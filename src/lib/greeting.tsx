@@ -1,0 +1,18 @@
+export const greetings = [
+    'Tashi Delek',
+    'Namo Buddhaya',
+    'Om Suvasti',
+    'Sabba Mangalam',
+    'Mingalaba',
+    'Ayubowan',
+    'Sukhi Hotu',
+    'Shanti',
+    'Maitri',
+    'Bodhi Blessings',
+    'With Gassho',
+    'Peaceful Morning',
+    'Mindful Greetings',
+    'Gentle Awareness',
+    'Joy and Peace',
+    'Welcome to the Present',
+];

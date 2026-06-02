@@ -1,35 +1,26 @@
-import { Text, View, Pressable } from 'react-native';
+import { Quotation } from '@/components/quotation';
+import { greetings } from '@/lib/greeting';
+import { useState } from 'react';
+import { Text, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
-import { AUTH0_CUSTOM_SCHEME } from '@/providers/auth0';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function Index() {
-  const { clearSession, user } = useAuth0();
-
-  const logout = async () => {
-    try {
-      await clearSession({}, { customScheme: AUTH0_CUSTOM_SCHEME });
-    } catch (e) {
-      console.error('Logout error:', e);
-    }
-  };
+  const { user } = useAuth0();
+  const insets = useSafeAreaInsets();
+  const [greeting] = useState(() => greetings[Math.floor(Math.random() * greetings.length)]);
 
   return (
-    <View className="flex-1 items-center justify-center gap-4 px-6">
-      <Text className="text-foreground text-2xl font-bold">WeBuddhist</Text>
-      <Text className="text-foreground text-lg">
-        Welcome, {user?.name || user?.email}!
-      </Text>
-      {user?.email && (
-        <Text className="text-muted-foreground">{user.email}</Text>
-      )}
-      <Pressable
-        onPress={logout}
-        className="mt-4 rounded-lg bg-destructive px-6 py-3 active:opacity-80"
-      >
-        <Text className="text-destructive-foreground font-semibold">
-          Log Out
+    <View className="flex-1 gap-4 p-4" style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom }}>
+      <View>
+        <Text className="text-foreground  max-w-36 text-xl font-semibold">
+          {greeting}, {user?.name}
         </Text>
-      </Pressable>
+        {user?.email && (
+          <Text className="text-muted-foreground">{user.email}</Text>
+        )}
+      </View>
+      <Quotation />
     </View>
   );
 }
