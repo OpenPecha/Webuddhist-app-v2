@@ -1,24 +1,47 @@
-import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import { useEffect } from 'react';
+import { View, ActivityIndicator } from 'react-native';
+import { Stack, useRouter, useSegments } from 'expo-router';
+import { useAuth0 } from 'react-native-auth0';
 import { Auth0ProviderWrapper } from '@/providers/auth0';
 import '../../global.css';
 
-export default function TabLayout() {
+function AuthGate() {
+  const { user, isLoading } = useAuth0();
+  const segments = useSegments();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    const onLoginScreen = segments[0] === 'login';
+
+    if (!user && !onLoginScreen) {
+      router.replace('/login');
+    } else if (user && onLoginScreen) {
+      router.replace('/');
+    }
+  }, [user, isLoading]);
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="login" />
+      <Stack.Screen name="(tabs)" />
+    </Stack>
+  );
+}
+
+export default function RootLayout() {
   return (
     <Auth0ProviderWrapper>
-    <NativeTabs>
-      <NativeTabs.Trigger name="index">
-        <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="house.fill" md="home" />
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="routes/recitation">
-        <NativeTabs.Trigger.Label>Recitation</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="book.fill" md="book" />
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="routes/setting" role='more'>
-        <NativeTabs.Trigger.Icon sf="gear" md="settings" />
-        <NativeTabs.Trigger.Label>Setting</NativeTabs.Trigger.Label>
-      </NativeTabs.Trigger>
-    </NativeTabs>
+      <AuthGate />
     </Auth0ProviderWrapper>
   );
 }
