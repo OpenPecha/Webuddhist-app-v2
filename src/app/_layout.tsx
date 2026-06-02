@@ -3,7 +3,11 @@ import { View, ActivityIndicator } from 'react-native';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { useAuth0 } from 'react-native-auth0';
 import { Auth0ProviderWrapper } from '@/providers/auth0';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 import '../../global.css';
+
+SplashScreen.preventAutoHideAsync();
 
 function AuthGate() {
   const { user, isLoading } = useAuth0();
@@ -39,6 +43,20 @@ function AuthGate() {
 }
 
 export default function RootLayout() {
+  const [fontsLoaded, fontError] = useFonts({
+    'EBGaramond-Regular': require('../../assets/fonts/EBGaramond-Regular.ttf'),
+  });
+
+  useEffect(() => {
+    if (fontsLoaded || fontError) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
+
   return (
     <Auth0ProviderWrapper>
       <AuthGate />

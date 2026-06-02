@@ -46,7 +46,8 @@
           "domain": "dev-vz6o17motc18g45h.us.auth0.com",
           "customScheme": "webuddhist"
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,

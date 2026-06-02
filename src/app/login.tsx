@@ -6,7 +6,7 @@ import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const bgImage = require('../../assets/images/bgimage5.jpg');
+const bgImage = require('../../assets/images/bgimagereal4.png');
 
 export default function Login() {
   const { authorize, isLoading } = useAuth0();
@@ -59,11 +59,12 @@ export default function Login() {
         style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
       >
         <View className="items-center p-8">
-          <Text className="text-3xl font-bold text-white ">
+
+          <Text className="text-3xl font-garamond font-bold text-white ">
             WeBuddhist
           </Text>
-          <Text className="text-lg text-white/70">
-            Live,Learn and Share Buddhism
+          <Text className="text-lg text-white/70 tracking-tight">
+            Live ,Learn and Share Buddhism
           </Text>
         </View>
 

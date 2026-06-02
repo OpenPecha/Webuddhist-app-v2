@@ -27,6 +27,7 @@
   --color-ring: var(--color-accent);
 
   --font-sans: "ABC Favorit";
+  --font-garamond: "EBGaramond-Regular";
 }
 
 @layer theme {
