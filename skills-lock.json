@@ -1,6 +1,18 @@
 {
   "version": 1,
   "skills": {
+    "auth0-expo": {
+      "source": "auth0/agent-skills",
+      "sourceType": "github",
+      "skillPath": "plugins/auth0/skills/auth0-expo/SKILL.md",
+      "computedHash": "19c42cb8d07b7306fb0c1df52366812dc067b949497511c8181239b83c77bdb7"
+    },
+    "auth0-quickstart": {
+      "source": "auth0/agent-skills",
+      "sourceType": "github",
+      "skillPath": "plugins/auth0/skills/auth0-quickstart/SKILL.md",
+      "computedHash": "d06cc9b09263af432b97e90120b6a82075bd3c173fac1892d55ad133e3d41964"
+    },
     "uniwind": {
       "source": "uni-stack/uniwind",
       "sourceType": "github",

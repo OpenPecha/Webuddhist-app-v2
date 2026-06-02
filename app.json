@@ -8,9 +8,11 @@
     "scheme": "webuddhistapp",
     "userInterfaceStyle": "automatic",
     "ios": {
+      "bundleIdentifier": "com.webuddhist.app",
       "icon": "./assets/expo.icon"
     },
     "android": {
+      "package": "com.webuddhist.app",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -33,6 +35,13 @@
             "image": "./assets/images/splash-icon.png",
             "imageWidth": 76
           }
+        }
+      ],
+      [
+        "react-native-auth0",
+        {
+          "domain": "dev-vz6o17motc18g45h.us.auth0.com",
+          "customScheme": "webuddhist"
         }
       ]
     ],

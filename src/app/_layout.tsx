@@ -1,8 +1,10 @@
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import { Auth0ProviderWrapper } from '@/providers/auth0';
 import '../../global.css';
 
 export default function TabLayout() {
   return (
+    <Auth0ProviderWrapper>
     <NativeTabs>
       <NativeTabs.Trigger name="index">
         <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
@@ -17,5 +19,6 @@ export default function TabLayout() {
         <NativeTabs.Trigger.Label>Setting</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
     </NativeTabs>
+    </Auth0ProviderWrapper>
   );
 }

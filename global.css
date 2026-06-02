@@ -1,2 +1,84 @@
 @import "tailwindcss";
 @import "uniwind";
+
+@theme {
+  /* Keep in sync with the `@variant light` block below. prettier-plugin-tailwindcss only reads the variables here, but Uniwind expects them to be declared per theme. */
+  --color-body-bg: #f4f4f0;
+  --color-background: #ffffff;
+  --color-foreground: #000000;
+  --color-primary: #000000;
+  --color-primary-foreground: #ffffff;
+  --color-muted: #8a8a8a;
+  --color-accent: #0d530e;
+  --color-accent-foreground: #000000;
+  --color-destructive: #dc341e;
+  --color-destructive-foreground: #ffffff;
+  --color-info: #90a8ed;
+  --color-info-foreground: #000000;
+  --color-border: #232323;
+  --color-card: var(--color-background);
+  --color-card-foreground: var(--color-foreground);
+  --color-popover: var(--color-background);
+  --color-popover-foreground: var(--color-foreground);
+  --color-secondary: var(--color-primary);
+  --color-secondary-foreground: var(--color-primary-foreground);
+  --color-muted-foreground: var(--color-muted);
+  --color-input: var(--color-border);
+  --color-ring: var(--color-accent);
+
+  --font-sans: "ABC Favorit";
+}
+
+@layer theme {
+  :root {
+    @variant light {
+      --color-body-bg: #f4f4f0;
+      --color-background: #ffffff;
+      --color-foreground: #000000;
+      --color-primary: #000000;
+      --color-primary-foreground: #ffffff;
+      --color-muted: #8a8a8a;
+      --color-accent: #0d530e;
+      --color-accent-foreground: #000000;
+      --color-destructive: #dc341e;
+      --color-destructive-foreground: #ffffff;
+      --color-info: #90a8ed;
+      --color-info-foreground: #000000;
+      --color-border: #232323;
+      --color-card: var(--color-background);
+      --color-card-foreground: var(--color-foreground);
+      --color-popover: var(--color-background);
+      --color-popover-foreground: var(--color-foreground);
+      --color-secondary: var(--color-primary);
+      --color-secondary-foreground: var(--color-primary-foreground);
+      --color-muted-foreground: var(--color-muted);
+      --color-input: var(--color-border);
+      --color-ring: var(--color-accent);
+    }
+
+    @variant dark {
+      --color-body-bg: #242423;
+      --color-background: #000000;
+      --color-foreground: #dedede;
+      --color-primary: #dedede;
+      --color-primary-foreground: #000000;
+      --color-muted: #797979;
+      --color-accent: #0d530e;
+      --color-accent-foreground: #000000;
+      --color-destructive: #dc341e;
+      --color-destructive-foreground: #ffffff;
+      --color-info: #90a8ed;
+      --color-info-foreground: #000000;
+      --color-border: #555555;
+      --color-card: var(--color-background);
+      --color-card-foreground: var(--color-foreground);
+      --color-popover: var(--color-background);
+      --color-popover-foreground: var(--color-foreground);
+      --color-secondary: var(--color-primary);
+      --color-secondary-foreground: var(--color-primary-foreground);
+      --color-muted-foreground: var(--color-muted);
+      --color-input: var(--color-border);
+      --color-ring: var(--color-accent);
+    }
+  }
+}
