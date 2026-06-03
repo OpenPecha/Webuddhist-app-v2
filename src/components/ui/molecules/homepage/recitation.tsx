@@ -1,6 +1,6 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import { RecitationCard } from '../recitation-card';
+import { RecitationCard } from '../cards/recitation-card';
 
 const image = require('../../../../../assets/images/bgimage2.jpg');
 const image2 = require('../../../../../assets/images/bgimage3.jpg');

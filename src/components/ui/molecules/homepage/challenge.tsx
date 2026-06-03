@@ -1,4 +1,4 @@
-import { SeriesCard } from '@/components/ui/molecules/series-card';
+import { SeriesCard } from '@/components/ui/molecules/cards/series-card';
 import { useSeries } from '@/hooks/useSeries';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
