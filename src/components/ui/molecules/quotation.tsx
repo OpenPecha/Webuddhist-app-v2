@@ -1,5 +1,5 @@
 import { ImageBackground, Text, View } from 'react-native';
-const backgroundImage = require('../../assets/images/bgimage1.jpg');
+const backgroundImage = require('../../../../assets/images/bgimage1.jpg');
 
 interface QuotationProps {
     quote?: string;
@@ -17,7 +17,7 @@ export function Quotation({
                 className="w-full min-h-48 items-center justify-center"
                 resizeMode="cover"
             >
-                <View className="items-center rounded-xl bg-black/10">
+                <View className="items-center rounded-xl">
                     <Text className="text-center font-garamond text-xl leading-relaxed text-white">
                         {quote}
                     </Text>

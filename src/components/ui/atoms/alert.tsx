@@ -1,4 +1,4 @@
-import { Text, TextClassContext } from "@/components/ui/text";
+import { Text, TextClassContext } from "@/components/ui/atoms/text";
 import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";

@@ -1,4 +1,6 @@
-import { Quotation } from '@/components/quotation';
+import { Challenge } from '@/components/ui/molecules/homepage/challenge';
+import { Quotation } from '@/components/ui/molecules/quotation';
+import { RecitationCard } from '@/components/ui/molecules/recitation-card';
 import { greetings } from '@/lib/greeting';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
@@ -11,16 +13,21 @@ export default function Index() {
   const [greeting] = useState(() => greetings[Math.floor(Math.random() * greetings.length)]);
 
   return (
-    <View className="flex-1 gap-4 p-4" style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom }}>
+    <View className=" gap-4 p-4" style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom }}>
       <View>
-        <Text className="text-foreground  max-w-36 text-xl font-semibold">
-          {greeting}, {user?.name}
+        <Text className="text-foreground text-xl font-semibold">
+          {greeting}
+        </Text>
+        <Text className='text-foreground text-xl font-semibold'>
+          {user?.name}
         </Text>
         {user?.email && (
           <Text className="text-muted-foreground">{user.email}</Text>
         )}
       </View>
       <Quotation />
+      <Challenge />
+      <RecitationCard />
     </View>
   );
 }
