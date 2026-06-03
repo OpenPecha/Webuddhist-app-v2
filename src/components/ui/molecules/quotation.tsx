@@ -1,3 +1,4 @@
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { ImageBackground, Text, View } from 'react-native';
 const backgroundImage = require('../../../../assets/images/bgimage1.jpg');
 
@@ -26,6 +27,10 @@ export function Quotation({
                             {author}
                         </Text>
                     )}
+                </View>
+                <View className="absolute bottom-5 bg-white/40 rounded-full p-2 right-5">
+                    <MaterialIcons name="share" size={12} color="white" />
+
                 </View>
             </ImageBackground>
         </View>

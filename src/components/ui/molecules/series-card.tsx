@@ -1,6 +1,7 @@
 import type { Series } from '@/hooks/useSeries';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 
 interface SeriesCardProps {
@@ -9,11 +10,20 @@ interface SeriesCardProps {
 }
 
 export function SeriesCard({ series, onPress }: SeriesCardProps) {
+  const router = useRouter();
   const metadata = series.metadata[0];
+
+  const handlePress = () => {
+    if (onPress) {
+      onPress();
+      return;
+    }
+    router.push(`/series/${series.id}`);
+  };
 
   return (
     <Pressable
-      onPress={onPress}
+      onPress={handlePress}
       className=" w-72 self-start overflow-hidden rounded-2xl active:opacity-80"
     >
       <Image

@@ -15,10 +15,10 @@ export default function Index() {
 
   return (
     <ScrollView
-      style={{ paddingTop: insets.top + 16, paddingBottom: insets.bottom }}
+      style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
       showsVerticalScrollIndicator={false}
     >
-      <View className="gap-3 p-4">
+      <View className="gap-3 p-2">
         <View>
           <Text className="text-foreground text-xl font-semibold">
             {greeting}

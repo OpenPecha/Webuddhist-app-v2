@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
-import { View, ActivityIndicator } from 'react-native';
-import { Stack, useRouter, useSegments } from 'expo-router';
-import { useAuth0 } from 'react-native-auth0';
 import { Auth0ProviderWrapper } from '@/providers/auth0';
 import { QueryProvider } from '@/providers/query';
 import { useFonts } from 'expo-font';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
+import { ActivityIndicator, View } from 'react-native';
+import { useAuth0 } from 'react-native-auth0';
 import '../../global.css';
 
 SplashScreen.preventAutoHideAsync();
@@ -39,6 +39,10 @@ function AuthGate() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="login" />
       <Stack.Screen name="(tabs)" />
+      <Stack.Screen
+        name="series/[id]"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 }
