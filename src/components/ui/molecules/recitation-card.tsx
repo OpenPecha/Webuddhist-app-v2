@@ -1,32 +1,38 @@
 import { StyledImage } from '@/components/styled';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Text, View } from 'react-native';
-const backgroundImage = require('../../../../assets/images/bgimage2.jpg');
 
-export function RecitationCard() {
+export function RecitationCard({ data }: { data: any }) {
     return (
-        <View className="w-72 flex bg-white flex-row overflow-hidden p-1 rounded-2xl">
+        <View className="w-72 flex flex-row overflow-hidden rounded-xl bg-white p-1">
             <StyledImage
-                source={backgroundImage}
-                className=" size-20 rounded-2xl"
+                source={data.image}
+                className=" size-20 rounded-xl"
                 contentFit="cover"
                 transition={200}
             />
 
-            <View className="p-3">
-                <Text
-                    className="text-foreground text-sm font-semibold"
-                    numberOfLines={2}
-                >
-                    The Way of Boddisatva
-                </Text>
-                <Text
-                    className="text-muted-foreground mt-1 text-xs"
-                    numberOfLines={2}
-                >
-                    Prayers to the Buddha
-                </Text>
-
-
+            <View className="p-3 gap-2">
+                <View>
+                    <Text
+                        className="text-foreground text-sm font-semibold"
+                        numberOfLines={2}
+                    >
+                        {data.title}
+                    </Text>
+                    <Text
+                        className="text-muted-foreground  text-xs"
+                        numberOfLines={2}
+                    >
+                        {data.description}
+                    </Text>
+                </View>
+                <View className="flex-row items-center gap-2">
+                    <MaterialIcons name="play-arrow" size={12} color="black" />
+                    <Text className="text-muted-foreground text-xs">
+                        {data.duration} min
+                    </Text>
+                </View>
             </View>
         </View>
     );

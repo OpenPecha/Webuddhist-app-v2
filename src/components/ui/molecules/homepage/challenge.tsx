@@ -12,7 +12,7 @@ export function Challenge() {
         <Text className="text-foreground text-lg font-semibold">
           Challenges
         </Text>
-        <Pressable className="p-4">
+        <Pressable className="p-2">
           <MaterialIcons name="arrow-forward-ios" size={12} />
         </Pressable>
       </View>
