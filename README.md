@@ -15,3 +15,9 @@ eas build:run --profile development --platform ios --latest
 ```bash
 npx expo start --dev-client
 ```
+
+4. build using physical device
+
+```bash
+npx expo run:ios --device
+```

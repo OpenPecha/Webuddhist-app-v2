@@ -36,7 +36,12 @@ function AuthGate() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: '#FDFDFC' },
+      }}
+    >
       <Stack.Screen name="login" />
       <Stack.Screen name="(tabs)" />
       <Stack.Screen

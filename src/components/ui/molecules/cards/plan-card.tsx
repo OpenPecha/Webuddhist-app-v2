@@ -17,13 +17,25 @@ export function PlanCard({ plan }: { plan: Plan }) {
                     {plan.title}
                 </Text>
                 {plan.description ? (
-                    <Text className="text-muted-foreground mt-0.5 text-xs" numberOfLines={2}>
+                    <Text className="text-muted-foreground text-xs" numberOfLines={2}>
                         {plan.description}
                     </Text>
                 ) : null}
                 <View className="mt-1 flex-row items-center gap-2">
                     <View className="flex-row items-center gap-0.5">
-                        <MaterialIcons name="signal-cellular-alt" size={12} color="gray" />
+                        <MaterialIcons
+                            name="signal-cellular-alt"
+                            size={12}
+                            color={
+                                plan.difficulty_level.toLowerCase() === "beginner"
+                                    ? "green"
+                                    : plan.difficulty_level.toLowerCase() === "intermediate"
+                                        ? "yellow"
+                                        : plan.difficulty_level.toLowerCase() === "advanced"
+                                            ? "orange"
+                                            : "gray"
+                            }
+                        />
                         <Text className="text-muted-foreground text-xs">
                             {plan.difficulty_level.charAt(0) + plan.difficulty_level.slice(1).toLowerCase()}
                         </Text>

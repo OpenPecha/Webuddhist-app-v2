@@ -15,6 +15,7 @@ export default function Index() {
 
   return (
     <ScrollView
+      className="bg-background"
       style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
       showsVerticalScrollIndicator={false}
     >

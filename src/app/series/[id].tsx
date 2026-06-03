@@ -18,7 +18,7 @@ export default function SeriesDetailScreen() {
   const metadata = series?.metadata[0];
 
   return (
-    <>
+    <View className="flex-1 bg-background">
       {isLoading && (
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" />
@@ -42,33 +42,33 @@ export default function SeriesDetailScreen() {
             transition={300}
           />
 
-          <View className="gap-4 p-4">
-            <View>
-              <Text className="text-foreground text-lg font-bold">
-                {metadata?.title}
+          <View className="gap-2 p-4">
+            <Text className="text-lg font-bold">
+              {metadata?.title}
+            </Text>
+            {metadata?.description ? (
+              <Text className="text-sm">
+                {metadata.description}
               </Text>
-              {metadata?.description ? (
-                <Text className="text-muted-foreground text-sm">
-                  {metadata.description}
-                </Text>
-              ) : null}
-            </View>
+            ) : null}
 
-            <View className="flex-row items-center gap-4">
-              <View className="flex-row items-center gap-1">
-                <MaterialIcons name="calendar-month" size={14} color="gray" />
-                <Text className="text-muted-foreground text-xs">
+            <View className="flex-row items-center gap-2">
+              <View className="flex-row items-center gap-1 bg-white/80 rounded-full p-2">
+                <MaterialIcons name="calendar-month" size={14} />
+                <Text className="text-xs">
                   {series.total_days} {series.total_days === 1 ? 'day' : 'days'}
                 </Text>
               </View>
-              <View className="flex-row items-center gap-1">
-                <MaterialIcons name="list" size={14} color="gray" />
-                <Text className="text-muted-foreground text-xs">
+              <View className="flex-row items-center gap-1 bg-white/80 rounded-full p-2">
+                <MaterialIcons name="list" size={14} />
+                <Text className="text-xs">
                   {series.plans.length} {series.plans.length === 1 ? 'plan' : 'plans'}
                 </Text>
               </View>
             </View>
+          </View>
 
+          <View className="gap-4 p-4">
             {series.plans.length > 0 && (
               <View className="gap-2">
                 {series.plans.map((plan) => (
@@ -77,8 +77,9 @@ export default function SeriesDetailScreen() {
               </View>
             )}
           </View>
-        </ScrollView>
-      )}
-    </>
+        </ScrollView >
+      )
+      }
+    </View>
   );
 }
