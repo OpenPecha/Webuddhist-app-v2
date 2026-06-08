@@ -1,10 +1,10 @@
 {
   "expo": {
     "name": "webuddhist-app",
-    "slug": "webuddhist-app",
+    "slug": "webuddhist-app-v2",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/webuddhist.png",
     "scheme": "webuddhistapp",
     "userInterfaceStyle": "automatic",
     "ios": {
@@ -26,7 +26,7 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/webuddhist.png"
     },
     "plugins": [
       "expo-router",
@@ -43,11 +43,12 @@
       [
         "react-native-auth0",
         {
-          "domain": "dev-vz6o17motc18g45h.us.auth0.com",
+          "domain": "dev-dn1sywolg36ltof4.us.auth0.com",
           "customScheme": "webuddhist"
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-image"
     ],
     "experiments": {
       "typedRoutes": true,
@@ -56,8 +57,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "809d85c9-8bb7-4b11-b70c-864e71bf1a72"
+        "projectId": "20b033a3-1b80-4cf6-8439-65ad01b855f3"
       }
-    }
+    },
+    "owner": "webuddhist"
   }
 }
