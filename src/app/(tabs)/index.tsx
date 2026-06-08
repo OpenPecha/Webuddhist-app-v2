@@ -4,7 +4,7 @@ import { Recitation } from '@/components/ui/molecules/homepage/recitation';
 import { Quotation } from '@/components/ui/molecules/quotation';
 import { greetings } from '@/lib/greeting';
 import { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Platform, ScrollView, Text, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -15,27 +15,28 @@ export default function Index() {
 
   return (
     <ScrollView
-      className="bg-background"
-      style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
-      showsVerticalScrollIndicator={false}
+      className="flex-1 bg-background"
+      contentContainerClassName="gap-3 p-2"
+      contentContainerStyle={{
+        paddingTop: Platform.OS === 'android' ? insets.top : 0,
+      }}
+      showsVerticalScrollIndicator={true}
     >
-      <View className="gap-3 p-2">
-        <View>
-          <Text className="text-foreground text-xl font-semibold">
-            {greeting}
-          </Text>
-          <Text className='text-foreground text-xl font-semibold'>
-            {user?.name}
-          </Text>
-          {user?.email && (
-            <Text className="text-muted-foreground">{user.email}</Text>
-          )}
-        </View>
-        <Calander />
-        <Quotation />
-        <Challenge />
-        <Recitation />
+      <View>
+        <Text className="text-foreground text-xl font-semibold">
+          {greeting}
+        </Text>
+        <Text className="text-foreground text-xl font-semibold">
+          {user?.name} !
+        </Text>
+        {user?.email && (
+          <Text className="text-muted-foreground">{user.email}</Text>
+        )}
       </View>
+      <Calander />
+      <Quotation />
+      <Challenge />
+      <Recitation />
     </ScrollView>
   );
 }

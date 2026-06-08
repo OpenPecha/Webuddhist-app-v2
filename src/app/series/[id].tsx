@@ -1,5 +1,6 @@
 import { PlanCard } from '@/components/ui/molecules/cards/plan-card';
 import { useSeriesById } from '@/hooks/useSeries';
+import { imageUrl } from '@/lib/image-url';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams } from 'expo-router';
@@ -15,7 +16,8 @@ export default function SeriesDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: series, isLoading, error } = useSeriesById(id!);
 
-  const metadata = series?.metadata[0];
+  const metadata =
+    series?.metadata.find((m) => m.language === 'EN') ?? series?.metadata[0];
 
   return (
     <View className="flex-1 bg-background">
@@ -36,7 +38,7 @@ export default function SeriesDetailScreen() {
       {series && (
         <ScrollView showsVerticalScrollIndicator={false}>
           <Image
-            source={{ uri: series.image }}
+            source={{ uri: imageUrl(series.image) }}
             style={{ height: 250, width: '100%' }}
             contentFit="cover"
             transition={300}

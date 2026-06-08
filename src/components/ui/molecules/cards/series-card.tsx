@@ -1,4 +1,5 @@
 import type { Series } from '@/hooks/useSeries';
+import { imageUrl } from '@/lib/image-url';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -11,7 +12,7 @@ interface SeriesCardProps {
 
 export function SeriesCard({ series, onPress }: SeriesCardProps) {
   const router = useRouter();
-  const metadata = series.metadata[0];
+  const metadata = series.metadata;
 
   const handlePress = () => {
     if (onPress) {
@@ -27,7 +28,7 @@ export function SeriesCard({ series, onPress }: SeriesCardProps) {
       className=" w-72 self-start overflow-hidden rounded-2xl active:opacity-80"
     >
       <Image
-        source={{ uri: series.image }}
+        source={{ uri: imageUrl(series.image) }}
         style={{ height: 128, width: '100%', borderRadius: 12 }}
         contentFit="cover"
         transition={200}

@@ -1,5 +1,6 @@
-import { Plan } from "@/hooks/useSeries";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Plan } from '@/hooks/useSeries';
+import { imageUrl } from '@/lib/image-url';
+import { MaterialIcons } from '@expo/vector-icons';
 import { Image } from "expo-image";
 import { Text, View } from "react-native";
 
@@ -7,7 +8,7 @@ export function PlanCard({ plan }: { plan: Plan }) {
     return (
         <View className="flex-row gap-3 rounded-xl bg-card p-1">
             <Image
-                source={{ uri: plan.image_url }}
+                source={{ uri: imageUrl(plan.image, 'thumbnail') }}
                 style={{ height: 72, width: 72, borderRadius: 8 }}
                 contentFit="cover"
                 transition={200}

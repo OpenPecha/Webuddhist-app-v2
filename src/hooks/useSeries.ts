@@ -1,4 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
+
+import type { ImageSizes } from '@/lib/image-url';
+
+export type { ImageSizes };
 
 interface SeriesMetadata {
   id: string;
@@ -9,8 +13,8 @@ interface SeriesMetadata {
 
 export interface Series {
   id: string;
-  metadata: SeriesMetadata[];
-  image: string;
+  metadata: SeriesMetadata;
+  image: ImageSizes;
   image_key: string;
   author_id: string;
   featured: boolean;
@@ -25,7 +29,7 @@ export interface Plan {
   description: string;
   language: string;
   difficulty_level: string;
-  image_url: string;
+  image: ImageSizes;
   image_key: string;
   tags: string[];
   status: string;
@@ -39,7 +43,7 @@ export interface Plan {
 export interface SeriesDetail {
   id: string;
   metadata: SeriesMetadata[];
-  image: string;
+  image: ImageSizes;
   image_key: string;
   author_id: string;
   featured: boolean;
@@ -57,7 +61,7 @@ interface SeriesResponse {
 }
 
 async function fetchSeries(
-  language = "en",
+  language = 'en',
   skip = 0,
   limit = 10,
 ): Promise<SeriesResponse> {
@@ -66,7 +70,7 @@ async function fetchSeries(
   );
 
   if (!response.ok) {
-    throw new Error("Failed to fetch series");
+    throw new Error('Failed to fetch series');
   }
 
   return response.json();
@@ -77,21 +81,21 @@ async function fetchSeriesById(id: string): Promise<SeriesDetail> {
     `https://api.webuddhist.com/api/v1/series/${id}`,
   );
   if (!response.ok) {
-    throw new Error("Failed to fetch series");
+    throw new Error('Failed to fetch series');
   }
   return response.json();
 }
 
-export function useSeries(language = "en", skip = 0, limit = 10) {
+export function useSeries(language = 'en', skip = 0, limit = 10) {
   return useQuery({
-    queryKey: ["series", language, skip, limit],
+    queryKey: ['series', language, skip, limit],
     queryFn: () => fetchSeries(language, skip, limit),
   });
 }
 
 export function useSeriesById(id: string) {
   return useQuery({
-    queryKey: ["series", id],
+    queryKey: ['series', id],
     queryFn: () => fetchSeriesById(id),
   });
 }
