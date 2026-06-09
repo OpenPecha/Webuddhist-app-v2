@@ -3,6 +3,7 @@ import { Challenge } from '@/components/ui/molecules/homepage/challenge';
 import { Recitation } from '@/components/ui/molecules/homepage/recitation';
 import { Quotation } from '@/components/ui/molecules/quotation';
 import { greetings } from '@/lib/greeting';
+import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { Platform, ScrollView, Text, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
@@ -37,6 +38,7 @@ export default function Index() {
       <Quotation />
       <Challenge />
       <Recitation />
+      <StatusBar style="auto" />
     </ScrollView>
   );
 }
