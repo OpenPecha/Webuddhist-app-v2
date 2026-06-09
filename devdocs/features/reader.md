@@ -13,10 +13,17 @@
 
 ## 1. Summary
 
-The reader is the core text-reading experience and the **highest-complexity** feature.
-It renders Buddhist texts segment-by-segment with version/language/script selection,
-commentary, segment actions (highlight, share, create image), an optional dual-panel
-mode, and supports navigation from plans, search, and deep links.
+The reader is the core text-reading experience and the **most complex** feature.
+It renders Buddhist texts segment-by-segment and supports:
+
+- **Version, language, and script selection** for the text being read
+- **Commentaries and translations** in a separate panel below the text
+- **Segment actions**, including loading segment-level commentaries and translations,
+  sharing a segment, and creating a shareable image (built from a selected segment and
+  a choice of background images)
+- **Dual-reader mode**, opened from an inline version picker, for viewing the source
+  text and another version side by side
+- **Navigation from plans**
 
 > Recommendation: this PRD should be split into sub-PRDs as scope firms up
 > (reader-core, versions-languages, commentary, segment-actions, dual-panel).
@@ -45,11 +52,10 @@ v2 must carry equivalent context (serializable params or a context store).
 ## 4. User stories
 
 - As any user, I can read a text and scroll through its segments.
-- As a user, I can jump to a target segment (from search/plan/deep link).
 - As a user, I can switch version / language / script.
-- As a user, I can open commentary for a segment.
-- As a user, I can act on a segment: highlight, share, create an image.
-- As a user, I can enable a secondary reading panel (dual-slot).
+- As a user, I can open a translation or commentary for a segment in a dual panel mode.
+- As a user, I can act on a segment: share, create an image.
+- As a user, I can choose another version of the text to view in altertanting segments with the main version
 
 ## 5. Functional requirements
 
@@ -57,9 +63,9 @@ v2 must carry equivalent context (serializable params or a context store).
 - **FR-2:** Scroll/jump to `targetSegmentId` when provided.
 - **FR-3:** Version selection (`/reader/:textId/versions`) and language selection.
 - **FR-4:** Commentary panel/tab per segment.
-- **FR-5:** Segment action bar: highlight, share, create image, read-full-text.
+- **FR-5:** Segment action bar: translation, commentary, share, create image.
 - **FR-6:** Font-size control (persisted via `font_size`).
-- **FR-7:** Optional dual-panel mode, persisted via `reader_secondary_enabled`
+- **FR-7:** Optional interlinear mode, persisted via `reader_secondary_enabled`
   (slot picks are in-memory, text-scoped — match Flutter semantics).
 - **FR-8:** Plan-mode navigation between texts with directional transitions and
   prev/next across `planTextItems`.

@@ -13,9 +13,9 @@
 
 ## 1. Summary
 
-The "More"/"Me" area: user profile, settings (language, theme, notifications), about,
-privacy policy, and account actions (login/logout, guest upgrade). It also hosts the
-guest profile/benefits view.
+The "Me" tab contains the user profile, settings (language, theme, notifications),
+about, privacy policy, and account actions (login/logout, guest upgrade). For guests,
+it also shows benefits copy and a sign-in CTA.
 
 ## 2. Flutter reference map
 

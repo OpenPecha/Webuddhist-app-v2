@@ -13,7 +13,7 @@
 
 ## 1. Summary
 
-A series is a curated collection of plans. The series detail screen shows cover image,
+A series is a sequential collection of plans. The series detail screen shows cover image,
 title/description, day/plan counts, and the list of plans, with an enrollment action for
 authenticated users.
 
@@ -42,7 +42,7 @@ hardcoded `'EN'`).
 ## 5. Functional requirements
 
 - **FR-1:** Load series by id via `/series/{id}`.
-- **FR-2:** Display cover image, title, description, total days, plan count, plan list.
+- **FR-2:** Display cover image, title, description, total days, plan list.
 - **FR-3:** Metadata respects the active locale (not hardcoded `EN`) — see
   `foundation/04-i18n-theming`.
 - **FR-4:** Enrollment action (authenticated only); guest is prompted to log in.
