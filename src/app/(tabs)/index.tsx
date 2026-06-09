@@ -38,7 +38,7 @@ export default function Index() {
       <Quotation />
       <Challenge />
       <Recitation />
-      <StatusBar style="auto" />
+      <StatusBar hidden />
     </ScrollView>
   );
 }
