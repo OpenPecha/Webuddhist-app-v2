@@ -33,19 +33,21 @@ completion.
 
 ## 3. User stories
 
-- As any user, I can browse plans by tag and preview a plan (guest preview allowed).
+- As any user, I can browse plans, search for plans by tag and preview plans (guest preview allowed).
+- As an any user, I can see day-by-day content.
 - As an **authenticated** user, I can enroll in a plan.
-- As an enrolled user, I can see day-by-day content and mark a day complete.
-- As an enrolled user, I can track progress (current day, start date, total days).
+- As an enrolled user, when I complete tasks, they are marked complete.
+- As an enrolled user, when I complete all the tasks in a day, the day is marked complete.
+- As an enrolled user, I can track progress (see marks on completed days and lack of a check mark on days I haven't completed).
+- As a user, I am informed of the number of days I have missed so I can find missed days and catch up.
 
 ## 4. Functional requirements
 
 - **FR-1:** Plan list filtered by tag.
-- **FR-2:** Plan preview (guest-accessible): cover, title, description, difficulty,
-  total days, tags.
-- **FR-3:** Plan info screen (auth-required): full plan with enroll action.
-- **FR-4:** Plan details/track: per-day content, selected day, start date.
-- **FR-5:** Day completion flow (bottom sheet) with progress update.
+- **FR-2:** Plan info page in preview mode (guest-accessible): cover, title, description, calendar of days, task list for each day. (Users can click into tasks and see the content of individual tasks, but progress is not tracked and checkboxes don't appear next to tasks)
+- **FR-3:** Enroll action on plan info page.
+- **FR-4:** Plan details/track: per-day content, current day, missed days listed, completed days checked, checkboxes per tasks, completed tasks get a check mark.
+- **FR-5:** Day completion flow (bottom sheet) with progress update: e.g., Day 1 of 8 completed.
 - **FR-6:** Enrollment writes plan metadata used by notifications
   (`plan_started_at_<id>`, `plan_total_days_<id>`) — see `foundation/06-notifications`.
 - **FR-7:** Day content can include TEXT subtasks rendered inline (`/plan-text/:subtaskId`)

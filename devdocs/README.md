@@ -31,12 +31,8 @@ devdocs/
     ├── series.md
     ├── plans.md
     ├── reader.md
-    ├── texts-library.md
-    ├── ai-search.md
     ├── recitation.md
     ├── practice.md
-    ├── story-view.md
-    ├── meditation-prayer-of-day.md
     ├── settings-profile.md
     └── onboarding.md
 ```

@@ -13,8 +13,12 @@
 
 ## 1. Summary
 
-Recitations are guided/audio prayer or chant items. Users browse recitations and open a
-detail screen to recite/play. Recitations can be added to a practice routine.
+Recitations are chant texts. Authenticated users add them to a practice routine on the
+Practice page. Once a recitation is in their routine, they can tap its card on the routine
+page to open it in the reader and recite it.
+
+There is no preview mode for anyone: even authenticated users who browse the recitation
+list can't open a recitation until they've added it to a routine.
 
 ## 2. Flutter reference map
 
@@ -29,20 +33,16 @@ and a recitation tab in v2.
 
 ## 3. User stories
 
-- As any user, I can browse recitations.
-- As a user, I can open a recitation detail and recite/play it.
 - As an **authenticated** user, I can add a recitation to my routine.
+- As an **authenticated** user with a recitation in my routine, I can open it in the text reader and recite it there.
+- As an **unauthenticated** user, I cannot view recitations; I need to sign in and enroll before I can view or recite them.
+
 
 ## 4. Functional requirements
 
-- **FR-1:** Recitation list (tab + home molecule).
-- **FR-2:** Recitation detail (`/recitations/detail`) — auth-required per
-  `AppRoutes._protectedBasePaths` (confirm whether browse is guest-ok but detail needs
-  auth).
-- **FR-3:** Audio playback if recitations include audio (Flutter has
-  `core/services/audio_handler.dart`). Confirm scope.
-- **FR-4:** Add recitation to routine (links to `features/practice`).
-- **FR-5:** Loading / error / empty states.
+- **FR-1:** Recitation list (tab on routine page after a user taps Add to Session).
+- **FR-2:** Add recitation to routine (links to `features/practice`).
+- **FR-3:** Loading / error / empty states.
 
 ## 5. API contracts
 

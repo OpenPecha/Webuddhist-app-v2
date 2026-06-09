@@ -34,7 +34,6 @@ on `/onboarding` are sent to `/home`.
 - As a **new authenticated user**, I complete onboarding once.
 - As a **returning user**, I never see onboarding again.
 - As a **guest**, I skip onboarding entirely.
-- As a user finishing onboarding, I may be enrolled into a starter plan.
 
 ## 4. Functional requirements
 
@@ -46,7 +45,6 @@ on `/onboarding` are sent to `/home`.
 - **FR-4:** Optional starter-plan enrollment on completion (Flutter sets
   `pendingOnboardingPlanProvider`, consumed by home).
 - **FR-5:** Guests bypass onboarding.
-- **FR-6:** Resume mid-onboarding using the saved step.
 
 ## 5. State & persistence (map to StorageKeys)
 

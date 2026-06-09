@@ -13,9 +13,11 @@
 
 ## 1. Summary
 
-Practice is the user's personal daily routine: time-blocked sessions built from plans
-and recitations. Users build/edit a routine, select plans/recitations to include, and
+Practice is the user's personal daily routine: time-blocked sessions built from series, plans
+and recitations. Users build/edit a routine, select series/plans/recitations to include, and
 the routine drives scheduled notifications.
+
+**Note: this page will be renamed "Routine" and will be sub-page of the home page. V2 of the app will include a new Practice page with different content.
 
 ## 2. Flutter reference map
 
@@ -37,8 +39,8 @@ the routine drives scheduled notifications.
 
 - As a **guest**, I see an empty practice screen (browse-only; building requires auth).
 - As an **authenticated** user, I can build a routine of time blocks.
-- As a user, I can add plans and recitations to time blocks.
-- As a user, my routine schedules reminders.
+- As a **authenticated** user, I can add series, plans, and recitations to time blocks.
+- As a user with series, plans, and/or recitations in my routine, my routine schedules reminders.
 
 ## 4. Functional requirements
 
@@ -46,7 +48,7 @@ the routine drives scheduled notifications.
 - **FR-2:** Guest sees empty practice; building/editing requires auth
   (`/practice/edit-routine` is in `_protectedBasePaths`).
 - **FR-3:** Edit routine: add/remove/reorder time blocks.
-- **FR-4:** Select plan to add to a block (`select-plan`).
+- **FR-4:** Select plan/series to add to a block (`select-plan`).
 - **FR-5:** Select recitation/session to add to a block (`select-recitation`).
 - **FR-6:** Persist routine via API + locally; drive notifications
   (`foundation/06-notifications`).

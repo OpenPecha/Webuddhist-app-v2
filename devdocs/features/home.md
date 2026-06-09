@@ -13,9 +13,7 @@
 
 ## 1. Summary
 
-The home tab is the landing screen: a greeting, daily content (quotation, challenge,
-calendar), series/plan discovery, and entry points into reading, recitation, and plans.
-It also drives the post-onboarding notification-permission prompt.
+The home tab is the app's landing screen. Currently, it contains a title: Home; a search bar, where users can search for plans and series via tags; and series and standalone cards. The cards lead to the series, which contains all the plans in the series, or a standalone plan
 
 ## 2. Flutter reference map
 
@@ -38,21 +36,20 @@ Home also: requests notification permission on load, shows an update banner
 
 ## 4. User stories
 
-- As a **guest**, I can see daily content and browse series without logging in.
-- As an **authenticated user**, I see a personalized greeting and my plan progress.
+- As any user, I can browser series and plans.
+- As any user, I can search for series and plans.
 - As any user, I can tap a series to open its detail.
 
 ## 5. Functional requirements
 
-- **FR-1:** Greeting with user name/email when authenticated; generic greeting for guest.
-- **FR-2:** Daily content widgets: quotation, challenge, calendar (parity with v2
-  molecules + Flutter home sections).
+- **FR-1:** Home title.
+- **FR-2:** Search bar, where users search for content. Results are tag-based.
 - **FR-3:** Series discovery list (horizontal/vertical) using `/series`.
 - **FR-4:** Plan list / continue-reading entry points (link to `features/plans`).
 - **FR-5:** Tapping a series → `series/[id]`.
 - **FR-6:** Trigger notification-permission prompt after onboarding (see
   `foundation/06-notifications`).
-- **FR-7:** Optional update banner (app upgrade) — confirm if in scope for v1.
+- **FR-7:** Update banner (app upgrade).
 - **FR-8:** Loading skeletons + error + empty states.
 
 ## 6. API contracts
