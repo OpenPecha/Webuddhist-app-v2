@@ -26,15 +26,21 @@ devdocs/
 │   ├── 04-i18n-theming.md
 │   ├── 05-analytics.md
 │   └── 06-notifications.md
-└── features/                   # One PRD per feature domain
-    ├── home.md
-    ├── series.md
-    ├── plans.md
-    ├── reader.md
-    ├── recitation.md
-    ├── practice.md
-    ├── settings-profile.md
-    └── onboarding.md
+├── features/                   # In-scope feature PRDs (v2 will build these)
+│   ├── home.md
+│   ├── series.md
+│   ├── plans.md
+│   ├── reader.md
+│   ├── recitation.md
+│   ├── practice.md
+│   ├── settings-profile.md
+│   └── onboarding.md
+└── stalled_features/           # Out of scope — reference only, no v2 build
+    ├── README.md
+    ├── texts-library.md
+    ├── ai-search.md
+    ├── story-view.md
+    └── meditation-prayer-of-day.md
 ```
 
 ---
@@ -44,7 +50,8 @@ devdocs/
 1. **[MIGRATION_OVERVIEW.md](./MIGRATION_OVERVIEW.md)** — why, scope, stack mapping, phasing, risks.
 2. **[parity/PARITY_MATRIX.md](./parity/PARITY_MATRIX.md)** — current status of every feature.
 3. **Foundation PRDs** — navigation, auth, networking. These unblock everything else.
-4. **Feature PRDs** — pick by priority wave (see overview).
+4. **Feature PRDs** — pick by priority wave (see overview). Skip
+   `stalled_features/` — those are explicitly out of scope.
 
 ## Writing a new PRD
 

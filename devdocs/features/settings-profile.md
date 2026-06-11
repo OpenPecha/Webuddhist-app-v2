@@ -7,7 +7,7 @@
 | **Flutter baseline** | `lib/features/more` |
 | **v2 target** | `src/app/(tabs)/screens/setting/index.tsx` |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-08 |
+| **Last updated** | 2026-06-11 |
 
 ---
 
@@ -49,9 +49,21 @@ it also shows benefits copy and a sign-in CTA.
 
 ## 5. API contracts
 
-| Endpoint | Method | Auth | Notes |
-|----------|--------|------|-------|
-| profile get/update | GET/PUT | required | `profile_data`, `last_profile_update` |
+**Source:** Flutter `edit_profile_screen.dart` · Backend `WeBuddhist-Backend/pecha_api/users/users_views.py`
+(`user_response_models.py`). Profile lives under **`/users/info`**, not `/users/me`.
+
+| Endpoint | Method | Auth | OpenAPI / backend schema | Notes |
+|----------|--------|------|--------------------------|-------|
+| `/users/info` | GET | required | `UserInfoResponse` | Load profile |
+| `/users/info` | POST | required | `UserInfoRequest` → **201** | Update profile (Flutter uses POST, not PUT) |
+| `/users/info` | DELETE | required | **204** | Delete account |
+| `/users/upload` | POST | required | multipart `file` → **201** | Avatar upload |
+
+`UserInfoResponse`: `firstname`, `lastname`, `username`, `email`, `title`, `organization`,
+`location`, `educations[]`, `avatar_url`, `about_me`, `followers`, `following`,
+`social_profiles[]`.
+
+Local cache keys: `profile_data`, `last_profile_update` (see §6).
 
 ## 6. State & persistence
 
