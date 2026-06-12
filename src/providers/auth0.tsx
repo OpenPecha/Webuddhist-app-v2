@@ -15,4 +15,4 @@ export function Auth0ProviderWrapper({ children }: Auth0ProviderWrapperProps) {
   );
 }
 
-export const AUTH0_CUSTOM_SCHEME = 'webuddhist';
+export const AUTH0_CUSTOM_SCHEME = 'org.pecha.app';

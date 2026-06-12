@@ -1,4 +1,7 @@
+import '@/lib/i18n';
 import { Auth0ProviderWrapper } from '@/providers/auth0';
+import { GuestProvider, useGuest } from '@/providers/guest';
+import { OnboardingProvider, useOnboarding } from '@/providers/onboarding';
 import { QueryProvider } from '@/providers/query';
 import { useFonts } from 'expo-font';
 import { Stack, useRouter, useSegments } from 'expo-router';
@@ -11,21 +14,41 @@ import '../../global.css';
 SplashScreen.preventAutoHideAsync();
 
 function AuthGate() {
-  const { user, isLoading } = useAuth0();
+  const { user, isLoading: authLoading } = useAuth0();
+  const { isGuest, isResolved: guestResolved } = useGuest();
+  const { isCompleted: onboardingDone, isResolved: onboardingResolved } = useOnboarding();
   const segments = useSegments();
   const router = useRouter();
+
+  const isLoading = authLoading || !guestResolved || !onboardingResolved;
+  const isAuthenticated = !!user || isGuest;
 
   useEffect(() => {
     if (isLoading) return;
 
-    const onLoginScreen = segments[0] === 'login';
+    const onLogin = segments[0] === 'login';
+    const onOnboarding = segments[0] === 'onboarding';
 
-    if (!user && !onLoginScreen) {
-      router.replace('/login');
-    } else if (user && onLoginScreen) {
-      router.replace('/');
+    if (!isAuthenticated) {
+      if (!onLogin) router.replace('/login');
+      return;
     }
-  }, [user, isLoading]);
+
+    // Guests skip onboarding
+    if (isGuest) {
+      if (onLogin || onOnboarding) router.replace('/');
+      return;
+    }
+
+    // Authenticated user: show onboarding once
+    if (!onboardingDone) {
+      if (!onOnboarding) router.replace('/onboarding');
+      return;
+    }
+
+    // Onboarding done — keep off login/onboarding
+    if (onLogin || onOnboarding) router.replace('/');
+  }, [isAuthenticated, isGuest, isLoading, onboardingDone]);
 
   if (isLoading) {
     return (
@@ -36,18 +59,11 @@ function AuthGate() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-        contentStyle: { backgroundColor: '#FDFDFC' },
-      }}
-    >
+    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#FDFDFC' } }}>
       <Stack.Screen name="login" />
+      <Stack.Screen name="onboarding" />
       <Stack.Screen name="(tabs)" />
-      <Stack.Screen
-        name="series/[id]"
-        options={{ headerShown: false }}
-      />
+      <Stack.Screen name="series/[id]" />
     </Stack>
   );
 }
@@ -55,6 +71,9 @@ function AuthGate() {
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
     'EBGaramond-Regular': require('../../assets/fonts/EBGaramond-Regular.ttf'),
+    'Inter-Regular': require('@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf'),
+    'Inter-SemiBold': require('@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.ttf'),
+    'Inter-Bold': require('@expo-google-fonts/inter/700Bold/Inter_700Bold.ttf'),
   });
 
   useEffect(() => {
@@ -63,14 +82,16 @@ export default function RootLayout() {
     }
   }, [fontsLoaded, fontError]);
 
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
+  if (!fontsLoaded && !fontError) return null;
 
   return (
     <QueryProvider>
       <Auth0ProviderWrapper>
-        <AuthGate />
+        <GuestProvider>
+          <OnboardingProvider>
+            <AuthGate />
+          </OnboardingProvider>
+        </GuestProvider>
       </Auth0ProviderWrapper>
     </QueryProvider>
   );

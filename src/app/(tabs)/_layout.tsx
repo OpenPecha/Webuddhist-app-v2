@@ -1,19 +1,22 @@
+import '@/lib/i18n';
+import { useTranslation } from 'react-i18next';
 import { NativeTabs } from 'expo-router/unstable-native-tabs';
 
 export default function TabLayout() {
+  const { t } = useTranslation();
   return (
     <NativeTabs>
       <NativeTabs.Trigger name="index">
-        <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Label>{t('nav.home')}</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon sf="house.fill" md="home" />
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="screens/recitation">
-        <NativeTabs.Trigger.Label>Recitation</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="book.fill" md="book" />
+      <NativeTabs.Trigger name="practice">
+        <NativeTabs.Trigger.Label>{t('nav.practice')}</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf="figure.mind.and.body" md="self_improvement" />
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="screens/setting" role="more">
-        <NativeTabs.Trigger.Icon sf="gear" md="settings" />
-        <NativeTabs.Trigger.Label>Setting</NativeTabs.Trigger.Label>
+      <NativeTabs.Trigger name="me" role="more">
+        <NativeTabs.Trigger.Label>{t('nav.me')}</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon sf="person.fill" md="person" />
       </NativeTabs.Trigger>
     </NativeTabs>
   );
