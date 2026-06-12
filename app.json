@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "WeBuddhist",
-    "slug": "webuddhist-app-v2",
+    "slug": "webuddhist-expo-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/webuddhist_icon.png",
@@ -61,9 +61,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "20b033a3-1b80-4cf6-8439-65ad01b855f3"
+        "projectId": "a2b8d034-7594-4d47-8760-4f4989d706d1"
       }
     },
-    "owner": "webuddhist"
+    "owner": "webuddhist-app-v1"
   }
 }
