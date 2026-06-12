@@ -169,6 +169,27 @@ defaults `started_at` to `DateTime.now()` if absent.
 // → 204 No Content (backend plan_users_views.py)
 ```
 
+### Unenroll from plan
+
+```jsonc
+// DELETE /users/me/plans/{plan_id}
+// → 204 No Content (no body, no request body)
+// Backend: plan_users_views.py → unenroll_user_from_plan → delete_user_plan_progress
+```
+
+- **Auth:** required (`Bearer` ID token).
+- **Effect:** deletes user plan progress, task completions, and related enrollment data for
+  that plan (cascade in `plan_users_progress_repository.py`).
+- **Errors:** **404** if user is not enrolled (`NOT_FOUND` — `"User is not enrolled in plan
+  with ID …"`).
+- **Flutter:** `user_plans_remote_datasource.dart` → `unenrollFromPlan(planId)`;
+  `dio.delete('/users/me/plans/$planId')`; treats any 2xx as success.
+- **Flutter UI:** confirmation dialog + snackbar in `plan_details.dart`, `my_plan_tab.dart`,
+  `user_plan_card.dart` (via `userPlanUnsubscribeFutureProvider`).
+
+> Unenrolling a plan is separate from removing it from a **routine** session
+> (`DELETE /users/me/task/{task_id}`) — routine removal does not call plan unenroll.
+
 ### Plan progress — `UserPlanProgressResponse`
 
 ```jsonc
@@ -281,16 +302,16 @@ Special "ITCC-like" plans use `special_plan_*` keys (see notifications PRD).
 - [ ] Browse plans by tag with proper states.
 - [ ] Guest can preview; auth required to enroll/track.
 - [ ] Enroll writes plan metadata for notifications.
+- [ ] Authenticated user can unenroll; progress removed; enrolled list refreshes.
 - [ ] Day content renders (incl. inline TEXT subtasks) and links to reader.
 - [ ] Mark-day-complete updates progress and persists.
 
 ## 9. Open questions
 
-- ~~Exact plan list/enroll/complete endpoints and payloads~~ → resolved in §5 (Swagger-verified).
 - **Verify at runtime:** `GET /users/me/plans/{plan_id}` — Swagger says single
   `UserPlanProgressResponse`; Flutter parses as `List<PlanProgressModel>`.
 - Difference between special plans and regular plans in the data model.
-- Plan vs series enrollment relationship (enrolling in a series auto-enrolls its plans —
+- [x] Plan vs series enrollment relationship (enrolling in a series auto-enrolls its plans —
   see `features/series.md` §6).
 
 ## 10. Migration status checklist
@@ -300,5 +321,6 @@ Special "ITCC-like" plans use `special_plan_*` keys (see notifications PRD).
 | Plan list by tag | yes | no | |
 | Plan preview | yes | no | `plan-card` molecule exists |
 | Enroll | yes | no | |
+| Unenroll | yes | no | `DELETE /users/me/plans/{plan_id}` |
 | Day tracking + completion | yes | no | |
 | Inline plan-text | yes | no | |

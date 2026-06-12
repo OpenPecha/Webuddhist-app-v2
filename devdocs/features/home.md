@@ -90,7 +90,7 @@ full `Series` shape.
 
 - Which home sections are P0 vs later? (Flutter home is dense.)
 - Is the update banner in scope for v1?
-- Are `Calander`/`Challenge`/`Quotation` backed by real APIs or placeholders?
+- Are `Calender`/`Challenge`/`Quotation` backed by real APIs or placeholders?
 
 ## 11. Migration status checklist
 

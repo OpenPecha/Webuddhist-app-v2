@@ -63,6 +63,7 @@ hardcoded `'EN'`).
 | `/series/{series_id}?language=` | GET | guest ok | `SeriesDTO` | Detail incl. `plans[]` |
 | `/users/me/series` | POST | required | `UserSeriesEnrollRequest` → **204** | Enroll in series |
 | `/users/me/series?status_filter=&language=&skip=&limit=` | GET | required | `UserSeriesEnrollmentsResponse` | User enrollments |
+| `/users/me/series/{series_id}` | DELETE | required | **204** (no body) | Unenroll from series |
 
 > There is **no** `/series/{id}/enroll` endpoint. Enrollment is `POST /users/me/series`.
 
@@ -135,6 +136,22 @@ hardcoded `'EN'`).
 defaults `auto_enroll_next=true`, `start_immediately=false`. v2 should send explicit flags if
 product behavior differs.
 
+### Unenroll from series
+
+```jsonc
+// DELETE /users/me/series/{series_id}
+// → 204 No Content (no body, no request body)
+// Backend: plan_users_views.py → unenroll_user_from_series → delete_user_series_enrollment
+```
+
+- **Auth:** required (`Bearer` ID token).
+- **Effect:** removes the user's series enrollment record. Does **not** automatically
+  unenroll individual plans enrolled via the series — confirm product behavior if v2 adds
+  a series-unenroll UI.
+- **Errors:** backend returns **204** even when no enrollment row existed (idempotent delete).
+- **Flutter:** **not implemented** — `series_remote_datasource.dart` has enroll + list only;
+  no `unenrollFromSeries` call. v2 may add if product wants series-level leave.
+
 ### User series enrollments — `UserSeriesEnrollmentsResponse`
 
 ```jsonc
@@ -172,7 +189,8 @@ product behavior differs.
 `series_id` into a `Set<String>`. v2 should use the full `UserSeriesEnrollmentDTO` shape.
 
 Flutter repository methods to match: `getSeriesList`, `getSeriesById`, `enrollInSeries`,
-`getUserSeriesEnrollments`.
+`getUserSeriesEnrollments`. Unenroll API exists on backend but has **no Flutter datasource
+method** yet.
 
 ## 7. Navigation
 

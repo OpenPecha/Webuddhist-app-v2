@@ -169,8 +169,6 @@ Note tab placement depends on the shell decision in `foundation/00-app-shell-nav
 
 ## 9. Open questions
 
-- Is audio playback in scope for v1? (Note: `RecitationModel` has no `audio_url`;
-  `RecitationContentModel` returns text layers only — confirm where audio comes from.)
 - Is the recitation tab intentional (vs Flutter accessing recitations elsewhere)?
 - ~~Guest access to detail?~~ → resolved: not in `ProtectedRoutes`; list + content are
   guest-accessible. Only `/users/me/recitations*` require auth.
@@ -183,5 +181,5 @@ Note tab placement depends on the shell decision in `foundation/00-app-shell-nav
 |-------------|---------|-----|-------|
 | List | yes | partial | tab + molecule scaffolded |
 | Detail | yes | no | |
-| Audio playback | yes | no | confirm scope |
+| Audio playback | yes | no | We are planning to add |
 | Add to routine | yes | no | |

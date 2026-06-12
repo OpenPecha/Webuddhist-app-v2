@@ -105,6 +105,7 @@ Migrate existing direct-`fetch` hooks (e.g. `useSeries.ts`) onto `client.ts`.
 | `/series/{series_id}?language=` | GET | guest ok | `SeriesDTO` | series detail |
 | `/users/me/series` | POST | required | `UserSeriesEnrollRequest` → **204** (no body) | series enroll |
 | `/users/me/series?status_filter=&language=&skip=&limit=` | GET | required | `UserSeriesEnrollmentsResponse` | user series enrollments |
+| `/users/me/series/{series_id}` | DELETE | required | **204** (no body) | unenroll from series |
 | `/plans?tag=&group_id=&search=&language=&sort_by=&sort_order=&skip=&limit=` | GET | guest ok | `PublicPlansResponse` | plans list |
 | `/plans/{plan_id}` | GET | optional | `PublicPlanDTO` | plan detail |
 | `/plans/{plan_id}/days` | GET | optional Bearer | `PlanDaysResponse` | day list; Bearer may auto-enroll |
