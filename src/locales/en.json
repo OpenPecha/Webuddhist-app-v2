@@ -1,0 +1,56 @@
+{
+  "appTitle": "WeBuddhist",
+  "onboarding": {
+    "welcome": "Welcome to",
+    "quote": "Drop by drop is the water pot filled. Likewise, the wise person, gathering it little by little, fills themselves with good.",
+    "quote_citation": "— Dhammapada 122",
+    "get_started": "Get started",
+    "event_question": "Join an\nevent?",
+    "event_optional": "Optional · Tap to enroll",
+    "event_duration": "{{description}} · {{days}} days",
+    "event_reminder": "We'll send you a daily reminder at 7:30 AM. (Change anytime.)",
+    "event_error": "Unable to enroll you. Check your connection and try again.",
+    "continue": "Continue",
+    "all_set": "You're all set up",
+    "all_set_description": "We've tailored your experience to your tradition. Show up each day — even for a moment — and watch your practice grow",
+    "begin_practice": "Begin your practice"
+  },
+  "auth": {
+    "continue_with_google": "Continue with Google",
+    "continue_with_apple": "Continue with Apple",
+    "continue_as_guest": "Continue as guest"
+  },
+  "home": {
+    "good_morning": "Good morning",
+    "good_afternoon": "Good afternoon",
+    "good_evening": "Good evening",
+    "featured": "Featured",
+    "continue_today": "Continue today",
+    "explore_more": "Browse Buddhist content",
+    "no_series_found": "No series found",
+    "no_feature_content": "No featured content available",
+    "series_in_progress": "In progress",
+    "search": "Search"
+  },
+  "nav": {
+    "home": "Home",
+    "practice": "Practice",
+    "me": "Me"
+  },
+  "series": {
+    "about": "About",
+    "about_creator": "About the creator",
+    "included_plans": "Included plans",
+    "view_creator_page": "View {{name}}'s page →",
+    "n_plans_one": "1 plan",
+    "n_plans_other": "{{count}} plans",
+    "n_days_one": "1 day",
+    "n_days_other": "{{count}} days",
+    "enroll": "Enroll",
+    "enrolled": "Enrolled",
+    "unenroll": "Unenroll",
+    "unenroll_title": "Unenroll from this series?",
+    "unenroll_body": "You'll lose all your progress in this series. You can re-enroll any time.",
+    "enroll_error": "Unable to enroll you. Check your connection and try again."
+  }
+}
