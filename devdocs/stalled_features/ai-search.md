@@ -2,14 +2,17 @@
 
 | | |
 |---|---|
-| **Status** | Not started |
-| **Priority** | P2 |
+| **Status** | Won't migrate |
+| **Priority** | — (out of scope) |
 | **Flutter baseline** | `lib/features/ai` |
 | **v2 target** | TBD |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-08 |
+| **Last updated** | 2026-06-11 |
 
 ---
+
+> **Out of scope for v2.** This feature will not be built. No AI search / SSE endpoints
+> are required in v2 networking or feature PRDs. Flutter reference only.
 
 ## 1. Summary
 
@@ -44,12 +47,8 @@ entry point or a separate feature (see `features/texts-library`).
 
 ## 5. API contracts
 
-| Endpoint | Method | Auth | Notes |
-|----------|--------|------|-------|
-| AI search | POST (stream) | guest ok | SSE streaming (see `ai_dio_client`) |
-
-> v2 networking layer must support SSE/streaming (see `foundation/02-api-networking`
-> FR-7). Confirm request/response/stream format from `ai_dio_client.dart`.
+N/A — out of v2 scope. AI search / SSE endpoints (`/chats`, `/threads`, etc.) are not
+documented in `foundation/02-api-networking.md` or implemented in v2.
 
 ## 6. Platform / Expo considerations
 

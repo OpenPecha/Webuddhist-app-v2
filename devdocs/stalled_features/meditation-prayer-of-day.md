@@ -2,14 +2,17 @@
 
 | | |
 |---|---|
-| **Status** | Not started |
-| **Priority** | P2 |
+| **Status** | Won't migrate |
+| **Priority** | — (out of scope) |
 | **Flutter baseline** | `lib/features/meditation_of_day`, `lib/features/prayer_of_the_day` |
 | **v2 target** | TBD |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-08 |
+| **Last updated** | 2026-06-11 |
 
 ---
+
+> **Out of scope for v2.** This feature will not be built. No meditation/prayer-of-day
+> API endpoints are required in v2 networking or feature PRDs. Flutter reference only.
 
 ## 1. Summary
 
@@ -45,10 +48,8 @@ prayer data display.
 
 ## 5. API contracts
 
-| Endpoint | Method | Auth | Notes |
-|----------|--------|------|-------|
-| meditation of the day | GET | guest ok | confirm path |
-| prayer of the day | GET | guest ok | confirm path; `prayer_data.dart` |
+N/A — out of v2 scope. Meditation/prayer-of-day endpoints are not documented in
+`foundation/02-api-networking.md` or implemented in v2.
 
 ## 6. Platform / Expo considerations
 

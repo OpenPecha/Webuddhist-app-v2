@@ -2,14 +2,17 @@
 
 | | |
 |---|---|
-| **Status** | Not started |
-| **Priority** | P1 |
+| **Status** | Won't migrate |
+| **Priority** | — (out of scope) |
 | **Flutter baseline** | `lib/features/texts` |
 | **v2 target** | TBD |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-08 |
+| **Last updated** | 2026-06-11 |
 
 ---
+
+> **Out of scope for v2.** This feature will not be built. No texts-library API
+> endpoints are required in v2 networking or feature PRDs. Flutter reference only.
 
 ## 1. Summary
 
@@ -55,13 +58,8 @@ library and the table-of-contents navigation.
 
 ## 5. API contracts
 
-| Endpoint | Method | Auth | Notes |
-|----------|--------|------|-------|
-| collections | GET | guest ok | |
-| categories / works / texts / chapters | GET | guest ok | hierarchy |
-| search | GET | guest ok | query → results |
-
-> Confirm exact endpoints + models from `features/texts/data/models/*`.
+N/A — out of v2 scope. Texts-library endpoints (`/texts/*`, collections, chapters, etc.)
+are not documented in `foundation/02-api-networking.md` or implemented in v2.
 
 ## 6. Navigation
 

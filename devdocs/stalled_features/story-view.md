@@ -2,14 +2,17 @@
 
 | | |
 |---|---|
-| **Status** | Not started |
-| **Priority** | P2 |
+| **Status** | Won't migrate |
+| **Priority** | — (out of scope) |
 | **Flutter baseline** | `lib/features/story_view` |
 | **v2 target** | TBD |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-08 |
+| **Last updated** | 2026-06-11 |
 
 ---
+
+> **Out of scope for v2.** This feature will not be built. No story-view API endpoints
+> are required in v2 networking or feature PRDs. Flutter reference only.
 
 ## 1. Summary
 
