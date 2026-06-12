@@ -49,7 +49,8 @@ Record the decision here once made. All tab-level feature PRDs reference this.
 ## 4. Functional requirements
 
 - **FR-1:** Root navigator renders a stack with `login`, the tab group, and
-  full-screen routes (series detail, reader, story presenter) outside the tabs.
+  full-screen routes (series detail, reader) outside the tabs. Story presenter is out of
+  scope (`stalled_features/story-view`).
 - **FR-2:** Bottom tab bar matches the approved tab structure (§3), with icons +
   labels, and preserves per-tab navigation state.
 - **FR-3:** Unknown routes fall back to the main navigation screen (Flutter
@@ -74,9 +75,8 @@ Record the decision here once made. All tab-level feature PRDs reference this.
 | `/reader/:textId/versions` | `src/app/reader/[textId]/versions.tsx` (TBD) | stack |
 | `/reader/:textId/versions/language` | `.../versions/language.tsx` (TBD) | stack |
 | `/plan-text/:subtaskId` | `src/app/plan-text/[subtaskId].tsx` (TBD) | stack |
-| `/home/stories`, `*-presenter` | `src/app/stories/...` (TBD) | modal/full screen |
-| `/ai-mode` + `/ai-mode/search-results` | TBD | stack |
-| `/texts/*` | TBD | stack |
+| `/home/stories`, `*-presenter` | — | Won't migrate (`stalled_features/story-view`) |
+| `/ai-mode`, `/texts/*` | — | Won't migrate (`stalled_features/`) |
 | `/about`, `/privacy-policy`, `/profile` | `src/app/settings/...` (TBD) | stack |
 
 Full Flutter route list: `lib/core/config/router/app_routes.dart`.

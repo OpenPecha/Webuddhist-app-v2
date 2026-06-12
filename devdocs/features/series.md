@@ -7,7 +7,7 @@
 | **Flutter baseline** | `lib/features/home` (series), `lib/features/home/data/repositories/series_repository.dart` |
 | **v2 target** | `src/app/series/[id].tsx`, `src/hooks/useSeries.ts` |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-08 |
+| **Last updated** | 2026-06-11 |
 
 ---
 
@@ -52,31 +52,145 @@ hardcoded `'EN'`).
 
 ## 6. API contracts
 
-| Endpoint | Method | Auth | Notes |
-|----------|--------|------|-------|
-| `/series/{id}` | GET | guest ok | Series detail incl. `plans[]` |
-| series enroll | POST | required | path TBD — confirm from Flutter datasource |
-| user series enrollments | GET | required | `getUserSeriesEnrollments()` → Set<id> |
+**Sources:** Flutter `series_remote_datasource.dart`, `series_model.dart` · Swagger
+`openapi.json` · Backend `WeBuddhist-Backend/pecha_api/plans/series/series_views.py`,
+`series_response_models.py`, `plans/users/plan_users_views.py` (enrollment routes under
+`/users/me/series`). Public routes only — no `/cms`.
 
-`SeriesDetail` shape (from v2 `useSeries.ts`):
+| Endpoint | Method | Auth | OpenAPI schema | Notes |
+|----------|--------|------|----------------|-------|
+| `/series?language=&search=&group_id=&skip=&limit=` | GET | guest ok | `SeriesListResponse` | Paginated list |
+| `/series/{series_id}?language=` | GET | guest ok | `SeriesDTO` | Detail incl. `plans[]` |
+| `/users/me/series` | POST | required | `UserSeriesEnrollRequest` → **204** | Enroll in series |
+| `/users/me/series?status_filter=&language=&skip=&limit=` | GET | required | `UserSeriesEnrollmentsResponse` | User enrollments |
+| `/users/me/series/{series_id}` | DELETE | required | **204** (no body) | Unenroll from series |
 
-```ts
-interface SeriesDetail {
-  id: string;
-  metadata: { id: string; title: string; description: string; language: string }[];
-  image: ImageSizes;
-  image_key: string;
-  author_id: string;
-  featured: boolean;
-  status: string;
-  plans: Plan[];
-  total_days: number;
-  group_id: string | null;
+> There is **no** `/series/{id}/enroll` endpoint. Enrollment is `POST /users/me/series`.
+
+### Series list — `SeriesListResponse`
+
+**Query params (Swagger):** `search`, `language`, `group_id`, `skip`, `limit`.
+
+```jsonc
+// GET /series?language=en&skip=0&limit=10  → 200
+{
+  "series": [
+    {
+      "id": "uuid",
+      "metadata": [ /* SeriesMetadataDTO[] or single object or null */ ],
+      "image": { "thumbnail": "...", "medium": "...", "original": "..." },
+      "image_key": "string|null",
+      "author_id": "uuid",
+      "featured": false,
+      "status": "PlanStatus",
+      "plan_count": 0,
+      "total_days": 0,
+      "enrolled_count": 0,           // backend SeriesListItemDTO
+      "group": { /* AuthorGroupSummaryDTO | null */ }
+    }
+  ],
+  "skip": 0,
+  "limit": 10,
+  "total": 42
 }
 ```
 
+**Swagger vs Flutter drift:** Flutter `fetchSeriesList` only passes `language` and reads
+`series[]` — ignores `skip`/`limit`/`total`. v2 `useSeries` uses the full paginated envelope.
+
+### Series detail — `SeriesDTO`
+
+```jsonc
+// GET /series/{series_id}?language=en  → 200
+{
+  "id": "uuid",
+  "metadata": [ /* SeriesMetadataDTO[] — id, title, sub_title, description, language */ ],
+  "image": { "thumbnail": "...", "medium": "...", "original": "..." },
+  "image_key": "string|null",
+  "author_id": "uuid",
+  "featured": false,
+  "status": "PlanStatus",
+  "plans": [ /* SeriesPlanDTO[] — see features/plans.md §5 */ ],
+  "total_days": 0,
+  "enrolled_count": 0,             // backend SeriesDTO
+  "group": { /* AuthorGroupSummaryDTO | null */ }
+}
+```
+
+**Swagger vs Flutter drift:** Flutter also accepts legacy `image` as a string or top-level
+`image_url` fallback (`ImageModel.fromJsonMap`).
+
+### Enroll in series — `UserSeriesEnrollRequest`
+
+```jsonc
+// POST /users/me/series
+{
+  "series_id": "uuid",              // required
+  "auto_enroll_next": true,         // optional — backend default true
+  "start_immediately": false        // optional — backend default false
+}
+// → 204 No Content (backend plan_users_views.py; Flutter treats any 2xx as success)
+```
+
+**Backend vs Flutter drift:** Flutter only sends `{ "series_id": "..." }`; backend applies
+defaults `auto_enroll_next=true`, `start_immediately=false`. v2 should send explicit flags if
+product behavior differs.
+
+### Unenroll from series
+
+```jsonc
+// DELETE /users/me/series/{series_id}
+// → 204 No Content (no body, no request body)
+// Backend: plan_users_views.py → unenroll_user_from_series → delete_user_series_enrollment
+```
+
+- **Auth:** required (`Bearer` ID token).
+- **Effect:** removes the user's series enrollment record. Does **not** automatically
+  unenroll individual plans enrolled via the series — confirm product behavior if v2 adds
+  a series-unenroll UI.
+- **Errors:** backend returns **204** even when no enrollment row existed (idempotent delete).
+- **Flutter:** **not implemented** — `series_remote_datasource.dart` has enroll + list only;
+  no `unenrollFromSeries` call. v2 may add if product wants series-level leave.
+
+### User series enrollments — `UserSeriesEnrollmentsResponse`
+
+```jsonc
+// GET /users/me/series?skip=0&limit=20  → 200
+{
+  "enrollments": [
+    {
+      "id": "uuid",
+      "user_id": "uuid",
+      "series_id": "uuid",
+      "series_title": "string",
+      "series_description": "string|null",
+      "image": { "thumbnail": "...", "medium": "...", "original": "..." },
+      "enrolled_at": "2026-01-01T00:00:00Z",
+      "status": "string",
+      "auto_enroll_next": false,
+      "current_plan_id": "uuid|null",
+      "current_plan_title": "string|null",
+      "is_completed": false,
+      "completed_at": "datetime|null",
+      "total_plans": 0,
+      "completed_plans": 0,
+      "progress_percentage": 0.0,
+      "group": { /* AuthorGroupSummaryDTO | null */ }
+    }
+  ],
+  "skip": 0,
+  "limit": 20,
+  "total": 3
+}
+```
+
+**Swagger vs Flutter drift:** Flutter defensively parses multiple legacy shapes
+(top-level list, `{ series: [...] }`, `{ enrollments: [...] }`) and extracts only
+`series_id` into a `Set<String>`. v2 should use the full `UserSeriesEnrollmentDTO` shape.
+
 Flutter repository methods to match: `getSeriesList`, `getSeriesById`, `enrollInSeries`,
-`getUserSeriesEnrollments`.
+`getUserSeriesEnrollments`. Unenroll API exists on backend but has **no Flutter datasource
+method** yet.
 
 ## 7. Navigation
 
@@ -97,9 +211,10 @@ Flutter repository methods to match: `getSeriesList`, `getSeriesById`, `enrollIn
 
 ## 9. Open questions
 
-- Exact enroll endpoint + payload (confirm `series_remote_datasource.dart`).
-- Author display (`author_id`) — is there an author/creator detail screen?
-  (relates to `creator_info` module).
+- ~~Exact enroll endpoint + payload~~ → resolved: `POST /users/me/series` with
+  `{ "series_id": "..." }` (see §6).
+- Author display (`author_id`) — `creator_info` module is out of v2 scope; show author
+  from plan/series DTO only if needed.
 
 ## 10. Migration status checklist
 

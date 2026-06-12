@@ -92,13 +92,14 @@ PRDs and implementation proceed in dependency order, not alphabetically.
 - `features/home`, `features/series`, `features/plans`, `features/recitation`
 
 ### Wave 2 — Reading & engagement (P1)
-- `features/reader`, `features/texts-library`, `features/practice`,
-  `foundation/06-notifications`
+- `features/reader`, `features/practice`, `foundation/06-notifications`
 
-### Wave 3 — Content & polish (P2)
-- `features/ai-search`, `features/story-view`,
-  `features/meditation-prayer-of-day`, `features/settings-profile`,
-  `foundation/05-analytics`
+### Wave 3 — Polish (P2)
+- `features/settings-profile`, `foundation/05-analytics`
+
+### Out of scope (`stalled_features/`)
+- Texts library, AI search, story view, meditation/prayer of the day — **won't migrate**.
+  See `stalled_features/README.md`. No related API endpoints in v2 networking docs.
 
 ## 8. Flutter feature inventory
 
@@ -113,17 +114,15 @@ From `WeBuddhist-app/lib/features/`:
 | `plans` | `features/plans` | 1 |
 | `recitation` | `features/recitation` | 1 |
 | `reader` | `features/reader` | 2 |
-| `texts` | `features/texts-library` | 2 |
 | `practice` | `features/practice` | 2 |
 | `notifications` | `foundation/06-notifications` | 2 |
-| `ai` | `features/ai-search` | 3 |
-| `story_view` | `features/story-view` | 3 |
-| `meditation_of_day`, `prayer_of_the_day` | `features/meditation-prayer-of-day` | 3 |
 | `more` | `features/settings-profile` | 3 |
+| `texts` | `stalled_features/texts-library` | — won't migrate |
+| `ai` | `stalled_features/ai-search` | — won't migrate |
+| `story_view` | `stalled_features/story-view` | — won't migrate |
+| `meditation_of_day`, `prayer_of_the_day` | `stalled_features/meditation-prayer-of-day` | — won't migrate |
 
-**Modules to confirm (active vs dead code — need product sign-off before scoping):**
-`connect`, `learn`, `explore`, `creator_info`. These have folders but no first-class
-routes in `app_router.dart`; confirm whether they ship before writing PRDs.
+**Not in v2 scope:** `connect`, `learn`, `explore`, `creator_info` (no main-shell routes).
 
 ## 9. Known navigation/IA difference to resolve early
 
@@ -142,7 +141,7 @@ product sign-off.
 | Auth0 ID-token model differs in Expo SDK | High | Foundation auth PRD; reuse Flutter auth docs |
 | Reader feature complexity (versions, commentary, segment actions) | High | Split into sub-PRDs; schedule early even if built late |
 | Local notification scheduling parity (plan/recitation reminders) | High | Dedicated notifications PRD; map `StorageKeys` notification keys |
-| Story viewer (image/text/video) native parity | Medium | Evaluate RN story libs in story-view PRD |
+| Story viewer native parity | — | Out of scope (`stalled_features/story-view`) |
 | Multi-language (bo/zh) font + layout rendering | Medium | i18n/theming PRD; verify Tibetan script rendering |
 | Offline/cache behavior (Dio cache interceptor) | Medium | Storage/offline PRD defines cache strategy |
 

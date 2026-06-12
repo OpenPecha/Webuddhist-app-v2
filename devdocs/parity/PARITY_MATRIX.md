@@ -29,19 +29,24 @@ implementation changes.
 | Plans | `/home/plans/:tag`, `/plans/info`, `/plans/details` | TBD | [plans](../features/plans.md) | P0 | Not started |
 | Recitation | `/recitations/detail` | `src/app/(tabs)/screens/recitation` | [recitation](../features/recitation.md) | P0 | In progress (partial) |
 | Reader | `/reader/:textId` (+ versions/language) | TBD | [reader](../features/reader.md) | P1 | Not started |
-| Texts library | `/texts/*`, `/ai-mode` | TBD | [texts-library](../features/texts-library.md) | P1 | Not started |
 | Practice | `/practice/*` | TBD | [practice](../features/practice.md) | P1 | Not started |
-| AI search | `/ai-mode/search-results` (+ text-chapters) | TBD | [ai-search](../features/ai-search.md) | P2 | Not started |
-| Story view | `/home/stories`, `*-presenter` | TBD | [story-view](../features/story-view.md) | P2 | Not started |
-| Meditation / Prayer of day | `/home/meditation_of_the_day`, `/home/prayer_of_the_day` | TBD | [meditation-prayer-of-day](../features/meditation-prayer-of-day.md) | P2 | Not started |
 | Settings / Profile | `/settings`, `/profile`, `/about`, `/privacy-policy` | `src/app/(tabs)/screens/setting` | [settings-profile](../features/settings-profile.md) | P2 | In progress (partial) |
 | Onboarding | `/onboarding` | TBD | [onboarding](../features/onboarding.md) | P0 | Not started |
 
-## Modules pending product confirmation
+## Won't migrate (stalled)
 
-| Module | Decision needed |
-|--------|-----------------|
-| `connect` | Ships in v2? |
-| `learn` | Ships in v2? |
-| `explore` | Ships in v2? |
-| `creator_info` | Standalone feature or part of series/plans? |
+Documented in [`stalled_features/`](../stalled_features/README.md) for Flutter reference
+only — **no v2 implementation, no API endpoints in scope.**
+
+| Feature | Flutter routes | PRD | Status |
+|---------|----------------|-----|--------|
+| Texts library | `/texts/*`, `/ai-mode` | [texts-library](../stalled_features/texts-library.md) | Won't migrate |
+| AI search | `/ai-mode/search-results`, text-chapters | [ai-search](../stalled_features/ai-search.md) | Won't migrate |
+| Story view | `/home/stories`, `*-presenter` | [story-view](../stalled_features/story-view.md) | Won't migrate |
+| Meditation / Prayer of day | `/home/meditation_of_the_day`, `/home/prayer_of_the_day` | [meditation-prayer-of-day](../stalled_features/meditation-prayer-of-day.md) | Won't migrate |
+
+## Modules not in v2 scope
+
+| Module | Status |
+|--------|--------|
+| `connect`, `learn`, `explore`, `creator_info` | Won't migrate — no Flutter routes in main shell; no PRD |

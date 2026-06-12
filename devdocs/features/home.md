@@ -7,7 +7,7 @@
 | **Flutter baseline** | `lib/features/home` |
 | **v2 target** | `src/app/(tabs)/index.tsx` + `src/components/ui/molecules/homepage/*` |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-08 |
+| **Last updated** | 2026-06-11 |
 
 ---
 
@@ -68,9 +68,9 @@ full `Series` shape.
 | `/home` | `src/app/(tabs)/index.tsx` |
 | `/home/series/:id` | `src/app/series/[id].tsx` |
 | `/home/plans/:tag` | TBD (`features/plans`) |
-| `/home/meditation_of_the_day` | `features/meditation-prayer-of-day` |
-| `/home/prayer_of_the_day` | `features/meditation-prayer-of-day` |
-| `/home/stories` | `features/story-view` |
+| `/home/meditation_of_the_day` | Won't migrate — `stalled_features/meditation-prayer-of-day` |
+| `/home/prayer_of_the_day` | Won't migrate — `stalled_features/meditation-prayer-of-day` |
+| `/home/stories` | Won't migrate — `stalled_features/story-view` |
 
 ## 8. UI / UX parity notes
 
@@ -83,14 +83,14 @@ full `Series` shape.
 - [ ] Greeting correct for guest vs authenticated.
 - [ ] Series list loads from `/series` with pagination, skeletons, error/empty states.
 - [ ] Series tap opens correct detail.
-- [ ] Daily content widgets render with real/placeholder data.
+- [ ] ~~Daily content widgets (meditation/prayer/stories)~~ — out of scope (`stalled_features/`).
 - [ ] Notification permission prompt fires at the correct time (post-onboarding).
 
 ## 10. Open questions
 
 - Which home sections are P0 vs later? (Flutter home is dense.)
 - Is the update banner in scope for v1?
-- Are `Calander`/`Challenge`/`Quotation` backed by real APIs or placeholders?
+- Are `Calender`/`Challenge`/`Quotation` backed by real APIs or placeholders?
 
 ## 11. Migration status checklist
 
