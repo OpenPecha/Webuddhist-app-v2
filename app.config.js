@@ -1,0 +1,74 @@
+const IS_PRODUCTION = process.env.APP_VARIANT === 'production';
+
+const APP_ID = IS_PRODUCTION ? 'org.pecha.app' : 'org.pecha.app.dev';
+
+/** @type {import('expo/config').ExpoConfig} */
+module.exports = {
+  name: IS_PRODUCTION ? 'WeBuddhist' : 'WeBuddhist Dev',
+  slug: 'webuddhist-expo-app',
+  version: '1.0.0',
+  orientation: 'portrait',
+  icon: './assets/images/webuddhist_icon.png',
+  scheme: 'webuddhistapp',
+  userInterfaceStyle: 'automatic',
+  ios: {
+    bundleIdentifier: APP_ID,
+    icon: './assets/images/webuddhist_icon.png',
+    infoPlist: {
+      ITSAppUsesNonExemptEncryption: false,
+    },
+  },
+  android: {
+    package: APP_ID,
+    adaptiveIcon: {
+      backgroundColor: '#FFFFFF',
+      foregroundImage: './assets/images/android-icon-foreground.png',
+      backgroundImage: './assets/images/webuddhist_icon.png',
+      monochromeImage: './assets/images/android-icon-monochrome.png',
+    },
+    predictiveBackGestureEnabled: false,
+  },
+  web: {
+    output: 'static',
+    favicon: './assets/images/webuddhist.png',
+  },
+  plugins: [
+    'expo-router',
+    [
+      'expo-splash-screen',
+      {
+        backgroundColor: '#FFFFFF',
+        image: './assets/images/webuddhist_gold.png',
+        imageWidth: 150,
+        android: {
+          image: './assets/images/webuddhist_gold.png',
+          imageWidth: 150,
+        },
+      },
+    ],
+    [
+      'react-native-auth0',
+      {
+        domain: 'we-buddhist-prod.us.auth0.com',
+        customScheme: APP_ID,
+      },
+    ],
+    'expo-font',
+    'expo-image',
+    'expo-secure-store',
+    'expo-asset',
+  ],
+  experiments: {
+    typedRoutes: true,
+    reactCompiler: true,
+  },
+  extra: {
+    router: {},
+    eas: {
+      projectId: 'a2b8d034-7594-4d47-8760-4f4989d706d1',
+    },
+    appVariant: IS_PRODUCTION ? 'production' : 'development',
+    auth0CustomScheme: APP_ID,
+  },
+  owner: 'webuddhist-app-v1',
+};

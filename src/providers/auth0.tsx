@@ -1,3 +1,4 @@
+import Constants from 'expo-constants';
 import { Auth0Provider } from 'react-native-auth0';
 
 const AUTH0_DOMAIN = process.env.EXPO_PUBLIC_AUTH0_DOMAIN!;
@@ -15,4 +16,6 @@ export function Auth0ProviderWrapper({ children }: Auth0ProviderWrapperProps) {
   );
 }
 
-export const AUTH0_CUSTOM_SCHEME = 'org.pecha.app';
+export const AUTH0_CUSTOM_SCHEME =
+  (Constants.expoConfig?.extra?.auth0CustomScheme as string | undefined) ??
+  'org.pecha.app.dev';
