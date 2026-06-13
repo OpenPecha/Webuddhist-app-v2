@@ -13,12 +13,12 @@ module.exports = {
   slug: 'webuddhist-expo-app',
   version: '1.0.0',
   orientation: 'portrait',
-  icon: './assets/images/webuddhist_icon.png',
+  icon: './assets/images/webuddhist_gold.png',
   scheme: 'webuddhistapp',
   userInterfaceStyle: 'automatic',
   ios: {
     bundleIdentifier: APP_ID,
-    icon: './assets/images/webuddhist_icon.png',
+    icon: './assets/images/webuddhist_gold.png',
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
     },
@@ -27,15 +27,13 @@ module.exports = {
     package: APP_ID,
     adaptiveIcon: {
       backgroundColor: '#FFFFFF',
-      foregroundImage: './assets/images/android-icon-foreground.png',
-      backgroundImage: './assets/images/webuddhist_icon.png',
-      monochromeImage: './assets/images/android-icon-monochrome.png',
+      foregroundImage: './assets/images/webuddhist_gold.png',
     },
     predictiveBackGestureEnabled: false,
   },
   web: {
     output: 'static',
-    favicon: './assets/images/webuddhist.png',
+    favicon: './assets/images/webuddhist_gold.png',
   },
   plugins: [
     'expo-router',
