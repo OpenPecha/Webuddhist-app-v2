@@ -2,6 +2,11 @@ const IS_PRODUCTION = process.env.APP_VARIANT === 'production';
 
 const APP_ID = IS_PRODUCTION ? 'org.pecha.app' : 'org.pecha.app.dev';
 
+// Must match EXPO_PUBLIC_AUTH0_DOMAIN in .env / EAS env — native deep links use this host
+const AUTH0_DOMAIN =
+  process.env.EXPO_PUBLIC_AUTH0_DOMAIN ??
+  (IS_PRODUCTION ? 'we-buddhist-prod.us.auth0.com' : 'dev-dn1sywolg36ltof4.us.auth0.com');
+
 /** @type {import('expo/config').ExpoConfig} */
 module.exports = {
   name: IS_PRODUCTION ? 'WeBuddhist' : 'WeBuddhist Dev',
@@ -49,7 +54,7 @@ module.exports = {
     [
       'react-native-auth0',
       {
-        domain: 'we-buddhist-prod.us.auth0.com',
+        domain: AUTH0_DOMAIN,
         customScheme: APP_ID,
       },
     ],
@@ -68,6 +73,8 @@ module.exports = {
       projectId: 'a2b8d034-7594-4d47-8760-4f4989d706d1',
     },
     appVariant: IS_PRODUCTION ? 'production' : 'development',
+    appId: APP_ID,
+    auth0Domain: AUTH0_DOMAIN,
     auth0CustomScheme: APP_ID,
   },
   owner: 'webuddhist-app-v1',
