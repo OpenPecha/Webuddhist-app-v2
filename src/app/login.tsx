@@ -1,4 +1,5 @@
 import '@/lib/i18n';
+import { GoogleIcon } from '@/components/auth/GoogleIcon';
 import { AUTH0_CUSTOM_SCHEME } from '@/providers/auth0';
 import { useGuest } from '@/providers/guest';
 import { Ionicons } from '@expo/vector-icons';
@@ -55,7 +56,7 @@ export default function Login() {
   const loginWithGoogle = async () => {
     try {
       await authorize(
-        { scope: 'openid profile email', connection: 'google-oauth2' },
+        { scope: 'openid profile email offline_access', connection: 'google-oauth2' },
         { customScheme: AUTH0_CUSTOM_SCHEME },
       );
     } catch (e) {
@@ -66,7 +67,7 @@ export default function Login() {
   const loginWithApple = async () => {
     try {
       await authorize(
-        { scope: 'openid profile email', connection: 'apple' },
+        { scope: 'openid profile email offline_access', connection: 'apple' },
         { customScheme: AUTH0_CUSTOM_SCHEME },
       );
     } catch (e) {
@@ -104,7 +105,7 @@ export default function Login() {
         ) : (
           <>
             <LoginButton
-              icon={<Ionicons name="logo-google" size={20} color="#000" />}
+              icon={<GoogleIcon />}
               label={t('auth.continue_with_google')}
               onPress={loginWithGoogle}
               bordered

@@ -18,7 +18,9 @@
   "auth": {
     "continue_with_google": "Google བརྒྱུད་ནས་མུ་མཐུད།",
     "continue_with_apple": "Apple བརྒྱུད་ནས་མུ་མཐུད།",
-    "continue_as_guest": "མགྲོན་པོའི་ངོ་བོའི་ཐོག་ནས་མུ་མཐུད།"
+    "continue_as_guest": "མགྲོན་པོའི་ངོ་བོའི་ཐོག་ནས་མུ་མཐུད།",
+    "drawer_title": "མུ་མཐུད་དུ་འགྲོ་བར་ནང་འཛུལ་བྱོས།",
+    "drawer_subtitle": "ཁྱེད་ཀྱི་ཉམས་ལེན་འཆར་གཞི་ལ་གཟིགས་ཏེ་ཡར་རྒྱས་ཀྱི་གོ་རིམ་ལ་རྗེས་འདེད་བྱོས།"
   },
   "home": {
     "good_morning": "སྔ་དྲོ་བདེ་ལེགས།",
@@ -36,6 +38,18 @@
     "home": "འདུན་ངོས།",
     "practice": "ཉམས་ལེན།",
     "me": "ང།"
+  },
+  "practice": {
+    "routine_title": "འཆར་ཅན་ཉམས་ལེན།",
+    "routine_empty_title": "འཆར་ཅན་ཉམས་ལེན།",
+    "routine_edit": "བཟོ་བཅོས།",
+    "routine_empty_description": "Explore more teachings and practices to enroll in or add to your routine",
+    "routine_build": "ཉམས་ལེན་གསར་པ་སྣོན།",
+    "routine_load_error": "Couldn't load. Check your connection and try again.",
+    "retry": "Retry",
+    "plan_status_on_track": "On Track!",
+    "missed_days_one": "1 missed day",
+    "missed_days_other": "{{count}} missed days"
   },
   "series": {
     "about": "About",

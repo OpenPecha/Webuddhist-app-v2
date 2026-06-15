@@ -7,7 +7,12 @@ export const ENDPOINTS = {
   plans: {
     list: '/plans',
     detail: (id: string) => `/plans/${id}`,
-    userPlans: '/user/plans',
+    userPlans: '/users/me/plans',
+    completionStatus: (planId: string) =>
+      `/users/me/plans/${planId}/days/completion_status`,
+  },
+  routine: {
+    user: '/users/me/routine',
   },
   recitations: {
     list: '/recitations',

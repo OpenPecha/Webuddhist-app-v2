@@ -8,12 +8,13 @@ import {
   ServerFailure,
   UnknownFailure,
 } from '@/lib/api-error';
+import { extractApiErrorMessage } from '@/lib/http-error';
 
-// Updated by AuthProvider when credentials change — keeps the HTTP client
-// decoupled from React context while still injecting fresh tokens.
-let authToken: string | null = null;
-export const setAuthToken = (token: string | null) => {
-  authToken = token;
+type AuthTokenProvider = () => Promise<string | null>;
+let authTokenProvider: AuthTokenProvider | null = null;
+
+export const setAuthTokenProvider = (provider: AuthTokenProvider | null) => {
+  authTokenProvider = provider;
 };
 
 export const http = axios.create({
@@ -22,9 +23,12 @@ export const http = axios.create({
   timeout: 15_000,
 });
 
-http.interceptors.request.use((config) => {
-  if (authToken) {
-    config.headers.Authorization = `Bearer ${authToken}`;
+http.interceptors.request.use(async (config) => {
+  if (authTokenProvider) {
+    const token = await authTokenProvider();
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
   return config;
 });
@@ -36,11 +40,14 @@ http.interceptors.response.use(
       return Promise.reject(new NetworkFailure());
     }
 
-    const { status } = error.response;
+    const { status, data } = error.response;
+    const apiMessage = extractApiErrorMessage(data);
 
     if (status === 401) {
-      // Auth0 handles token refresh via its SDK; signal the app to re-authenticate.
-      return Promise.reject(new AuthenticationFailure());
+      return Promise.reject(new AuthenticationFailure(apiMessage || 'Authentication required'));
+    }
+    if (status === 403 && apiMessage.toLowerCase().includes('not authenticated')) {
+      return Promise.reject(new AuthenticationFailure(apiMessage));
     }
     if (status === 404) {
       return Promise.reject(new NotFoundFailure());
@@ -49,11 +56,9 @@ http.interceptors.response.use(
       return Promise.reject(new RateLimitFailure());
     }
     if (status >= 500) {
-      return Promise.reject(
-        new ServerFailure(status, error.response.data?.message ?? 'Server error'),
-      );
+      return Promise.reject(new ServerFailure(status, apiMessage || 'Server error'));
     }
 
-    return Promise.reject(new UnknownFailure(error.response.data?.message));
+    return Promise.reject(new UnknownFailure(apiMessage || 'An unexpected error occurred'));
   },
 );
