@@ -1,4 +1,5 @@
 import '@/lib/i18n';
+import { AuthTokenSync } from '@/providers/auth-token';
 import { Auth0ProviderWrapper } from '@/providers/auth0';
 import { GuestProvider, useGuest } from '@/providers/guest';
 import { OnboardingProvider, useOnboarding } from '@/providers/onboarding';
@@ -88,9 +89,11 @@ export default function RootLayout() {
     <QueryProvider>
       <Auth0ProviderWrapper>
         <GuestProvider>
-          <OnboardingProvider>
-            <AuthGate />
-          </OnboardingProvider>
+          <AuthTokenSync>
+            <OnboardingProvider>
+              <AuthGate />
+            </OnboardingProvider>
+          </AuthTokenSync>
         </GuestProvider>
       </Auth0ProviderWrapper>
     </QueryProvider>

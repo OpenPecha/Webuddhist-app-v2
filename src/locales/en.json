@@ -18,7 +18,9 @@
   "auth": {
     "continue_with_google": "Continue with Google",
     "continue_with_apple": "Continue with Apple",
-    "continue_as_guest": "Continue as guest"
+    "continue_as_guest": "Continue as guest",
+    "drawer_title": "Log in to continue",
+    "drawer_subtitle": "Continue your practice on any device, wherever you go."
   },
   "home": {
     "good_morning": "Good morning",
@@ -36,6 +38,18 @@
     "home": "Home",
     "practice": "Practice",
     "me": "Me"
+  },
+  "practice": {
+    "routine_title": "My practice routine",
+    "routine_empty_title": "Practice routine",
+    "routine_edit": "Edit",
+    "routine_empty_description": "Explore more teachings and practices to enroll in or add to your routine",
+    "routine_build": "Build your routine",
+    "routine_load_error": "Couldn't load. Check your connection and try again.",
+    "retry": "Retry",
+    "plan_status_on_track": "On Track!",
+    "missed_days_one": "1 missed day",
+    "missed_days_other": "{{count}} missed days"
   },
   "series": {
     "about": "About",

@@ -4,8 +4,9 @@ const APP_ID = IS_PRODUCTION ? 'org.pecha.app' : 'org.pecha.app.dev';
 
 // Must match EXPO_PUBLIC_AUTH0_DOMAIN in .env / EAS env — native deep links use this host
 const AUTH0_DOMAIN =
+
   process.env.EXPO_PUBLIC_AUTH0_DOMAIN ??
-  (IS_PRODUCTION ? 'we-buddhist-prod.us.auth0.com' : 'dev-dn1sywolg36ltof4.us.auth0.com');
+  (IS_PRODUCTION ? 'we-buddhist-prod.us.auth0.com' : 'dev-vz6o17motc18g45h.us.auth0.com');
 
 /** @type {import('expo/config').ExpoConfig} */
 module.exports = {

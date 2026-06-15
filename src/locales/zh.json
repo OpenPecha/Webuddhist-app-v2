@@ -18,7 +18,9 @@
   "auth": {
     "continue_with_google": "使用 Google 繼續",
     "continue_with_apple": "使用 Apple 繼續",
-    "continue_as_guest": "以訪客身份繼續"
+    "continue_as_guest": "以訪客身份繼續",
+    "drawer_title": "請先登入帳號再繼續",
+    "drawer_subtitle": "隨時隨地，在任何裝置上繼續您的修持"
   },
   "home": {
     "good_morning": "早上好",
@@ -36,6 +38,18 @@
     "home": "首頁",
     "practice": "修持計畫",
     "me": "個人"
+  },
+  "practice": {
+    "routine_title": "日常修持",
+    "routine_empty_title": "日常修持",
+    "routine_edit": "編輯",
+    "routine_empty_description": "探索更多課程與修持計畫，加入學習選單或新增至您的修持安排",
+    "routine_build": "建立日常修持",
+    "routine_load_error": "無法載入。請檢查您的網路連線，然後再試一次。",
+    "retry": "重試",
+    "plan_status_on_track": "進度正常！",
+    "missed_days_one": "1 天未完成",
+    "missed_days_other": "{{count}} 天未完成"
   },
   "series": {
     "about": "關於",

@@ -16,8 +16,8 @@ export class NetworkFailure extends Error {
 }
 
 export class AuthenticationFailure extends Error {
-  constructor() {
-    super('Authentication required');
+  constructor(message = 'Authentication required') {
+    super(message);
     this.name = 'AuthenticationFailure';
   }
 }
