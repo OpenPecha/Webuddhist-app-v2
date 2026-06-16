@@ -105,7 +105,8 @@ export default function EditRoutineScreen() {
   );
 
   const isLastBlockEmpty = blocks.length > 0 && blocks[blocks.length - 1].items.length === 0;
-  const shouldShowAddButton = !isLastBlockEmpty && canAddBlock(blocks.length);
+  const shouldShowAddButton =
+    (blocks.length === 0 || !isLastBlockEmpty) && canAddBlock(blocks.length);
   const emptyBlockCount = blocks.filter((b) => b.items.length === 0).length;
 
   const updateBlock = (localId: string, patch: Partial<EditableRoutineBlock>) => {
@@ -124,9 +125,9 @@ export default function EditRoutineScreen() {
         setRemovedBlockIds((ids) => [...ids, target.apiTimeBlockId!]);
       }
       const next = prev.filter((b) => b.localId !== localId);
-      const result = next.length ? next : [createEmptyBlock()];
+      const result = next;
       // #region agent log
-      fetch('http://127.0.0.1:7544/ingest/57328dfe-8256-4e2a-91e6-138b7c8b37e5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c5e88e'},body:JSON.stringify({sessionId:'c5e88e',hypothesisId:'A',location:'edit-routine/index.tsx:removeBlock:computed',message:'removeBlock result',data:{prevCount:prev.length,nextCount:next.length,resultCount:result.length,usedEmptyFallback:next.length===0,resultIds:result.map(b=>({id:b.localId,items:b.items.length}))},timestamp:Date.now()})}).catch(()=>{});
+      fetch('http://127.0.0.1:7544/ingest/57328dfe-8256-4e2a-91e6-138b7c8b37e5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c5e88e'},body:JSON.stringify({sessionId:'c5e88e',runId:'post-fix',hypothesisId:'A',location:'edit-routine/index.tsx:removeBlock:computed',message:'removeBlock result',data:{prevCount:prev.length,nextCount:next.length,resultCount:result.length,usedEmptyFallback:false,resultIds:result.map(b=>({id:b.localId,items:b.items.length}))},timestamp:Date.now()})}).catch(()=>{});
       // #endregion
       return result;
     });
@@ -140,7 +141,7 @@ export default function EditRoutineScreen() {
         return { ...b, items };
       });
       const filtered = next.filter((b) => b.items.length > 0);
-      return filtered.length ? filtered : [createEmptyBlock()];
+      return filtered;
     });
   };
 
@@ -219,7 +220,27 @@ export default function EditRoutineScreen() {
 
     const toSave = blocks.filter((b) => b.items.length > 0);
     if (!toSave.length) {
-      Alert.alert(t('editRoutine.empty_block_title'), t('editRoutine.no_plans'));
+      setSaving(true);
+      try {
+        if (apiRoutineId) {
+          const blockIdsToDelete = new Set(removedBlockIds);
+          for (const block of blocks) {
+            if (block.apiTimeBlockId) blockIdsToDelete.add(block.apiTimeBlockId);
+          }
+          for (const blockId of blockIdsToDelete) {
+            await removeTimeBlock.mutateAsync({ routineId: apiRoutineId, blockId });
+          }
+        }
+        // #region agent log
+        fetch('http://127.0.0.1:7544/ingest/57328dfe-8256-4e2a-91e6-138b7c8b37e5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c5e88e'},body:JSON.stringify({sessionId:'c5e88e',runId:'post-fix',hypothesisId:'E',location:'edit-routine/index.tsx:handleSave:clearRoutine',message:'saved empty routine',data:{apiRoutineId,deletedCount:blocks.length},timestamp:Date.now()})}).catch(()=>{});
+        // #endregion
+        router.back();
+      } catch (e) {
+        const message = e instanceof Error ? e.message : t('practice.routine_load_error');
+        Alert.alert(message);
+      } finally {
+        setSaving(false);
+      }
       return;
     }
 
