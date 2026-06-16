@@ -89,6 +89,9 @@ export function RoutineTimeBlock({
   const { t } = useTranslation();
 
   const confirmDeleteBlock = () => {
+    // #region agent log
+    fetch('http://127.0.0.1:7544/ingest/57328dfe-8256-4e2a-91e6-138b7c8b37e5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c5e88e'},body:JSON.stringify({sessionId:'c5e88e',hypothesisId:'B',location:'RoutineTimeBlock.tsx:confirmDeleteBlock',message:'delete block alert shown',data:{itemCount:items.length},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     Alert.alert(
       t('editRoutine.delete_block_title'),
       t('editRoutine.delete_block_message'),
@@ -97,7 +100,12 @@ export function RoutineTimeBlock({
         {
           text: t('editRoutine.delete_block_confirm'),
           style: 'destructive',
-          onPress: onDeleteBlock,
+          onPress: () => {
+            // #region agent log
+            fetch('http://127.0.0.1:7544/ingest/57328dfe-8256-4e2a-91e6-138b7c8b37e5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c5e88e'},body:JSON.stringify({sessionId:'c5e88e',hypothesisId:'B',location:'RoutineTimeBlock.tsx:confirmDeleteBlock:confirmed',message:'user confirmed block delete',data:{itemCount:items.length},timestamp:Date.now()})}).catch(()=>{});
+            // #endregion
+            onDeleteBlock();
+          },
         },
       ],
     );

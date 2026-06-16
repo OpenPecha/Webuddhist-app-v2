@@ -115,13 +115,20 @@ export default function EditRoutineScreen() {
   };
 
   const removeBlock = (localId: string) => {
+    // #region agent log
+    fetch('http://127.0.0.1:7544/ingest/57328dfe-8256-4e2a-91e6-138b7c8b37e5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c5e88e'},body:JSON.stringify({sessionId:'c5e88e',hypothesisId:'A',location:'edit-routine/index.tsx:removeBlock:entry',message:'removeBlock called',data:{localId,blocksCount:blocks.length,blockIds:blocks.map(b=>({id:b.localId,items:b.items.length,apiId:b.apiTimeBlockId}))},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     setBlocks((prev) => {
       const target = prev.find((b) => b.localId === localId);
       if (target?.apiTimeBlockId) {
         setRemovedBlockIds((ids) => [...ids, target.apiTimeBlockId!]);
       }
       const next = prev.filter((b) => b.localId !== localId);
-      return next.length ? next : [createEmptyBlock()];
+      const result = next.length ? next : [createEmptyBlock()];
+      // #region agent log
+      fetch('http://127.0.0.1:7544/ingest/57328dfe-8256-4e2a-91e6-138b7c8b37e5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c5e88e'},body:JSON.stringify({sessionId:'c5e88e',hypothesisId:'A',location:'edit-routine/index.tsx:removeBlock:computed',message:'removeBlock result',data:{prevCount:prev.length,nextCount:next.length,resultCount:result.length,usedEmptyFallback:next.length===0,resultIds:result.map(b=>({id:b.localId,items:b.items.length}))},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
+      return result;
     });
   };
 
@@ -182,6 +189,9 @@ export default function EditRoutineScreen() {
   };
 
   const handleSave = async () => {
+    // #region agent log
+    fetch('http://127.0.0.1:7544/ingest/57328dfe-8256-4e2a-91e6-138b7c8b37e5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c5e88e'},body:JSON.stringify({sessionId:'c5e88e',hypothesisId:'E',location:'edit-routine/index.tsx:handleSave:entry',message:'handleSave called',data:{blocksCount:blocks.length,emptyBlockCount,blocks:blocks.map(b=>({items:b.items.length,apiId:b.apiTimeBlockId})),removedBlockIds},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
     if (emptyBlockCount > 0) {
       const hasMultiple = emptyBlockCount > 1;
       const confirmed = await new Promise<boolean>((resolve) => {

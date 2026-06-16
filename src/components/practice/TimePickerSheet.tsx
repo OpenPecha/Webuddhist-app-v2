@@ -1,6 +1,6 @@
 import { dateFromTimeInt, timeIntFromDate } from '@/utils/routine-time-utils';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal, Platform, Pressable, Text, View } from 'react-native';
 
@@ -11,31 +11,47 @@ interface TimePickerSheetProps {
   onConfirm: (timeInt: number) => void;
 }
 
+interface TimePickerSheetContentProps {
+  timeInt: number;
+  onClose: () => void;
+  onConfirm: (timeInt: number) => void;
+}
+
 /** iOS Cupertino wheel + Android system time picker — matches Flutter `_showCupertinoTimePicker`. */
 export function TimePickerSheet({ visible, timeInt, onClose, onConfirm }: TimePickerSheetProps) {
+  if (!visible) return null;
+
+  return (
+    <TimePickerSheetContent
+      key={timeInt}
+      timeInt={timeInt}
+      onClose={onClose}
+      onConfirm={onConfirm}
+    />
+  );
+}
+
+function TimePickerSheetContent({ timeInt, onClose, onConfirm }: TimePickerSheetContentProps) {
   const { t } = useTranslation();
-  const [selected, setSelected] = useState(dateFromTimeInt(timeInt));
+  const [selected, setSelected] = useState(() => dateFromTimeInt(timeInt));
 
-  useEffect(() => {
-    if (visible) setSelected(dateFromTimeInt(timeInt));
-  }, [visible, timeInt]);
-
-  if (Platform.OS === 'android' && visible) {
+  if (Platform.OS === 'android') {
     return (
       <DateTimePicker
         value={selected}
         mode="time"
         is24Hour={false}
-        onChange={(_, date) => {
+        onValueChange={(_, date) => {
           onClose();
           if (date) onConfirm(timeIntFromDate(date));
         }}
+        onDismiss={onClose}
       />
     );
   }
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+    <Modal visible transparent animationType="slide" onRequestClose={onClose}>
       <Pressable style={{ flex: 1, justifyContent: 'flex-end' }} onPress={onClose}>
         <Pressable onPress={(e) => e.stopPropagation()}>
           <View
@@ -82,7 +98,7 @@ export function TimePickerSheet({ visible, timeInt, onClose, onConfirm }: TimePi
               value={selected}
               mode="time"
               display="spinner"
-              onChange={(_, date) => {
+              onValueChange={(_, date) => {
                 if (date) setSelected(date);
               }}
               style={{ height: 216 }}
