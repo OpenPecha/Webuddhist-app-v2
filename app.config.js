@@ -28,7 +28,7 @@ module.exports = {
     package: APP_ID,
     adaptiveIcon: {
       backgroundColor: '#FFFFFF',
-      foregroundImage: './assets/images/webuddhist_gold.png',
+      foregroundImage: './assets/images/webuddhist_icon.png',
     },
     predictiveBackGestureEnabled: false,
   },
@@ -61,6 +61,14 @@ module.exports = {
     'expo-image',
     'expo-secure-store',
     'expo-asset',
+    '@react-native-community/datetimepicker',
+    [
+      'expo-notifications',
+      {
+        icon: './assets/images/webuddhist_gold.png',
+        color: '#000000',
+      },
+    ],
   ],
   experiments: {
     typedRoutes: true,

@@ -49,7 +49,50 @@
     "retry": "重試",
     "plan_status_on_track": "進度正常！",
     "missed_days_one": "1 天未完成",
-    "missed_days_other": "{{count}} 天未完成"
+    "missed_days_other": "{{count}} 天未完成",
+    "not_found": "找不到計畫"
+  },
+  "planTrack": {
+    "title": "計畫",
+    "day_of": "第 {{day}} 天，共 {{total}} 天",
+    "no_tasks": "這一天沒有任務"
+  },
+  "reader": {
+    "title": "閱讀器",
+    "placeholder": "完整閱讀體驗將在後續更新中提供。"
+  },
+  "editRoutine": {
+    "title": "編輯日常修持",
+    "done": "完成",
+    "cancel": "取消",
+    "saving": "儲存中…",
+    "add_session": "添加課程",
+    "add_block_label": "時段",
+    "add_plan": "添加計畫",
+    "add_recitation": "添加誦讀",
+    "delete_time_block": "移除時段",
+    "delete_block_title": "移除時段？",
+    "delete_block_message": "此時段及其所有項目將被移除",
+    "delete_block_confirm": "移除",
+    "remove": "移除",
+    "remove_item_title": "移除項目？",
+    "remove_item_message": "「{{itemName}}」將從此時段中移除",
+    "empty_block_title": "空白時段",
+    "empty_block_title_plural": "空白時段（{{count}}）",
+    "empty_block_message": "此時段為空白。要新增項目，還是從修持中移除？",
+    "empty_block_message_plural": "{{count}} 個時段為空白。要新增項目，還是從修持中移除？",
+    "empty_block_add_items": "新增項目",
+    "empty_block_delete": "移除時段",
+    "empty_block_delete_plural": "移除時段",
+    "duplicate_item": "此項目已在該時段中",
+    "no_time_slot": "沒有可用的時間。請先移除一個時段",
+    "max_blocks": "已達最多 {{max}} 個時段上限",
+    "time_adjusted_title": "時間已調整",
+    "time_adjusted_message": "已調整為 {{time}}（需間隔 {{minutes}} 分鐘）",
+    "select_plan_title": "新增計畫",
+    "select_recitation_title": "新增誦讀",
+    "no_plans": "沒有已加入的計畫",
+    "no_recitations": "找不到誦讀內容"
   },
   "series": {
     "about": "關於",

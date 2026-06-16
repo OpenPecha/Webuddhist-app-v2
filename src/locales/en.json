@@ -49,7 +49,53 @@
     "retry": "Retry",
     "plan_status_on_track": "On Track!",
     "missed_days_one": "1 missed day",
-    "missed_days_other": "{{count}} missed days"
+    "missed_days_other": "{{count}} missed days",
+    "not_found": "Plan not found"
+  },
+  "planTrack": {
+    "title": "Plan",
+    "day_of": "Day {{day}} of {{total}}",
+    "no_tasks": "No tasks for this day"
+  },
+  "reader": {
+    "title": "Reader",
+    "placeholder": "Full reader experience is coming in a future update. You opened this text from your practice routine."
+  },
+  "editRoutine": {
+    "title": "Edit your routine",
+    "done": "Done",
+    "cancel": "Cancel",
+    "saving": "Saving…",
+    "add_session": "Add to session",
+    "add_block_label": "Time block",
+    "add_plan": "Add plan",
+    "add_recitation": "Add recitation",
+    "delete_time_block": "Remove time block",
+    "delete_block_title": "Remove block?",
+    "delete_block_message": "The time block and all its items will be removed",
+    "delete_block_confirm": "Remove",
+    "remove": "Remove",
+    "remove_item_title": "Remove item?",
+    "remove_item_message": "\"{{itemName}}\" will be removed from this block",
+    "empty_block_title": "Empty time block",
+    "empty_block_title_plural": "Empty time blocks ({{count}})",
+    "empty_block_message": "This time block is empty. Add an item, or remove it from your routine?",
+    "empty_block_message_plural": "{{count}} time blocks are empty. Add items, or remove them from your routine?",
+    "empty_block_add_items": "Add items",
+    "empty_block_delete": "Remove block",
+    "empty_block_delete_plural": "Remove blocks",
+    "duplicate_item": "This item is already in the block",
+    "no_time_slot": "No available time slots. Try removing a block first",
+    "max_blocks": "Maximum of {{max}} time blocks reached",
+    "time_adjusted_title": "Time adjusted",
+    "time_adjusted_message": "Adjusted to {{time}} ({{minutes}} min gap required)",
+    "select_plan_title": "Add plan",
+    "select_recitation_title": "Add recitation",
+    "no_plans": "No enrolled plans",
+    "no_recitations": "No recitations found"
+  },
+  "common": {
+    "not_found": "Not found"
   },
   "series": {
     "about": "About",

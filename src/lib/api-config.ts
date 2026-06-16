@@ -8,11 +8,18 @@ export const ENDPOINTS = {
     list: '/plans',
     detail: (id: string) => `/plans/${id}`,
     userPlans: '/users/me/plans',
+    userPlanProgress: (id: string) => `/users/me/plans/${id}`,
+    userPlanDay: (planId: string, day: number) =>
+      `/users/me/plan/${planId}/days/${day}`,
     completionStatus: (planId: string) =>
       `/users/me/plans/${planId}/days/completion_status`,
   },
   routine: {
     user: '/users/me/routine',
+    create: '/routines',
+    timeBlocks: (routineId: string) => `/routines/${routineId}/time-blocks`,
+    timeBlock: (routineId: string, blockId: string) =>
+      `/routines/${routineId}/time-blocks/${blockId}`,
   },
   recitations: {
     list: '/recitations',
