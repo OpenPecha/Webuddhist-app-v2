@@ -1,6 +1,7 @@
 import '@/lib/i18n';
 import { configureNotificationHandler } from '@/lib/notifications';
-import { AuthTokenSync } from '@/providers/auth-token';import { Auth0ProviderWrapper } from '@/providers/auth0';
+import { AuthTokenSync } from '@/providers/auth-token';
+import { Auth0ProviderWrapper } from '@/providers/auth0';
 import { GuestProvider, useGuest } from '@/providers/guest';
 import { OnboardingProvider, useOnboarding } from '@/providers/onboarding';
 import { QueryProvider } from '@/providers/query';
