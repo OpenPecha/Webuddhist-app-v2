@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { useUserPlans } from '@/hooks/api/useUserPlans';
 import { setPendingRoutineItem } from '@/stores/edit-routine-selection';
 import type { UserPlan } from '@/types/plans';

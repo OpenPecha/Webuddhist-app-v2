@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { APP_ASSETS } from '@/constants/app-assets';
 import { SessionListTile } from '@/components/practice/SessionListTile';
 import { routineItemCoverUri } from '@/components/practice/RoutineItemCard';

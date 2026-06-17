@@ -14,7 +14,8 @@ interface RoutineItemCardProps {
   trailing?: ReactNode;
   onPress?: () => void;
   onDelete?: () => void;
-  showReorderHandle?: boolean;
+  onReorderDragStart?: () => void;
+  isDragging?: boolean;
 }
 
 /** Matches Flutter RoutineItemCard layout (74×74 cover, title, optional subtitle row). */
@@ -26,7 +27,8 @@ export function RoutineItemCard({
   trailing,
   onPress,
   onDelete,
-  showReorderHandle,
+  onReorderDragStart,
+  isDragging,
 }: RoutineItemCardProps) {
   const showSubtitleRow = subtitle != null;
 
@@ -39,6 +41,13 @@ export function RoutineItemCard({
         alignItems: 'center',
         paddingVertical: 12,
         opacity: pressed && onPress ? 0.85 : 1,
+        borderRadius: 10,
+        backgroundColor: isDragging ? '#FDFDFC' : 'transparent',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: isDragging ? 2 : 0 },
+        shadowOpacity: isDragging ? 0.12 : 0,
+        shadowRadius: isDragging ? 4 : 0,
+        elevation: isDragging ? 2 : 0,
       })}
     >
       {onDelete ? (
@@ -114,8 +123,15 @@ export function RoutineItemCard({
         ) : null}
       </View>
 
-      {showReorderHandle ? (
-        <Ionicons name="reorder-three" size={22} color="#8a8a8a" style={{ marginLeft: 8 }} />
+      {onReorderDragStart ? (
+        <Pressable
+          onLongPress={onReorderDragStart}
+          delayLongPress={120}
+          hitSlop={8}
+          style={{ marginLeft: 8, padding: 4 }}
+        >
+          <Ionicons name="reorder-three" size={22} color="#8a8a8a" />
+        </Pressable>
       ) : null}
     </Pressable>
   );

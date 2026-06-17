@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { APP_ASSETS } from '@/constants/app-assets';
 import { useRecitations } from '@/hooks/api/useRecitations';
 import { setPendingRoutineItem } from '@/stores/edit-routine-selection';

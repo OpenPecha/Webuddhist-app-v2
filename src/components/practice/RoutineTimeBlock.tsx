@@ -2,10 +2,12 @@ import {
   RoutineItemCard,
   routineItemCoverUri,
 } from '@/components/practice/RoutineItemCard';
+import { useDialog } from '@/hooks/useDialog';
 import type { RoutineItem } from '@/types/routine';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { Alert, Pressable, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
+import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
 
 interface RoutineTimeBlockProps {
   formattedTime: string;
@@ -16,6 +18,7 @@ interface RoutineTimeBlockProps {
   onDeleteBlock: () => void;
   onAddSession: () => void;
   onDeleteItem: (index: number) => void;
+  onReorderItems: (items: RoutineItem[]) => void;
 }
 
 const pillBg = '#f0f0ec';
@@ -85,46 +88,30 @@ export function RoutineTimeBlock({
   onDeleteBlock,
   onAddSession,
   onDeleteItem,
+  onReorderItems,
 }: RoutineTimeBlockProps) {
   const { t } = useTranslation();
+  const { dialog, confirmDestructive } = useDialog();
 
-  const confirmDeleteBlock = () => {
-    // #region agent log
-    fetch('http://127.0.0.1:7544/ingest/57328dfe-8256-4e2a-91e6-138b7c8b37e5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c5e88e'},body:JSON.stringify({sessionId:'c5e88e',hypothesisId:'B',location:'RoutineTimeBlock.tsx:confirmDeleteBlock',message:'delete block alert shown',data:{itemCount:items.length},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
-    Alert.alert(
-      t('editRoutine.delete_block_title'),
-      t('editRoutine.delete_block_message'),
-      [
-        { text: t('editRoutine.cancel'), style: 'cancel' },
-        {
-          text: t('editRoutine.delete_block_confirm'),
-          style: 'destructive',
-          onPress: () => {
-            // #region agent log
-            fetch('http://127.0.0.1:7544/ingest/57328dfe-8256-4e2a-91e6-138b7c8b37e5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c5e88e'},body:JSON.stringify({sessionId:'c5e88e',hypothesisId:'B',location:'RoutineTimeBlock.tsx:confirmDeleteBlock:confirmed',message:'user confirmed block delete',data:{itemCount:items.length},timestamp:Date.now()})}).catch(()=>{});
-            // #endregion
-            onDeleteBlock();
-          },
-        },
-      ],
-    );
+  const confirmDeleteBlock = async () => {
+    const confirmed = await confirmDestructive({
+      title: t('editRoutine.delete_block_title'),
+      message: t('editRoutine.delete_block_message'),
+      confirmLabel: t('editRoutine.delete_block_confirm'),
+      cancelLabel: t('editRoutine.cancel'),
+    });
+    if (confirmed) onDeleteBlock();
   };
 
-  const confirmDeleteItem = (index: number) => {
+  const confirmDeleteItem = async (index: number) => {
     const item = items[index];
-    Alert.alert(
-      t('editRoutine.remove_item_title'),
-      t('editRoutine.remove_item_message', { itemName: item.title }),
-      [
-        { text: t('editRoutine.cancel'), style: 'cancel' },
-        {
-          text: t('editRoutine.remove'),
-          style: 'destructive',
-          onPress: () => onDeleteItem(index),
-        },
-      ],
-    );
+    const confirmed = await confirmDestructive({
+      title: t('editRoutine.remove_item_title'),
+      message: t('editRoutine.remove_item_message', { itemName: item.title }),
+      confirmLabel: t('editRoutine.remove'),
+      cancelLabel: t('editRoutine.cancel'),
+    });
+    if (confirmed) onDeleteItem(index);
   };
 
   return (
@@ -143,22 +130,37 @@ export function RoutineTimeBlock({
 
       {items.length > 0 ? (
         <View style={{ marginTop: 8 }}>
-          {items.map((item, index) => (
-            <View key={`${item.type}-${item.id}`}>
-              <RoutineItemCard
-                title={item.title}
-                coverUri={
-                  item.type === 'plan'
-                    ? routineItemCoverUri(item.coverImage, item.imageUrl)
-                    : undefined
-                }
-                type={item.type}
-                onDelete={() => confirmDeleteItem(index)}
-                showReorderHandle
-              />
-              <View style={{ height: 1, backgroundColor: '#e8e8e4', marginLeft: 140 }} />
-            </View>
-          ))}
+          <DraggableFlatList
+            data={items}
+            keyExtractor={(item) => `${item.type}-${item.id}`}
+            scrollEnabled={false}
+            activationDistance={12}
+            onDragEnd={({ data }) => onReorderItems(data)}
+            renderItem={({ item, drag, isActive, getIndex }) => {
+              const index = getIndex();
+              return (
+                <ScaleDecorator activeScale={1.02}>
+                  <View>
+                    <RoutineItemCard
+                      title={item.title}
+                      coverUri={
+                        item.type === 'plan'
+                          ? routineItemCoverUri(item.coverImage, item.imageUrl)
+                          : undefined
+                      }
+                      type={item.type}
+                      onDelete={
+                        index != null ? () => confirmDeleteItem(index) : undefined
+                      }
+                      onReorderDragStart={drag}
+                      isDragging={isActive}
+                    />
+                    <View style={{ height: 1, backgroundColor: '#e8e8e4', marginLeft: 140 }} />
+                  </View>
+                </ScaleDecorator>
+              );
+            }}
+          />
         </View>
       ) : null}
 
@@ -191,6 +193,7 @@ export function RoutineTimeBlock({
           {t('editRoutine.add_session')}
         </Text>
       </Pressable>
+      {dialog}
     </View>
   );
 }

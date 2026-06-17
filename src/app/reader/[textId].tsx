@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { useTextDetail } from '@/hooks/api/useTextDetail';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';

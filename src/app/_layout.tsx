@@ -9,6 +9,7 @@ import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useAuth0 } from 'react-native-auth0';
 import '../../global.css';
 
@@ -89,16 +90,18 @@ export default function RootLayout() {
   if (!fontsLoaded && !fontError) return null;
 
   return (
-    <QueryProvider>
-      <Auth0ProviderWrapper>
-        <GuestProvider>
-          <AuthTokenSync>
-            <OnboardingProvider>
-              <AuthGate />
-            </OnboardingProvider>
-          </AuthTokenSync>
-        </GuestProvider>
-      </Auth0ProviderWrapper>
-    </QueryProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <QueryProvider>
+        <Auth0ProviderWrapper>
+          <GuestProvider>
+            <AuthTokenSync>
+              <OnboardingProvider>
+                <AuthGate />
+              </OnboardingProvider>
+            </AuthTokenSync>
+          </GuestProvider>
+        </Auth0ProviderWrapper>
+      </QueryProvider>
+    </GestureHandlerRootView>
   );
 }

@@ -1,9 +1,10 @@
-import '@/lib/i18n';
 import { AddBlockButton, RoutineTimeBlock } from '@/components/practice/RoutineTimeBlock';
 import { TimePickerSheet } from '@/components/practice/TimePickerSheet';
+import { useDialog } from '@/hooks/useDialog';
 import { useRoutine } from '@/hooks/api/useRoutine';
 import { useRoutineMutations } from '@/hooks/api/useRoutineMutations';
 import { takePendingRoutineItem } from '@/stores/edit-routine-selection';
+import type { RoutineItem } from '@/types/routine';
 import {
   blockToTimeBlockRequest,
   createEmptyBlock,
@@ -24,7 +25,6 @@ import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Alert,
-  BackHandler,
   Pressable,
   ScrollView,
   Text,
@@ -52,6 +52,7 @@ export default function EditRoutineScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const { dialog, confirmChoice } = useDialog();
   const { data: routine, isLoading } = useRoutine();
   const { createRoutine, addTimeBlock, saveTimeBlock, removeTimeBlock } = useRoutineMutations();
 
@@ -61,6 +62,7 @@ export default function EditRoutineScreen() {
   const [hydrated, setHydrated] = useState(false);
   const [saving, setSaving] = useState(false);
   const [editingBlockId, setEditingBlockId] = useState<string | null>(null);
+  const [allowLeave, setAllowLeave] = useState(false);
 
   const editingBlock = useMemo(
     () => blocks.find((b) => b.localId === editingBlockId),
@@ -68,9 +70,9 @@ export default function EditRoutineScreen() {
   );
 
   useEffect(() => {
-    const sub = BackHandler.addEventListener('hardwareBackPress', () => true);
-    return () => sub.remove();
-  }, []);
+    if (!allowLeave) return;
+    router.back();
+  }, [allowLeave, router]);
 
   useEffect(() => {
     if (hydrated || isLoading) return;
@@ -116,20 +118,12 @@ export default function EditRoutineScreen() {
   };
 
   const removeBlock = (localId: string) => {
-    // #region agent log
-    fetch('http://127.0.0.1:7544/ingest/57328dfe-8256-4e2a-91e6-138b7c8b37e5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c5e88e'},body:JSON.stringify({sessionId:'c5e88e',hypothesisId:'A',location:'edit-routine/index.tsx:removeBlock:entry',message:'removeBlock called',data:{localId,blocksCount:blocks.length,blockIds:blocks.map(b=>({id:b.localId,items:b.items.length,apiId:b.apiTimeBlockId}))},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
     setBlocks((prev) => {
       const target = prev.find((b) => b.localId === localId);
       if (target?.apiTimeBlockId) {
         setRemovedBlockIds((ids) => [...ids, target.apiTimeBlockId!]);
       }
-      const next = prev.filter((b) => b.localId !== localId);
-      const result = next;
-      // #region agent log
-      fetch('http://127.0.0.1:7544/ingest/57328dfe-8256-4e2a-91e6-138b7c8b37e5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c5e88e'},body:JSON.stringify({sessionId:'c5e88e',runId:'post-fix',hypothesisId:'A',location:'edit-routine/index.tsx:removeBlock:computed',message:'removeBlock result',data:{prevCount:prev.length,nextCount:next.length,resultCount:result.length,usedEmptyFallback:false,resultIds:result.map(b=>({id:b.localId,items:b.items.length}))},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
-      return result;
+      return prev.filter((b) => b.localId !== localId);
     });
   };
 
@@ -140,10 +134,41 @@ export default function EditRoutineScreen() {
         const items = b.items.filter((_, i) => i !== itemIndex);
         return { ...b, items };
       });
-      const filtered = next.filter((b) => b.items.length > 0);
-      return filtered;
+      const droppedApiIds = next
+        .filter((b) => b.items.length === 0 && b.apiTimeBlockId)
+        .map((b) => b.apiTimeBlockId!);
+      if (droppedApiIds.length) {
+        setRemovedBlockIds((ids) => [...ids, ...droppedApiIds]);
+      }
+      return next.filter((b) => b.items.length > 0);
     });
   };
+
+  const reorderItemsInBlock = (blockLocalId: string, items: RoutineItem[]) => {
+    updateBlock(blockLocalId, { items });
+  };
+
+  const collectBlockIdsToDelete = (
+    workingRemovedIds: string[],
+    workingBlocks: EditableRoutineBlock[],
+    toSave: EditableRoutineBlock[],
+  ): Set<string> => {
+    const ids = new Set(workingRemovedIds);
+    const keepingIds = new Set(
+      toSave.map((b) => b.apiTimeBlockId).filter((id): id is string => !!id),
+    );
+    for (const block of workingBlocks) {
+      if (block.apiTimeBlockId && block.items.length === 0) {
+        ids.add(block.apiTimeBlockId);
+      }
+    }
+    for (const block of routine?.blocks ?? []) {
+      if (!keepingIds.has(block.id)) ids.add(block.id);
+    }
+    return ids;
+  };
+
+  const exitAfterSave = () => setAllowLeave(true);
 
   const addBlock = () => {
     if (!canAddBlock(blocks.length)) {
@@ -190,51 +215,44 @@ export default function EditRoutineScreen() {
   };
 
   const handleSave = async () => {
-    // #region agent log
-    fetch('http://127.0.0.1:7544/ingest/57328dfe-8256-4e2a-91e6-138b7c8b37e5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c5e88e'},body:JSON.stringify({sessionId:'c5e88e',hypothesisId:'E',location:'edit-routine/index.tsx:handleSave:entry',message:'handleSave called',data:{blocksCount:blocks.length,emptyBlockCount,blocks:blocks.map(b=>({items:b.items.length,apiId:b.apiTimeBlockId})),removedBlockIds},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
+    let workingBlocks = blocks;
+    let workingRemovedIds = removedBlockIds;
+
     if (emptyBlockCount > 0) {
       const hasMultiple = emptyBlockCount > 1;
-      const confirmed = await new Promise<boolean>((resolve) => {
-        Alert.alert(
-          hasMultiple
-            ? t('editRoutine.empty_block_title_plural', { count: emptyBlockCount })
-            : t('editRoutine.empty_block_title'),
-          hasMultiple
-            ? t('editRoutine.empty_block_message_plural', { count: emptyBlockCount })
-            : t('editRoutine.empty_block_message'),
-          [
-            { text: t('editRoutine.empty_block_add_items'), onPress: () => resolve(false) },
-            {
-              text: hasMultiple
-                ? t('editRoutine.empty_block_delete_plural')
-                : t('editRoutine.empty_block_delete'),
-              style: 'destructive',
-              onPress: () => resolve(true),
-            },
-          ],
-        );
+      const result = await confirmChoice({
+        title: hasMultiple
+          ? t('editRoutine.empty_block_title_plural', { count: emptyBlockCount })
+          : t('editRoutine.empty_block_title'),
+        message: hasMultiple
+          ? t('editRoutine.empty_block_message_plural', { count: emptyBlockCount })
+          : t('editRoutine.empty_block_message'),
+        secondaryLabel: t('editRoutine.empty_block_add_items'),
+        primaryLabel: hasMultiple
+          ? t('editRoutine.empty_block_delete_plural')
+          : t('editRoutine.empty_block_delete'),
       });
-      if (!confirmed) return;
+      if (result !== 'primary') return;
+      const emptyApiIds = workingBlocks
+        .filter((b) => b.items.length === 0 && b.apiTimeBlockId)
+        .map((b) => b.apiTimeBlockId!);
+      workingRemovedIds = [...workingRemovedIds, ...emptyApiIds];
+      workingBlocks = workingBlocks.filter((b) => b.items.length > 0);
+      setRemovedBlockIds(workingRemovedIds);
+      setBlocks(workingBlocks);
     }
 
-    const toSave = blocks.filter((b) => b.items.length > 0);
+    const toSave = workingBlocks.filter((b) => b.items.length > 0);
     if (!toSave.length) {
       setSaving(true);
       try {
         if (apiRoutineId) {
-          const blockIdsToDelete = new Set(removedBlockIds);
-          for (const block of blocks) {
-            if (block.apiTimeBlockId) blockIdsToDelete.add(block.apiTimeBlockId);
-          }
+          const blockIdsToDelete = collectBlockIdsToDelete(workingRemovedIds, workingBlocks, toSave);
           for (const blockId of blockIdsToDelete) {
             await removeTimeBlock.mutateAsync({ routineId: apiRoutineId, blockId });
           }
         }
-        // #region agent log
-        fetch('http://127.0.0.1:7544/ingest/57328dfe-8256-4e2a-91e6-138b7c8b37e5',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'c5e88e'},body:JSON.stringify({sessionId:'c5e88e',runId:'post-fix',hypothesisId:'E',location:'edit-routine/index.tsx:handleSave:clearRoutine',message:'saved empty routine',data:{apiRoutineId,deletedCount:blocks.length},timestamp:Date.now()})}).catch(()=>{});
-        // #endregion
-        router.back();
+        exitAfterSave();
       } catch (e) {
         const message = e instanceof Error ? e.message : t('practice.routine_load_error');
         Alert.alert(message);
@@ -248,9 +266,10 @@ export default function EditRoutineScreen() {
     try {
       let routineId = apiRoutineId;
 
-      for (const removedId of removedBlockIds) {
-        if (routineId) {
-          await removeTimeBlock.mutateAsync({ routineId, blockId: removedId });
+      if (routineId) {
+        const blockIdsToDelete = collectBlockIdsToDelete(workingRemovedIds, workingBlocks, toSave);
+        for (const blockId of blockIdsToDelete) {
+          await removeTimeBlock.mutateAsync({ routineId, blockId });
         }
       }
 
@@ -278,7 +297,7 @@ export default function EditRoutineScreen() {
         }
       }
 
-      router.back();
+      exitAfterSave();
     } catch (e) {
       const message = e instanceof Error ? e.message : t('practice.routine_load_error');
       Alert.alert(message);
@@ -358,6 +377,7 @@ export default function EditRoutineScreen() {
                   } as Href)
                 }
                 onDeleteItem={(itemIndex) => removeItemAt(block.localId, itemIndex)}
+                onReorderItems={(items) => reorderItemsInBlock(block.localId, items)}
               />
               {index < blocks.length - 1 || shouldShowAddButton ? (
                 <View style={{ paddingVertical: 16 }}>
@@ -378,6 +398,7 @@ export default function EditRoutineScreen() {
           if (editingBlockId) onTimeConfirmed(editingBlockId, next);
         }}
       />
+      {dialog}
     </View>
   );
 }
