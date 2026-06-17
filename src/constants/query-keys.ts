@@ -11,6 +11,9 @@ export const QUERY_KEYS = {
     detail: (id: string) => ['plans', 'detail', id] as const,
     userPlans: (language: string, skip: number, limit: number) =>
       ['plans', 'user', language, skip, limit] as const,
+    userPlanProgress: (planId: string) => ['plans', 'user', 'progress', planId] as const,
+    userPlanDay: (planId: string, day: number) =>
+      ['plans', 'user', 'day', planId, day] as const,
     completionStatus: (planId: string) => ['plans', 'completion', planId] as const,
   },
   routine: {
@@ -19,6 +22,9 @@ export const QUERY_KEYS = {
   },
   recitations: {
     all: ['recitations'] as const,
-    list: () => ['recitations', 'list'] as const,
+    list: (language: string) => ['recitations', 'list', language] as const,
+  },
+  texts: {
+    detail: (id: string) => ['texts', 'detail', id] as const,
   },
 } as const;

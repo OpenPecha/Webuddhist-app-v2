@@ -6,9 +6,14 @@ import { useRoutine } from '@/hooks/api/useRoutine';
 import { useUserPlans } from '@/hooks/api/useUserPlans';
 import { useLoginDrawer } from '@/hooks/useLoginDrawer';
 import { useGuest } from '@/providers/guest';
-import { routineHasItems } from '@/types/routine';
+import { routineHasItems, type RoutineItem } from '@/types/routine';
+import {
+  resolveUserPlanForRoutineItem,
+  selectedDayForRoutinePlan,
+} from '@/utils/routine-navigation';
 import { useQueryClient } from '@tanstack/react-query';
-import { useCallback } from 'react';
+import { type Href, useRouter } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
@@ -206,7 +211,8 @@ function PracticeErrorState({
 
 export default function PracticeScreen() {
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const router = useRouter();
   const queryClient = useQueryClient();
   const { user, isLoading: authLoading } = useAuth0();
   const { isGuest } = useGuest();
@@ -229,6 +235,7 @@ export default function PracticeScreen() {
 
   const userPlans = userPlansData?.plans ?? [];
   const refreshing = routineFetching || plansFetching;
+  const [resolvingItemId, setResolvingItemId] = useState<string | null>(null);
 
   const refreshAll = useCallback(async () => {
     await Promise.all([refetchRoutine(), refetchUserPlans()]);
@@ -240,8 +247,47 @@ export default function PracticeScreen() {
       showLoginDrawer();
       return;
     }
-    Alert.alert(t('practice.routine_build'), 'Edit routine is coming soon in v2.');
-  }, [isGuest, showLoginDrawer, t, user]);
+    router.push('/practice/edit-routine' as Href);
+  }, [isGuest, router, showLoginDrawer, user]);
+
+  const onRoutineItemPress = useCallback(
+    async (item: RoutineItem) => {
+      if (isGuest || !user) {
+        showLoginDrawer();
+        return;
+      }
+
+      if (item.type === 'recitation') {
+        router.push({ pathname: '/reader/[textId]', params: { textId: item.id } });
+        return;
+      }
+
+      setResolvingItemId(item.id);
+      try {
+        const userPlan = await resolveUserPlanForRoutineItem(
+          item,
+          userPlans,
+          i18n.language,
+        );
+        if (!userPlan) {
+          Alert.alert(t('practice.not_found'));
+          return;
+        }
+        const selectedDay = selectedDayForRoutinePlan(userPlan, item);
+        router.push({
+          pathname: '/practice/details',
+          params: {
+            planId: userPlan.id,
+            selectedDay: String(selectedDay),
+            title: userPlan.title,
+          },
+        });
+      } finally {
+        setResolvingItemId(null);
+      }
+    },
+    [i18n.language, isGuest, router, showLoginDrawer, t, user, userPlans],
+  );
 
   const showGuestEmpty = isGuest || !user;
 
@@ -289,7 +335,11 @@ export default function PracticeScreen() {
         }
         renderItem={({ item }) => (
           <View style={{ paddingHorizontal: 20, paddingTop: 12 }}>
-            <RoutineBlockSection block={item} userPlans={userPlans} />
+            <RoutineBlockSection
+              block={item}
+              userPlans={userPlans}
+              onItemPress={onRoutineItemPress}
+            />
           </View>
         )}
         contentContainerStyle={{ paddingBottom: 32 }}
@@ -308,6 +358,23 @@ export default function PracticeScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
+      {resolvingItemId ? (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 10,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: 'rgba(253,253,252,0.6)',
+          }}
+        >
+          <ActivityIndicator size="large" />
+        </View>
+      ) : null}
       {content}
       <LoginDrawer
         key={loginDrawerSession}

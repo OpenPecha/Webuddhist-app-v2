@@ -16,14 +16,17 @@ import { Text, View } from 'react-native';
 interface RoutineBlockSectionProps {
   block: RoutineBlock;
   userPlans: UserPlan[];
+  onItemPress?: (item: RoutineItem) => void;
 }
 
 function RoutinePlanItem({
   item,
   userPlans,
+  onItemPress,
 }: {
   item: RoutineItem;
   userPlans: UserPlan[];
+  onItemPress?: (item: RoutineItem) => void;
 }) {
   const userPlan = resolveUserPlanForItem(item.id, userPlans);
   const dateRange = userPlan ? createPlanDateRange(userPlan) : null;
@@ -34,6 +37,7 @@ function RoutinePlanItem({
       title={item.title}
       coverUri={coverUri}
       type={item.type}
+      onPress={onItemPress ? () => onItemPress(item) : undefined}
       subtitle={dateRange ? <PlanDateRangeLabel dateRange={dateRange} /> : undefined}
       trailing={
         dateRange && userPlan ? (
@@ -49,9 +53,13 @@ function RoutinePlanItem({
   );
 }
 
-export function RoutineBlockSection({ block, userPlans }: RoutineBlockSectionProps) {
+export function RoutineBlockSection({
+  block,
+  userPlans,
+  onItemPress,
+}: RoutineBlockSectionProps) {
   return (
-    <View style={{ marginBottom: 8 }}>
+    <View style={{ marginBottom:  8 }}>
       <Text
         style={{
           fontSize: 15,
@@ -67,11 +75,16 @@ export function RoutineBlockSection({ block, userPlans }: RoutineBlockSectionPro
       {block.items.map((item, index) => (
         <View key={`${item.type}-${item.id}-${index}`}>
           {item.type === 'plan' ? (
-            <RoutinePlanItem item={item} userPlans={userPlans} />
+            <RoutinePlanItem
+              item={item}
+              userPlans={userPlans}
+              onItemPress={onItemPress}
+            />
           ) : (
             <RoutineItemCard
               title={item.title}
               type="recitation"
+              onPress={onItemPress ? () => onItemPress(item) : undefined}
             />
           )}
           {index < block.items.length - 1 ? (

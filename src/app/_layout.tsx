@@ -1,4 +1,5 @@
 import '@/lib/i18n';
+import { configureNotificationHandler } from '@/lib/notifications';
 import { AuthTokenSync } from '@/providers/auth-token';
 import { Auth0ProviderWrapper } from '@/providers/auth0';
 import { GuestProvider, useGuest } from '@/providers/guest';
@@ -9,10 +10,12 @@ import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useAuth0 } from 'react-native-auth0';
 import '../../global.css';
 
 SplashScreen.preventAutoHideAsync();
+configureNotificationHandler();
 
 function AuthGate() {
   const { user, isLoading: authLoading } = useAuth0();
@@ -65,6 +68,8 @@ function AuthGate() {
       <Stack.Screen name="onboarding" />
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="series/[id]" />
+      <Stack.Screen name="practice" />
+      <Stack.Screen name="reader/[textId]" />
     </Stack>
   );
 }
@@ -86,16 +91,18 @@ export default function RootLayout() {
   if (!fontsLoaded && !fontError) return null;
 
   return (
-    <QueryProvider>
-      <Auth0ProviderWrapper>
-        <GuestProvider>
-          <AuthTokenSync>
-            <OnboardingProvider>
-              <AuthGate />
-            </OnboardingProvider>
-          </AuthTokenSync>
-        </GuestProvider>
-      </Auth0ProviderWrapper>
-    </QueryProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <QueryProvider>
+        <Auth0ProviderWrapper>
+          <GuestProvider>
+            <AuthTokenSync>
+              <OnboardingProvider>
+                <AuthGate />
+              </OnboardingProvider>
+            </AuthTokenSync>
+          </GuestProvider>
+        </Auth0ProviderWrapper>
+      </QueryProvider>
+    </GestureHandlerRootView>
   );
 }

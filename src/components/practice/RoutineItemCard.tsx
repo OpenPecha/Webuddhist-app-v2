@@ -1,10 +1,10 @@
+import { APP_ASSETS } from '@/constants/app-assets';
 import type { RoutineItemType } from '@/types/routine';
 import { imageUrl } from '@/utils/image-url';
+import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import type { ReactNode } from 'react';
 import { Pressable, Text, View } from 'react-native';
-
-const recitationPlaceholder = require('../../../assets/images/bgimage2.jpg');
 
 interface RoutineItemCardProps {
   title: string;
@@ -13,6 +13,9 @@ interface RoutineItemCardProps {
   subtitle?: ReactNode;
   trailing?: ReactNode;
   onPress?: () => void;
+  onDelete?: () => void;
+  onReorderDragStart?: () => void;
+  isDragging?: boolean;
 }
 
 /** Matches Flutter RoutineItemCard layout (74×74 cover, title, optional subtitle row). */
@@ -23,6 +26,9 @@ export function RoutineItemCard({
   subtitle,
   trailing,
   onPress,
+  onDelete,
+  onReorderDragStart,
+  isDragging,
 }: RoutineItemCardProps) {
   const showSubtitleRow = subtitle != null;
 
@@ -32,13 +38,42 @@ export function RoutineItemCard({
       disabled={!onPress}
       style={({ pressed }) => ({
         flexDirection: 'row',
+        alignItems: 'center',
         paddingVertical: 12,
         opacity: pressed && onPress ? 0.85 : 1,
+        borderRadius: 10,
+        backgroundColor: isDragging ? '#FDFDFC' : 'transparent',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: isDragging ? 2 : 0 },
+        shadowOpacity: isDragging ? 0.12 : 0,
+        shadowRadius: isDragging ? 4 : 0,
+        elevation: isDragging ? 2 : 0,
       })}
     >
+      {onDelete ? (
+        <>
+          <Pressable
+            onPress={onDelete}
+            hitSlop={8}
+            style={{
+              width: 24,
+              height: 24,
+              marginLeft: 8,
+              borderRadius: 12,
+              backgroundColor: '#f0f0ec',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Ionicons name="remove" size={16} color="#000" />
+          </Pressable>
+          <View style={{ width: 20 }} />
+        </>
+      ) : null}
+
       {type === 'recitation' ? (
         <Image
-          source={recitationPlaceholder}
+          source={APP_ASSETS.recitationCoverDefault}
           style={{ width: 74, height: 74, borderRadius: 10 }}
           contentFit="cover"
         />
@@ -87,6 +122,17 @@ export function RoutineItemCard({
           </View>
         ) : null}
       </View>
+
+      {onReorderDragStart ? (
+        <Pressable
+          onLongPress={onReorderDragStart}
+          delayLongPress={120}
+          hitSlop={8}
+          style={{ marginLeft: 8, padding: 4 }}
+        >
+          <Ionicons name="reorder-three" size={22} color="#8a8a8a" />
+        </Pressable>
+      ) : null}
     </Pressable>
   );
 }

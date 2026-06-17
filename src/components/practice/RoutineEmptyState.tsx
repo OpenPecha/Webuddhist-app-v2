@@ -1,8 +1,7 @@
+import { APP_ASSETS } from '@/constants/app-assets';
 import { useTranslation } from 'react-i18next';
 import { Image } from 'expo-image';
 import { Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-native';
-
-const calendarImage = require('../../../assets/images/bgimage1.jpg');
 
 interface RoutineEmptyStateProps {
   onBuildRoutine: () => void;
@@ -24,7 +23,7 @@ export function RoutineEmptyState({ onBuildRoutine }: RoutineEmptyStateProps) {
     >
       <View style={{ alignItems: 'center', gap: 32 }}>
         <Image
-          source={calendarImage}
+          source={APP_ASSETS.routineCalendar}
           style={{
             width: width * 0.5,
             height: height * 0.2,

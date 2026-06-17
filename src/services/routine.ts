@@ -1,6 +1,10 @@
 import { ENDPOINTS } from '@/lib/api-config';
 import { http } from '@/lib/http';
 import type { RoutineResponse } from '@/types/routine';
+import type {
+  RoutineWithTimeBlocksResponse,
+  TimeBlockRequest,
+} from '@/types/routine-mutations';
 import { routineDataFromApiResponse } from '@/utils/routine-mapper';
 import type { RoutineData } from '@/types/routine';
 import axios from 'axios';
@@ -47,4 +51,41 @@ export async function fetchUserRoutine(
     }
     throw error;
   }
+}
+
+export async function createRoutineWithTimeBlock(
+  request: TimeBlockRequest,
+): Promise<RoutineWithTimeBlocksResponse> {
+  const { data } = await http.post<RoutineWithTimeBlocksResponse>(
+    ENDPOINTS.routine.create,
+    request,
+  );
+  return data;
+}
+
+export async function createTimeBlock(
+  routineId: string,
+  request: TimeBlockRequest,
+): Promise<{ id: string }> {
+  const { data } = await http.post<{ id: string }>(
+    ENDPOINTS.routine.timeBlocks(routineId),
+    request,
+  );
+  return data;
+}
+
+export async function updateTimeBlock(
+  routineId: string,
+  blockId: string,
+  request: TimeBlockRequest,
+): Promise<{ id: string }> {
+  const { data } = await http.put<{ id: string }>(
+    ENDPOINTS.routine.timeBlock(routineId, blockId),
+    request,
+  );
+  return data;
+}
+
+export async function deleteTimeBlock(routineId: string, blockId: string): Promise<void> {
+  await http.delete(ENDPOINTS.routine.timeBlock(routineId, blockId));
 }

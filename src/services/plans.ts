@@ -1,5 +1,6 @@
 import { ENDPOINTS } from '@/lib/api-config';
 import { http } from '@/lib/http';
+import type { UserPlanDayDetails, UserPlanProgress } from '@/types/plan-track';
 import type { UserPlansResponse } from '@/types/plans';
 
 export async function fetchUserPlans(
@@ -10,6 +11,21 @@ export async function fetchUserPlans(
   const { data } = await http.get<UserPlansResponse>(ENDPOINTS.plans.userPlans, {
     params: { language, skip, limit },
   });
+  return data;
+}
+
+export async function fetchUserPlanProgress(planId: string): Promise<UserPlanProgress> {
+  const { data } = await http.get<UserPlanProgress>(ENDPOINTS.plans.userPlanProgress(planId));
+  return data;
+}
+
+export async function fetchUserPlanDay(
+  planId: string,
+  dayNumber: number,
+): Promise<UserPlanDayDetails> {
+  const { data } = await http.get<UserPlanDayDetails>(
+    ENDPOINTS.plans.userPlanDay(planId, dayNumber),
+  );
   return data;
 }
 
