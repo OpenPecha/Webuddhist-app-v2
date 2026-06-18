@@ -25,6 +25,9 @@
   --color-muted-foreground: var(--color-muted);
   --color-input: var(--color-border);
   --color-ring: var(--color-accent);
+  --color-brand: #dead2d;
+  --color-surface-input: #ffffff;
+  --color-border-input: #d4d4d4;
 
   --font-sans: "Inter-Regular";
   --font-garamond: "EBGaramond-Regular";
@@ -55,6 +58,9 @@
       --color-muted-foreground: var(--color-muted);
       --color-input: var(--color-border);
       --color-ring: var(--color-accent);
+      --color-brand: #dead2d;
+      --color-surface-input: #ffffff;
+      --color-border-input: #d4d4d4;
     }
 
     @variant dark {
@@ -80,6 +86,9 @@
       --color-muted-foreground: var(--color-muted);
       --color-input: var(--color-border);
       --color-ring: var(--color-accent);
+      --color-brand: #dead2d;
+      --color-surface-input: #1a1a1a;
+      --color-border-input: #555555;
     }
   }
 }

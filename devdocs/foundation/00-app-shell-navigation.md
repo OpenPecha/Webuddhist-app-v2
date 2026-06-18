@@ -17,6 +17,9 @@ Defines the app's navigation skeleton: the root stack, the bottom tab bar, route
 naming, deep-link structure, and how the screens hang off them. Everything else
 plugs into this shell, so it ships first.
 
+**Import paths:** Use `@/…` imports rooted at `src/` (e.g. `@/components/settings/Foo`,
+`@/hooks/useContentLanguage`). Configured in `tsconfig.json` as `@/*` → `./src/*`.
+
 ## 2. Flutter reference map
 
 | Element | Flutter source | Notes |

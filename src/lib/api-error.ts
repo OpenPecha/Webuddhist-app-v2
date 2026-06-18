@@ -36,6 +36,16 @@ export class RateLimitFailure extends Error {
   }
 }
 
+export class ConflictFailure extends Error {
+  constructor(
+    message: string,
+    public readonly suggestions: string[] = [],
+  ) {
+    super(message);
+    this.name = 'ConflictFailure';
+  }
+}
+
 export class UnknownFailure extends Error {
   constructor(message = 'An unexpected error occurred') {
     super(message);

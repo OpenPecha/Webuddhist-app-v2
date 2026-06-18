@@ -34,4 +34,9 @@ export const ENDPOINTS = {
   auth: {
     me: '/auth/me',
   },
+  users: {
+    info: '/users/info',
+    upload: '/users/upload',
+    username: '/users/username',
+  },
 } as const;

@@ -5,6 +5,7 @@ import {
   NetworkFailure,
   NotFoundFailure,
   RateLimitFailure,
+  ConflictFailure,
   ServerFailure,
   UnknownFailure,
 } from '@/lib/api-error';
@@ -54,6 +55,15 @@ http.interceptors.response.use(
     }
     if (status === 429) {
       return Promise.reject(new RateLimitFailure());
+    }
+    if (status === 409) {
+      const detail = data?.detail as { message?: string; suggestions?: string[] } | undefined;
+      return Promise.reject(
+        new ConflictFailure(
+          detail?.message ?? apiMessage ?? 'Conflict',
+          detail?.suggestions ?? [],
+        ),
+      );
     }
     if (status >= 500) {
       return Promise.reject(new ServerFailure(status, apiMessage || 'Server error'));

@@ -27,4 +27,8 @@ export const QUERY_KEYS = {
   texts: {
     detail: (id: string) => ['texts', 'detail', id] as const,
   },
+  profile: {
+    all: ['profile'] as const,
+    info: () => ['profile', 'info'] as const,
+  },
 } as const;
