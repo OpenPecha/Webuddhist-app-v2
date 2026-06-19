@@ -1,5 +1,6 @@
 import { ENDPOINTS } from '@/lib/api-config';
 import { ConflictFailure } from '@/lib/api-error';
+import { normalizeUserProfile } from '@/lib/profile-cache';
 import { http } from '@/lib/http';
 import type {
   UserInfoUpdatePayload,
@@ -8,8 +9,8 @@ import type {
 } from '@/types/user';
 
 export async function fetchUserProfile(): Promise<UserProfile> {
-  const { data } = await http.get<UserProfile>(ENDPOINTS.users.info);
-  return data;
+  const { data } = await http.get<Partial<UserProfile>>(ENDPOINTS.users.info);
+  return normalizeUserProfile(data);
 }
 
 export async function updateUserProfile(payload: UserInfoUpdatePayload): Promise<void> {

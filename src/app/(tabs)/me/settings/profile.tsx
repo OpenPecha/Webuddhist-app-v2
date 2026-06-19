@@ -1,9 +1,11 @@
 import { AppBottomSheet } from '@/components/settings/AppBottomSheet';
 import { AppScreenHeader } from '@/components/settings/AppScreenHeader';
 import { ProfileAvatarSection } from '@/components/settings/ProfileAvatarSection';
-import { ProfileFormField } from '@/components/settings/ProfileFormField';
 import { UsernameFormField } from '@/components/settings/UsernameFormField';
+import type { UsernameFieldState } from '@/components/settings/UsernameFormField';
+import { FloatingTextInput } from '@/components/ui/floating-text-input';
 import { Text } from '@/components/ui/text';
+import { QUERY_KEYS } from '@/constants/query-keys';
 import { Camera, CaretRight, Images, Trash } from '@/constants/settings-icons';
 import { useUserProfile } from '@/hooks/api/useUserProfile';
 import { useUserProfileMutations } from '@/hooks/api/useUserProfileMutations';
@@ -11,27 +13,43 @@ import { useNavigateOnce } from '@/hooks/useNavigateOnce';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { pickProfileImage } from '@/lib/image-picker';
 import {
+  emptyProfileFormState,
+  profileToFormState,
+  type ProfileFormState,
+} from '@/lib/profile-form-state';
+import {
   validatePersonName,
   validateUsername,
   type UsernameValidationKey,
 } from '@/lib/username-validation';
-import { type Href, router } from 'expo-router';
+import type { UserProfile } from '@/types/user';
+import { useQueryClient } from '@tanstack/react-query';
+import { type Href, router, useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  ActivityIndicator,
-  Alert,
-  Pressable,
-  ScrollView,
-  TextInput,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Alert, Pressable, ScrollView, View } from 'react-native';
+import { useAuth0, type User } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useUniwind } from 'uniwind';
-import type { UsernameFieldState } from '@/components/settings/UsernameFormField';
 
 const BIO_MAX = 100;
 const USERNAME_DEBOUNCE_MS = 700;
+
+function seedFromAuth0(form: ProfileFormState, authUser: User | null | undefined): ProfileFormState {
+  if (!authUser) return form;
+  if (form.firstName || form.lastName) return form;
+
+  let firstName = authUser.givenName ?? '';
+  let lastName = authUser.familyName ?? '';
+
+  if (!firstName && !lastName && authUser.name) {
+    const parts = authUser.name.trim().split(/\s+/);
+    firstName = parts[0] ?? '';
+    lastName = parts.slice(1).join(' ');
+  }
+
+  return { ...form, firstName, lastName };
+}
 
 export default function EditProfileScreen() {
   const { t } = useTranslation();
@@ -39,16 +57,29 @@ export default function EditProfileScreen() {
   const { theme } = useUniwind();
   const isDark = theme === 'dark';
   const { foreground, mutedForeground, destructive } = useThemeColors();
-  const { data: profile, isLoading, refetch } = useUserProfile();
+  const { user: authUser } = useAuth0();
+  const queryClient = useQueryClient();
+  const cachedProfile = queryClient.getQueryData<UserProfile>(QUERY_KEYS.profile.info());
+  const initialForm = cachedProfile
+    ? seedFromAuth0(profileToFormState(cachedProfile), authUser)
+    : emptyProfileFormState();
+
+  const {
+    data: profile,
+    isLoading,
+    isFetching,
+    isError,
+    refetch,
+  } = useUserProfile();
   const { updateProfile, patchUsername, uploadAvatar } = useUserProfileMutations();
   const navigateOnce = useNavigateOnce();
 
-  const [username, setUsername] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [bio, setBio] = useState('');
-  const [originalUsername, setOriginalUsername] = useState('');
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [username, setUsername] = useState(initialForm.username);
+  const [firstName, setFirstName] = useState(initialForm.firstName);
+  const [lastName, setLastName] = useState(initialForm.lastName);
+  const [bio, setBio] = useState(initialForm.bio);
+  const [originalUsername, setOriginalUsername] = useState(initialForm.originalUsername);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(initialForm.avatarUrl);
   const [localAvatarUri, setLocalAvatarUri] = useState<string | null>(null);
   const [usernameState, setUsernameState] = useState<UsernameFieldState>('idle');
   const [usernameMessageKey, setUsernameMessageKey] = useState<UsernameValidationKey>(null);
@@ -58,17 +89,28 @@ export default function EditProfileScreen() {
   const [saving, setSaving] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [avatarSheetVisible, setAvatarSheetVisible] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(true);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  useFocusEffect(
+    useCallback(() => {
+      setIsRefreshing(true);
+      void refetch();
+    }, [refetch]),
+  );
+
   useEffect(() => {
-    if (!profile) return;
-    setUsername(profile.username ?? '');
-    setOriginalUsername(profile.username ?? '');
-    setFirstName(profile.firstname ?? '');
-    setLastName(profile.lastname ?? '');
-    setBio(profile.about_me ?? '');
-    setAvatarUrl(profile.avatar_url ?? null);
-  }, [profile]);
+    if (!profile || !isRefreshing) return;
+
+    const next = seedFromAuth0(profileToFormState(profile), authUser);
+    setUsername(next.username);
+    setOriginalUsername(next.originalUsername);
+    setFirstName(next.firstName);
+    setLastName(next.lastName);
+    setBio(next.bio);
+    setAvatarUrl(next.avatarUrl);
+    setIsRefreshing(false);
+  }, [profile, isRefreshing, authUser]);
 
   const checkUsernameAvailability = useCallback(
     async (value: string) => {
@@ -128,6 +170,7 @@ export default function EditProfileScreen() {
   };
 
   const canSave =
+    !isRefreshing &&
     !saving &&
     !uploadingAvatar &&
     usernameState !== 'checking' &&
@@ -208,7 +251,29 @@ export default function EditProfileScreen() {
     </Pressable>
   );
 
-  if (isLoading && !profile) {
+  if (isError && !profile) {
+    return (
+      <View className="flex-1 bg-background">
+        <AppScreenHeader title={t('profile.edit_title')} />
+        <View className="flex-1 items-center justify-center px-8">
+          <Text className="text-center text-base" style={{ color: mutedForeground }}>
+            {t('practice.routine_load_error')}
+          </Text>
+          <Pressable
+            onPress={() => refetch()}
+            className="mt-4 rounded-full px-6 py-3 active:opacity-80"
+            style={{ backgroundColor: isDark ? '#fdfdfc' : '#000' }}
+          >
+            <Text className="text-sm font-semibold" style={{ color: isDark ? '#000' : '#fff' }}>
+              {t('practice.retry')}
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+    );
+  }
+
+  if (!profile && (isLoading || isFetching)) {
     return (
       <View className="flex-1 items-center justify-center bg-background">
         <ActivityIndicator size="large" />
@@ -217,13 +282,11 @@ export default function EditProfileScreen() {
   }
 
   const displayAvatar = localAvatarUri ?? avatarUrl;
-  const borderColor = isDark ? '#555555' : '#d4d4d4';
-  const fillColor = isDark ? '#1a1a1a' : '#ffffff';
 
   return (
     <View className="flex-1 bg-background">
       <AppScreenHeader title={t('profile.edit_title')} rightAction={savePill} />
-      {(saving || uploadingAvatar) && (
+      {(saving || uploadingAvatar || isRefreshing) && (
         <View className="bg-muted h-0.5 w-full">
           <ActivityIndicator style={{ height: 2 }} />
         </View>
@@ -252,7 +315,7 @@ export default function EditProfileScreen() {
 
         <View className="mt-5 flex-row gap-3">
           <View className="flex-1">
-            <ProfileFormField
+            <FloatingTextInput
               label={t('profile.first_name')}
               value={firstName}
               onChangeText={setFirstName}
@@ -260,7 +323,7 @@ export default function EditProfileScreen() {
             />
           </View>
           <View className="flex-1">
-            <ProfileFormField
+            <FloatingTextInput
               label={t('profile.last_name')}
               value={lastName}
               onChangeText={setLastName}
@@ -270,29 +333,15 @@ export default function EditProfileScreen() {
         </View>
 
         <View className="mt-5">
-          <View
-            style={{
-              borderRadius: 12,
-              borderWidth: 1,
-              borderColor,
-              backgroundColor: fillColor,
-              paddingHorizontal: 16,
-              paddingVertical: 10,
-            }}
-          >
-            <Text style={{ fontSize: 12, color: mutedForeground, marginBottom: 2 }}>
-              {t('profile.bio')}
-            </Text>
-            <TextInput
-              value={bio}
-              onChangeText={(text) => setBio(text.slice(0, BIO_MAX))}
-              multiline
-              numberOfLines={3}
-              placeholder={t('profile.bio_hint')}
-              placeholderTextColor={mutedForeground}
-              style={{ fontSize: 16, color: foreground, minHeight: 72, textAlignVertical: 'top' }}
-            />
-          </View>
+          <FloatingTextInput
+            label={t('profile.bio')}
+            hint={t('profile.bio_hint')}
+            value={bio}
+            onChangeText={setBio}
+            multiline
+            minHeight={96}
+            maxLength={BIO_MAX}
+          />
           <Text className="text-muted-foreground mt-1 text-right text-xs">
             {bio.length}/{BIO_MAX}
           </Text>

@@ -1,4 +1,4 @@
-import { ProfileFormField } from '@/components/settings/ProfileFormField';
+import { FloatingTextInput } from '@/components/ui/floating-text-input';
 import { Check, X } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
@@ -25,7 +25,7 @@ export function UsernameFormField({
 }: UsernameFormFieldProps) {
   const { t } = useTranslation();
 
-  const trailing =
+  const trailingIcon =
     state === 'checking' ? (
       <ActivityIndicator size="small" />
     ) : state === 'available' ? (
@@ -36,16 +36,14 @@ export function UsernameFormField({
 
   return (
     <View>
-      <View className="relative">
-        <ProfileFormField
-          label={t('profile.username_label')}
-          value={value}
-          onChangeText={onChangeText}
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
-        {trailing ? <View className="absolute right-4 top-10">{trailing}</View> : null}
-      </View>
+      <FloatingTextInput
+        label={t('profile.username_label')}
+        value={value}
+        onChangeText={onChangeText}
+        autoCapitalize="none"
+        autoCorrect={false}
+        trailingIcon={trailingIcon}
+      />
       {validationKey ? (
         <Text className="text-destructive mt-1 text-sm">{t(`profile.${validationKey}`)}</Text>
       ) : null}
