@@ -14,12 +14,12 @@ module.exports = {
   slug: 'webuddhist-expo-app',
   version: '1.0.0',
   orientation: 'portrait',
-  icon: './assets/images/webuddhist_gold.png',
+  icon: './assets/images/webuddhist_icon.png',
   scheme: 'webuddhistapp',
   userInterfaceStyle: 'automatic',
   ios: {
     bundleIdentifier: APP_ID,
-    icon: './assets/images/webuddhist_gold.png',
+    icon: './assets/images/webuddhist_icon.png',
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
     },
@@ -34,7 +34,7 @@ module.exports = {
   },
   web: {
     output: 'static',
-    favicon: './assets/images/webuddhist_gold.png',
+    favicon: './assets/images/webuddhist_icon.png',
   },
   plugins: [
     'expo-router',
@@ -42,10 +42,10 @@ module.exports = {
       'expo-splash-screen',
       {
         backgroundColor: '#FFFFFF',
-        image: './assets/images/webuddhist_gold.png',
+        image: './assets/images/webuddhist_icon.png',
         imageWidth: 150,
         android: {
-          image: './assets/images/webuddhist_gold.png',
+          image: './assets/images/webuddhist_icon.png',
           imageWidth: 150,
         },
       },
@@ -65,7 +65,7 @@ module.exports = {
     [
       'expo-notifications',
       {
-        icon: './assets/images/webuddhist_gold.png',
+        icon: './assets/images/webuddhist_icon.png',
         color: '#000000',
       },
     ],

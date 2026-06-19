@@ -5,6 +5,7 @@ import { RoutineEmptyState } from '@/components/practice/RoutineEmptyState';
 import { useRoutine } from '@/hooks/api/useRoutine';
 import { useUserPlans } from '@/hooks/api/useUserPlans';
 import { useLoginDrawer } from '@/hooks/useLoginDrawer';
+import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useGuest } from '@/providers/guest';
 import { routineHasItems, type RoutineItem } from '@/types/routine';
 import {
@@ -211,7 +212,8 @@ function PracticeErrorState({
 
 export default function PracticeScreen() {
   const insets = useSafeAreaInsets();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const contentLanguage = useContentLanguage();
   const router = useRouter();
   const queryClient = useQueryClient();
   const { user, isLoading: authLoading } = useAuth0();
@@ -267,7 +269,7 @@ export default function PracticeScreen() {
         const userPlan = await resolveUserPlanForRoutineItem(
           item,
           userPlans,
-          i18n.language,
+          contentLanguage,
         );
         if (!userPlan) {
           Alert.alert(t('practice.not_found'));
@@ -286,7 +288,7 @@ export default function PracticeScreen() {
         setResolvingItemId(null);
       }
     },
-    [i18n.language, isGuest, router, showLoginDrawer, t, user, userPlans],
+    [contentLanguage, isGuest, router, showLoginDrawer, t, user, userPlans],
   );
 
   const showGuestEmpty = isGuest || !user;

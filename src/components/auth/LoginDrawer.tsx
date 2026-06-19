@@ -1,8 +1,5 @@
-import '@/lib/i18n';
-import { GoogleIcon } from '@/components/auth/GoogleIcon';
-import { AUTH0_CUSTOM_SCHEME } from '@/providers/auth0';
+import { SocialLoginButtons } from '@/components/auth/SocialLoginButtons';
 import { useGuest } from '@/providers/guest';
-import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +7,6 @@ import {
   ActivityIndicator,
   Animated,
   PanResponder,
-  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -31,53 +27,12 @@ interface LoginDrawerProps {
   onClose: () => void;
 }
 
-interface SocialLoginButtonProps {
-  icon: React.ReactNode;
-  label: string;
-  onPress: () => void;
-  dark?: boolean;
-  bordered?: boolean;
-}
-
-function SocialLoginButton({
-  icon,
-  label,
-  onPress,
-  dark = false,
-  bordered = false,
-}: SocialLoginButtonProps) {
-  return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
-        paddingVertical: 14,
-        paddingHorizontal: 16,
-        borderRadius: 8,
-        backgroundColor: dark ? '#000' : '#fff',
-        borderWidth: bordered ? 0.5 : 0,
-        borderColor: '#aaa',
-        gap: 12,
-        opacity: pressed ? 0.75 : 1,
-      })}
-    >
-      {icon}
-      <Text style={{ fontSize: 16, color: dark ? '#fff' : '#000', fontFamily: 'Inter-Regular' }}>
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
-
 /**
  * In-screen bottom sheet (not a root Modal) so the tab bar stays visible,
  * matching Flutter's bottom sheet scoped to the tab body.
  */
 export function LoginDrawer({ visible, onClose }: LoginDrawerProps) {
-  const { authorize, isLoading, user } = useAuth0();
+  const { isLoading, user } = useAuth0();
   const { clearGuest } = useGuest();
   const { t } = useTranslation();
   const onCloseRef = useRef(onClose);
@@ -151,38 +106,6 @@ export function LoginDrawer({ visible, onClose }: LoginDrawerProps) {
     [finishDismiss, translateY],
   );
 
-  const loginWithGoogle = async () => {
-    try {
-      await authorize(
-        { scope: 'openid profile email offline_access', connection: 'google-oauth2' },
-        { customScheme: AUTH0_CUSTOM_SCHEME },
-      );
-      await clearGuest();
-      onClose();
-    } catch (e) {
-      const message = e instanceof Error ? e.message : String(e);
-      if (!message.includes('user_cancelled')) {
-        console.error('Google login error:', e);
-      }
-    }
-  };
-
-  const loginWithApple = async () => {
-    try {
-      await authorize(
-        { scope: 'openid profile email offline_access', connection: 'apple' },
-        { customScheme: AUTH0_CUSTOM_SCHEME },
-      );
-      await clearGuest();
-      onClose();
-    } catch (e) {
-      const message = e instanceof Error ? e.message : String(e);
-      if (!message.includes('user_cancelled')) {
-        console.error('Apple login error:', e);
-      }
-    }
-  };
-
   if (!visible) return null;
 
   return (
@@ -216,22 +139,7 @@ export function LoginDrawer({ visible, onClose }: LoginDrawerProps) {
               {isLoading ? (
                 <ActivityIndicator size="large" color="#000" style={{ marginVertical: 24 }} />
               ) : (
-                <View style={{ width: '100%', gap: 16 }}>
-                  <SocialLoginButton
-                    icon={<GoogleIcon />}
-                    label={t('auth.continue_with_google')}
-                    onPress={loginWithGoogle}
-                    bordered
-                  />
-                  {Platform.OS === 'ios' ? (
-                    <SocialLoginButton
-                      icon={<Ionicons name="logo-apple" size={22} color="#fff" />}
-                      label={t('auth.continue_with_apple')}
-                      onPress={loginWithApple}
-                      dark
-                    />
-                  ) : null}
-                </View>
+                <SocialLoginButtons onSuccess={onClose} className="px-0" />
               )}
             </View>
           </Animated.View>

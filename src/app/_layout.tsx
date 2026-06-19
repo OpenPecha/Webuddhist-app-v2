@@ -1,14 +1,15 @@
-import '@/lib/i18n';
+import { ensureI18nReady } from '@/lib/i18n';
 import { configureNotificationHandler } from '@/lib/notifications';
 import { AuthTokenSync } from '@/providers/auth-token';
 import { Auth0ProviderWrapper } from '@/providers/auth0';
 import { GuestProvider, useGuest } from '@/providers/guest';
 import { OnboardingProvider, useOnboarding } from '@/providers/onboarding';
 import { QueryProvider } from '@/providers/query';
+import { ThemeProvider } from '@/providers/theme';
 import { useFonts } from 'expo-font';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useAuth0 } from 'react-native-auth0';
@@ -81,14 +82,19 @@ export default function RootLayout() {
     'Inter-SemiBold': require('@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.ttf'),
     'Inter-Bold': require('@expo-google-fonts/inter/700Bold/Inter_700Bold.ttf'),
   });
+  const [i18nReady, setI18nReady] = useState(false);
 
   useEffect(() => {
-    if (fontsLoaded || fontError) {
+    ensureI18nReady().then(() => setI18nReady(true));
+  }, []);
+
+  useEffect(() => {
+    if ((fontsLoaded || fontError) && i18nReady) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, fontError]);
+  }, [fontsLoaded, fontError, i18nReady]);
 
-  if (!fontsLoaded && !fontError) return null;
+  if ((!fontsLoaded && !fontError) || !i18nReady) return null;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -97,7 +103,9 @@ export default function RootLayout() {
           <GuestProvider>
             <AuthTokenSync>
               <OnboardingProvider>
-                <AuthGate />
+                <ThemeProvider>
+                  <AuthGate />
+                </ThemeProvider>
               </OnboardingProvider>
             </AuthTokenSync>
           </GuestProvider>

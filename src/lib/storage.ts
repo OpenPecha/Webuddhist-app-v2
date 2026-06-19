@@ -28,6 +28,8 @@ export const StorageKeys = {
   planTotalDaysPrefix: 'plan_total_days_',
   planImmediateShownPrefix: 'plan_immediate_shown_',
   readerSecondaryEnabled: 'reader_secondary_enabled',
+  profileData: 'profile_data',
+  lastProfileUpdate: 'last_profile_update',
 } as const;
 
 export async function getString(key: string): Promise<string | null> {
