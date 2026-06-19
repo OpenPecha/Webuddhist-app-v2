@@ -1,14 +1,19 @@
 import { SocialLoginButtons } from '@/components/auth/SocialLoginButtons';
+import { MeProfileHeader } from '@/components/me/MeProfileHeader';
+import { MeStatsSection } from '@/components/me/MeStatsSection';
 import { ProfileAvatar } from '@/components/settings/ProfileAvatar';
-import { Gear } from '@/constants/settings-icons';
 import { Text } from '@/components/ui/text';
+import { Gear } from '@/constants/settings-icons';
 import { useUserProfile } from '@/hooks/api/useUserProfile';
+import { useUserStats } from '@/hooks/api/useUserStats';
 import { useNavigateOnce } from '@/hooks/useNavigateOnce';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useGuest } from '@/providers/guest';
+import { EMPTY_USER_STATS } from '@/types/user-stats';
 import { type Href } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, View } from 'react-native';
+import { ActivityIndicator, Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -20,11 +25,27 @@ export default function MeScreen() {
   const insets = useSafeAreaInsets();
   const navigateOnce = useNavigateOnce();
   const showGuest = !user || isGuest;
-  const { data: profile, isLoading: profileLoading } = useUserProfile();
+  const [refreshing, setRefreshing] = useState(false);
 
-  const avatarUrl = profile?.avatar_url ?? user?.picture ?? null;
-  const displayName = profile?.username || user?.name || '';
-  const bio = profile?.about_me ?? '';
+  const {
+    data: profile,
+    isLoading: profileLoading,
+    refetch: refetchProfile,
+  } = useUserProfile();
+  const {
+    data: stats,
+    isLoading: statsLoading,
+    refetch: refetchStats,
+  } = useUserStats();
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      await Promise.all([refetchProfile(), refetchStats()]);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refetchProfile, refetchStats]);
 
   return (
     <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
@@ -63,24 +84,21 @@ export default function MeScreen() {
           </View>
         </View>
       ) : (
-        <View className="items-center px-8 pt-10">
-          {profileLoading && !profile ? (
-            <ProfileAvatar size={104} loading />
+        <ScrollView
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
+        >
+          <MeProfileHeader
+            profile={profile}
+            authUser={user}
+            loading={profileLoading && !profile}
+          />
+          {statsLoading && !stats ? (
+            <ActivityIndicator size="large" className="mt-8" />
           ) : (
-            <ProfileAvatar url={avatarUrl} size={104} />
+            <MeStatsSection stats={stats ?? EMPTY_USER_STATS} />
           )}
-          {displayName ? (
-            <Text className="mt-4 text-[22px] font-semibold">{displayName}</Text>
-          ) : null}
-          {bio ? (
-            <Text
-              className="mt-2 px-8 text-center text-sm"
-              style={{ color: mutedForeground }}
-            >
-              {bio}
-            </Text>
-          ) : null}
-        </View>
+        </ScrollView>
       )}
     </View>
   );

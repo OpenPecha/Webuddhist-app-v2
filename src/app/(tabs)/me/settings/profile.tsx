@@ -17,6 +17,7 @@ import {
   profileToFormState,
   type ProfileFormState,
 } from '@/lib/profile-form-state';
+import { resolveProfileAvatarUrl } from '@/lib/profile-display';
 import {
   validatePersonName,
   validateUsername,
@@ -281,7 +282,8 @@ export default function EditProfileScreen() {
     );
   }
 
-  const displayAvatar = localAvatarUri ?? avatarUrl;
+  const displayAvatar =
+    localAvatarUri ?? resolveProfileAvatarUrl(profile, authUser) ?? avatarUrl;
 
   return (
     <View className="flex-1 bg-background">

@@ -32,7 +32,8 @@
     "no_series_found": "No series found",
     "no_feature_content": "No featured content available",
     "series_in_progress": "In progress",
-    "search": "Search"
+    "search": "Search",
+    "timer": "Timer"
   },
   "nav": {
     "home": "Home",
@@ -115,7 +116,20 @@
   },
   "me": {
     "guest_headline": "Access the full experience",
-    "guest_subtitle": "Create a free account to save your progress"
+    "guest_subtitle": "Create a free account to save your progress",
+    "my_stats": "My stats",
+    "day_streak": "{{count}}-day streak",
+    "best_streak": "Best streak: {{count}} days",
+    "accumulation": "Accumulation",
+    "counts": "counts",
+    "minutes": "minutes",
+    "days_plan_practiced_suffix": "days plan practiced",
+    "streak_share_message": "I'm on a {{count}}-day streak on {{appName}}!",
+    "streak_share_quote": "My daily practice is growing",
+    "streak_days_count": "{{count}} days",
+    "streak_share_error": "Unable to share streak. Please try again",
+    "share_this_streak": "Share this streak",
+    "shared_from": "Shared from"
   },
   "settings": {
     "title": "Settings",

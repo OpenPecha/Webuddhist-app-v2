@@ -32,7 +32,8 @@
     "no_series_found": "कुनै श्रृङ्खला फेला परेन",
     "no_feature_content": "कुनै विशेष सामग्री उपलब्ध छैन",
     "series_in_progress": "In progress",
-    "search": "खोज्नुहोस्"
+    "search": "खोज्नुहोस्",
+    "timer": "टाइमर"
   },
   "nav": {
     "home": "गृह",
@@ -115,7 +116,20 @@
   },
   "me": {
     "guest_headline": "पूर्ण अनुभव प्राप्त गर्नुहोस्",
-    "guest_subtitle": "आफ्नो प्रगति सेभ गर्न निःशुल्क खाता सिर्जना गर्नुहोस्"
+    "guest_subtitle": "आफ्नो प्रगति सेभ गर्न निःशुल्क खाता सिर्जना गर्नुहोस्",
+    "my_stats": "My stats",
+    "day_streak": "{{count}}-day streak",
+    "best_streak": "Best streak: {{count}} days",
+    "accumulation": "Accumulation",
+    "counts": "counts",
+    "minutes": "minutes",
+    "days_plan_practiced_suffix": "days plan practiced",
+    "streak_share_message": "I'm on a {{count}}-day streak on {{appName}}!",
+    "streak_share_quote": "My daily practice is growing",
+    "streak_days_count": "{{count}} days",
+    "streak_share_error": "Unable to share streak. Please try again",
+    "share_this_streak": "Share this streak",
+    "shared_from": "बाट साझा गरिएको"
   },
   "settings": {
     "title": "सेटिङ",

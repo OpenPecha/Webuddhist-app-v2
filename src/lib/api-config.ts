@@ -38,5 +38,6 @@ export const ENDPOINTS = {
     info: '/users/info',
     upload: '/users/upload',
     username: '/users/username',
+    stats: '/users/me/stats',
   },
 } as const;
