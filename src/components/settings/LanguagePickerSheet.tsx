@@ -1,12 +1,13 @@
-import { getLanguageLabel, supportedLanguages } from '@/constants/app-config';
-import { changeAppLanguage } from '@/lib/i18n';
-import { StorageKeys, setString } from '@/lib/storage';
 import { AppBottomSheet } from '@/components/settings/AppBottomSheet';
+import { getLanguageLabel, supportedLanguages } from '@/constants/app-config';
 import { Check } from '@/constants/settings-icons';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { changeAppLanguage } from '@/lib/i18n';
+import { StorageKeys, setString } from '@/lib/storage';
 import { Text } from '@/components/ui/text';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useTranslation } from 'react-i18next';
-import { Pressable, ScrollView } from 'react-native';
+import { Pressable } from 'react-native';
 
 interface LanguagePickerSheetProps {
   visible: boolean;
@@ -25,9 +26,9 @@ export function LanguagePickerSheet({ visible, onClose }: LanguagePickerSheetPro
   };
 
   return (
-    <AppBottomSheet visible={visible} onClose={onClose}>
-      <Text className="px-5 pb-2 text-lg font-bold">{t('settings.language')}</Text>
-      <ScrollView>
+    <AppBottomSheet visible={visible} onClose={onClose} scrollable>
+      <BottomSheetScrollView contentContainerStyle={{ paddingBottom: 16 }}>
+        <Text className="px-5 pb-2 text-lg font-bold">{t('settings.language')}</Text>
         {supportedLanguages.map((code) => {
           const selected = currentCode === code;
           const labelColor = selected ? brand : foreground;
@@ -50,7 +51,7 @@ export function LanguagePickerSheet({ visible, onClose }: LanguagePickerSheetPro
             </Pressable>
           );
         })}
-      </ScrollView>
+      </BottomSheetScrollView>
     </AppBottomSheet>
   );
 }

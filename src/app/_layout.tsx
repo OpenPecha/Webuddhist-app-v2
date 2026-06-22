@@ -6,6 +6,7 @@ import { GuestProvider, useGuest } from '@/providers/guest';
 import { OnboardingProvider, useOnboarding } from '@/providers/onboarding';
 import { QueryProvider } from '@/providers/query';
 import { ThemeProvider } from '@/providers/theme';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { useFonts } from 'expo-font';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -98,19 +99,21 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <QueryProvider>
-        <Auth0ProviderWrapper>
-          <GuestProvider>
-            <AuthTokenSync>
-              <OnboardingProvider>
-                <ThemeProvider>
-                  <AuthGate />
-                </ThemeProvider>
-              </OnboardingProvider>
-            </AuthTokenSync>
-          </GuestProvider>
-        </Auth0ProviderWrapper>
-      </QueryProvider>
+      <BottomSheetModalProvider>
+        <QueryProvider>
+          <Auth0ProviderWrapper>
+            <GuestProvider>
+              <AuthTokenSync>
+                <OnboardingProvider>
+                  <ThemeProvider>
+                    <AuthGate />
+                  </ThemeProvider>
+                </OnboardingProvider>
+              </AuthTokenSync>
+            </GuestProvider>
+          </Auth0ProviderWrapper>
+        </QueryProvider>
+      </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
 }
