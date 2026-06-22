@@ -238,6 +238,10 @@
   },
   "timers": {
     "title": "Timer",
+    "meditation_timer": "Meditation Timer",
+    "min": "min",
+    "finish": "Finish",
+    "discard_session": "Discard session",
     "running": "Timer running",
     "complete": "Time's up",
     "close": "Close"

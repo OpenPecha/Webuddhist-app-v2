@@ -69,6 +69,25 @@ http.interceptors.response.use(
       return Promise.reject(new ServerFailure(status, apiMessage || 'Server error'));
     }
 
+    // #region agent log
+    const requestUrl = error.config?.url ?? '';
+    if (requestUrl.includes('timer_stop')) {
+      fetch('http://127.0.0.1:7544/ingest/57328dfe-8256-4e2a-91e6-138b7c8b37e5', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '3a2ae6' },
+        body: JSON.stringify({
+          sessionId: '3a2ae6',
+          runId: 'pre-fix',
+          hypothesisId: 'H3-H4',
+          location: 'http.ts:interceptor:timer_stop',
+          message: 'timer_stop HTTP error before UnknownFailure',
+          data: { status, apiMessage, responseData: data, requestBody: error.config?.data },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+    }
+    // #endregion
+
     return Promise.reject(new UnknownFailure(apiMessage || 'An unexpected error occurred'));
   },
 );

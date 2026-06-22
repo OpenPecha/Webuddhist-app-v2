@@ -50,4 +50,8 @@ export const ENDPOINTS = {
     streak: '/users/me/streak',
     routineInfo: '/users/me/routine/info',
   },
+  timers: {
+    list: '/timers',
+    stop: '/timers/user/timer_stop',
+  },
 } as const;

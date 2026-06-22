@@ -1,12 +1,45 @@
-/** Fallback presets when `/timers` API is unavailable — common meditation durations. */
+/** Fallback presets when `/timers` API is unavailable — matches Flutter default grid. */
 import type { PresetTimer } from '@/types/timers';
 
-export const FALLBACK_PRESET_TIMERS: PresetTimer[] = [
-  { id: 'preset-5', name: '5 min', durationMs: 5 * 60 * 1000 },
-  { id: 'preset-10', name: '10 min', durationMs: 10 * 60 * 1000 },
-  { id: 'preset-15', name: '15 min', durationMs: 15 * 60 * 1000 },
-  { id: 'preset-20', name: '20 min', durationMs: 20 * 60 * 1000 },
-  { id: 'preset-30', name: '30 min', durationMs: 30 * 60 * 1000 },
-  { id: 'preset-45', name: '45 min', durationMs: 45 * 60 * 1000 },
-  { id: 'preset-60', name: '60 min', durationMs: 60 * 60 * 1000 },
-];
+export const MEDITATION_PRESET_MINUTES = [5, 10, 15, 30] as const;
+
+export const MEDITATION_PRESET_DURATION_MS = MEDITATION_PRESET_MINUTES.map(
+  (minutes) => minutes * 60 * 1000,
+);
+
+export const FALLBACK_PRESET_TIMERS: PresetTimer[] = MEDITATION_PRESET_MINUTES.map((minutes) => ({
+  id: `preset-${minutes}`,
+  name: `${minutes} min`,
+  durationMs: minutes * 60 * 1000,
+}));
+
+function normalizeDurationMs(durationMs: number): number {
+  const canonical = MEDITATION_PRESET_DURATION_MS.find((ms) => ms === durationMs);
+  if (canonical != null) return canonical;
+
+  const minutes = Math.round(durationMs / (60 * 1000));
+  const fromMinutes = minutes * 60 * 1000;
+  if (MEDITATION_PRESET_DURATION_MS.includes(fromMinutes)) {
+    return fromMinutes;
+  }
+
+  return durationMs;
+}
+
+/** Keeps only 5/10/15/30 min presets; falls back when API returns none. */
+export function filterMeditationPresets(timers: PresetTimer[]): PresetTimer[] {
+  const allowed = new Set<number>(MEDITATION_PRESET_DURATION_MS);
+  const byDuration = new Map<number, PresetTimer>();
+
+  for (const timer of timers) {
+    const durationMs = normalizeDurationMs(timer.durationMs);
+    if (!allowed.has(durationMs) || byDuration.has(durationMs)) continue;
+    byDuration.set(durationMs, { ...timer, durationMs });
+  }
+
+  const filtered = MEDITATION_PRESET_DURATION_MS.map((durationMs) => byDuration.get(durationMs)).filter(
+    (timer): timer is PresetTimer => timer != null,
+  );
+
+  return filtered.length > 0 ? filtered : FALLBACK_PRESET_TIMERS;
+}

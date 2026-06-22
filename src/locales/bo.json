@@ -222,6 +222,10 @@
   },
   "timers": {
     "title": "དུས་ཚོད་རྩིས།",
+    "meditation_timer": "སྒོམ་དུས་ཚོད།",
+    "min": "min",
+    "finish": "Finish",
+    "discard_session": "Discard session",
     "running": "དུས་ཚོད་རྩིས་བཞིན་པ།",
     "complete": "དུས་ཚོད་མཇུག་བསྡུས།",
     "close": "ཁ་བསྡམས།"

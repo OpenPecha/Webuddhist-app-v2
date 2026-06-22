@@ -77,6 +77,7 @@ function AuthGate() {
       <Stack.Screen name="calendar/index" />
       <Stack.Screen name="mala/index" />
       <Stack.Screen name="timers/index" />
+      <Stack.Screen name="timers/active" />
       <Stack.Screen name="reader/[textId]" />
     </Stack>
   );

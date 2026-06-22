@@ -222,6 +222,10 @@
   },
   "timers": {
     "title": "計時器",
+    "meditation_timer": "禪修計時",
+    "min": "min",
+    "finish": "完成",
+    "discard_session": "捨棄本次",
     "running": "計時中",
     "complete": "時間到",
     "close": "關閉"
