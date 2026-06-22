@@ -23,6 +23,7 @@
     "drawer_subtitle": "隨時隨地，在任何裝置上繼續您的修持"
   },
   "home": {
+    "hello_prefix": "你好，",
     "good_morning": "早上好",
     "good_afternoon": "下午好",
     "good_evening": "晚上好",
@@ -32,7 +33,21 @@
     "no_series_found": "找不到該系列",
     "no_feature_content": "尚無精選內容",
     "series_in_progress": "進行中",
-    "search": "搜尋"
+    "search": "搜尋",
+    "timer": "計時器",
+    "home_mala": "念珠",
+    "home_chants": "誦經",
+    "home_shortcut_plans": "計畫",
+    "home_share_prompt": "喜歡 {{appName}} 嗎？",
+    "share": "分享",
+    "home_overall_stats": "整體統計",
+    "home_plans_count": "{{count}} 個計畫",
+    "home_recitation_count": "{{count}} 個誦經",
+    "creator_featured_plan": "精選計畫",
+    "calendar_day_month": "藏历{{month}}月{{day}}日",
+    "load_error": "無法載入。請檢查您的網路連線，然後再試一次。",
+    "share_this_quote": "分享这句话",
+    "verse_share_error": "无法分享引文，请重试"
   },
   "nav": {
     "home": "首頁",
@@ -191,5 +206,29 @@
     "person_name_min_length": "至少需要 1 個字元",
     "person_name_max_length": "不得超過 50 個字元",
     "person_name_invalid_chars": "僅允許字母、空格、連字號和撇號"
+  },
+  "calendar": {
+    "title": "藏曆",
+    "moon_phase_new_moon": "新月",
+    "moon_phase_first_quarter": "上弦月",
+    "moon_phase_full_moon": "滿月"
+  },
+  "mala": {
+    "title": "念珠",
+    "tap_to_count": "點擊計數",
+    "rounds_one": "1 圈",
+    "rounds_other": "{{count}} 圈",
+    "reset": "重設"
+  },
+  "timers": {
+    "title": "計時器",
+    "running": "計時中",
+    "complete": "時間到",
+    "close": "關閉"
+  },
+  "force_update": {
+    "title": "需要更新",
+    "message": "有新版本的 WeBuddhist 可用。請更新後繼續使用。",
+    "button": "立即更新"
   }
 }

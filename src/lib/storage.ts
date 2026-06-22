@@ -30,6 +30,7 @@ export const StorageKeys = {
   readerSecondaryEnabled: 'reader_secondary_enabled',
   profileData: 'profile_data',
   lastProfileUpdate: 'last_profile_update',
+  malaCounter: 'mala_counter',
 } as const;
 
 export async function getString(key: string): Promise<string | null> {

@@ -1,8 +1,16 @@
 export const ENDPOINTS = {
   series: {
     list: '/series',
+    featured: '/series/featured',
     detail: (id: string) => `/series/${id}`,
     enroll: (id: string) => `/series/${id}/enroll`,
+  },
+  calendar: {
+    today: '/calendar/today',
+    month: (year: number, month: number) => `/calendar/${year}/${month}`,
+  },
+  verseOfDay: {
+    today: '/verse-of-day/today',
   },
   plans: {
     list: '/plans',
@@ -39,5 +47,7 @@ export const ENDPOINTS = {
     upload: '/users/upload',
     username: '/users/username',
     stats: '/users/me/stats',
+    streak: '/users/me/streak',
+    routineInfo: '/users/me/routine/info',
   },
 } as const;

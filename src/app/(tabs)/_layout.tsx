@@ -12,7 +12,7 @@ export default function TabLayout() {
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="practice">
         <NativeTabs.Trigger.Label>{t('nav.practice')}</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="figure.mind.and.body" md="self_improvement" />
+        <NativeTabs.Trigger.Icon sf="bell.fill" md="notifications" />
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="me" role="more">
         <NativeTabs.Trigger.Label>{t('nav.me')}</NativeTabs.Trigger.Label>

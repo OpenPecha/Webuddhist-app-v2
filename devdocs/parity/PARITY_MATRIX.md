@@ -19,16 +19,16 @@ implementation changes.
 | i18n / theming | `core/l10n/*`, `core/theme/*` | `global.css`, fonts in `_layout.tsx` | [04](../foundation/04-i18n-theming.md) | P1 | PRD draft |
 | Analytics | `core/analytics/*` | TBD | [05](../foundation/05-analytics.md) | P2 | PRD draft |
 | Notifications | `features/notifications` | TBD (`expo-notifications`) | [06](../foundation/06-notifications.md) | P1 | PRD draft |
-| Force update | `core/services/upgrade/force_update_gate.dart` | `src/app/_layout.tsx` (TBD) | [07](../foundation/07-force-update.md) | P0 | Not started |
+| Force update | `core/services/upgrade/force_update_gate.dart` | `src/components/ForceUpdateGate.tsx` | [07](../foundation/07-force-update.md) | P0 | In progress — env min-version gate; store API check TBD |
 
 ## Features
 
 | Feature | Flutter routes | v2 route | PRD | Priority | Status |
 |---------|----------------|----------|-----|----------|--------|
-| Home | `/home` | `src/app/(tabs)/index.tsx` | [home](../features/home.md) | P0 | In progress (partial) — series browse partial; dashboard widgets not started |
-| Home — calendar | `/home/calendar` | TBD | [home](../features/home.md) | P0 | Not started |
-| Home — Mala shortcut | `/mala` | TBD | [home](../features/home.md) | P0 | Not started |
-| Home — Timer shortcut | `/home/timers` | TBD | [home](../features/home.md) | P0 | Not started |
+| Home | `/home` | `src/app/(tabs)/index.tsx` | [home](../features/home.md) | P0 | Parity — dashboard + theme polish; notification sync stub |
+| Home — calendar | `/home/calendar` | `src/app/calendar/index.tsx` | [home](../features/home.md) | P0 | Parity — month grid + nav |
+| Home — Mala shortcut | `/mala` | `src/app/mala/index.tsx` | [home](../features/home.md) | P0 | In progress — MVP counter |
+| Home — Timer shortcut | `/home/timers` | `src/app/timers/index.tsx` | [home](../features/home.md) | P0 | In progress — presets + countdown |
 | Series | `/home/series/:id` | `src/app/series/[id].tsx` | [series](../features/series.md) | P0 | In progress |
 | Plans | `/home/plans/:tag`, `/plans/info`, `/plans/details` | TBD | [plans](../features/plans.md) | P0 | Not started |
 | Recitation | `/recitations/detail` | `src/app/(tabs)/screens/recitation` | [recitation](../features/recitation.md) | P0 | In progress (partial) |
@@ -43,18 +43,18 @@ Sub-components of the Home tab. See [home](../features/home.md) for full require
 
 | Section | Flutter widget | v2 status | Notes |
 |---------|---------------|-----------|-------|
-| Header + streak | `home_header.dart` | Partial | Greeting only; no streak badge |
-| Calendar card | `home_calendar_card.dart` | Not started | Deprecated `Calander.tsx` unused |
-| Verse of day | `verse_of_day_card.dart` | Not started | Deprecated `quotation.tsx` unused |
-| Shortcuts (Mala/Timer) | `home_shortcuts_row.dart` | Not started | Guest gate required |
-| My practices stats | `my_practices_stats_card.dart` | Not started | Auth required |
-| Featured plans | `featured_plan_section.dart` | Partial | Wrong endpoint; no random hero |
-| Share prompt | `home_share_prompt.dart` | Not started | |
-| Series gate | `series_provider.dart` | Partial | Loads; no global empty state |
-| Notification on load | `home_screen.dart` init | Not started | Cross-ref notifications PRD |
-| Post-onboarding plan nav | `pendingOnboardingPlanProvider` | Not started | Cross-ref onboarding PRD |
-| Pull-to-refresh | `_onRefresh()` | Partial | Refetches series only today |
-| Per-section skeletons | verse/stats skeletons | Not started | Spinner only today |
+| Header + streak | `home_header.dart` | Parity | Greeting + streak badge + share sheet |
+| Calendar card | `home_calendar_card.dart` | Parity | `MoonPhaseIcon` + full calendar screen |
+| Verse of day | `verse_of_day_card.dart` | Parity | Skeleton + share on tap |
+| Shortcuts (Mala/Timer) | `home_shortcuts_row.dart` | Parity | 4 tiles; Mala/Timer guest-gated |
+| My practices stats | `my_practices_stats_card.dart` | Parity | Hidden when counts zero or guest |
+| Featured plans | `featured_plan_section.dart` | Parity | `/series/featured` + random hero layout |
+| Share prompt | `home_share_prompt.dart` | Parity | App share CTA |
+| Series gate | `series_provider.dart` | Parity | Empty/error states localized |
+| Notification on load | `home_screen.dart` init | In progress | Permission + Day-1 sync stub with idempotency keys |
+| Post-onboarding plan nav | `pendingOnboardingPlanProvider` | Parity | Push plan detail then Practice tab |
+| Pull-to-refresh | `_onRefresh()` | Parity | Invalidates all home queries |
+| Per-section skeletons | verse/stats skeletons | Parity | Verse, stats, featured skeletons |
 
 ## Won't migrate (stalled)
 

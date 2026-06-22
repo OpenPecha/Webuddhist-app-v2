@@ -244,18 +244,20 @@ switch bottom nav to Practice tab (index 1).
 
 | Requirement | Flutter | v2 | Notes |
 |-------------|---------|-----|-------|
-| Greeting | yes | partial | time-of-day + name; no streak |
-| Streak badge | yes | no | |
-| Calendar card | yes | no | placeholder component unused |
-| Verse of day | yes | no | dummy quotation unused |
-| Shortcuts (Mala/Timer) | yes | no | |
-| My practices stats | yes | no | |
-| Featured plans | yes | partial | wrong endpoint; no random hero |
-| Share prompt | yes | no | |
-| Series gate (empty/error) | yes | partial | loads but no global empty state |
-| Pull-to-refresh | yes | yes | only refetches series today |
-| Notification on load | yes | no | |
-| Post-onboarding plan nav | yes | no | |
-| Per-section skeletons | yes | no | spinner only |
-| Force-update gate | yes | no | app-wide modal |
-| Notification permission | yes | no | |
+| Greeting | yes | yes | Guest vs authenticated + Tibetan font sizing |
+| Streak badge | yes | yes | Tap opens share sheet |
+| Calendar card | yes | yes | `MoonPhaseIcon` + `CalendarDots`; tap → calendar screen |
+| Verse of day | yes | yes | Skeleton + share on tap |
+| Shortcuts (Mala/Timer) | yes | yes | Phosphor icons; Mala/Timer guest-gated |
+| My practices stats | yes | yes | `ListChecks` + `BookOpenText`; hidden when counts zero |
+| Featured plans | yes | yes | `/series/featured` + layout adapts to stats |
+| Share prompt | yes | yes | App share CTA |
+| Series gate (empty/error) | yes | yes | Localized empty/error + retry |
+| Pull-to-refresh | yes | yes | Invalidates all home queries |
+| Notification on load | yes | partial | Permission + user-plans refresh + Day-1 sync stub |
+| Post-onboarding plan nav | yes | yes | Push plan detail then Practice tab |
+| Per-section skeletons | yes | yes | Verse, stats, featured skeletons |
+| Force-update gate | yes | yes | `ForceUpdateGate` in `_layout.tsx`; env `EXPO_PUBLIC_MIN_APP_VERSION` |
+| Calendar screen | yes | yes | Month grid via `GET /calendar/{year}/{month}` |
+| Mala screen | yes | partial | MVP counter + AsyncStorage; no mantra catalogue |
+| Timer screen | yes | partial | Preset list + inline countdown; API with fallback presets |

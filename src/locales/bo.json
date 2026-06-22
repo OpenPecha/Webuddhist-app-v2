@@ -23,6 +23,7 @@
     "drawer_subtitle": "ཁྱེད་ཀྱི་ཉམས་ལེན་འཆར་གཞི་ལ་གཟིགས་ཏེ་ཡར་རྒྱས་ཀྱི་གོ་རིམ་ལ་རྗེས་འདེད་བྱོས།"
   },
   "home": {
+    "hello_prefix": "བཀྲ་ཤིས་བདེ་ལེགས། ",
     "good_morning": "སྔ་དྲོ་བདེ་ལེགས།",
     "good_afternoon": "ཉིན་གུང་བདེ་ལེགས།",
     "good_evening": "དགོང་དྲོ་བདེ་ལེགས།",
@@ -32,7 +33,21 @@
     "no_series_found": "རིམ་པ་ཅན་རྙེད་མ་སོང་།",
     "no_feature_content": "རྒྱུ་ཆ་མིན་འདུག",
     "series_in_progress": "In progress",
-    "search": "Search"
+    "search": "Search",
+    "timer": "Timer",
+    "home_mala": "ཕྲེང་བ།",
+    "home_chants": "Chants",
+    "home_shortcut_plans": "Plans",
+    "home_share_prompt": "{{appName}} ལ་དགའ་པོ་ཡོད་དམ།",
+    "share": "Share",
+    "home_overall_stats": "Overall stats",
+    "home_plans_count": "{{count}} plans",
+    "home_recitation_count": "{{count}} recitations",
+    "creator_featured_plan": "Featured plans",
+    "calendar_day_month": "ཟླ་བ་{{month}} ཚེས་{{day}}",
+    "load_error": "Couldn't load. Check your connection and try again.",
+    "share_this_quote": "Share this quote",
+    "verse_share_error": "Unable to share quote. Please try again"
   },
   "nav": {
     "home": "འདུན་ངོས།",
@@ -191,5 +206,29 @@
     "person_name_min_length": "ཉུང་མཐའ་ཡིག་འབྲུ་ 1",
     "person_name_max_length": "རིང་མཐའ་ཡིག་འབྲུ་ 50",
     "person_name_invalid_chars": "ཡིག་འབྲུ། སྟོང་ཆ། འབྲེལ་རྟགས་ཁོ་ན་ཆོག"
+  },
+  "calendar": {
+    "title": "བོད་ཟླ་ཐོ།",
+    "moon_phase_new_moon": "གསར་ཟླ།",
+    "moon_phase_first_quarter": "ཟླ་ཕྱེད་དང་པོ།",
+    "moon_phase_full_moon": "ཟླ་གང་།"
+  },
+  "mala": {
+    "title": "ཕྲེང་བ།",
+    "tap_to_count": "རྡེབ་ནས་གྲངས་རྩིས།",
+    "rounds_one": "འཁོར་ཆུང་ 1",
+    "rounds_other": "འཁོར་ཆུང་ {{count}}",
+    "reset": "སླར་གསོ།"
+  },
+  "timers": {
+    "title": "དུས་ཚོད་རྩིས།",
+    "running": "དུས་ཚོད་རྩིས་བཞིན་པ།",
+    "complete": "དུས་ཚོད་མཇུག་བསྡུས།",
+    "close": "ཁ་བསྡམས།"
+  },
+  "force_update": {
+    "title": "གསར་སྒྱུར་དགོས།",
+    "message": "WeBuddhist པར་གསར་པ་ཡོད། མུ་མཐུད་དུ་བེད་སྤྱོད་བྱེད་པར་གསར་སྒྱུར་བྱོས།",
+    "button": "ད་ལྟ་གསར་སྒྱུར།"
   }
 }
