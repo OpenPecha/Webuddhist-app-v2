@@ -7,7 +7,7 @@
 | **Flutter baseline** | `lib/features/recitation` |
 | **v2 target** | `src/app/(tabs)/screens/recitation/index.tsx`, `src/components/ui/molecules/cards/recitation-card.tsx` |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-11 |
+| **Last updated** | 2026-06-22 |
 
 ---
 
@@ -28,8 +28,10 @@ list can't open a recitation until they've added it to a routine.
 | Recitation model | `features/recitation/data/models/recitation_model.dart` | — |
 | Best practices doc | `features/recitation/BEST_PRACTICES_APPLIED.md` | — |
 
-There is a recitation home molecule (`src/components/ui/molecules/homepage/recitation.tsx`)
-and a recitation tab in v2.
+There is a recitation tab in v2. On Flutter Home, recitation appears only via the
+**MyPracticesStatsCard** recitation count (`my_practices_stats_card.dart`) — not as a
+standalone home carousel. The deprecated v2 molecule
+`src/components/home/Recitation.tsx` (dummy data) is not part of Home parity.
 
 ## 3. User stories
 

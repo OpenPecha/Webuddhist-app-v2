@@ -19,12 +19,16 @@ implementation changes.
 | i18n / theming | `core/l10n/*`, `core/theme/*` | `global.css`, fonts in `_layout.tsx` | [04](../foundation/04-i18n-theming.md) | P1 | PRD draft |
 | Analytics | `core/analytics/*` | TBD | [05](../foundation/05-analytics.md) | P2 | PRD draft |
 | Notifications | `features/notifications` | TBD (`expo-notifications`) | [06](../foundation/06-notifications.md) | P1 | PRD draft |
+| Force update | `core/services/upgrade/force_update_gate.dart` | `src/app/_layout.tsx` (TBD) | [07](../foundation/07-force-update.md) | P0 | Not started |
 
 ## Features
 
 | Feature | Flutter routes | v2 route | PRD | Priority | Status |
 |---------|----------------|----------|-----|----------|--------|
-| Home | `/home` | `src/app/(tabs)/index.tsx` | [home](../features/home.md) | P0 | In progress (partial) |
+| Home | `/home` | `src/app/(tabs)/index.tsx` | [home](../features/home.md) | P0 | In progress (partial) — series browse partial; dashboard widgets not started |
+| Home — calendar | `/home/calendar` | TBD | [home](../features/home.md) | P0 | Not started |
+| Home — Mala shortcut | `/mala` | TBD | [home](../features/home.md) | P0 | Not started |
+| Home — Timer shortcut | `/home/timers` | TBD | [home](../features/home.md) | P0 | Not started |
 | Series | `/home/series/:id` | `src/app/series/[id].tsx` | [series](../features/series.md) | P0 | In progress |
 | Plans | `/home/plans/:tag`, `/plans/info`, `/plans/details` | TBD | [plans](../features/plans.md) | P0 | Not started |
 | Recitation | `/recitations/detail` | `src/app/(tabs)/screens/recitation` | [recitation](../features/recitation.md) | P0 | In progress (partial) |
@@ -32,6 +36,25 @@ implementation changes.
 | Practice | `/practice/*` | TBD | [practice](../features/practice.md) | P1 | Not started |
 | Settings / Profile | `/settings`, `/profile`, `/about`, `/privacy-policy` | `src/app/(tabs)/screens/setting` | [settings-profile](../features/settings-profile.md) | P2 | In progress (partial) |
 | Onboarding | `/onboarding` | TBD | [onboarding](../features/onboarding.md) | P0 | Not started |
+
+## Home sections (detail)
+
+Sub-components of the Home tab. See [home](../features/home.md) for full requirements.
+
+| Section | Flutter widget | v2 status | Notes |
+|---------|---------------|-----------|-------|
+| Header + streak | `home_header.dart` | Partial | Greeting only; no streak badge |
+| Calendar card | `home_calendar_card.dart` | Not started | Deprecated `Calander.tsx` unused |
+| Verse of day | `verse_of_day_card.dart` | Not started | Deprecated `quotation.tsx` unused |
+| Shortcuts (Mala/Timer) | `home_shortcuts_row.dart` | Not started | Guest gate required |
+| My practices stats | `my_practices_stats_card.dart` | Not started | Auth required |
+| Featured plans | `featured_plan_section.dart` | Partial | Wrong endpoint; no random hero |
+| Share prompt | `home_share_prompt.dart` | Not started | |
+| Series gate | `series_provider.dart` | Partial | Loads; no global empty state |
+| Notification on load | `home_screen.dart` init | Not started | Cross-ref notifications PRD |
+| Post-onboarding plan nav | `pendingOnboardingPlanProvider` | Not started | Cross-ref onboarding PRD |
+| Pull-to-refresh | `_onRefresh()` | Partial | Refetches series only today |
+| Per-section skeletons | verse/stats skeletons | Not started | Spinner only today |
 
 ## Won't migrate (stalled)
 

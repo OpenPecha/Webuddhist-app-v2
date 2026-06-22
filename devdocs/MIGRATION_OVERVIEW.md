@@ -4,7 +4,7 @@
 |---|---|
 | **Status** | PRD draft |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-08 |
+| **Last updated** | 2026-06-22 |
 | **Flutter baseline** | `WeBuddhist-app` (`main`) |
 | **v2 target** | `Webuddhist-app-v2` (`dev`) |
 
@@ -87,9 +87,12 @@ PRDs and implementation proceed in dependency order, not alphabetically.
 - `foundation/02-api-networking`
 - `foundation/03-local-storage-offline`
 - `foundation/04-i18n-theming`
+- `foundation/07-force-update`
 
 ### Wave 1 — Core value (P0)
-- `features/home`, `features/series`, `features/plans`, `features/recitation`
+- `features/home` — full dashboard parity: header/streak, calendar, verse of day,
+  shortcuts, my practices stats, featured plans, share prompt, notification on load
+- `features/series`, `features/plans`, `features/recitation`
 
 ### Wave 2 — Reading & engagement (P1)
 - `features/reader`, `features/practice`, `foundation/06-notifications`

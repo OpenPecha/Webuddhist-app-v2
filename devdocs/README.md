@@ -25,7 +25,8 @@ devdocs/
 │   ├── 03-local-storage-offline.md
 │   ├── 04-i18n-theming.md
 │   ├── 05-analytics.md
-│   └── 06-notifications.md
+│   ├── 06-notifications.md
+│   └── 07-force-update.md
 ├── features/                   # In-scope feature PRDs (v2 will build these)
 │   ├── home.md
 │   ├── series.md
