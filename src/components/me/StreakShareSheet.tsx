@@ -80,7 +80,8 @@ export function StreakShareSheet({ visible, streak, onClose }: StreakShareSheetP
     <AppBottomSheet
       visible={visible}
       onClose={onClose}
-      maxHeight="90%"
+      maxHeight="85%"
+      placement="tab"
       sheetClassName={isDark ? 'bg-[#1c1c1c]' : undefined}
       sheetStyle={isDark ? undefined : { backgroundColor: GOLD_LIGHT, borderTopLeftRadius: 24, borderTopRightRadius: 24 }}
     >

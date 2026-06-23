@@ -361,7 +361,11 @@ export default function EditProfileScreen() {
         </Pressable>
       </ScrollView>
 
-      <AppBottomSheet visible={avatarSheetVisible} onClose={() => setAvatarSheetVisible(false)}>
+      <AppBottomSheet
+        visible={avatarSheetVisible}
+        onClose={() => setAvatarSheetVisible(false)}
+        placement="tab"
+      >
         <Pressable
           onPress={() => pickAvatar('library')}
           className="flex-row items-center px-6 py-4 active:opacity-70"

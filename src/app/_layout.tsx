@@ -74,8 +74,8 @@ function AuthGate() {
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="series/[id]" />
       <Stack.Screen name="practice" />
-      <Stack.Screen name="calendar/index" />
-      <Stack.Screen name="mala/index" />
+      <Stack.Screen name="calendar" />
+      <Stack.Screen name="mala" />
       <Stack.Screen name="timers/index" />
       <Stack.Screen name="timers/active" />
       <Stack.Screen name="reader/[textId]" />
@@ -106,25 +106,21 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <BottomSheetModalProvider>
-        <QueryProvider>
-          <Auth0ProviderWrapper>
-            <GuestProvider>
-              <AuthTokenSync>
-                <OnboardingProvider>
-                  <PendingOnboardingPlanProvider>
-                    <ThemeProvider>
-                      <ForceUpdateGate>
-                        <AuthGate />
-                      </ForceUpdateGate>
-                    </ThemeProvider>
-                  </PendingOnboardingPlanProvider>
-                </OnboardingProvider>
-              </AuthTokenSync>
-            </GuestProvider>
-          </Auth0ProviderWrapper>
-        </QueryProvider>
-      </BottomSheetModalProvider>
+      <QueryProvider>
+        <Auth0ProviderWrapper>
+          <GuestProvider>
+            <AuthTokenSync>
+              <OnboardingProvider>
+                <ThemeProvider>
+                  <BottomSheetModalProvider>
+                    <AuthGate />
+                  </BottomSheetModalProvider>
+                </ThemeProvider>
+              </OnboardingProvider>
+            </AuthTokenSync>
+          </GuestProvider>
+        </Auth0ProviderWrapper>
+      </QueryProvider>
     </GestureHandlerRootView>
   );
 }

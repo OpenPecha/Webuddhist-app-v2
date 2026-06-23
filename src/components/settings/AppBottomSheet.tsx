@@ -1,3 +1,4 @@
+import { TAB_BAR_CONTENT_HEIGHT } from '@/components/navigation/AppBottomTabBar';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { cn } from '@/utils/cn';
 import {
@@ -10,6 +11,30 @@ import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useWindowDimensions, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+export type AppBottomSheetPlacement = 'tab' | 'fullscreen';
+
+function parseMaxHeight(maxHeight: number | `${number}%`, heightBasis: number): number {
+  if (typeof maxHeight === 'number') return maxHeight;
+  const pct = Number(String(maxHeight).replace('%', ''));
+  return Math.round(heightBasis * (pct / 100));
+}
+
+export function appBottomSheetInsets(
+  placement: AppBottomSheetPlacement,
+  insets: { top: number; bottom: number },
+  screenHeight?: number,
+  maxHeight: number | `${number}%` = '70%',
+) {
+  const bottomInset = placement === 'tab' ? TAB_BAR_CONTENT_HEIGHT + insets.bottom : 0;
+  const contentPaddingBottom = placement === 'tab' ? 16 : Math.max(16, insets.bottom);
+  const topInset = insets.top;
+  const availableHeight =
+    screenHeight != null ? Math.max(0, screenHeight - topInset - bottomInset) : undefined;
+  const maxDynamicContentSize =
+    availableHeight != null ? parseMaxHeight(maxHeight, availableHeight) : undefined;
+  return { bottomInset, contentPaddingBottom, topInset, availableHeight, maxDynamicContentSize };
+}
+
 interface AppBottomSheetProps {
   visible: boolean;
   onClose: () => void;
@@ -20,15 +45,13 @@ interface AppBottomSheetProps {
   showHandle?: boolean;
   /** When true, children are rendered directly (use BottomSheetScrollView inside). */
   scrollable?: boolean;
+  /**
+   * `tab` — sheet opens over the bottom tab bar. `fullscreen` — root stack routes (default).
+   */
+  placement?: AppBottomSheetPlacement;
 }
 
-function parseMaxHeight(maxHeight: number | `${number}%`, screenHeight: number): number {
-  if (typeof maxHeight === 'number') return maxHeight;
-  const pct = Number(String(maxHeight).replace('%', ''));
-  return Math.round(screenHeight * (pct / 100));
-}
-
-/** Flutter-style bottom drawer with bidirectional drag dismiss. */
+/** Flutter-style bottom drawer: content-sized, capped below top safe area. */
 export function AppBottomSheet({
   visible,
   onClose,
@@ -38,6 +61,7 @@ export function AppBottomSheet({
   maxHeight = '70%',
   showHandle = true,
   scrollable = false,
+  placement = 'fullscreen',
 }: AppBottomSheetProps) {
   const insets = useSafeAreaInsets();
   const { height: screenHeight } = useWindowDimensions();
@@ -45,10 +69,10 @@ export function AppBottomSheet({
   const ref = useRef<BottomSheetModal>(null);
   const wasVisibleRef = useRef(false);
 
-  const snapPoints = useMemo(
-    () => [parseMaxHeight(maxHeight, screenHeight)],
-    [maxHeight, screenHeight],
-  );
+  const { bottomInset, contentPaddingBottom, topInset, maxDynamicContentSize } = useMemo(
+      () => appBottomSheetInsets(placement, insets, screenHeight, maxHeight),
+      [placement, insets, screenHeight, maxHeight],
+    );
 
   useEffect(() => {
     if (visible) {
@@ -89,13 +113,17 @@ export function AppBottomSheet({
   return (
     <BottomSheetModal
       ref={ref}
-      snapPoints={snapPoints}
+      topInset={topInset}
+      bottomInset={bottomInset}
+      enableDynamicSizing
+      maxDynamicContentSize={maxDynamicContentSize}
+      enableContentPanningGesture={scrollable}
+      enableOverDrag={false}
       enablePanDownToClose
       enableDismissOnClose
       stackBehavior="push"
       onDismiss={handleDismiss}
       backdropComponent={renderBackdrop}
-      bottomInset={insets.bottom}
       handleIndicatorStyle={
         showHandle
           ? {
@@ -114,7 +142,7 @@ export function AppBottomSheet({
       ) : (
         <BottomSheetView
           className={cn('bg-background', sheetClassName)}
-          style={{ paddingBottom: 8 }}
+          style={{ paddingBottom: contentPaddingBottom, flexGrow: 0 }}
         >
           {children}
         </BottomSheetView>

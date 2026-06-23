@@ -4,7 +4,8 @@ import { useGuest } from '@/providers/guest';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Platform, Pressable, View } from 'react-native';
-import { useAuth0 } from 'react-native-auth0';
+import { useAuth0, WebAuthError, WebAuthErrorCodes } from 'react-native-auth0';
+import { useState } from 'react';
 import { Text } from '@/components/ui/text';
 import { cn } from '@/utils/cn';
 import { useUniwind } from 'uniwind';
@@ -41,13 +42,15 @@ interface SocialLoginButtonsProps {
 }
 
 export function SocialLoginButtons({ onSuccess, className }: SocialLoginButtonsProps) {
-  const { authorize, isLoading } = useAuth0();
+  const { authorize } = useAuth0();
   const { clearGuest } = useGuest();
   const { t } = useTranslation();
   const { theme } = useUniwind();
   const isDark = theme === 'dark';
+  const [isAuthorizing, setIsAuthorizing] = useState(false);
 
   const loginWith = async (connection: 'google-oauth2' | 'apple') => {
+    setIsAuthorizing(true);
     try {
       await authorize(
         { scope: 'openid profile email offline_access', connection },
@@ -57,13 +60,21 @@ export function SocialLoginButtons({ onSuccess, className }: SocialLoginButtonsP
       onSuccess?.();
     } catch (e) {
       const message = e instanceof Error ? e.message : String(e);
-      if (!message.includes('user_cancelled')) {
+      const code = e instanceof WebAuthError ? e.code : (e as { code?: string })?.code;
+      const type = e instanceof WebAuthError ? e.type : undefined;
+      const isUserCancelled =
+        type === WebAuthErrorCodes.USER_CANCELLED ||
+        code === 'a0.session.user_cancelled' ||
+        message.includes('user_cancelled');
+      if (!isUserCancelled) {
         console.error(`${connection} login error:`, e);
       }
+    } finally {
+      setIsAuthorizing(false);
     }
   };
 
-  if (isLoading) {
+  if (isAuthorizing) {
     return (
       <View className={cn('h-[52px] items-center justify-center', className)}>
         <ActivityIndicator size="large" />
