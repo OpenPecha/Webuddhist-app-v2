@@ -12,23 +12,25 @@ try {
   meditationAsset = null;
 }
 
-/** Lazy-loads expo-av only when ExponentAV native module is present in the dev build. */
+/** Lazy-loads expo-audio when the ExpoAudio native module is present in the dev build. */
 export async function createTimerSoundPlayer(): Promise<TimerSoundPlayer | null> {
   if (meditationAsset == null) {
     return null;
   }
 
-  if (requireOptionalNativeModule('ExponentAV') == null) {
+  if (requireOptionalNativeModule('ExpoAudio') == null) {
     return null;
   }
 
   try {
-    const { Audio } = await import('expo-av');
-    await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
-    const { sound } = await Audio.Sound.createAsync(meditationAsset);
+    const { createAudioPlayer, setAudioModeAsync } = await import('expo-audio');
+    await setAudioModeAsync({ playsInSilentMode: true });
+    const player = createAudioPlayer(meditationAsset);
     return {
       play: () => {
-        void sound.setPositionAsync(0).then(() => sound.playAsync());
+        void player.seekTo(0).then(() => {
+          player.play();
+        });
       },
     };
   } catch (error) {
