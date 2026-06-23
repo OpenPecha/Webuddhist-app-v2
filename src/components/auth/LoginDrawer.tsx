@@ -4,7 +4,7 @@ import { useGuest } from '@/providers/guest';
 import { Image } from 'expo-image';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 
 const logo = require('../../../assets/images/webuddhist_gold.png');
@@ -15,7 +15,7 @@ interface LoginDrawerProps {
 }
 
 export function LoginDrawer({ visible, onClose }: LoginDrawerProps) {
-  const { isLoading, user } = useAuth0();
+  const { user } = useAuth0();
   const { clearGuest } = useGuest();
   const { t } = useTranslation();
 
@@ -26,7 +26,7 @@ export function LoginDrawer({ visible, onClose }: LoginDrawerProps) {
   }, [visible, user, clearGuest, onClose]);
 
   return (
-    <AppBottomSheet visible={visible} onClose={onClose}>
+    <AppBottomSheet visible={visible} onClose={onClose} placement="tab">
       <View className="items-center gap-6 px-6 pb-6">
         <Image source={logo} style={{ width: 80, height: 80 }} contentFit="contain" />
 
@@ -37,11 +37,7 @@ export function LoginDrawer({ visible, onClose }: LoginDrawerProps) {
           </Text>
         </View>
 
-        {isLoading ? (
-          <ActivityIndicator size="large" color="#000" style={{ marginVertical: 24 }} />
-        ) : (
-          <SocialLoginButtons onSuccess={onClose} className="px-0" />
-        )}
+        <SocialLoginButtons onSuccess={onClose} className="px-0" />
       </View>
     </AppBottomSheet>
   );
