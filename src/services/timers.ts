@@ -13,7 +13,7 @@ export async function fetchPresetTimers(skip = 0, limit = 20): Promise<PresetTim
       id: timer.id ?? '',
       name: timer.name ?? '',
       durationMs: apiDurationToMs(
-        (timer as { duration?: number }).duration ?? timer.durationMs ?? 0,
+        (timer as { duration?: number; }).duration ?? timer.durationMs ?? 0,
       ),
       audioUrl: timer.audioUrl ?? null,
     }));
@@ -35,7 +35,7 @@ export async function stopUserTimer(timerId: string, durationMs: number): Promis
       timer_id: timerId,
       duration: durationMs,
     });
-  } catch (error) {
-    console.warn('[timers] Failed to report timer stop:', error);
+  } catch {
+    return;
   }
 }
