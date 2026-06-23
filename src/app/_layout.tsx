@@ -5,6 +5,7 @@ import { configureNotificationHandler } from '@/lib/notifications';
 import { AuthTokenSync } from '@/providers/auth-token';
 import { Auth0ProviderWrapper } from '@/providers/auth0';
 import { GuestProvider, useGuest } from '@/providers/guest';
+import { MalaSyncBootstrap } from '@/providers/mala-sync';
 import { PendingOnboardingPlanProvider } from '@/providers/pending-onboarding-plan';
 import { OnboardingProvider, useOnboarding } from '@/providers/onboarding';
 import { QueryProvider } from '@/providers/query';
@@ -110,6 +111,7 @@ export default function RootLayout() {
         <Auth0ProviderWrapper>
           <GuestProvider>
             <AuthTokenSync>
+              <MalaSyncBootstrap />
               <OnboardingProvider>
                 <ThemeProvider>
                   <BottomSheetModalProvider>

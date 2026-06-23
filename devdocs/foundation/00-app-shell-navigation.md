@@ -72,9 +72,9 @@ Record the decision here once made. All tab-level feature PRDs reference this.
 | `/login` | `src/app/login.tsx` | stack |
 | `/onboarding` | `src/app/onboarding.tsx` (TBD) | stack |
 | `/home` | `src/app/(tabs)/index.tsx` | tab |
-| `/home/calendar` | TBD | stack |
-| `/mala` | TBD | stack |
-| `/home/timers` | TBD | stack (hides bottom nav in Flutter) |
+| `/home/calendar` | `src/app/calendar/index.tsx` | stack |
+| `/mala` | `src/app/mala/index.tsx` | stack |
+| `/home/timers` (Flutter) / `/timers` (v2) | `src/app/timers/index.tsx`, `timers/active.tsx` | stack (hides bottom nav in Flutter) |
 | `/practice` | `src/app/(tabs)/practice/...` (TBD, pending §3) | tab |
 | `/settings` (Me) | `src/app/(tabs)/screens/setting/index.tsx` | tab |
 | `/recitations/detail` | `src/app/(tabs)/screens/recitation/...` | tab/stack |

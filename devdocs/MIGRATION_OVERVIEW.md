@@ -113,6 +113,8 @@ From `WeBuddhist-app/lib/features/`:
 | `auth`, `onboarding` | `foundation/01-auth-guest-onboarding` | 0 |
 | `app` (nav shell) | `foundation/00-app-shell-navigation` | 0 |
 | `home` | `features/home` | 1 |
+| `mala` | `features/mala` | 1 |
+| `timer` | `features/timer` | 1 |
 | `home` (series) | `features/series` | 1 |
 | `plans` | `features/plans` | 1 |
 | `recitation` | `features/recitation` | 1 |

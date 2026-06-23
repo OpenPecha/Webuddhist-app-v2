@@ -50,4 +50,7 @@ export const QUERY_KEYS = {
   timers: {
     list: (skip: number, limit: number) => ['timers', 'list', skip, limit] as const,
   },
+  mala: {
+    presets: (language: string) => ['mala', 'presets', language] as const,
+  },
 } as const;

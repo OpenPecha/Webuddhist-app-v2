@@ -27,8 +27,10 @@ implementation changes.
 |---------|----------------|----------|-----|----------|--------|
 | Home | `/home` | `src/app/(tabs)/index.tsx` | [home](../features/home.md) | P0 | Parity — dashboard + theme polish; notification sync stub |
 | Home — calendar | `/home/calendar` | `src/app/calendar/index.tsx` | [home](../features/home.md) | P0 | Parity — month grid + nav |
-| Home — Mala shortcut | `/mala` | `src/app/mala/index.tsx` | [home](../features/home.md) | P0 | In progress — MVP counter |
-| Home — Timer shortcut | `/home/timers` | `src/app/timers/index.tsx` + `timers/active.tsx` | [home](../features/home.md) | P0 | Parity — preset grid + active timer screen |
+| Home — Mala shortcut | `/mala` | `src/app/mala/index.tsx` | [mala](../features/mala.md) | P0 | Improved — mockup UI + core parity |
+| Home — Timer shortcut | `/home/timers` | `src/app/timers/index.tsx` + `timers/active.tsx` | [timer](../features/timer.md) | P0 | Parity — preset grid + active timer screen |
+| Mala (screen) | `/mala` | `src/app/mala/index.tsx` | [mala](../features/mala.md) | P0 | Improved — settings, reset, bead arc |
+| Timer (screen) | `/home/timers` | `src/app/timers/*` | [timer](../features/timer.md) | P0 | Parity — v2 route `/timers` |
 | Series | `/home/series/:id` | `src/app/series/[id].tsx` | [series](../features/series.md) | P0 | In progress |
 | Plans | `/home/plans/:tag`, `/plans/info`, `/plans/details` | TBD | [plans](../features/plans.md) | P0 | Not started |
 | Recitation | `/recitations/detail` | `src/app/(tabs)/screens/recitation` | [recitation](../features/recitation.md) | P0 | In progress (partial) |

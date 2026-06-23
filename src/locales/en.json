@@ -110,7 +110,8 @@
     "no_recitations": "No recitations found"
   },
   "common": {
-    "not_found": "Not found"
+    "not_found": "Not found",
+    "cancel": "Cancel"
   },
   "series": {
     "about": "About",
@@ -231,10 +232,21 @@
   },
   "mala": {
     "title": "Mala",
-    "tap_to_count": "Tap to count",
     "rounds_one": "1 round",
     "rounds_other": "{{count}} rounds",
-    "reset": "Reset"
+    "load_error": "Could not load mala. Check your connection and try again.",
+    "seed_error": "Could not load your count.",
+    "no_mantras": "No mantras available for your language.",
+    "settings_title": "Mala options",
+    "settings_add_to_practice": "Add to practice",
+    "settings_bookmark": "Bookmark",
+    "settings_reset": "Reset count",
+    "settings_sound": "Sound",
+    "settings_vibration": "Vibration",
+    "settings_screen_lock": "Screen Lock",
+    "reset_title": "Reset Mala?",
+    "reset_message": "Are you sure you want to reset the count for this Mala? This action cannot be undone.",
+    "reset_confirm": "Reset"
   },
   "timers": {
     "title": "Timer",

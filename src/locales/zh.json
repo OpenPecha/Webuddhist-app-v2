@@ -215,10 +215,21 @@
   },
   "mala": {
     "title": "念珠",
-    "tap_to_count": "點擊計數",
     "rounds_one": "1 圈",
     "rounds_other": "{{count}} 圈",
-    "reset": "重設"
+    "load_error": "無法載入念珠，請檢查網路後重試。",
+    "seed_error": "無法載入您的計數。",
+    "no_mantras": "目前語言沒有可用的咒語。",
+    "settings_title": "念珠選項",
+    "settings_add_to_practice": "加入練習",
+    "settings_bookmark": "書籤",
+    "settings_reset": "重設計數",
+    "settings_sound": "聲音",
+    "settings_vibration": "震動",
+    "settings_screen_lock": "螢幕鎖定",
+    "reset_title": "重設念珠？",
+    "reset_message": "確定要重設此念珠的計數嗎？此操作無法復原。",
+    "reset_confirm": "重設"
   },
   "timers": {
     "title": "計時器",

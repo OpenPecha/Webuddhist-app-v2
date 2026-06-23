@@ -1,68 +1,103 @@
 import '@/lib/i18n';
+import { MalaBeads } from '@/components/mala/MalaBeads';
+import { MalaCounterDisplay } from '@/components/mala/MalaCounterDisplay';
+import { MalaSeedError } from '@/components/mala/MalaSeedError';
+import { MalaSettingsSheet } from '@/components/mala/MalaSettingsSheet';
+import { MalaSkeleton } from '@/components/mala/MalaSkeleton';
+import { createMalaSoundPlayer } from '@/components/mala/MalaSoundPlayer';
+import { MantraSwitcher } from '@/components/mala/MantraSwitcher';
 import { ArrowLeftIcon } from '@/components/home/HomeIcon';
-import { AppColors } from '@/constants/app-colors';
-import { StorageKeys, getString, setString } from '@/lib/storage';
+import { DestructiveConfirmDialog } from '@/components/ui/DestructiveConfirmDialog';
+import { useMalaPresets } from '@/hooks/api/useMalaPresets';
+import { useMalaCounter } from '@/hooks/useMalaCounter';
+import { useMalaPreferences } from '@/hooks/useMalaPreferences';
 import { useThemeColors } from '@/hooks/useThemeColors';
-import { useRouter } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
+import { localizedMantraName, type Mantra } from '@/types/mala';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
+import { DotsThreeVerticalIcon } from 'phosphor-react-native';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
+import { useAuth0 } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const BEADS_PER_ROUND = 108;
-
-interface MalaState {
-  total: number;
-  rounds: number;
-  beadInRound: number;
-}
-
-function parseMalaState(raw: string | null): MalaState {
-  if (!raw) return { total: 0, rounds: 0, beadInRound: 0 };
-  try {
-    const parsed = JSON.parse(raw) as MalaState;
-    return {
-      total: parsed.total ?? 0,
-      rounds: parsed.rounds ?? 0,
-      beadInRound: parsed.beadInRound ?? 0,
-    };
-  } catch {
-    return { total: 0, rounds: 0, beadInRound: 0 };
-  }
-}
+const KEEP_AWAKE_TAG = 'mala-screen';
 
 export default function MalaScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { foreground, mutedForeground, scaffoldBackground } = useThemeColors();
-  const [state, setState] = useState<MalaState>({ total: 0, rounds: 0, beadInRound: 0 });
-  const [loaded, setLoaded] = useState(false);
+  const { foreground, scaffoldBackground } = useThemeColors();
+  const { user } = useAuth0();
+  const language = i18n.language.split('-')[0] ?? 'en';
+
+  const params = useLocalSearchParams<{ initialPresetId?: string; }>();
+  const { data: mantras = [], isLoading, isError, refetch } = useMalaPresets();
+  const {
+    prefs,
+    setSoundEnabled,
+    setVibrationEnabled,
+  } = useMalaPreferences();
+
+  const [index, setIndex] = useState(0);
+  const [initialized, setInitialized] = useState(false);
+  const [settingsVisible, setSettingsVisible] = useState(false);
+  const [resetVisible, setResetVisible] = useState(false);
+  const soundRef = useRef<{ play: () => void; } | null>(null);
 
   useEffect(() => {
-    getString(StorageKeys.malaCounter).then((raw) => {
-      setState(parseMalaState(raw));
-      setLoaded(true);
+    void createMalaSoundPlayer().then((player) => {
+      soundRef.current = player;
     });
   }, []);
 
-  const persist = useCallback(async (next: MalaState) => {
-    setState(next);
-    await setString(StorageKeys.malaCounter, JSON.stringify(next));
-  }, []);
+  useEffect(() => {
+    if (initialized || mantras.length === 0) return;
+    if (params.initialPresetId) {
+      const i = mantras.findIndex((m) => m.presetId === params.initialPresetId);
+      if (i >= 0) setIndex(i);
+    }
+    setInitialized(true);
+  }, [initialized, mantras, params.initialPresetId]);
 
-  const increment = () => {
-    const nextTotal = state.total + 1;
-    const beadInRound = nextTotal % BEADS_PER_ROUND || (nextTotal > 0 ? BEADS_PER_ROUND : 0);
-    const rounds = Math.floor(nextTotal / BEADS_PER_ROUND);
-    void persist({ total: nextTotal, rounds, beadInRound });
+  useFocusEffect(
+    useCallback(() => {
+      if (!prefs.screenLockEnabled) return;
+      void activateKeepAwakeAsync(KEEP_AWAKE_TAG);
+      return () => {
+        deactivateKeepAwake(KEEP_AWAKE_TAG);
+      };
+    }, [prefs.screenLockEnabled]),
+  );
+
+  const activeMantra: Mantra | null = useMemo(() => {
+    if (mantras.length === 0) return null;
+    const safeIndex = Math.min(Math.max(index, 0), mantras.length - 1);
+    return mantras[safeIndex] ?? null;
+  }, [index, mantras]);
+
+  const { state, seed, incrementBead, reset } = useMalaCounter(activeMantra, user ?? undefined);
+
+  const headerTitle = activeMantra
+    ? localizedMantraName(activeMantra, language)
+    : t('mala.title');
+
+  const beadImageUrl =
+    state.beadImageUrl ?? activeMantra?.beadImageUrl ?? activeMantra?.mantra?.beadImageUrl;
+
+  const handleIncrement = () => {
+    void incrementBead({
+      soundEnabled: prefs.soundEnabled,
+      vibrationEnabled: prefs.vibrationEnabled,
+      onSound: () => soundRef.current?.play(),
+    });
   };
 
-  const reset = () => {
-    void persist({ total: 0, rounds: 0, beadInRound: 0 });
+  const handleResetConfirm = () => {
+    setResetVisible(false);
+    void reset();
   };
-
-  const displayBead = state.total === 0 ? 0 : state.beadInRound;
 
   return (
     <View style={{ flex: 1, backgroundColor: scaffoldBackground, paddingTop: insets.top }}>
@@ -70,71 +105,101 @@ export default function MalaScreen() {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          paddingHorizontal: 8,
-          paddingVertical: 8,
+          paddingHorizontal: 4,
+          paddingVertical: 2,
         }}
       >
-        <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
+        <Pressable onPress={() => router.back()} style={{ padding: 8, width: 48, height: 48, justifyContent: 'center' }}>
           <ArrowLeftIcon size={24} color={foreground} />
         </Pressable>
         <Text
           style={{
             flex: 1,
-            fontSize: 17,
+            fontSize: 18,
             fontWeight: '600',
             fontFamily: 'Inter-SemiBold',
             color: foreground,
             textAlign: 'center',
           }}
+          numberOfLines={1}
         >
-          {t('mala.title')}
+          {headerTitle}
         </Text>
-        <Pressable onPress={reset} style={{ paddingHorizontal: 12, paddingVertical: 8 }}>
-          <Text style={{ color: AppColors.blue, fontWeight: '600', fontFamily: 'Inter-SemiBold' }}>
-            {t('mala.reset')}
-          </Text>
-        </Pressable>
-      </View>
-
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-        <Text style={{ fontSize: 14, color: mutedForeground, marginBottom: 8 }}>
-          {t('mala.tap_to_count')}
-        </Text>
-        <Text
-          style={{
-            fontSize: 56,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            color: foreground,
-            opacity: loaded ? 1 : 0.4,
-          }}
-        >
-          {displayBead}/{BEADS_PER_ROUND}
-        </Text>
-        <Text style={{ marginTop: 8, fontSize: 20, color: mutedForeground }}>
-          {t('mala.rounds', { count: state.rounds })}
-        </Text>
-
         <Pressable
-          onPress={increment}
-          style={({ pressed }) => ({
-            marginTop: 48,
-            width: 200,
-            height: 200,
-            borderRadius: 100,
-            backgroundColor: AppColors.blue,
-            alignItems: 'center',
-            justifyContent: 'center',
-            opacity: pressed ? 0.9 : 1,
-          })}
+          onPress={() => setSettingsVisible(true)}
+          style={{ padding: 8, width: 48, height: 48, justifyContent: 'center', alignItems: 'center' }}
           accessibilityRole="button"
-          accessibilityLabel={t('mala.tap_to_count')}
+          accessibilityLabel={t('mala.settings_title')}
         >
-          <Text style={{ color: '#fff', fontSize: 18, fontWeight: '700', fontFamily: 'Inter-Bold' }}>
-            +1
-          </Text>
+          <DotsThreeVerticalIcon size={30} color={foreground} />
         </Pressable>
       </View>
+
+      {isLoading ? (
+        <MalaSkeleton />
+      ) : isError ? (
+        <MalaSeedError onRetry={() => void refetch()} />
+      ) : mantras.length === 0 ? (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+          <Text style={{ color: foreground, fontFamily: 'Inter-Regular', textAlign: 'center' }}>
+            {t('mala.no_mantras')}
+          </Text>
+        </View>
+      ) : (
+        <View style={{ flex: 1, paddingHorizontal: 24 }}>
+          <View style={{ flex: 0.4, minHeight: 40 }}>
+            <MantraSwitcher mantras={mantras} index={index} onIndexChange={setIndex} />
+          </View>
+
+          <View style={{ flex: 0.6 }}>
+            <MalaCounterDisplay
+              beadInRound={state.beadInRound}
+              rounds={state.rounds}
+              loaded={!state.isSeeding}
+            />
+
+            {state.seedFailed ? (
+              <MalaSeedError
+                compact
+                message={t('mala.seed_error')}
+                onRetry={() => void seed()}
+              />
+            ) : (
+              <View style={{
+                flex: 1,
+                justifyContent: 'flex-end', paddingBottom: 80, minHeight: 220
+              }}>
+                <MalaBeads
+                  key={activeMantra?.presetId}
+                  total={state.total}
+                  beadImageUrl={beadImageUrl}
+                  enabled={!state.isSeeding}
+                  onIncrement={handleIncrement}
+                />
+              </View>
+            )}
+          </View>
+        </View>
+      )}
+
+      <MalaSettingsSheet
+        visible={settingsVisible}
+        prefs={prefs}
+        onClose={() => setSettingsVisible(false)}
+        onResetPress={() => setResetVisible(true)}
+        onSoundChange={(v) => void setSoundEnabled(v)}
+        onVibrationChange={(v) => void setVibrationEnabled(v)}
+      />
+
+      <DestructiveConfirmDialog
+        visible={resetVisible}
+        title={t('mala.reset_title')}
+        message={t('mala.reset_message')}
+        confirmLabel={t('mala.reset_confirm')}
+        cancelLabel={t('common.cancel')}
+        onConfirm={handleResetConfirm}
+        onClose={() => setResetVisible(false)}
+      />
     </View>
   );
 }

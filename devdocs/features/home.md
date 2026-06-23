@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | In progress (partial) |
+| **Status** | Parity (notification sync stub partial) |
 | **Priority** | P0 |
 | **Flutter baseline** | `lib/features/home` |
 | **v2 target** | `src/app/(tabs)/index.tsx` + `src/components/home/*` |
@@ -73,27 +73,30 @@ info, streak.
 
 ## 3. v2 current state
 
-`src/app/(tabs)/index.tsx` implements a **series-discovery layout** — only partial
-overlap with Flutter's dashboard.
+`src/app/(tabs)/index.tsx` implements the **Flutter dashboard layout** (header through
+share prompt). See §11 checklist for per-requirement status.
 
 | Flutter section | v2 status | Notes |
 |-----------------|-------------|-------|
-| Header + streak | Partial | Time-of-day greeting + Auth0 first name; **no streak badge** |
-| Calendar card | Missing | `Calander.tsx` exists but unused (hardcoded placeholder) |
-| Verse of day | Missing | `quotation.tsx` exists but unused (static dummy) |
-| Shortcuts (Mala/Timer) | Missing | — |
-| My practices stats | Missing | — |
-| Featured plans | Partial | Uses first `featured` from `GET /series`, not `/series/featured` with random hero |
-| Share prompt | Missing | — |
-| Series gate | Partial | Loads `/series` but no global empty state |
-| Pull-to-refresh | Done | `refetch()` on FlatList |
-| Loading/error/empty | Partial | Spinner + hardcoded English error; no per-section skeletons |
-| Notification on load | Missing | Only via Settings toggle today |
-| Post-onboarding plan nav | Missing | — |
-| Force update | Missing | No app-wide gate |
+| Header + streak | Done | Time-of-day greeting + streak badge + share sheet |
+| Calendar card | Done | `HomeCalendarCard`; tap → `src/app/calendar/index.tsx` |
+| Verse of day | Done | Skeleton + share on tap |
+| Shortcuts (Mala/Timer) | Done | 4 tiles; Mala/Timer guest-gated → `/mala`, `/timers` |
+| My practices stats | Done | Hidden when counts zero or guest |
+| Featured plans | Done | `/series/featured` + random hero layout |
+| Share prompt | Done | App share CTA |
+| Series gate | Done | Localized empty/error + retry |
+| Pull-to-refresh | Done | Invalidates series, featured, verse, routine info, streak |
+| Loading/error/empty | Done | Per-section skeletons (verse, stats, featured) |
+| Notification on load | Partial | Permission + Day-1 sync stub |
+| Post-onboarding plan nav | Done | Push plan detail then Practice tab |
+| Force update | Done | `ForceUpdateGate` in `_layout.tsx` |
 
-**v2-only (not Flutter parity):** client-side title search, 2-column `SeriesCard` browse
-grid, "Continue today" section stub (`enrolledSeries = []`; `useUserPlans` not wired).
+**Pull-to-refresh:** does not invalidate mala data — Home shows no mala counts (Flutter
+Me tab owns accumulation stats; see `features/mala`).
+
+**Shortcuts:** four tiles (Plans, Chants, Mala, Timer). Plans and Chants are visible
+but **not wired** in Flutter or v2 (P2 backlog).
 
 **Deprecated (abandoned molecule layout — do not implement):**
 
@@ -133,8 +136,9 @@ All requirements below are **P0** (full Flutter parity).
   calendar screen.
 - **FR-3:** Verse of day card from `GET /verse-of-day/today`; skeleton while loading;
   hidden on error; share on tap.
-- **FR-4:** Shortcuts row — Mala → `/mala`, Timer → `/home/timers`; guests see login
-  drawer instead of navigating.
+- **FR-4:** Shortcuts row — Mala → `/mala` ([mala](./mala.md)), Timer → `/timers`
+  ([timer](./timer.md)); guests see login drawer instead of navigating. Home owns only
+  the shortcut row; screen internals live in dedicated PRDs.
 - **FR-5:** My practices stats from `GET /users/me/routine/info`; hidden when
   `seriesCount` and `recitationCount` are both 0 or user is guest; tap → Practice tab.
 - **FR-6:** Featured plans from `GET /series/featured?language=&limit=10`; random hero
@@ -180,9 +184,9 @@ Language-aware providers refetch when content language / locale changes (mirror 
 |---------------|----------|--------|
 | `/home` | `src/app/(tabs)/index.tsx` | In scope |
 | `/home/series/:id` | `src/app/series/[id].tsx` | In scope |
-| `/home/calendar` | TBD | Not started |
-| `/mala` | TBD | Not started |
-| `/home/timers` | TBD | Not started |
+| `/home/calendar` | `src/app/calendar/index.tsx` | Parity |
+| `/mala` | `src/app/mala/index.tsx` | Parity — see [mala](./mala.md) |
+| `/home/timers` (Flutter) / `/timers` (v2) | `src/app/timers/index.tsx`, `timers/active.tsx` | Parity — see [timer](./timer.md) |
 | `/home/plans/:tag` | TBD (`features/plans`) | Not started |
 | `/home/meditation_of_the_day` | — | Won't migrate (`stalled_features/meditation-prayer-of-day`) |
 | `/home/prayer_of_the_day` | — | Won't migrate (`stalled_features/meditation-prayer-of-day`) |
@@ -259,5 +263,5 @@ switch bottom nav to Practice tab (index 1).
 | Per-section skeletons | yes | yes | Verse, stats, featured skeletons |
 | Force-update gate | yes | yes | `ForceUpdateGate` in `_layout.tsx`; env `EXPO_PUBLIC_MIN_APP_VERSION` |
 | Calendar screen | yes | yes | Month grid via `GET /calendar/{year}/{month}` |
-| Mala screen | yes | partial | MVP counter + AsyncStorage; no mantra catalogue |
-| Timer screen | yes | partial | Preset list + inline countdown; API with fallback presets |
+| Mala screen | yes | yes | Full parity — see [mala](./mala.md) |
+| Timer screen | yes | yes | Parity — see [timer](./timer.md) |

@@ -29,6 +29,8 @@ devdocs/
 │   └── 07-force-update.md
 ├── features/                   # In-scope feature PRDs (v2 will build these)
 │   ├── home.md
+│   ├── mala.md
+│   ├── timer.md
 │   ├── series.md
 │   ├── plans.md
 │   ├── reader.md

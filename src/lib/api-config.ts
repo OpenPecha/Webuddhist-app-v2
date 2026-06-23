@@ -54,4 +54,11 @@ export const ENDPOINTS = {
     list: '/timers',
     stop: '/timers/user/timer_stop',
   },
+  accumulators: {
+    presets: '/accumulators/presets',
+    detail: (parentId: string) => `/accumulators/${parentId}`,
+    createUser: '/accumulators/user',
+    updateUser: (id: string) => `/accumulators/user/${id}`,
+    deleteUser: (id: string) => `/accumulators/user/${id}`,
+  },
 } as const;
