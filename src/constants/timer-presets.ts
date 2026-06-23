@@ -7,24 +7,23 @@ export const MEDITATION_PRESET_DURATION_MS = MEDITATION_PRESET_MINUTES.map(
   (minutes) => minutes * 60 * 1000,
 );
 
+/** Converts API `duration` field to milliseconds — handles ms, seconds, or minutes. */
+export function apiDurationToMs(raw: number): number {
+  if (raw <= 0) return raw;
+
+  const candidates = [raw, raw * 1000, raw * 60 * 1000];
+  for (const ms of candidates) {
+    if (MEDITATION_PRESET_DURATION_MS.includes(ms)) return ms;
+  }
+
+  return raw;
+}
+
 export const FALLBACK_PRESET_TIMERS: PresetTimer[] = MEDITATION_PRESET_MINUTES.map((minutes) => ({
   id: `preset-${minutes}`,
   name: `${minutes} min`,
   durationMs: minutes * 60 * 1000,
 }));
-
-function normalizeDurationMs(durationMs: number): number {
-  const canonical = MEDITATION_PRESET_DURATION_MS.find((ms) => ms === durationMs);
-  if (canonical != null) return canonical;
-
-  const minutes = Math.round(durationMs / (60 * 1000));
-  const fromMinutes = minutes * 60 * 1000;
-  if (MEDITATION_PRESET_DURATION_MS.includes(fromMinutes)) {
-    return fromMinutes;
-  }
-
-  return durationMs;
-}
 
 /** Keeps only 5/10/15/30 min presets; falls back when API returns none. */
 export function filterMeditationPresets(timers: PresetTimer[]): PresetTimer[] {
@@ -32,7 +31,7 @@ export function filterMeditationPresets(timers: PresetTimer[]): PresetTimer[] {
   const byDuration = new Map<number, PresetTimer>();
 
   for (const timer of timers) {
-    const durationMs = normalizeDurationMs(timer.durationMs);
+    const durationMs = apiDurationToMs(timer.durationMs);
     if (!allowed.has(durationMs) || byDuration.has(durationMs)) continue;
     byDuration.set(durationMs, { ...timer, durationMs });
   }

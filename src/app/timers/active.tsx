@@ -29,25 +29,10 @@ export default function ActiveTimerScreen() {
 
   const reportStop = useCallback(
     (elapsedMs: number) => {
-      // #region agent log
-      fetch('http://127.0.0.1:7544/ingest/57328dfe-8256-4e2a-91e6-138b7c8b37e5', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '3a2ae6' },
-        body: JSON.stringify({
-          sessionId: '3a2ae6',
-          runId: 'pre-fix',
-          hypothesisId: 'H2-H3',
-          location: 'active.tsx:reportStop',
-          message: 'reportStop invoked',
-          data: { timerId, elapsedMs, totalMs },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
       if (!timerId) return;
       void stopUserTimer(timerId, elapsedMs);
     },
-    [timerId, totalMs],
+    [timerId],
   );
 
   const soundPlayerRef = useRef<{ play: () => void } | null>(null);
