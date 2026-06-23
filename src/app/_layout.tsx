@@ -6,6 +6,7 @@ import { GuestProvider, useGuest } from '@/providers/guest';
 import { OnboardingProvider, useOnboarding } from '@/providers/onboarding';
 import { QueryProvider } from '@/providers/query';
 import { ThemeProvider } from '@/providers/theme';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { useFonts } from 'expo-font';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -70,6 +71,8 @@ function AuthGate() {
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="series/[id]" />
       <Stack.Screen name="practice" />
+      <Stack.Screen name="calendar" />
+      <Stack.Screen name="mala" />
       <Stack.Screen name="reader/[textId]" />
     </Stack>
   );
@@ -104,7 +107,9 @@ export default function RootLayout() {
             <AuthTokenSync>
               <OnboardingProvider>
                 <ThemeProvider>
-                  <AuthGate />
+                  <BottomSheetModalProvider>
+                    <AuthGate />
+                  </BottomSheetModalProvider>
                 </ThemeProvider>
               </OnboardingProvider>
             </AuthTokenSync>

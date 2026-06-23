@@ -1,4 +1,5 @@
 import { StreakWeekTracker } from '@/components/me/StreakWeekTracker';
+import { AppBottomSheet } from '@/components/settings/AppBottomSheet';
 import { Text } from '@/components/ui/text';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import type { StreakStats } from '@/types/user-stats';
@@ -7,9 +8,8 @@ import * as Sharing from 'expo-sharing';
 import { Fire, ShareNetwork } from 'phosphor-react-native';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Alert, Modal, Pressable, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import ViewShot from 'react-native-view-shot';
+import { ActivityIndicator, Alert, Pressable, View } from 'react-native';
+import ViewShot, { type ViewShotRef } from 'react-native-view-shot';
 import { useUniwind } from 'uniwind';
 
 const logo = require('../../../assets/images/webuddhist_gold.png');
@@ -52,11 +52,10 @@ interface StreakShareSheetProps {
 
 export function StreakShareSheet({ visible, streak, onClose }: StreakShareSheetProps) {
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
   const { theme } = useUniwind();
   const isDark = theme === 'dark';
-  const { foreground, mutedForeground } = useThemeColors();
-  const viewShotRef = useRef<ViewShot>(null);
+  const { foreground } = useThemeColors();
+  const viewShotRef = useRef<ViewShotRef>(null);
   const [sharing, setSharing] = useState(false);
 
   const shareStreak = async () => {
@@ -78,62 +77,45 @@ export function StreakShareSheet({ visible, streak, onClose }: StreakShareSheetP
   };
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable className="flex-1 justify-end bg-black/50" onPress={onClose}>
+    <AppBottomSheet
+      visible={visible}
+      onClose={onClose}
+      maxHeight="85%"
+      placement="tab"
+      sheetClassName={isDark ? 'bg-[#1c1c1c]' : undefined}
+      sheetStyle={isDark ? undefined : { backgroundColor: GOLD_LIGHT, borderTopLeftRadius: 24, borderTopRightRadius: 24 }}
+    >
+      <View className="px-3">
+        <ViewShot ref={viewShotRef} options={{ format: 'png', quality: 1 }}>
+          <View style={{ backgroundColor: GOLD_LIGHT, paddingHorizontal: 14, paddingVertical: 20 }}>
+            <View className="rounded-xl bg-white px-6 pb-7 pt-8">
+              <StreakShareContent streak={streak} />
+            </View>
+            <View className="mt-6 items-center">
+              <Image source={logo} style={{ width: 32, height: 32 }} contentFit="contain" />
+              <Text className="mt-2 text-xs text-[#8a8a8a]">{t('me.shared_from')}</Text>
+              <Text className="text-sm font-semibold text-[#212121]">{t('appTitle')}</Text>
+            </View>
+          </View>
+        </ViewShot>
+      </View>
+
+      <View className="mt-8 px-8 pb-2">
         <Pressable
-          style={{
-            paddingBottom: insets.bottom + 8,
-            backgroundColor: isDark ? '#1c1c1c' : GOLD_LIGHT,
-            borderTopLeftRadius: 24,
-            borderTopRightRadius: 24,
-          }}
-          onPress={(e) => e.stopPropagation()}
+          onPress={shareStreak}
+          disabled={sharing}
+          className="h-[52px] flex-row items-center justify-center gap-2 rounded-full border border-border bg-card active:opacity-80"
         >
-          <View className="items-center pt-3 pb-6">
-            <View
-              style={{
-                width: 40,
-                height: 4,
-                borderRadius: 2,
-                backgroundColor: mutedForeground,
-                opacity: 0.35,
-              }}
-            />
-          </View>
-
-          <View className="px-3">
-            <ViewShot ref={viewShotRef} options={{ format: 'png', quality: 1 }}>
-              <View style={{ backgroundColor: GOLD_LIGHT, paddingHorizontal: 14, paddingVertical: 20 }}>
-                <View className="rounded-xl bg-white px-6 pb-7 pt-8">
-                  <StreakShareContent streak={streak} />
-                </View>
-                <View className="mt-6 items-center">
-                  <Image source={logo} style={{ width: 32, height: 32 }} contentFit="contain" />
-                  <Text className="mt-2 text-xs text-[#8a8a8a]">{t('me.shared_from')}</Text>
-                  <Text className="text-sm font-semibold text-[#212121]">{t('appTitle')}</Text>
-                </View>
-              </View>
-            </ViewShot>
-          </View>
-
-          <View className="mt-8 px-8">
-            <Pressable
-              onPress={shareStreak}
-              disabled={sharing}
-              className="h-[52px] flex-row items-center justify-center gap-2 rounded-full border border-border bg-card active:opacity-80"
-            >
-              {sharing ? (
-                <ActivityIndicator color={foreground} />
-              ) : (
-                <>
-                  <ShareNetwork size={22} color={foreground} />
-                  <Text className="text-base font-bold">{t('me.share_this_streak')}</Text>
-                </>
-              )}
-            </Pressable>
-          </View>
+          {sharing ? (
+            <ActivityIndicator color={foreground} />
+          ) : (
+            <>
+              <ShareNetwork size={22} color={foreground} />
+              <Text className="text-base font-bold">{t('me.share_this_streak')}</Text>
+            </>
+          )}
         </Pressable>
-      </Pressable>
-    </Modal>
+      </View>
+    </AppBottomSheet>
   );
 }

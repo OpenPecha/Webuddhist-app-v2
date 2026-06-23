@@ -1,23 +1,20 @@
 import '@/lib/i18n';
-import { useTranslation } from 'react-i18next';
-import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import { AppBottomTabBar } from '@/components/navigation/AppBottomTabBar';
+import { Tabs } from 'expo-router';
 
 export default function TabLayout() {
-  const { t } = useTranslation();
   return (
-    <NativeTabs>
-      <NativeTabs.Trigger name="index">
-        <NativeTabs.Trigger.Label>{t('nav.home')}</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="house.fill" md="home" />
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="practice">
-        <NativeTabs.Trigger.Label>{t('nav.practice')}</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="figure.mind.and.body" md="self_improvement" />
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="me" role="more">
-        <NativeTabs.Trigger.Label>{t('nav.me')}</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="person.fill" md="person" />
-      </NativeTabs.Trigger>
-    </NativeTabs>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: { display: 'none' },
+      }}
+      tabBar={(props) => <AppBottomTabBar {...props} />}
+    >
+      <Tabs.Screen name="index" />
+      <Tabs.Screen name="practice" />
+      <Tabs.Screen name="me" />
+      <Tabs.Screen name="screens/recitation/index" options={{ href: null }} />
+    </Tabs>
   );
 }
