@@ -13,6 +13,7 @@ export default function TabLayout() {
     >
       <Tabs.Screen name="index" />
       <Tabs.Screen name="practice" />
+      <Tabs.Screen name="connect" />
       <Tabs.Screen name="me" />
       <Tabs.Screen name="screens/recitation/index" options={{ href: null }} />
     </Tabs>

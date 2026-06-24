@@ -43,6 +43,11 @@
     "home_overall_stats": "Overall stats",
     "home_plans_count": "{{count}} plans",
     "home_recitation_count": "{{count}} recitations",
+    "my_practices_title": "My practices",
+    "events_title": "Events",
+    "events_see_all": "See all",
+    "events_empty": "No events today.",
+    "calendar_accessibility": "Open calendar",
     "creator_featured_plan": "Featured plans",
     "calendar_day_month": "ཟླ་བ་{{month}} ཚེས་{{day}}",
     "load_error": "Couldn't load. Check your connection and try again.",
@@ -52,7 +57,11 @@
   "nav": {
     "home": "འདུན་ངོས།",
     "practice": "ཉམས་ལེན།",
+    "connect": "Connect",
     "me": "ང།"
+  },
+  "connect": {
+    "coming_soon": "Connect is coming soon."
   },
   "practice": {
     "routine_title": "འཆར་ཅན་ཉམས་ལེན།",

@@ -1,3 +1,4 @@
+import { CalendarDotsIcon } from '@/components/home/HomeIcon';
 import { StreakShareSheet } from '@/components/me/StreakShareSheet';
 import { AppColors } from '@/constants/app-colors';
 import { useStreak } from '@/hooks/api/useStreak';
@@ -5,6 +6,7 @@ import { useUserStats } from '@/hooks/api/useUserStats';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useGuest } from '@/providers/guest';
+import { useRouter, type Href } from 'expo-router';
 import { Fire } from 'phosphor-react-native';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +15,7 @@ import { useAuth0 } from 'react-native-auth0';
 
 export function HomeHeader() {
   const { t } = useTranslation();
+  const router = useRouter();
   const { user } = useAuth0();
   const { isGuest } = useGuest();
   const language = useContentLanguage();
@@ -52,33 +55,43 @@ export function HomeHeader() {
           {firstName ? firstName : ''}
         </Text>
 
-        {showStreak && (
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginLeft: 12 }}>
           <Pressable
-            onPress={() => {
-              if (userStats?.streak) setShareVisible(true);
-            }}
-            style={({ pressed }) => ({
-              flexDirection: 'row',
-              alignItems: 'center',
-              opacity: pressed ? 0.7 : 1,
-              marginLeft: 12,
-            })}
+            onPress={() => router.push('/calendar' as Href)}
+            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
             accessibilityRole="button"
+            accessibilityLabel={t('home.calendar_accessibility')}
           >
-            <Fire size={24} color={AppColors.flame} weight="fill" />
-            <Text
-              style={{
-                marginLeft: 4,
-                fontSize: 20,
-                fontWeight: '700',
-                fontFamily: 'Inter-Bold',
-                color: foreground,
-              }}
-            >
-              {streakCount}
-            </Text>
+            <CalendarDotsIcon size={24} color={foreground} />
           </Pressable>
-        )}
+
+          {showStreak && (
+            <Pressable
+              onPress={() => {
+                if (userStats?.streak) setShareVisible(true);
+              }}
+              style={({ pressed }) => ({
+                flexDirection: 'row',
+                alignItems: 'center',
+                opacity: pressed ? 0.7 : 1,
+              })}
+              accessibilityRole="button"
+            >
+              <Fire size={24} color={AppColors.flame} weight="fill" />
+              <Text
+                style={{
+                  marginLeft: 4,
+                  fontSize: 20,
+                  fontWeight: '700',
+                  fontFamily: 'Inter-Bold',
+                  color: foreground,
+                }}
+              >
+                {streakCount}
+              </Text>
+            </Pressable>
+          )}
+        </View>
       </View>
 
       {userStats?.streak && (

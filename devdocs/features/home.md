@@ -2,12 +2,12 @@
 
 | | |
 |---|---|
-| **Status** | Parity (notification sync stub partial) |
+| **Status** | Improved (Home1.12 redesign; notification sync stub partial) |
 | **Priority** | P0 |
 | **Flutter baseline** | `lib/features/home` |
 | **v2 target** | `src/app/(tabs)/index.tsx` + `src/components/home/*` |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-22 |
+| **Last updated** | 2026-06-22 (Home1.12 revamp) |
 
 ---
 
@@ -17,13 +17,17 @@ The home tab is the app's landing screen. In Flutter it is a scrollable **practi
 dashboard** gated by the series list API. When series data is available, the screen
 shows (top to bottom):
 
-1. **Header** — personalized greeting + streak badge
-2. **Calendar card** — today's Tibetan lunar date
-3. **Verse of the day** card
-4. **Shortcuts row** — Mala and Timer (guest-gated)
-5. **My practices stats** card (conditional on routine counts)
+1. **Header** — personalized greeting + calendar icon + streak badge
+2. **Verse of the day** hero card (image + quote + share)
+3. **Shortcuts row** — Plans, Chants, Mala, Timer (Mala/Timer guest-gated)
+4. **My practices stats** card (conditional on routine counts)
+5. **Events** section (when `GET /events/today` returns data)
 6. **Featured plans** section
 7. **Share prompt** at the bottom
+
+**Home1.12 redesign (v2 target):** Calendar moves from scroll body to header icon
+(tap → `/calendar`). Events section and Connect tab stub added per product design;
+see §3 and shell PRD for Connect placeholder scope.
 
 On first load after onboarding, Home also requests notification permission, fires
 special-plan Day 1 notification sync, and consumes any pending onboarding plan
@@ -73,16 +77,17 @@ info, streak.
 
 ## 3. v2 current state
 
-`src/app/(tabs)/index.tsx` implements the **Flutter dashboard layout** (header through
+`src/app/(tabs)/index.tsx` implements the **Home1.12 dashboard layout** (header through
 share prompt). See §11 checklist for per-requirement status.
 
 | Flutter section | v2 status | Notes |
 |-----------------|-------------|-------|
-| Header + streak | Done | Time-of-day greeting + streak badge + share sheet |
-| Calendar card | Done | `HomeCalendarCard`; tap → `src/app/calendar/index.tsx` |
-| Verse of day | Done | Skeleton + share on tap |
-| Shortcuts (Mala/Timer) | Done | 4 tiles; Mala/Timer guest-gated → `/mala`, `/timers` |
+| Header + streak | Done | Greeting + calendar icon + streak badge + share sheet |
+| Calendar card | Improved | Removed from scroll; header icon → calendar screen |
+| Verse of day | Done | Hero card; skeleton + share on tap |
+| Shortcuts (Mala/Timer) | Done | 4 tiles; Plans → Practice; Mala/Timer guest-gated |
 | My practices stats | Done | Hidden when counts zero or guest |
+| Events | Done | `GET /events/today`; hidden when empty/error |
 | Featured plans | Done | `/series/featured` + random hero layout |
 | Share prompt | Done | App share CTA |
 | Series gate | Done | Localized empty/error + retry |

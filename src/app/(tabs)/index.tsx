@@ -1,7 +1,7 @@
 import '@/lib/i18n';
 import { CARD_SPACING } from '@/components/home/constants';
 import { FeaturedPlanSection } from '@/components/home/FeaturedPlanSection';
-import { HomeCalendarCard } from '@/components/home/HomeCalendarCard';
+import { HomeEventsSection } from '@/components/home/HomeEventsSection';
 import { HomeHeader } from '@/components/home/HomeHeader';
 import { HomeSharePrompt } from '@/components/home/HomeSharePrompt';
 import { HomeShortcutsRow } from '@/components/home/HomeShortcutsRow';
@@ -141,9 +141,6 @@ export default function Index() {
           </View>
         ) : showBody ? (
           <View>
-            <HomeCalendarCard />
-            <View style={{ height: CARD_SPACING }} />
-
             {verseLoading ? (
               <VerseOfDaySkeleton />
             ) : verse && !verseError ? (
@@ -166,6 +163,9 @@ export default function Index() {
             {(showRoutineStats || (routineInfoLoading && !isGuest)) && (
               <View style={{ height: CARD_SPACING }} />
             )}
+
+            <HomeEventsSection />
+            <View style={{ height: CARD_SPACING }} />
 
             <FeaturedPlanSection />
             <HomeSharePrompt />

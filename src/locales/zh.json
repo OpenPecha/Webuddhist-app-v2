@@ -43,6 +43,11 @@
     "home_overall_stats": "整體統計",
     "home_plans_count": "{{count}} 個計畫",
     "home_recitation_count": "{{count}} 個誦經",
+    "my_practices_title": "我的修持",
+    "events_title": "活動",
+    "events_see_all": "查看全部",
+    "events_empty": "今天沒有活動。",
+    "calendar_accessibility": "開啟日曆",
     "creator_featured_plan": "精選計畫",
     "calendar_day_month": "藏历{{month}}月{{day}}日",
     "load_error": "無法載入。請檢查您的網路連線，然後再試一次。",
@@ -52,7 +57,11 @@
   "nav": {
     "home": "首頁",
     "practice": "修持計畫",
+    "connect": "連結",
     "me": "個人"
+  },
+  "connect": {
+    "coming_soon": "連結功能即將推出。"
   },
   "practice": {
     "routine_title": "日常修持",

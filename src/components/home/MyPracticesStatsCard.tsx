@@ -54,7 +54,7 @@ export function MyPracticesStatsCard({ routineInfo, onPress }: MyPracticesStatsC
       onPress={onPress}
       style={({ pressed }) => ({
         marginHorizontal: 16,
-        borderRadius: 20,
+        borderRadius: 24,
         backgroundColor: AppColors.blue,
         opacity: pressed ? 0.92 : 1,
         overflow: 'hidden',
@@ -71,7 +71,7 @@ export function MyPracticesStatsCard({ routineInfo, onPress }: MyPracticesStatsC
               fontFamily: 'Inter-Bold',
             }}
           >
-            {t('practice.routine_title')}
+            {t('home.my_practices_title')}
           </Text>
           <Pressable
             onPress={onPress}

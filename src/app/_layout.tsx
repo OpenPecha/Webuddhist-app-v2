@@ -76,6 +76,7 @@ function AuthGate() {
       <Stack.Screen name="series/[id]" />
       <Stack.Screen name="practice" />
       <Stack.Screen name="calendar" />
+      <Stack.Screen name="events" />
       <Stack.Screen name="mala" />
       <Stack.Screen name="timers/index" />
       <Stack.Screen name="timers/active" />

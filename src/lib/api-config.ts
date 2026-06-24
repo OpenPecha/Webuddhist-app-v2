@@ -61,4 +61,8 @@ export const ENDPOINTS = {
     updateUser: (id: string) => `/accumulators/user/${id}`,
     deleteUser: (id: string) => `/accumulators/user/${id}`,
   },
+  events: {
+    today: '/events/today',
+    detail: (id: string) => `/events/${id}`,
+  },
 } as const;

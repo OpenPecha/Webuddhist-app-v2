@@ -32,7 +32,7 @@ export function verseTypographyForContext(
   if (context === 'sheet') {
     return {
       verseFontSize: isTibetan ? 20 : 18,
-      fontWeight: isTibetan ? 'bold' : 'normal',
+      fontWeight: isTibetan ? "bold" : "800",
       attributionFontSize: isTibetan ? 16 : 15,
       imageAspectRatio: 1.15,
       textPaddingHorizontal: 28,
@@ -43,6 +43,7 @@ export function verseTypographyForContext(
 
   return {
     verseFontSize: isTibetan ? 18 : 16,
+    fontWeight: isTibetan ? "bold" : "600",
     attributionFontSize: isTibetan ? 14 : 13,
     imageAspectRatio: 1.65,
     textPaddingHorizontal: 24,
@@ -100,27 +101,18 @@ export function VerseOfDayContent({ verse, typography, footerAction }: VerseOfDa
                 fontFamily: isTibetan ? 'Inter-Regular' : 'EBGaramond-Regular',
                 color: attributionColor,
                 textAlign: 'center',
+                fontWeight: typography.fontWeight,
               }}
             >
               ~ {attribution}
-
             </Text>
           ) : null}
-
         </View>
 
         {footerAction ? (
-
           <View style={{ position: 'absolute', right: 16, bottom: 16 }}>{footerAction}</View>
-
         ) : null}
-
       </View>
-
     </View>
-
   );
-
 }
-
-

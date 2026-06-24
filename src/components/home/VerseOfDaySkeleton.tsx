@@ -5,7 +5,7 @@ export function VerseOfDaySkeleton() {
   const { skeleton, skeletonMid } = useThemeColors();
 
   return (
-    <View style={{ marginHorizontal: 12 }}>
+    <View style={{ marginHorizontal: 16 }}>
       <View
         style={{
           borderRadius: 24,

@@ -25,7 +25,8 @@ implementation changes.
 
 | Feature | Flutter routes | v2 route | PRD | Priority | Status |
 |---------|----------------|----------|-----|----------|--------|
-| Home | `/home` | `src/app/(tabs)/index.tsx` | [home](../features/home.md) | P0 | Parity — dashboard + theme polish; notification sync stub |
+| Home | `/home` | `src/app/(tabs)/index.tsx` | [home](../features/home.md) | P0 | Improved — Home1.12 layout; Events section; header calendar icon |
+| Connect (stub) | — | `src/app/(tabs)/connect.tsx` | [home](../features/home.md) | P2 | Partial — tab shell placeholder; full feature TBD |
 | Home — calendar | `/home/calendar` | `src/app/calendar/index.tsx` | [home](../features/home.md) | P0 | Parity — month grid + nav |
 | Home — Mala shortcut | `/mala` | `src/app/mala/index.tsx` | [mala](../features/mala.md) | P0 | Improved — mockup UI + core parity |
 | Home — Timer shortcut | `/home/timers` | `src/app/timers/index.tsx` + `timers/active.tsx` | [timer](../features/timer.md) | P0 | Parity — preset grid + active timer screen |
@@ -46,7 +47,8 @@ Sub-components of the Home tab. See [home](../features/home.md) for full require
 | Section | Flutter widget | v2 status | Notes |
 |---------|---------------|-----------|-------|
 | Header + streak | `home_header.dart` | Parity | Greeting + streak badge + share sheet |
-| Calendar card | `home_calendar_card.dart` | Parity | `MoonPhaseIcon` + full calendar screen |
+| Calendar affordance | `home_calendar_card.dart` | Improved | Header icon → calendar screen (card removed from scroll) |
+| Events section | — | Improved | `GET /events/today`; hidden when empty/error |
 | Verse of day | `verse_of_day_card.dart` | Parity | Skeleton + share on tap |
 | Shortcuts (Mala/Timer) | `home_shortcuts_row.dart` | Parity | 4 tiles; Mala/Timer guest-gated |
 | My practices stats | `my_practices_stats_card.dart` | Parity | Hidden when counts zero or guest |
@@ -74,4 +76,5 @@ only — **no v2 implementation, no API endpoints in scope.**
 
 | Module | Status |
 |--------|--------|
-| `connect`, `learn`, `explore`, `creator_info` | Won't migrate — no Flutter routes in main shell; no PRD |
+| `learn`, `explore`, `creator_info` | Won't migrate — no Flutter routes in main shell; no PRD |
+| `connect` (full feature) | Partial — stub tab only; groups/social TBD |

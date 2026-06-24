@@ -127,7 +127,7 @@ From `WeBuddhist-app/lib/features/`:
 | `story_view` | `stalled_features/story-view` | — won't migrate |
 | `meditation_of_day`, `prayer_of_the_day` | `stalled_features/meditation-prayer-of-day` | — won't migrate |
 
-**Not in v2 scope:** `connect`, `learn`, `explore`, `creator_info` (no main-shell routes).
+**Not in v2 scope (full feature):** `connect` (stub tab in shell only), `learn`, `explore`, `creator_info`.
 
 ## 9. Known navigation/IA difference to resolve early
 

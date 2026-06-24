@@ -16,6 +16,7 @@ export function useHomeRefresh() {
       }),
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.streak.me() }),
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.routineInfo.me() }),
+      queryClient.invalidateQueries({ queryKey: ['events', 'today'] }),
     ]);
 
     await Promise.all([
@@ -26,6 +27,7 @@ export function useHomeRefresh() {
       }),
       queryClient.refetchQueries({ queryKey: QUERY_KEYS.streak.me() }),
       queryClient.refetchQueries({ queryKey: QUERY_KEYS.routineInfo.me() }),
+      queryClient.refetchQueries({ queryKey: ['events', 'today'] }),
     ]);
   }, [language, queryClient]);
 }

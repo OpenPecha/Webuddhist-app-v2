@@ -53,4 +53,8 @@ export const QUERY_KEYS = {
   mala: {
     presets: (language: string) => ['mala', 'presets', language] as const,
   },
+  events: {
+    today: (language: string, limit: number) =>
+      ['events', 'today', language, limit] as const,
+  },
 } as const;
