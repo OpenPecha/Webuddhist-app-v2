@@ -61,6 +61,7 @@ module.exports = {
     'expo-image',
     'expo-secure-store',
     'expo-asset',
+    'expo-audio',
     '@react-native-community/datetimepicker',
     [
       'expo-notifications',

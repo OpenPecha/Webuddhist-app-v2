@@ -23,6 +23,7 @@
     "drawer_subtitle": "Continue your practice on any device, wherever you go."
   },
   "home": {
+    "hello_prefix": "Hello, ",
     "good_morning": "Good morning",
     "good_afternoon": "Good afternoon",
     "good_evening": "Good evening",
@@ -33,12 +34,34 @@
     "no_feature_content": "No featured content available",
     "series_in_progress": "In progress",
     "search": "Search",
-    "timer": "Timer"
+    "timer": "Timer",
+    "home_mala": "Mala",
+    "home_chants": "Chants",
+    "home_shortcut_plans": "Plans",
+    "home_share_prompt": "Enjoying {{appName}}?",
+    "share": "Share",
+    "home_overall_stats": "Overall stats",
+    "home_plans_count": "{{count}} plans",
+    "home_recitation_count": "{{count}} recitations",
+    "my_practices_title": "My practices",
+    "events_title": "Events",
+    "events_see_all": "See all",
+    "events_empty": "No events today.",
+    "calendar_accessibility": "Open calendar",
+    "creator_featured_plan": "Featured plans",
+    "calendar_day_month": "Day {{day}} · Month {{month}}",
+    "load_error": "Unable to load. Check your connection and try again.",
+    "share_this_quote": "Share this quote",
+    "verse_share_error": "Unable to share quote. Please try again"
   },
   "nav": {
     "home": "Home",
     "practice": "Practice",
+    "connect": "Connect",
     "me": "Me"
+  },
+  "connect": {
+    "coming_soon": "Connect is coming soon."
   },
   "practice": {
     "routine_title": "My practice routine",
@@ -96,7 +119,8 @@
     "no_recitations": "No recitations found"
   },
   "common": {
-    "not_found": "Not found"
+    "not_found": "Not found",
+    "cancel": "Cancel"
   },
   "series": {
     "about": "About",
@@ -208,5 +232,44 @@
     "person_name_min_length": "Must be at least 1 character",
     "person_name_max_length": "Must be 50 characters or less",
     "person_name_invalid_chars": "Only letters, spaces, hyphens, and apostrophes are allowed"
+  },
+  "calendar": {
+    "title": "Tibetan Calendar",
+    "moon_phase_new_moon": "New moon",
+    "moon_phase_first_quarter": "First quarter",
+    "moon_phase_full_moon": "Full moon"
+  },
+  "mala": {
+    "title": "Mala",
+    "rounds_one": "1 round",
+    "rounds_other": "{{count}} rounds",
+    "load_error": "Could not load mala. Check your connection and try again.",
+    "seed_error": "Could not load your count.",
+    "no_mantras": "No mantras available for your language.",
+    "settings_title": "Mala options",
+    "settings_add_to_practice": "Add to practice",
+    "settings_bookmark": "Bookmark",
+    "settings_reset": "Reset count",
+    "settings_sound": "Sound",
+    "settings_vibration": "Vibration",
+    "settings_screen_lock": "Screen Lock",
+    "reset_title": "Reset Mala?",
+    "reset_message": "Are you sure you want to reset the count for this Mala? This action cannot be undone.",
+    "reset_confirm": "Reset"
+  },
+  "timers": {
+    "title": "Timer",
+    "meditation_timer": "Meditation Timer",
+    "min": "min",
+    "finish": "Finish",
+    "discard_session": "Discard session",
+    "running": "Timer running",
+    "complete": "Time's up",
+    "close": "Close"
+  },
+  "force_update": {
+    "title": "Update required",
+    "message": "A newer version of WeBuddhist is available. Please update to continue.",
+    "button": "Update now"
   }
 }

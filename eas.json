@@ -1,39 +1,51 @@
 {
-  "cli": {
-    "version": ">= 20.0.0",
-    "appVersionSource": "remote"
-  },
-  "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal",
-      "env": {
-        "APP_VARIANT": "development"
-      },
-      "android": {
-        "buildType": "apk"
-      },
-      "ios": {
-        "simulator": true
-      }
-    },
-    "preview": {
-      "distribution": "internal",
-      "env": {
-        "APP_VARIANT": "development"
-      },
-      "android": {
-        "buildType": "apk"
-      }
-    },
-    "production": {
-      "autoIncrement": true,
-      "env": {
-        "APP_VARIANT": "production"
-      }
-    }
-  },
-  "submit": {
-    "production": {}
-  }
+	"cli": {
+		"version": ">= 20.0.0",
+		"appVersionSource": "remote"
+	},
+	"build": {
+		"development": {
+			"developmentClient": true,
+			"distribution": "internal",
+			"env": {
+				"APP_VARIANT": "development"
+			},
+			"android": {
+				"buildType": "apk"
+			},
+			"ios": {
+				"simulator": true
+			}
+		},
+		"development-prod": {
+			"developmentClient": true,
+			"distribution": "internal",
+			"env": {
+				"APP_VARIANT": "production",
+				"EXPO_PUBLIC_API_URL": "https://api.webuddhist.com/api/v1",
+				"EXPO_PUBLIC_AUTH0_AUDIENCE": "https://api.webuddhist.com"
+			},
+			"android": {
+				"buildType": "apk"
+			}
+		},
+		"preview": {
+			"distribution": "internal",
+			"env": {
+				"APP_VARIANT": "development"
+			},
+			"android": {
+				"buildType": "apk"
+			}
+		},
+		"production": {
+			"autoIncrement": true,
+			"env": {
+				"APP_VARIANT": "production"
+			}
+		}
+	},
+	"submit": {
+		"production": {}
+	}
 }

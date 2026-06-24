@@ -1,5 +1,5 @@
 import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs';
-import { Bell, House, UserCircle, type IconProps } from 'phosphor-react-native';
+import { Bell, House, UserCircle, UsersThree, type IconProps } from 'phosphor-react-native';
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
@@ -11,7 +11,7 @@ export const TAB_BAR_CONTENT_HEIGHT = 48;
 const TAB_INACTIVE_LIGHT = '#757575';
 const TAB_INACTIVE_DARK = '#9E9E9E';
 
-const TAB_ORDER = ['index', 'practice', 'me'] as const;
+const TAB_ORDER = ['index', 'practice', 'connect', 'me'] as const;
 
 type TabRouteName = (typeof TAB_ORDER)[number];
 
@@ -20,6 +20,7 @@ type TabIcon = ComponentType<IconProps>;
 const TAB_ICONS: Record<TabRouteName, TabIcon> = {
   index: House,
   practice: Bell,
+  connect: UsersThree,
   me: UserCircle,
 };
 
@@ -34,6 +35,7 @@ export function AppBottomTabBar({ state, navigation, insets }: BottomTabBarProps
   const labels: Record<TabRouteName, string> = {
     index: t('nav.home'),
     practice: t('nav.practice'),
+    connect: t('nav.connect'),
     me: t('nav.me'),
   };
 

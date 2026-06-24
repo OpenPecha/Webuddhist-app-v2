@@ -4,7 +4,7 @@
 |---|---|
 | **Status** | PRD draft |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-08 |
+| **Last updated** | 2026-06-22 |
 | **Flutter baseline** | `WeBuddhist-app` (`main`) |
 | **v2 target** | `Webuddhist-app-v2` (`dev`) |
 
@@ -87,9 +87,12 @@ PRDs and implementation proceed in dependency order, not alphabetically.
 - `foundation/02-api-networking`
 - `foundation/03-local-storage-offline`
 - `foundation/04-i18n-theming`
+- `foundation/07-force-update`
 
 ### Wave 1 — Core value (P0)
-- `features/home`, `features/series`, `features/plans`, `features/recitation`
+- `features/home` — full dashboard parity: header/streak, calendar, verse of day,
+  shortcuts, my practices stats, featured plans, share prompt, notification on load
+- `features/series`, `features/plans`, `features/recitation`
 
 ### Wave 2 — Reading & engagement (P1)
 - `features/reader`, `features/practice`, `foundation/06-notifications`
@@ -110,6 +113,8 @@ From `WeBuddhist-app/lib/features/`:
 | `auth`, `onboarding` | `foundation/01-auth-guest-onboarding` | 0 |
 | `app` (nav shell) | `foundation/00-app-shell-navigation` | 0 |
 | `home` | `features/home` | 1 |
+| `mala` | `features/mala` | 1 |
+| `timer` | `features/timer` | 1 |
 | `home` (series) | `features/series` | 1 |
 | `plans` | `features/plans` | 1 |
 | `recitation` | `features/recitation` | 1 |
@@ -122,7 +127,7 @@ From `WeBuddhist-app/lib/features/`:
 | `story_view` | `stalled_features/story-view` | — won't migrate |
 | `meditation_of_day`, `prayer_of_the_day` | `stalled_features/meditation-prayer-of-day` | — won't migrate |
 
-**Not in v2 scope:** `connect`, `learn`, `explore`, `creator_info` (no main-shell routes).
+**Not in v2 scope (full feature):** `connect` (stub tab in shell only), `learn`, `explore`, `creator_info`.
 
 ## 9. Known navigation/IA difference to resolve early
 

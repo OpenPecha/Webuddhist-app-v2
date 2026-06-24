@@ -1,8 +1,12 @@
+import { ForceUpdateGate } from '@/components/ForceUpdateGate';
+import { AppColors } from '@/constants/app-colors';
 import { ensureI18nReady } from '@/lib/i18n';
 import { configureNotificationHandler } from '@/lib/notifications';
 import { AuthTokenSync } from '@/providers/auth-token';
 import { Auth0ProviderWrapper } from '@/providers/auth0';
 import { GuestProvider, useGuest } from '@/providers/guest';
+import { MalaSyncBootstrap } from '@/providers/mala-sync';
+import { PendingOnboardingPlanProvider } from '@/providers/pending-onboarding-plan';
 import { OnboardingProvider, useOnboarding } from '@/providers/onboarding';
 import { QueryProvider } from '@/providers/query';
 import { ThemeProvider } from '@/providers/theme';
@@ -65,14 +69,17 @@ function AuthGate() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#FDFDFC' } }}>
+    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: AppColors.surfaceLight } }}>
       <Stack.Screen name="login" />
       <Stack.Screen name="onboarding" />
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="series/[id]" />
       <Stack.Screen name="practice" />
       <Stack.Screen name="calendar" />
+      <Stack.Screen name="events" />
       <Stack.Screen name="mala" />
+      <Stack.Screen name="timers/index" />
+      <Stack.Screen name="timers/active" />
       <Stack.Screen name="reader/[textId]" />
     </Stack>
   );
@@ -105,6 +112,7 @@ export default function RootLayout() {
         <Auth0ProviderWrapper>
           <GuestProvider>
             <AuthTokenSync>
+              <MalaSyncBootstrap />
               <OnboardingProvider>
                 <ThemeProvider>
                   <BottomSheetModalProvider>

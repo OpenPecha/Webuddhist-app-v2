@@ -7,7 +7,7 @@
 | **Flutter baseline** | `lib/features/notifications` |
 | **v2 target** | TBD (`expo-notifications`) |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-08 |
+| **Last updated** | 2026-06-22 |
 
 ---
 
@@ -60,7 +60,7 @@ re-enabling re-schedules from stored routine.
 ## 5. Functional requirements
 
 - **FR-1:** Request OS notification permission at the right moment (Flutter does this in
-  the home-screen flow after onboarding).
+  the home-screen flow after onboarding — see `features/home` FR-10 and §10 below).
 - **FR-2:** Schedule routine + recitation reminders from the user's routine, using
   timezone-correct local scheduling.
 - **FR-3:** Plan/special-plan day-based notifications with idempotency flags so a day's
@@ -81,7 +81,29 @@ re-enabling re-schedules from stored routine.
 - Timezone handling: ensure scheduled times respect device timezone (Flutter uses the
   `timezone` package).
 
-## 7. Acceptance criteria
+## 7. Home-screen permission flow (Flutter reference)
+
+Triggered on first `HomeScreen` load (`home_screen.dart` →
+`_requestNotificationPermissionsIfNeeded`). Cross-ref: `features/home` FR-10.
+
+```
+HomeScreen initState (post-frame callback)
+  1. Capture ProviderContainer BEFORE any await
+     (OS permission dialog may dispose widget; container survives)
+  2. If notifications not enabled → requestPermission()
+  3. _firePendingSpecialPlanDay1IfNeeded(container)
+     → invalidate userPlansFutureProvider (fresh auth fetch)
+     → notificationSyncEngine.sync(trigger: appLaunch)
+  4. _navigateToPendingPlanIfNeeded()
+     → consume pendingOnboardingPlanProvider
+     → push /practice/details, switch tab to Practice
+```
+
+**v2 implementation note:** capture notification/plan state in a root-level store or
+ref before showing the OS permission dialog — the Home component may unmount while the
+dialog is open (same issue Flutter solves with `ProviderScope.containerOf`).
+
+## 8. Acceptance criteria
 
 - [ ] Permission requested and handled (grant/deny) on iOS + Android.
 - [ ] Routine and recitation reminders fire at correct local times.
@@ -89,15 +111,17 @@ re-enabling re-schedules from stored routine.
 - [ ] Master + category toggles work and persist.
 - [ ] Notification tap opens the correct screen.
 - [ ] Re-launch reschedules without duplicates.
+- [ ] Home load after onboarding triggers permission request + special-plan Day 1 sync
+  (see §7).
 
-## 8. Open questions
+## 9. Open questions
 
 - Full per-day content payload structure for special plans (extract from
   `special_plan_notifications.dart`).
 - Do we need background tasks, or is launch-time + enrollment-time rescheduling enough?
 - Rich notifications (cover images) parity — required for v1?
 
-## 9. Migration status checklist
+## 10. Migration status checklist
 
 | Requirement | Flutter | v2 | Notes |
 |-------------|---------|-----|-------|
@@ -106,3 +130,4 @@ re-enabling re-schedules from stored routine.
 | Plan day notifications | yes | no | idempotency scheme to port |
 | Settings toggles | yes | no | |
 | Deep-link on tap | yes | no | |
+| Permission on Home load | yes | no | see §7 + home FR-10 |

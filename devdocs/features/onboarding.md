@@ -7,7 +7,7 @@
 | **Flutter baseline** | `lib/features/onboarding` |
 | **v2 target** | TBD (`src/app/onboarding.tsx`) |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-08 |
+| **Last updated** | 2026-06-22 |
 
 ---
 
@@ -43,8 +43,11 @@ on `/onboarding` are sent to `/home`.
   fallback `onboarding_completed`).
 - **FR-3:** Redirect rules enforced by the nav guard (see auth PRD §8).
 - **FR-4:** Optional starter-plan enrollment on completion (Flutter sets
-  `pendingOnboardingPlanProvider`, consumed by home).
+  `pendingOnboardingPlanProvider`, consumed by Home on first load — see §10).
 - **FR-5:** Guests bypass onboarding.
+- **FR-6:** After onboarding completes, user lands on Home; Home then runs the
+  notification permission flow and, if a pending plan exists, navigates to Practice tab +
+  plan detail (not just "stay on Home").
 
 ## 5. State & persistence (map to StorageKeys)
 
@@ -76,7 +79,8 @@ on `/onboarding` are sent to `/home`.
 - [ ] Completion persists per-user; not re-shown on relaunch.
 - [ ] Guests never see onboarding.
 - [ ] Mid-onboarding resume works from saved step.
-- [ ] Starter-plan enrollment (if any) happens once and lands on home.
+- [ ] Starter-plan enrollment (if any) happens once; Home permission flow runs; user
+  opens enrolled plan on Practice tab (see §10).
 
 ## 9. Open questions
 
@@ -84,7 +88,28 @@ on `/onboarding` are sent to `/home`.
 - Is starter-plan enrollment part of onboarding in v1?
 - Server-side vs local-only preference storage.
 
-## 10. Migration status checklist
+## 10. Home consumption of pending plan (Flutter reference)
+
+When onboarding enrolls a starter plan, Flutter stores it in
+`pendingOnboardingPlanProvider`. Home consumes it on first load **after** the
+notification permission flow:
+
+```
+_onboarding complete → navigate to /home
+HomeScreen._requestNotificationPermissionsIfNeeded()
+  → permission request + special-plan Day 1 sync
+  → _navigateToPendingPlanIfNeeded()
+      1. Read pendingOnboardingPlanProvider; clear immediately
+      2. context.push('/practice/details', extra: { plan, selectedDay, startDate })
+      3. Switch mainNavigationIndexProvider to Practice tab
+```
+
+**Why order matters:** push plan detail **before** switching tabs — switching first
+unmounts HomeScreen and the push becomes a no-op.
+
+Cross-ref: `features/home` FR-10, `foundation/06-notifications` §7.
+
+## 11. Migration status checklist
 
 | Requirement | Flutter | v2 | Notes |
 |-------------|---------|-----|-------|
@@ -92,4 +117,4 @@ on `/onboarding` are sent to `/home`.
 | Per-user completion | yes | no | |
 | Guest skip | yes | no | |
 | Resume from step | yes | no | |
-| Starter plan enroll | yes | no | |
+| Pending plan → Practice nav | yes | no | consumed on Home load |

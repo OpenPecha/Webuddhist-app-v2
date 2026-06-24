@@ -1,4 +1,6 @@
 import { useOnboarding } from '@/providers/onboarding';
+import { usePendingOnboardingPlan } from '@/providers/pending-onboarding-plan';
+import type { UserPlan } from '@/types/plans';
 import '@/lib/i18n';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -99,7 +101,15 @@ function WelcomeScreen({ onNext }: { onNext: () => void }) {
 
 // ─── Screen 2: Event enrollment ──────────────────────────────────────────────
 
-function EventScreen({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
+function EventScreen({
+  onNext,
+  onBack,
+  onSelectionChange,
+}: {
+  onNext: () => void;
+  onBack: () => void;
+  onSelectionChange: (selected: boolean) => void;
+}) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const [selected, setSelected] = useState(false);
@@ -129,7 +139,13 @@ function EventScreen({ onNext, onBack }: { onNext: () => void; onBack: () => voi
 
       {/* Event card */}
       <Pressable
-        onPress={() => setSelected((s) => !s)}
+        onPress={() => {
+          setSelected((s) => {
+            const next = !s;
+            onSelectionChange(next);
+            return next;
+          });
+        }}
         style={{
           borderRadius: 16,
           borderWidth: selected ? 2 : 1.5,
@@ -210,8 +226,10 @@ function AllSetScreen({ onComplete }: { onComplete: () => void }) {
 export default function OnboardingScreen() {
   const router = useRouter();
   const { markCompleted } = useOnboarding();
+  const { setPendingPlan } = usePendingOnboardingPlan();
   const scrollRef = useRef<ScrollView>(null);
   const [page, setPage] = useState(0);
+  const [eventEnrolled, setEventEnrolled] = useState(false);
 
   const goTo = (next: number) => {
     setPage(next);
@@ -219,6 +237,21 @@ export default function OnboardingScreen() {
   };
 
   const handleComplete = async () => {
+    if (eventEnrolled) {
+      const pendingPlan: UserPlan = {
+        id: ONBOARDING_EVENT.planId,
+        title: ONBOARDING_EVENT.planName,
+        description: ONBOARDING_EVENT.description,
+        language: 'en',
+        difficulty_level: null,
+        image: null,
+        started_at: new Date().toISOString(),
+        total_days: ONBOARDING_EVENT.totalDays,
+        start_date: null,
+      };
+      setPendingPlan(pendingPlan);
+    }
+
     await markCompleted();
     router.replace('/');
   };
@@ -238,7 +271,11 @@ export default function OnboardingScreen() {
           <WelcomeScreen onNext={() => goTo(1)} />
         </View>
         <View style={{ width: SCREEN_WIDTH, flex: 1 }}>
-          <EventScreen onNext={() => goTo(2)} onBack={() => goTo(0)} />
+          <EventScreen
+            onNext={() => goTo(2)}
+            onBack={() => goTo(0)}
+            onSelectionChange={setEventEnrolled}
+          />
         </View>
         <View style={{ width: SCREEN_WIDTH, flex: 1 }}>
           <AllSetScreen onComplete={handleComplete} />

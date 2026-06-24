@@ -17,6 +17,8 @@ export interface Series {
   status: string;
   plan_count: number;
   total_days: number;
+  start_date?: string | null;
+  end_date?: string | null;
 }
 
 export interface Plan {

@@ -7,7 +7,7 @@
 | **Flutter baseline** | `lib/features/app`, `lib/features/home/presentation/screens/main_navigation_screen.dart`, `lib/core/config/router` |
 | **v2 target** | `src/app/_layout.tsx`, `src/app/(tabs)/_layout.tsx` |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-08 |
+| **Last updated** | 2026-06-22 |
 
 ---
 
@@ -62,6 +62,8 @@ Record the decision here once made. All tab-level feature PRDs reference this.
   (`series/:id`, `reader/:textId`, `plan-text/:subtaskId`).
 - **FR-5:** Auth/guest/onboarding redirects are enforced at the navigation layer
   (see `foundation/01-auth-guest-onboarding`).
+- **FR-6:** Force-update gate mounted app-wide when store version requires update
+  (see `foundation/07-force-update`; not a Home-screen banner).
 
 ## 5. Route map (Flutter → Expo Router)
 
@@ -70,6 +72,9 @@ Record the decision here once made. All tab-level feature PRDs reference this.
 | `/login` | `src/app/login.tsx` | stack |
 | `/onboarding` | `src/app/onboarding.tsx` (TBD) | stack |
 | `/home` | `src/app/(tabs)/index.tsx` | tab |
+| `/home/calendar` | `src/app/calendar/index.tsx` | stack |
+| `/mala` | `src/app/mala/index.tsx` | stack |
+| `/home/timers` (Flutter) / `/timers` (v2) | `src/app/timers/index.tsx`, `timers/active.tsx` | stack (hides bottom nav in Flutter) |
 | `/practice` | `src/app/(tabs)/practice/...` (TBD, pending §3) | tab |
 | `/settings` (Me) | `src/app/(tabs)/screens/setting/index.tsx` | tab |
 | `/recitations/detail` | `src/app/(tabs)/screens/recitation/...` | tab/stack |

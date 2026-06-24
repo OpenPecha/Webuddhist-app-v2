@@ -3,7 +3,22 @@ export const QUERY_KEYS = {
     all: ['series'] as const,
     list: (language: string, skip: number, limit: number) =>
       ['series', 'list', language, skip, limit] as const,
+    featured: (language: string, limit: number) =>
+      ['series', 'featured', language, limit] as const,
     detail: (id: string) => ['series', 'detail', id] as const,
+  },
+  calendar: {
+    today: () => ['calendar', 'today'] as const,
+    month: (year: number, month: number) => ['calendar', 'month', year, month] as const,
+  },
+  verseOfDay: {
+    today: (language: string) => ['verseOfDay', 'today', language] as const,
+  },
+  streak: {
+    me: () => ['streak', 'me'] as const,
+  },
+  routineInfo: {
+    me: () => ['routineInfo', 'me'] as const,
   },
   plans: {
     all: ['plans'] as const,
@@ -31,5 +46,15 @@ export const QUERY_KEYS = {
     all: ['profile'] as const,
     info: () => ['profile', 'info'] as const,
     stats: () => ['profile', 'stats'] as const,
+  },
+  timers: {
+    list: (skip: number, limit: number) => ['timers', 'list', skip, limit] as const,
+  },
+  mala: {
+    presets: (language: string) => ['mala', 'presets', language] as const,
+  },
+  events: {
+    today: (language: string, limit: number) =>
+      ['events', 'today', language, limit] as const,
   },
 } as const;

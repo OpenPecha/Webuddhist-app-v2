@@ -19,12 +19,19 @@ implementation changes.
 | i18n / theming | `core/l10n/*`, `core/theme/*` | `global.css`, fonts in `_layout.tsx` | [04](../foundation/04-i18n-theming.md) | P1 | PRD draft |
 | Analytics | `core/analytics/*` | TBD | [05](../foundation/05-analytics.md) | P2 | PRD draft |
 | Notifications | `features/notifications` | TBD (`expo-notifications`) | [06](../foundation/06-notifications.md) | P1 | PRD draft |
+| Force update | `core/services/upgrade/force_update_gate.dart` | `src/components/ForceUpdateGate.tsx` | [07](../foundation/07-force-update.md) | P0 | In progress — env min-version gate; store API check TBD |
 
 ## Features
 
 | Feature | Flutter routes | v2 route | PRD | Priority | Status |
 |---------|----------------|----------|-----|----------|--------|
-| Home | `/home` | `src/app/(tabs)/index.tsx` | [home](../features/home.md) | P0 | In progress (partial) |
+| Home | `/home` | `src/app/(tabs)/index.tsx` | [home](../features/home.md) | P0 | Improved — Home1.12 layout; Events section; header calendar icon |
+| Connect (stub) | — | `src/app/(tabs)/connect.tsx` | [home](../features/home.md) | P2 | Partial — tab shell placeholder; full feature TBD |
+| Home — calendar | `/home/calendar` | `src/app/calendar/index.tsx` | [home](../features/home.md) | P0 | Parity — month grid + nav |
+| Home — Mala shortcut | `/mala` | `src/app/mala/index.tsx` | [mala](../features/mala.md) | P0 | Improved — mockup UI + core parity |
+| Home — Timer shortcut | `/home/timers` | `src/app/timers/index.tsx` + `timers/active.tsx` | [timer](../features/timer.md) | P0 | Parity — preset grid + active timer screen |
+| Mala (screen) | `/mala` | `src/app/mala/index.tsx` | [mala](../features/mala.md) | P0 | Improved — settings, reset, bead arc |
+| Timer (screen) | `/home/timers` | `src/app/timers/*` | [timer](../features/timer.md) | P0 | Parity — v2 route `/timers` |
 | Series | `/home/series/:id` | `src/app/series/[id].tsx` | [series](../features/series.md) | P0 | In progress |
 | Plans | `/home/plans/:tag`, `/plans/info`, `/plans/details` | TBD | [plans](../features/plans.md) | P0 | Not started |
 | Recitation | `/recitations/detail` | `src/app/(tabs)/screens/recitation` | [recitation](../features/recitation.md) | P0 | In progress (partial) |
@@ -32,6 +39,26 @@ implementation changes.
 | Practice | `/practice/*` | TBD | [practice](../features/practice.md) | P1 | Not started |
 | Settings / Profile | `/settings`, `/profile`, `/about`, `/privacy-policy` | `src/app/(tabs)/screens/setting` | [settings-profile](../features/settings-profile.md) | P2 | In progress (partial) |
 | Onboarding | `/onboarding` | TBD | [onboarding](../features/onboarding.md) | P0 | Not started |
+
+## Home sections (detail)
+
+Sub-components of the Home tab. See [home](../features/home.md) for full requirements.
+
+| Section | Flutter widget | v2 status | Notes |
+|---------|---------------|-----------|-------|
+| Header + streak | `home_header.dart` | Parity | Greeting + streak badge + share sheet |
+| Calendar affordance | `home_calendar_card.dart` | Improved | Header icon → calendar screen (card removed from scroll) |
+| Events section | — | Improved | `GET /events/today`; hidden when empty/error |
+| Verse of day | `verse_of_day_card.dart` | Parity | Skeleton + share on tap |
+| Shortcuts (Mala/Timer) | `home_shortcuts_row.dart` | Parity | 4 tiles; Mala/Timer guest-gated |
+| My practices stats | `my_practices_stats_card.dart` | Parity | Hidden when counts zero or guest |
+| Featured plans | `featured_plan_section.dart` | Parity | `/series/featured` + random hero layout |
+| Share prompt | `home_share_prompt.dart` | Parity | App share CTA |
+| Series gate | `series_provider.dart` | Parity | Empty/error states localized |
+| Notification on load | `home_screen.dart` init | In progress | Permission + Day-1 sync stub with idempotency keys |
+| Post-onboarding plan nav | `pendingOnboardingPlanProvider` | Parity | Push plan detail then Practice tab |
+| Pull-to-refresh | `_onRefresh()` | Parity | Invalidates all home queries |
+| Per-section skeletons | verse/stats skeletons | Parity | Verse, stats, featured skeletons |
 
 ## Won't migrate (stalled)
 
@@ -49,4 +76,5 @@ only — **no v2 implementation, no API endpoints in scope.**
 
 | Module | Status |
 |--------|--------|
-| `connect`, `learn`, `explore`, `creator_info` | Won't migrate — no Flutter routes in main shell; no PRD |
+| `learn`, `explore`, `creator_info` | Won't migrate — no Flutter routes in main shell; no PRD |
+| `connect` (full feature) | Partial — stub tab only; groups/social TBD |
