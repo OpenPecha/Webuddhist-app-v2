@@ -2,12 +2,12 @@
 
 | | |
 |---|---|
-| **Status** | Not started |
+| **Status** | PRD draft (mockup research complete) |
 | **Priority** | P0 |
 | **Flutter baseline** | `lib/features/plans` |
-| **v2 target** | TBD + `src/components/ui/molecules/cards/plan-card.tsx` |
+| **v2 target** | `src/app/plans/[id].tsx`, `src/app/practice/details.tsx`, `src/components/plans/*` |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-11 |
+| **Last updated** | 2026-06-22 (mockup research + implementation alignment) |
 
 ---
 
@@ -17,7 +17,63 @@ Plans are day-structured practice/study programs (within a series or standalone)
 browse plans by tag, preview a plan, enroll, and track day-by-day progress with
 completion.
 
-## 2. Flutter reference map
+## 2a. v2 current state
+
+| Screen | v2 file | Status |
+|--------|---------|--------|
+| Plan preview | — | **Missing** — series taps broken route |
+| Plan track | `src/app/practice/details.tsx` | **Partial** — chevron day nav, task list only |
+| Plan components | `src/components/plans/*` | Partial — `PlanCard`, `EnrolledPlanStatusIndicator` exist |
+| Services | `src/services/plans.ts` | Partial — enrolled reads only; no catalog fetch or enroll |
+
+## 2b. Mockup redesign (`plan_design_revamp`, `Missed_days_flow`)
+
+Design reference: shared mockup sets. Full index:
+[`devdocs/research/mockup-screen-index.md`](../research/mockup-screen-index.md).
+
+### Plan preview / detail (`/plans/[id]`) — P0
+
+| Element | Spec | Flutter | API |
+|---------|------|---------|-----|
+| Hero cover | Top image ~25–40% | `PlanCoverImage` | `GET /plans/{id}` |
+| Title + day count | Header area | preview + info screens | `total_days` |
+| Intro description | Body text | plan description | |
+| Day carousel | Horizontal 1..N; border = selected; check = completed | `DayCarousel` | `/plans/{id}/days` + completion when enrolled |
+| Task list | Title + icon + chevron | `PreviewActivityList` / `ActivityList` | day endpoint |
+| Practice Now | Sticky black CTA | opens first incomplete task | enrolled only |
+
+### Plan track enhancements — P1
+
+| Element | Spec | Flutter widget |
+|---------|------|----------------|
+| Task completion toggles | Circle → checkmark | `ActivityList` + POST complete |
+| Day completion sheet | Bottom sheet on day done | `DayCompletionBottomSheet` |
+| Missed days badge | Count + tap → first missed | `MissedDaysBadge` |
+| On track badge | When zero missed | `OnTrackBadge` |
+| Reader bar | Prev / play / Next | `PlanNavigator` |
+
+### Day status rules (from Flutter)
+
+**Carousel future lock** (`lockFutureDays: true`):
+
+```
+isDisabled = dayDate > today && dayNumber > previewUnlockDayCount
+previewUnlockDayCount = 10 for first plan in series only (SeriesPlanUtils)
+```
+
+**Missed days:** `PlanUtils.calculateMissedDays(startDate, totalDays, completionMap)`
+
+See [`open-questions.md`](../research/open-questions.md) §3 — Shorts maps to `PlanDayDTO.videos[]` on day endpoints (`GET /plans/{id}/days/{n}` or user day endpoint). Hide when empty; P2 with plan track.
+
+### Scope tiers
+
+| Tier | Deliverable |
+|------|-------------|
+| v1 | `/plans/[id]` layout + day list + carousel (read-only preview); enrollment gate via `GET /users/me/plans/{id}` |
+| v2 | Enrolled track: completion, Practice Now, missed days |
+| v3 | Reader/plan-text; day videos strip (mockup Shorts) |
+
+## 3. Flutter reference map
 
 | Screen / element | Flutter source | Route |
 |------------------|----------------|-------|
@@ -30,18 +86,20 @@ completion.
 | Plan entity | `features/plans/domain/entities/plan.dart` | — |
 | Plan models | `features/plans/data/models/plans_model.dart`, `user/user_plans_model.dart` | — |
 | User plans provider | `features/plans/presentation/providers/user_plans_provider.dart` | — |
+| Day carousel | `features/plans/presentation/widgets/day_carousel.dart` | — |
+| Activity list | `features/plans/presentation/widgets/plan_track/activity_list.dart` | — |
 
-## 3. User stories
+## 4. User stories
 
 - As any user, I can browse plans, search for plans by tag and preview plans (guest preview allowed).
-- As an any user, I can see day-by-day content.
+- As any user, I can see day-by-day content.
 - As an **authenticated** user, I can enroll in a plan.
 - As an enrolled user, when I complete tasks, they are marked complete.
 - As an enrolled user, when I complete all the tasks in a day, the day is marked complete.
 - As an enrolled user, I can track progress (see marks on completed days and lack of a check mark on days I haven't completed).
 - As a user, I am informed of the number of days I have missed so I can find missed days and catch up.
 
-## 4. Functional requirements
+## 5. Functional requirements
 
 - **FR-1:** Plan list filtered by tag.
 - **FR-2:** Plan info page in preview mode (guest-accessible): cover, title, description, calendar of days, task list for each day. (Users can click into tasks and see the content of individual tasks, but progress is not tracked and checkboxes don't appear next to tasks)
@@ -54,7 +112,7 @@ completion.
   and links into the reader (`source: plan`).
 - **FR-8:** Loading / error / empty states.
 
-## 5. API contracts
+## 6. API contracts
 
 **Sources:** Flutter `plans/user_plans/plan_days/tasks_remote_datasource.dart` +
 `data/models/**` · Swagger `openapi.json` · Backend `WeBuddhist-Backend/pecha_api/plans/public/plan_views.py`,
@@ -275,7 +333,7 @@ Tasks: `UserTaskDTO` · Subtasks: `UserSubTaskDTO`
 // POST /users/me/sub-tasks/{sub_task_id}/complete → 204 (409 = already complete → success)
 ```
 
-## 6. State & persistence
+## 7. State & persistence
 
 | Data | Flutter key |
 |------|-------------|
@@ -285,19 +343,28 @@ Tasks: `UserTaskDTO` · Subtasks: `UserSubTaskDTO`
 
 Special "ITCC-like" plans use `special_plan_*` keys (see notifications PRD).
 
-## 7. Navigation
+## 8. Navigation
 
-| Flutter route | v2 route (TBD) | Params |
-|---------------|----------------|--------|
-| `/home/plans/:tag` | `src/app/plans/[tag].tsx` | tag |
-| `/plans/info` | `src/app/plans/info.tsx` | plan |
-| `/plans/details` | `src/app/plans/details.tsx` | plan, selectedDay, startDate |
-| `/plan-text/:subtaskId` | `src/app/plan-text/[subtaskId].tsx` | NavigationContext |
+**Dual routes (Flutter parity)** — preview and track are separate screens; shared components
+(`PlanHero`, `PlanDayCarousel`, `PlanTaskList`) are reused across both. No single-route merge.
+
+| Flutter route | v2 route | When |
+|---------------|----------|------|
+| `/practice/plans/preview` | `src/app/plans/[id].tsx` | Guest or not enrolled — read-only preview |
+| `/practice/details` | `src/app/practice/details.tsx` | Enrolled — track mode (`planId`, `selectedDay?`, `title?`) |
+| Series plan row (not enrolled) | `src/app/plans/[id].tsx` | From `series/[id].tsx` |
+| Series plan row (enrolled) | `src/app/practice/details.tsx` | Same params as track |
+| `/practice/plans/info` | TBD or merged into `/plans/[id]` | catalog plan |
+| `/home/plans/:tag` | `src/app/plans/[tag].tsx` (TBD) | tag |
+| `/plan-text/:subtaskId` | `src/app/plan-text/[subtaskId].tsx` (TBD) | NavigationContext |
+
+**Enrollment gate:** On `plans/[id]` mount, if authed and `GET /users/me/plans/{id}` returns
+200, `router.replace` to `/practice/details` with the same `planId`.
 
 > Plan navigation uses directional transitions in Flutter
 > (`buildPlanNavigationTransition`). Parity is nice-to-have.
 
-## 8. Acceptance criteria
+## 9. Acceptance criteria
 
 - [ ] Browse plans by tag with proper states.
 - [ ] Guest can preview; auth required to enroll/track.
@@ -306,21 +373,42 @@ Special "ITCC-like" plans use `special_plan_*` keys (see notifications PRD).
 - [ ] Day content renders (incl. inline TEXT subtasks) and links to reader.
 - [ ] Mark-day-complete updates progress and persists.
 
-## 9. Open questions
+## 10. Open questions
+
+**Implementation notes (not product blockers):**
 
 - **Verify at runtime:** `GET /users/me/plans/{plan_id}` — Swagger says single
   `UserPlanProgressResponse`; Flutter parses as `List<PlanProgressModel>`.
 - Difference between special plans and regular plans in the data model.
-- [x] Plan vs series enrollment relationship (enrolling in a series auto-enrolls its plans —
-  see `features/series.md` §6).
 
-## 10. Migration status checklist
+**Resolved** — see [`open-questions.md`](../research/open-questions.md):
+
+- [x] Plan vs series enrollment — series enroll creates enrollment record; plan progress
+  via routine `_enroll_plans` or `start_immediately` — [series.md §6a](./series.md).
+- [x] Dual-route navigation — preview at `/plans/[id]`, track at `/practice/details`.
+- [x] Shorts mockup — maps to `PlanDayDTO.videos[]` on day endpoints; P2 — §3.
+
+## 11. Migration status checklist
 
 | Requirement | Flutter | v2 | Notes |
 |-------------|---------|-----|-------|
 | Plan list by tag | yes | no | |
-| Plan preview | yes | no | `plan-card` molecule exists |
+| Plan preview `/plans/[id]` | yes | no | mockup P0 |
+| Day carousel | yes | no | |
+| Plan track | yes | partial | minimal details screen |
 | Enroll | yes | no | |
-| Unenroll | yes | no | `DELETE /users/me/plans/{plan_id}` |
+| Unenroll | yes | no | |
 | Day tracking + completion | yes | no | |
+| Practice Now CTA | yes | no | |
+| Missed days UI | yes | no | utils exist |
 | Inline plan-text | yes | no | |
+| Shorts (mockup) | no | no | `PlanDayDTO.videos[]` — P2; [open-questions §3](../research/open-questions.md) |
+
+## 12. Research references
+
+| Document | Purpose |
+|----------|---------|
+| [flutter-series-plans-connect-routes.md](../research/flutter-series-plans-connect-routes.md) | Plan screen variants + navigation |
+| [mockup-screen-index.md](../research/mockup-screen-index.md) | Plan mockup frames |
+| [api-to-screen-matrix.md](../research/api-to-screen-matrix.md) | Plan endpoints |
+| [series-plans-connect-gap-matrix.md](../research/series-plans-connect-gap-matrix.md) | Gap analysis |
