@@ -2,7 +2,20 @@ const pendingJoinedIds = new Set<string>();
 const pendingUnjoinedIds = new Set<string>();
 const listeners = new Set<() => void>();
 
+let cachedSnapshot = {
+  pendingJoinedIds: new Set<string>(),
+  pendingUnjoinedIds: new Set<string>(),
+};
+
+function rebuildSnapshot() {
+  cachedSnapshot = {
+    pendingJoinedIds: new Set(pendingJoinedIds),
+    pendingUnjoinedIds: new Set(pendingUnjoinedIds),
+  };
+}
+
 function emit() {
+  rebuildSnapshot();
   listeners.forEach((listener) => listener());
 }
 
@@ -12,10 +25,7 @@ export function subscribePendingGroups(listener: () => void) {
 }
 
 export function getPendingGroupsSnapshot() {
-  return {
-    pendingJoinedIds: new Set(pendingJoinedIds),
-    pendingUnjoinedIds: new Set(pendingUnjoinedIds),
-  };
+  return cachedSnapshot;
 }
 
 export function markGroupJoinedOptimistic(groupId: string) {
