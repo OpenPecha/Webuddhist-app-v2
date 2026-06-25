@@ -13,9 +13,11 @@ export function useSeries(skip = 0, limit = 10) {
 }
 
 export function useSeriesById(id: string) {
+  const language = useContentLanguage();
+
   return useQuery({
-    queryKey: QUERY_KEYS.series.detail(id),
-    queryFn: () => fetchSeriesById(id),
+    queryKey: QUERY_KEYS.series.detail(id, language),
+    queryFn: () => fetchSeriesById(id, language),
     enabled: !!id,
   });
 }

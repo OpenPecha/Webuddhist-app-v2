@@ -1,8 +1,50 @@
 import { ENDPOINTS } from '@/lib/api-config';
 import { http } from '@/lib/http';
+import { resolveUserPlanForItem } from '@/utils/plan-utils';
+import type {
+  PlanDaysResponse,
+  PublicPlanDayDetail,
+  PublicPlanDetail,
+} from '@/types/plan-catalog';
 import type { UserPlanDayDetails, UserPlanProgress } from '@/types/plan-track';
 import type { UserPlansResponse } from '@/types/plans';
 
+export async function fetchPlanById(
+  id: string,
+  language = 'en',
+): Promise<PublicPlanDetail> {
+  const { data } = await http.get<PublicPlanDetail>(ENDPOINTS.plans.detail(id), {
+    params: { language },
+  });
+  return data;
+}
+
+export async function fetchPlanDays(id: string): Promise<PlanDaysResponse> {
+  const { data } = await http.get<PlanDaysResponse>(ENDPOINTS.plans.planDays(id));
+  return data;
+}
+
+export async function fetchPublicPlanDay(
+  planId: string,
+  dayNumber: number,
+): Promise<PublicPlanDayDetail> {
+  const { data } = await http.get<PublicPlanDayDetail>(
+    ENDPOINTS.plans.planDay(planId, dayNumber),
+  );
+  return data;
+}
+
+export async function enrollInPlan(planId: string): Promise<void> {
+  await http.post(ENDPOINTS.plans.enroll, { plan_id: planId });
+}
+
+export async function checkUserPlanEnrolled(
+  planId: string,
+  language = 'en',
+): Promise<boolean> {
+  const response = await fetchUserPlans(language);
+  return !!resolveUserPlanForItem(planId, response.plans);
+}
 export async function fetchUserPlans(
   language = 'en',
   skip = 0,
@@ -41,4 +83,12 @@ export async function fetchPlanCompletionStatus(
     status[day.day_number] = day.is_completed;
   }
   return status;
+}
+
+export async function completeTask(taskId: string): Promise<void> {
+  await http.post(ENDPOINTS.plans.completeTask(taskId));
+}
+
+export async function completeSubTask(subTaskId: string): Promise<void> {
+  await http.post(ENDPOINTS.plans.completeSubTask(subTaskId));
 }

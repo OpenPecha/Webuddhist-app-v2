@@ -62,19 +62,19 @@ flowchart TD
    - User must be enrolled in the previous plan in the series
    - Today must satisfy `plan.start_date <= today < next_plan.start_date`
 
-Flutter locks a plan row when `plan.startDate != null && plan.startDate.isAfter(DateTime.now())` — this covers rule 1 only for guests.
+Flutter locks a plan row when `plan.startDate != null && plan.startDate.isAfter(DateTime.now())` — same rule for all viewers (guest and series-enrolled).
 
 **When user is enrolled in series**, use `GET /users/me/series/{series_id}` ([`plan_users_views.py`](../../../WeBuddhist-Backend/pecha_api/plans/users/plan_users_views.py) `get_user_series_progress`):
 
 - Response includes `current_plan_id`, `plans[]` as `UserPlanDTO` with `started_at` (null = not yet enrolled in that plan)
-- Combine with `start_date` and `display_order` for lock / active / current labels
+- `started_at` drives status badge (`EnrolledPlanStatusIndicator`) only — not row lock
+- `current_plan_id` reserved for future “current plan” label (not used for lock)
 
-**v2 rule:**
+**v2 rule (Flutter parity):**
 
 | Viewer state | Lock logic |
 |--------------|------------|
-| Guest / not series-enrolled | Future `start_date` only (Flutter) |
-| Series-enrolled | Locked if `started_at == null` OR future `start_date`; Current = plan matching `current_plan_id` from progress response |
+| All | Locked when `start_date` is in the future; otherwise tappable |
 
 Mockup Set C vertical rows = **plan segments within a series** (Interpretation A). Day-level lock stays on plan track carousel only (`GET /users/me/plans/{id}/days/completion-status`).
 
@@ -148,17 +148,18 @@ P1 group profile is required for series About → org row mockup path. See [`con
 
 | Check | Endpoint |
 |-------|----------|
-| Is user enrolled? | `GET /users/me/plans/{plan_id}` → 200 = track, 404 = preview |
+| Is user enrolled? | Plan id in `GET /users/me/plans` list (Flutter parity — **not** progress GET 200) |
 | Or filter | `GET /users/me/plans?series_id={series_id}` |
 | Public preview content | `GET /plans/{id}`, `GET /plans/{id}/days` |
-| Track content + completion | `GET /users/me/plans/{id}/days/completion-status`, `GET /users/me/plans/{id}/days/{n}` |
+| Track day tasks | `GET /users/me/plan/{id}/days/{n}` |
+| Track completion map | `GET /users/me/plans/{id}/days/completion_status` |
 
 | User state | Route (Flutter) | v2 |
 |------------|-----------------|-----|
 | Guest or not enrolled | `/practice/plans/preview` | `/plans/[id]` (public preview) |
 | Enrolled | `/practice/details` | `/plans/[id]` with enrolled mode, or `/practice/details` |
 
-**v2 decision:** Single `/plans/[id]` that switches preview vs track based on enrollment API check (cleaner than Flutter dual routes).
+**v2 decision:** Dual routes like Flutter — `/plans/[id]` preview; `/practice/details` track. Enrollment gate: plan appears in `GET /users/me/plans` (series calendar-visible plans may have `started_at: null` and no progress row).
 
 ---
 
@@ -191,6 +192,6 @@ Mockup shows "200 ENROLLED". Flutter `series_stats` l10n shows plan count + tota
 | 3 | Shorts on plan | Resolved via API | Map to `PlanDayDTO.videos[]`; P2 with plan track |
 | 4 | Creator profile | Resolved | Group profile at `/group/[id]` |
 | 5 | Connect scope | Resolved via API | P1 discover + profile (API-complete) |
-| 6 | Preview vs track routes | Resolved via API | Single `/plans/[id]` + enrollment gate |
+| 6 | Preview vs track routes | Resolved via API | Dual routes; enrolled = in `/users/me/plans` list |
 | 7 | Wrong enroll endpoint | Resolved | POST `/users/me/series` |
 | 8 | Enrolled count in stats | Resolved via API | Always show `SeriesDTO.enrolled_count` |

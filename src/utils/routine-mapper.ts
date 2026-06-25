@@ -9,15 +9,24 @@ import type {
 import { formatRoutineTimeFromInt } from '@/utils/routine-time';
 
 function sessionToRoutineItem(session: SessionDTO): RoutineItem {
+  const type =
+    session.session_type === 'PLAN'
+      ? 'plan'
+      : session.session_type === 'SERIES'
+        ? 'series'
+        : 'recitation';
+
   return {
     id: session.source_id,
     title: session.title,
     coverImage: session.image ?? null,
     imageUrl: session.image_url ?? null,
-    type: session.session_type === 'PLAN' ? 'plan' : 'recitation',
+    type,
     enrolledAt: session.started_at ?? null,
     language: session.language,
     startDate: session.start_date ?? null,
+    currentPlanId: session.current_plan_id ?? null,
+    currentPlanTitle: session.current_plan_title ?? null,
   };
 }
 

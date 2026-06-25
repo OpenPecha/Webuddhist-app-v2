@@ -55,12 +55,12 @@ See [`open-questions.md`](./open-questions.md) §1 for navigation decision (defa
 | `GET /series/featured?language=&limit=` | Guest | Home featured | `FeaturedPlanSection` | featured list |
 | `POST /users/me/series` | Auth | `FeaturedPlanCard` Enroll | Series sticky Enroll | body: `{ series_id, auto_enroll_next?, start_immediately? }` → 204 |
 | `GET /users/me/series` | Auth | `userSeriesEnrollmentsProvider` | Hide Enroll when enrolled | `enrollments[].series_id` |
-| `GET /users/me/series/{series_id}` | Auth | *(partial)* | Plan row lock/current when enrolled | `current_plan_id`, `plans[].started_at`, `plans[].start_date` |
+| `GET /users/me/series/{series_id}` | Auth | *(partial)* | Plan row status when enrolled | `plans[].started_at`, `plans[].start_date` |
 | `DELETE /users/me/series/{id}` | Auth | *(not in Flutter)* | Future unenroll | — |
 
 **Stats row (mockup):** Render `plan_count` / `total_days` / **`enrolled_count`** from `GET /series/{id}` — see [`open-questions.md`](./open-questions.md) §8.
 
-**Plan row lock (series-enrolled):** Use `GET /users/me/series/{series_id}` — locked when `started_at == null` or future `start_date`; current = `current_plan_id`. Guests: future `start_date` only — see [`open-questions.md`](./open-questions.md) §2.
+**Plan row lock:** Future `start_date` only for all viewers (Flutter parity) — see [`open-questions.md`](./open-questions.md) §2. `GET /users/me/series/{series_id}` supplies `plans[].started_at` for status badges only.
 
 ---
 

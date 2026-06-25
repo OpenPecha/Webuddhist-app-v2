@@ -69,7 +69,7 @@ See [`open-questions.md`](../research/open-questions.md) §3 — Shorts maps to 
 
 | Tier | Deliverable |
 |------|-------------|
-| v1 | `/plans/[id]` layout + day list + carousel (read-only preview); enrollment gate via `GET /users/me/plans/{id}` |
+| v1 | `/plans/[id]` layout + day list + carousel (read-only preview); enrollment gate via list membership in `GET /users/me/plans` |
 | v2 | Enrolled track: completion, Practice Now, missed days |
 | v3 | Reader/plan-text; day videos strip (mockup Shorts) |
 
@@ -358,8 +358,10 @@ Special "ITCC-like" plans use `special_plan_*` keys (see notifications PRD).
 | `/home/plans/:tag` | `src/app/plans/[tag].tsx` (TBD) | tag |
 | `/plan-text/:subtaskId` | `src/app/plan-text/[subtaskId].tsx` (TBD) | NavigationContext |
 
-**Enrollment gate:** On `plans/[id]` mount, if authed and `GET /users/me/plans/{id}` returns
-200, `router.replace` to `/practice/details` with the same `planId`.
+**Enrollment gate:** On `plans/[id]` mount, if authed and plan id is in `GET /users/me/plans`,
+`router.replace` to `/practice/details` with `planId`, `title`, and `selectedDay` from calendar start.
+
+**Track screen data (Flutter parity):** [`src/app/practice/details.tsx`](../../src/app/practice/details.tsx) does **not** call `GET /users/me/plans/{id}`. It resolves `UserPlan` from the user plans list, loads day tasks via `GET /users/me/plan/{id}/days/{n}`, and completion via `GET /users/me/plans/{id}/days/completion_status`.
 
 > Plan navigation uses directional transitions in Flutter
 > (`buildPlanNavigationTransition`). Parity is nice-to-have.

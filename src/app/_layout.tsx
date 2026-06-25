@@ -1,3 +1,4 @@
+import { AppToastHost } from '@/components/common/AppToastHost';
 import { ForceUpdateGate } from '@/components/ForceUpdateGate';
 import { AppColors } from '@/constants/app-colors';
 import { ensureI18nReady } from '@/lib/i18n';
@@ -74,6 +75,11 @@ function AuthGate() {
       <Stack.Screen name="onboarding" />
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="series/[id]" />
+      <Stack.Screen name="series/[id]/info" />
+      <Stack.Screen name="plans/[id]" />
+      <Stack.Screen name="group/[id]" />
+      <Stack.Screen name="connect/search" />
+      <Stack.Screen name="connect/my-groups" />
       <Stack.Screen name="practice" />
       <Stack.Screen name="calendar" />
       <Stack.Screen name="events" />
@@ -117,6 +123,7 @@ export default function RootLayout() {
                 <ThemeProvider>
                   <BottomSheetModalProvider>
                     <AuthGate />
+                    <AppToastHost />
                   </BottomSheetModalProvider>
                 </ThemeProvider>
               </OnboardingProvider>

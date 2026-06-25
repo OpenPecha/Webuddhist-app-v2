@@ -2,10 +2,12 @@
 
 | | |
 |---|---|
-| **Status** | Research complete |
-| **Last updated** | 2026-06-22 (synced with PRDs) |
+| **Status** | Flutter-parity pass complete |
+| **Last updated** | 2026-06-22 (Flutter-parity pass) |
 
 Columns: **Mockup** (design target) · **Flutter** (production baseline) · **v2** (current) · **API** · **Priority** · **Notes**
+
+> **Note:** Rows below reflect post–Flutter-parity implementation. Treat v2 source + Flutter as truth for QA.
 
 ---
 
@@ -13,18 +15,15 @@ Columns: **Mockup** (design target) · **Flutter** (production baseline) · **v2
 
 | Feature | Mockup | Flutter | v2 | API | P | Notes |
 |---------|--------|---------|-----|-----|---|-------|
-| Series detail hero | Yes | Yes | Partial | `GET /series/{id}` | P0 | v2 has hero; missing stats row |
-| Stats row (plans · days · enrolled) | Yes | Partial | No | `plan_count`, `total_days`, `enrolled_count` | P0 | Flutter shows plans+days only |
-| Sticky Enroll | Yes | Yes | Stub (Alert) | `POST /users/me/series` | P0 | v2 wrong endpoint in config |
-| Enrolled → hide Enroll | Yes | Yes | No | `GET /users/me/series` | P0 | |
-| Plan list in series | Yes | Yes | Yes | `plans[]` | P0 | |
-| Plan row date range | Yes | Yes | Partial | `start_date`, `total_days` | P1 | v2 shows day count only |
-| Plan row lock (future start) | Yes | Yes | No | `start_date` | P1 | |
-| Plan row "On track" | Yes | Yes | No | completion_status | P1 | v2 component exists but not on series rows |
-| Series About / intro | Yes | Yes | No | metadata, group | P1 | `SeriesInfoScreen` — no v2 route |
-| Org row → profile | Yes | Yes | Dead link | `group` on series | P1 | v2 shows author placeholder |
-| Tap featured → About | Yes | Yes | No | — | P2 | |
-| Series unenroll | — | No | No | DELETE `/users/me/series/{id}` | P3 | Backend only |
+| Series detail hero + featured card | Yes | Yes | **Parity** | `GET /series/{id}` | P0 | FeaturedSeriesPlanCard layout |
+| Stats row (plans · days · enrolled) | Yes | Partial | **Parity** | counts on series | P0 | On featured card |
+| Enroll on featured card | Yes | Yes | **Parity** | `POST /users/me/series` | P0 | → edit-routine |
+| Enrolled → hide Enroll | Yes | Yes | **Parity** | user enrollments | P0 | Cache invalidation fixed |
+| Plan list in series | Yes | Yes | **Parity** | `plans[]` | P0 | |
+| Plan row lock (future start) | Yes | Yes | **Parity** | `start_date` | P1 | Guests + enrolled |
+| Plan row "On track" / missed | Yes | Yes | **Partial** | completion_status | P1 | Track screen wired; series rows partial |
+| Series About / intro | Yes | Yes | **Parity** | metadata, group | P1 | Single markdown body |
+| Org row → profile | Yes | Yes | **Parity** | `group` on series | P1 | |
 
 ---
 
@@ -32,18 +31,15 @@ Columns: **Mockup** (design target) · **Flutter** (production baseline) · **v2
 
 | Feature | Mockup | Flutter | v2 | API | P | Notes |
 |---------|--------|---------|-----|-----|---|-------|
-| Plan preview route | Yes | Yes | **Missing** | `GET /plans/{id}` | P0 | v2 broken nav to `/series/{planId}/plan` |
-| Hero + description | Yes | Yes | No | plan detail | P0 | |
-| Day carousel | Yes | Yes | No | `/plans/{id}/days` | P0 | v2 uses chevron prev/next only |
-| Task list | Yes | Yes | Partial | user day endpoint | P0 | v2 lists tasks, no completion UI |
-| Practice Now CTA | Yes | Yes | No | — | P1 | |
-| Task completion toggles | Yes | Yes | No | POST complete | P1 | |
-| Day completion sheet | Yes | Yes | No | — | P1 | |
-| Missed days badge | Yes | Yes | Partial | completion_status | P1 | v2 utils exist; not on plan screen |
-| Reader / plan-text | Yes | Yes | Partial | texts API | P2 | v2 reader placeholder |
-| Shorts section | Yes | **No** | No | `PlanDayDTO.videos[]` | P2 | Mockup Shorts strip on plan day; hide when empty — [open-questions §3](./open-questions.md) |
-| Plan list by tag | — | Yes (orphaned) | No | `GET /plans?tag=` | P2 | |
-| PlanInfo enroll screen | — | Yes | No | POST `/users/me/plans` | P1 | Separate from series enroll |
+| Plan preview route | Yes | Yes | **Parity** | `GET /plans/{id}` | P0 | `/plans/[id]` |
+| Add to Routine CTA | Yes | Yes | **Parity** | routine blocks | P0 | Not direct enroll |
+| Day carousel w/ dates | Yes | Yes | **Parity** | start_date | P0 | Preview unlock for first plan |
+| Task / subtask completion | Yes | Yes | **Parity** | POST complete | P1 | Optimistic UI |
+| Start Reading CTA | Yes | Yes | **Parity** | texts API | P1 | Navigates to reader w/ plan context |
+| Day completion sheet | Yes | Yes | **Parity** | — | P1 | Transition-only |
+| Missed days badge tap | Yes | Yes | **Parity** | completion_status | P1 | Jumps carousel |
+| Shorts section | Yes | **No** | **Partial** | videos[] | P2 | In-app fullscreen browser |
+| Reader / plan-text | Yes | Yes | **Partial** | texts API | P2 | Reader placeholder; plan context params |
 
 ---
 
@@ -51,16 +47,25 @@ Columns: **Mockup** (design target) · **Flutter** (production baseline) · **v2
 
 | Feature | Mockup | Flutter | v2 | API | P | Notes |
 |---------|--------|---------|-----|-----|---|-------|
-| Connect tab | Yes | Yes | Stub | — | P1 | v2 placeholder only |
-| Discover groups | Yes | Yes | No | `GET /author/groups` | P1 | |
-| My groups | Yes | Yes | No | `GET /users/me/joined/...` | P1 | |
-| Group search | — | Yes (push) | No | search param | P2 | |
-| Group profile | Yes | Yes | **Missing** | `GET /author/groups/{id}` | P1 | |
-| Join / Follow CTA | Yes | Yes | No | POST join/follow | P1 | |
-| Practices tab | Yes | Yes | No | series on profile | P1 | |
-| About tab | Yes | Yes | No | description_long | P1 | |
-| Social links drawer | Yes | Yes | No | social_links | P2 | |
-| Creator standalone profile | — | **No** | No | — | — | Use group profile; "creator" is home copy |
+| Connect tab | Yes | Yes | **Parity** | — | P1 | ConnectHeader + discover |
+| Discover groups | Yes | Yes | **Parity** | `GET /author/groups` | P1 | Inline join |
+| My groups | Yes | Yes | **Parity** | joined endpoint | P1 | See-all screen |
+| Group search | — | Yes | **Parity** | search param | P2 | `/connect/search` |
+| Group profile | Yes | Yes | **Parity** | group detail | P1 | |
+| Join / Follow CTA | Yes | Yes | **Parity** | POST join/follow | P1 | |
+| Practices tab (series + plans) | Yes | Yes | **Parity** | series, plans | P1 | |
+| About tab markdown | Yes | Yes | **Parity** | description_long | P1 | MarkdownText |
+| Social links sheet | Yes | Yes | **Parity** | social_links | P2 | Bottom sheet |
+
+---
+
+## Practice / Routine
+
+| Feature | Mockup | Flutter | v2 | P | Notes |
+|---------|--------|---------|-----|---|-------|
+| SERIES routine card | Yes | Yes | **Parity** | P0 | Fixed type branch |
+| Edit-routine series picker | Yes | Yes | **Parity** | P2 | select-session series tab |
+| Post-series-enroll flow | Yes | Yes | **Parity** | P0 | edit-routine prefill |
 
 ---
 
@@ -68,10 +73,9 @@ Columns: **Mockup** (design target) · **Flutter** (production baseline) · **v2
 
 | Feature | Mockup | Flutter | v2 | P | Notes |
 |---------|--------|---------|-----|---|-------|
-| Post-series-enroll navigation | Practice tab implied | edit-routine | — | P0 | **Resolved:** edit-routine + SERIES session — [open-questions §1](./open-questions.md) |
-| Locale-aware metadata | — | Yes | No | P0 | v2 hardcodes `'EN'` |
-| Toast/snackbar on enroll error | — | SnackBar | Alert only | P1 | No shared v2 utility |
-| Guest gating | — | LoginDrawer | Partial | P0 | Home has pattern; series lacks |
+| Locale-aware metadata | — | Yes | **Partial** | P0 | en/zh/bo connect keys added |
+| Toast/snackbar on error | — | SnackBar | Alert | P1 | Deferred — no shared utility yet |
+| Guest gating | — | LoginDrawer | **Parity** | P0 | Connect join + series/plans |
 
 ---
 
@@ -79,22 +83,12 @@ Columns: **Mockup** (design target) · **Flutter** (production baseline) · **v2
 
 | Screen | v2 file | Status |
 |--------|---------|--------|
-| Series detail | `src/app/series/[id].tsx` | Partial UI; enroll stub |
-| Series info | — | Missing |
-| Plan preview | — | Missing (`/plans/[id]`) |
-| Plan track | `src/app/practice/details.tsx` | Minimal |
-| Connect | `src/app/(tabs)/connect.tsx` | Stub |
-| Group profile | — | Missing |
-
----
-
-## Recommended implementation backlog (future phase)
-
-1. **P0:** Fix series enroll API + mutation; plan preview route; fix plan row navigation; locale metadata
-2. **P0:** Day carousel + public plan fetch on `/plans/[id]`
-3. **P1:** Enrolled track UX (completion, Practice Now, on-track on series rows)
-4. **P1:** Connect discover + group profile
-5. **P2:** Reader/plan-text integration; series info route; day videos strip (mockup Shorts)
-6. **P2:** Series unenroll; plan list by tag
-
-See [`open-questions.md`](./open-questions.md) — all product decisions resolved via backend API.
+| Series detail | `series/[id].tsx` | Parity |
+| Series info | `series/[id]/info.tsx` | Parity |
+| Plan preview | `plans/[id].tsx` | Parity |
+| Plan track | `practice/details.tsx` | Parity |
+| Connect tab | `(tabs)/connect.tsx` | Parity |
+| Group search | `connect/search.tsx` | Parity |
+| My groups | `connect/my-groups.tsx` | Parity |
+| Group profile | `group/[id].tsx` | Parity |
+| Edit routine | `practice/edit-routine/*` | Parity |

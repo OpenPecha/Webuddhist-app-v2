@@ -52,7 +52,8 @@
     "calendar_day_month": "Day {{day}} · Month {{month}}",
     "load_error": "Unable to load. Check your connection and try again.",
     "share_this_quote": "Share this quote",
-    "verse_share_error": "Unable to share quote. Please try again"
+    "verse_share_error": "Unable to share quote. Please try again",
+    "shortcut_coming_soon": "Coming soon."
   },
   "nav": {
     "home": "Home",
@@ -61,7 +62,31 @@
     "me": "Me"
   },
   "connect": {
-    "coming_soon": "Connect is coming soon."
+    "coming_soon": "Connect is coming soon.",
+    "subtitle": "Find communities and teachers to practice with",
+    "discover": "Discover",
+    "my_groups": "My groups",
+    "my_groups_empty": "You haven't joined any groups yet.",
+    "see_all": "See all",
+    "search_placeholder": "Search groups",
+    "search_empty": "No groups match your search.",
+    "empty": "No communities to discover yet.",
+    "not_found": "Group not found",
+    "action_error": "Something went wrong. Please try again.",
+    "tab_practices": "Practices",
+    "tab_about": "About",
+    "no_practices": "No practices yet.",
+    "no_about": "No description available.",
+    "join": "Join",
+    "joined": "Joined",
+    "follow": "Follow",
+    "following": "Following",
+    "followers_count": "{{count}} followers",
+    "members_count": "{{count}} members",
+    "social_links": "Social links",
+    "social_links_title": "Links",
+    "show_more": "Show more",
+    "show_less": "Show less"
   },
   "practice": {
     "routine_title": "My practice routine",
@@ -79,11 +104,29 @@
   "planTrack": {
     "title": "Plan",
     "day_of": "Day {{day}} of {{total}}",
-    "no_tasks": "No tasks for this day"
+    "no_tasks": "No tasks for this day",
+    "practice_now": "Practice Now",
+    "start_reading": "Start Reading",
+    "continue": "Continue",
+    "day_complete_title": "Day complete!",
+    "day_complete_body": "Great work — you've finished all tasks for today."
+  },
+  "plans": {
+    "preview": {
+      "enroll": "Enroll in plan",
+      "add_to_routine": "Add to Routine",
+      "untitled_task": "Task"
+    },
+    "videos": {
+      "title": "Shorts"
+    }
   },
   "reader": {
     "title": "Reader",
-    "placeholder": "Full reader experience is coming in a future update. You opened this text from your practice routine."
+    "plan_context": "Day {{day}} reading",
+    "placeholder": "Full reader experience is coming in a future update. You opened this text from your practice routine.",
+    "read_full_text": "Read Full Text",
+    "font_size": "Text size"
   },
   "editRoutine": {
     "title": "Edit your routine",
@@ -93,6 +136,7 @@
     "add_session": "Add to session",
     "add_block_label": "Time block",
     "add_plan": "Add plan",
+    "add_series": "Add series",
     "add_recitation": "Add recitation",
     "delete_time_block": "Remove time block",
     "delete_block_title": "Remove block?",
@@ -116,6 +160,7 @@
     "select_plan_title": "Add plan",
     "select_recitation_title": "Add recitation",
     "no_plans": "No enrolled plans",
+    "no_series": "No series found",
     "no_recitations": "No recitations found"
   },
   "common": {
@@ -133,10 +178,21 @@
     "n_days_other": "{{count}} days",
     "enroll": "Enroll",
     "enrolled": "Enrolled",
+    "enrolling": "Enrolling…",
+    "stats_plans": "{{count}} PLANS",
+    "stats_days": "{{count}} DAYS",
+    "stats_enrolled": "{{count}} ENROLLED",
+    "stats_row_enrolled": "{{count}} enrolled",
+    "organization": "Organization",
+    "plan_locked": "Locked",
+    "plan_current": "Current",
+    "introduction": "Introduction",
+    "no_about": "No additional information available.",
     "unenroll": "Unenroll",
     "unenroll_title": "Unenroll from this series?",
     "unenroll_body": "You'll lose all your progress in this series. You can re-enroll any time.",
-    "enroll_error": "Unable to enroll you. Check your connection and try again."
+    "enroll_error": "Unable to enroll you. Check your connection and try again.",
+    "load_error": "Unable to load series. Check your connection and try again."
   },
   "me": {
     "guest_headline": "Access the full experience",

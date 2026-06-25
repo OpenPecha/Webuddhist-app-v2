@@ -1,4 +1,4 @@
-export type SessionTypeApi = 'PLAN' | 'RECITATION';
+export type SessionTypeApi = 'PLAN' | 'RECITATION' | 'SERIES';
 
 export interface SessionRequest {
   session_type: SessionTypeApi;

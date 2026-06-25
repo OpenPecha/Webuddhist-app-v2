@@ -85,7 +85,7 @@ share prompt). See §11 checklist for per-requirement status.
 | Header + streak | Done | Greeting + calendar icon + streak badge + share sheet |
 | Calendar card | Improved | Removed from scroll; header icon → calendar screen |
 | Verse of day | Done | Hero card; skeleton + share on tap |
-| Shortcuts (Mala/Timer) | Done | 4 tiles; Plans → Practice; Mala/Timer guest-gated |
+| Shortcuts (Mala/Timer) | Done | Plans/Chants → coming-soon toast; Mala/Timer guest-gated |
 | My practices stats | Done | Hidden when counts zero or guest |
 | Events | Done | `GET /events/today`; hidden when empty/error |
 | Featured plans | Done | `/series/featured` + random hero layout |
@@ -100,8 +100,7 @@ share prompt). See §11 checklist for per-requirement status.
 **Pull-to-refresh:** does not invalidate mala data — Home shows no mala counts (Flutter
 Me tab owns accumulation stats; see `features/mala`).
 
-**Shortcuts:** four tiles (Plans, Chants, Mala, Timer). Plans and Chants are visible
-but **not wired** in Flutter or v2 (P2 backlog).
+**Shortcuts:** four tiles (Plans, Chants, Mala, Timer). Plans and Chants show a coming-soon toast (not wired in Flutter either). Mala/Timer guest-gated.
 
 **Deprecated (abandoned molecule layout — do not implement):**
 

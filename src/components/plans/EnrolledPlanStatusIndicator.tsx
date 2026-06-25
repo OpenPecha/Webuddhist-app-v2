@@ -1,13 +1,13 @@
 import { usePlanCompletionStatus } from '@/hooks/api/usePlanCompletionStatus';
 import {
   calculateMissedDays,
-  createPlanDateRange,
   dateOnly,
-  getEffectiveStartDate,
+  firstMissedDay,
 } from '@/utils/plan-utils';
 import type { PlanDateRange } from '@/utils/plan-utils';
+import { Ionicons } from '@expo/vector-icons';
+import { Pressable, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
 
 function OnTrackBadge() {
   const { t } = useTranslation();
@@ -17,39 +17,64 @@ function OnTrackBadge() {
         borderRadius: 16,
         borderWidth: 1,
         borderColor: 'rgba(138, 138, 138, 0.5)',
+        backgroundColor: '#fff',
         paddingHorizontal: 8,
         paddingVertical: 3,
       }}
     >
-      <Text style={{ fontSize: 12, color: '#8a8a8a', fontFamily: 'Inter-Regular' }}>
+      <Text
+        style={{
+          fontSize: 12,
+          color: '#8a8a8a',
+          fontFamily: 'Inter-Regular',
+          textTransform: 'uppercase',
+        }}
+      >
         {t('practice.plan_status_on_track')}
       </Text>
     </View>
   );
 }
 
-function MissedDaysBadge({ count }: { count: number }) {
+function MissedDaysBadge({
+  count,
+  onPress,
+}: {
+  count: number;
+  onPress?: () => void;
+}) {
   const { t } = useTranslation();
   const label =
     count === 1
       ? t('practice.missed_days_one')
       : t('practice.missed_days_other', { count });
 
-  return (
+  const content = (
     <View
       style={{
+        flexDirection: 'row',
+        alignItems: 'center',
         borderRadius: 16,
         borderWidth: 1,
         borderColor: 'rgba(138, 138, 138, 0.5)',
-        paddingHorizontal: 12,
+        backgroundColor: '#fff',
+        paddingHorizontal: onPress ? 10 : 12,
         paddingVertical: 4,
       }}
     >
-      <Text style={{ fontSize: 9, color: '#8a8a8a', fontFamily: 'Inter-Regular' }}>
+      {onPress ? (
+        <Ionicons name="arrow-back" size={10} color="#8a8a8a" style={{ marginRight: 4 }} />
+      ) : null}
+      <Text style={{ fontSize: 10, color: '#8a8a8a', fontFamily: 'Inter-Regular' }}>
         {label}
       </Text>
     </View>
   );
+
+  if (onPress) {
+    return <Pressable onPress={onPress}>{content}</Pressable>;
+  }
+  return content;
 }
 
 interface EnrolledPlanStatusIndicatorProps {
@@ -57,6 +82,8 @@ interface EnrolledPlanStatusIndicatorProps {
   dateRange: PlanDateRange;
   totalDays: number;
   planStartDate: Date;
+  completionMap?: Record<number, boolean>;
+  onMissedDaysPress?: (firstMissedDay: number) => void;
 }
 
 /** Matches Flutter EnrolledPlanStatusIndicator decision tree. */
@@ -65,12 +92,20 @@ export function EnrolledPlanStatusIndicator({
   dateRange,
   totalDays,
   planStartDate,
+  completionMap: completionMapProp,
+  onMissedDaysPress,
 }: EnrolledPlanStatusIndicatorProps) {
   const today = dateOnly(new Date());
   if (today < dateRange.start) return null;
 
-  const { data: completion, isLoading, isError } = usePlanCompletionStatus(planId);
-  if (isLoading || isError || !completion) return null;
+  const { data: fetchedCompletion, isLoading, isError } = usePlanCompletionStatus(
+    planId,
+    completionMapProp == null,
+  );
+  const completion = completionMapProp ?? fetchedCompletion;
+
+  if (completionMapProp == null && (isLoading || isError || !completion)) return null;
+  if (!completion) return null;
 
   const allCompleted = Array.from({ length: totalDays }, (_, i) => i + 1).every(
     (day) => completion[day] === true,
@@ -81,5 +116,15 @@ export function EnrolledPlanStatusIndicator({
   if (dateRange.isCurrent && missed === 0) return <OnTrackBadge />;
   if (missed <= 0) return null;
 
-  return <MissedDaysBadge count={missed} />;
+  const firstMissed = firstMissedDay(planStartDate, totalDays, completion);
+  return (
+    <MissedDaysBadge
+      count={missed}
+      onPress={
+        firstMissed != null && onMissedDaysPress
+          ? () => onMissedDaysPress(firstMissed)
+          : undefined
+      }
+    />
+  );
 }

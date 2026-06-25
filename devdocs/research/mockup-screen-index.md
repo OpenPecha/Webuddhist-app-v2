@@ -18,8 +18,8 @@ Frame-by-frame index mapping mockup UI to Flutter screens, v2 targets, and APIs.
 |----------------|------|---------|-----------|------------|
 | Back | Top-left chevron | `SeriesDetailScreen` app bar | `series/[id].tsx` | — |
 | Hero image | 16:9 cover | `FeaturedPlanCard` in `PlanListView` | Hero `Image` | `SeriesDTO.image` |
-| Stats row | "10 PLANS • 300 DAYS • 200 ENROLLED" | `series_stats(plans.length, totalDays)` — **no enrolled count in Flutter UI today** | Add stats row (**Improved** vs Flutter) | `plans.length`, `total_days`, **`enrolled_count`** |
-| Subtitle | Series edition name | `series.subTitle` on featured card | Title block | `metadata[].title`, `sub_title` |
+| Stats row | "10 PLANS • 300 DAYS • 200 ENROLLED" | `series_stats(plans.length, totalDays)` — **no enrolled count in Flutter UI today** | **Parity** — uppercase `stats_plans/stats_days/stats_enrolled` on featured card | `plans.length`, `total_days`, **`enrolled_count`** |
+| Subtitle | Series edition name | `series.subTitle` on featured card | Bold `sub_title` below stats (title in app bar only) | `metadata[].sub_title` |
 | Sticky Enroll | Full-width black CTA | `FeaturedPlanCard` ElevatedButton | Bottom sticky `Pressable` | `POST /users/me/series` |
 | Plan rows | Thumbnail 86×86, title, date range | `PlanListItem` | `PlanRow` in series detail | `plans[]` sorted by `display_order` |
 | Row status (future) | Lock icon, dimmed | `isLocked` when `startDate > now` | Lock + opacity 0.45 | `plan.start_date` |
@@ -63,19 +63,19 @@ Maps to [`SeriesInfoScreen`](WeBuddhist-app/lib/features/home/presentation/scree
 | Hero image | ~25–40% viewport | `PlanCoverImage` | Top `Image` | `plan.image` |
 | Intro text | Welcome paragraph | Plan description / day intro | Text block | `GET /plans/{id}` |
 | "Day N of M" + status | On track label | Plan details header | Status row | progress + completion |
-| Day carousel | Horizontal pills 1–7; border = selected; check = done | `DayCarousel` | New `PlanDayCarousel` component | `GET /plans/{id}/days` + completion_status |
-| Task list | Title + circle/check + chevron | `ActivityList` | Task rows | `GET /users/me/plan/{id}/days/{n}` |
-| Practice Now | Sticky black CTA | Opens first incomplete task | Sticky button | task list |
-| Missed days | Badge on header | `MissedDaysBadge` | Port from v2 `EnrolledPlanStatusIndicator` patterns | completion_status |
+| Day carousel | Horizontal pills 1–7; border = selected; check = done | `DayCarousel` | **Parity** — `PlanDayCarousel` `variant="card"` | `GET /plans/{id}/days` + completion_status |
+| Task list | Title + circle/check + chevron | `ActivityList` | **Parity** — `PlanTaskList` `variant="activity"` | `GET /users/me/plan/{id}/days/{n}` |
+| Practice Now | Sticky black CTA | Opens first incomplete task | **Parity** — sticky CTA in `practice/details.tsx` | task list |
+| Missed days | Badge on header | `MissedDaysBadge` | **Parity** — `PlanDayHeader` + `EnrolledPlanStatusIndicator` | completion_status |
 
 ### B2 — Content reader session
 
 | Mockup element | Spec | Flutter | v2 target |
 |----------------|------|---------|-----------|
-| Header | Back, search, AA, share | Reader / plan-text screens | `reader/[textId]`, future `plan-text/[id]` |
-| Scrollable text | Sections with headings | `PlanTextScreen` / reader | Reader PRD |
-| Bottom bar | Prev · play · section · Next | `PlanNavigator` | Phase 2 — reader integration |
-| Read Now overlay | Optional CTA on content | Reader entry | Phase 2 |
+| Header | Back, search, AA, share | Reader / plan-text screens | **Partial** — `PlanReadingLayout` (Aa + placeholder search/globe) |
+| Scrollable text | Sections with headings | `PlanTextScreen` / reader | **Partial** — markdown body via `plan-text/[subtaskId]` + `reader/[textId]` |
+| Bottom bar | Prev · play · section · Next | `PlanNavigator` | **Parity** — footer prev/title/next; play in body |
+| Read Now overlay | Optional CTA on content | Reader entry | **Parity** — "Read Full Text" expand button |
 
 ### B3 — Shorts / day videos (mockup Shorts strip)
 

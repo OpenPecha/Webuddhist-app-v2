@@ -52,7 +52,8 @@
     "calendar_day_month": "藏历{{month}}月{{day}}日",
     "load_error": "無法載入。請檢查您的網路連線，然後再試一次。",
     "share_this_quote": "分享这句话",
-    "verse_share_error": "无法分享引文，请重试"
+    "verse_share_error": "无法分享引文，请重试",
+    "shortcut_coming_soon": "即將推出。"
   },
   "nav": {
     "home": "首頁",
@@ -61,7 +62,31 @@
     "me": "個人"
   },
   "connect": {
-    "coming_soon": "連結功能即將推出。"
+    "coming_soon": "連結功能即將推出。",
+    "subtitle": "尋找共修的社群與老師",
+    "discover": "探索",
+    "my_groups": "我的社群",
+    "my_groups_empty": "您尚未加入任何社群。",
+    "see_all": "查看全部",
+    "search_placeholder": "搜尋社群",
+    "search_empty": "找不到符合的社群。",
+    "empty": "尚無可探索的社群。",
+    "not_found": "找不到社群",
+    "action_error": "發生錯誤，請再試一次。",
+    "tab_practices": "修持",
+    "tab_about": "關於",
+    "no_practices": "尚無修持內容。",
+    "no_about": "沒有描述。",
+    "join": "加入",
+    "joined": "已加入",
+    "follow": "追蹤",
+    "following": "追蹤中",
+    "followers_count": "{{count}} 位追蹤者",
+    "members_count": "{{count}} 位成員",
+    "social_links": "社群連結",
+    "social_links_title": "連結",
+    "show_more": "顯示更多",
+    "show_less": "顯示較少"
   },
   "practice": {
     "routine_title": "日常修持",
@@ -83,7 +108,9 @@
   },
   "reader": {
     "title": "閱讀器",
-    "placeholder": "完整閱讀體驗將在後續更新中提供。"
+    "placeholder": "完整閱讀體驗將在後續更新中提供。",
+    "read_full_text": "閱讀全文",
+    "font_size": "字體大小"
   },
   "editRoutine": {
     "title": "編輯日常修持",
@@ -129,6 +156,9 @@
     "n_days_other": "{{count}} 天",
     "enroll": "報名",
     "enrolled": "已報名",
+    "stats_plans": "{{count}} 個計畫",
+    "stats_days": "{{count}} 天",
+    "stats_enrolled": "{{count}} 人已報名",
     "unenroll": "取消報名",
     "unenroll_title": "取消此系列的報名？",
     "unenroll_body": "您將失去此系列的所有進度。您可以隨時重新報名。",

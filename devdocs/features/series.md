@@ -47,9 +47,8 @@ Design reference: shared mockup set `series_page`. Full frame index:
 | Sticky Enroll (black full-width) | Bottom of `series/[id].tsx` | P0 |
 | Enroll → loading; hide when enrolled | Mutation + `GET /users/me/series` | P0 |
 | Plan rows: thumbnail, title, date range | `PlanRow` (exists) — add date range | P1 |
-| Plan row lock icon (future `start_date`) | Opacity + disabled tap | P1 |
-| Plan row lock when series-enrolled | `GET /users/me/series/{id}` — `started_at`, `current_plan_id` | P1 — see [open-questions §2](../research/open-questions.md) |
-| Plan row "On track" when enrolled | `EnrolledPlanStatusIndicator` | P1 |
+| Plan row lock icon (future `start_date`) | Opacity + disabled tap (Flutter parity — all viewers) | P1 |
+| Plan row "On track" when enrolled | `EnrolledPlanStatusIndicator` via `GET /users/me/series/{id}` `started_at` | P1 |
 | Tap featured card → About | `series/[id]/info` route | P1 |
 | Org row (ITCC) → group profile | `/group/[id]` — see [connect](./connect.md) | P1 |
 
@@ -276,7 +275,7 @@ All resolved via backend API — see [`open-questions.md`](../research/open-ques
 - ~~Exact enroll endpoint + payload~~ → `POST /users/me/series` with `{ "series_id": "..." }` (see §6).
 - ~~Author display~~ → group profile via `series.group` — see [connect](./connect.md).
 - ~~Post-enroll navigation~~ → edit-routine (Option A); API does not enroll plans without routine or `start_immediately` — §1.
-- ~~Plan row lock~~ → guest: future `start_date`; enrolled: `GET /users/me/series/{series_id}` — §2.
+- ~~Plan row lock~~ → future `start_date` only (Flutter parity) — §2.
 - ~~Enrolled count in stats~~ → always show `SeriesDTO.enrolled_count` — §8.
 - ~~SERIES routine type in v2~~ → required for series enroll E2E (see §6a).
 

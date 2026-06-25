@@ -3,7 +3,8 @@ export const ENDPOINTS = {
     list: '/series',
     featured: '/series/featured',
     detail: (id: string) => `/series/${id}`,
-    enroll: (id: string) => `/series/${id}/enroll`,
+    userSeries: '/users/me/series',
+    userSeriesProgress: (seriesId: string) => `/users/me/series/${seriesId}`,
   },
   calendar: {
     today: '/calendar/today',
@@ -15,12 +16,25 @@ export const ENDPOINTS = {
   plans: {
     list: '/plans',
     detail: (id: string) => `/plans/${id}`,
+    planDays: (id: string) => `/plans/${id}/days`,
+    planDay: (planId: string, day: number) => `/plans/${planId}/days/${day}`,
     userPlans: '/users/me/plans',
+    enroll: '/users/me/plans',
     userPlanProgress: (id: string) => `/users/me/plans/${id}`,
     userPlanDay: (planId: string, day: number) =>
       `/users/me/plan/${planId}/days/${day}`,
     completionStatus: (planId: string) =>
       `/users/me/plans/${planId}/days/completion_status`,
+    completeTask: (taskId: string) => `/users/me/tasks/${taskId}/complete`,
+    completeSubTask: (id: string) => `/users/me/sub-tasks/${id}/complete`,
+  },
+  groups: {
+    list: '/author/groups',
+    detail: (id: string) => `/author/groups/${id}`,
+    join: (id: string) => `/author/groups/${id}/join`,
+    follow: (id: string) => `/author/groups/${id}/follow`,
+    joined: '/users/me/joined/author/groups',
+    following: '/users/me/following/author/groups',
   },
   routine: {
     user: '/users/me/routine',

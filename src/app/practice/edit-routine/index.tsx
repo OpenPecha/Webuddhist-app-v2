@@ -19,8 +19,8 @@ import {
   MIN_BLOCK_GAP_MINUTES,
   sortBlocksByTime,
 } from '@/utils/routine-time-utils';
-import { type Href, useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { type Href, useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
@@ -31,6 +31,10 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { fetchSeriesById } from '@/services/series';
+import { fetchPlanById } from '@/services/plans';
+import { pickSeriesMetadata } from '@/types/series';
+import { useContentLanguage } from '@/hooks/useContentLanguage';
 
 function hydrateBlocksFromRoutine(
   routine: NonNullable<ReturnType<typeof useRoutine>['data']>,
@@ -50,8 +54,13 @@ function hydrateBlocksFromRoutine(
 
 export default function EditRoutineScreen() {
   const router = useRouter();
+  const { enrollSeriesId, initialPlanId } = useLocalSearchParams<{
+    enrollSeriesId?: string;
+    initialPlanId?: string;
+  }>();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const contentLanguage = useContentLanguage();
   const { dialog, confirmChoice } = useDialog();
   const { data: routine, isLoading } = useRoutine();
   const { createRoutine, addTimeBlock, saveTimeBlock, removeTimeBlock } = useRoutineMutations();
@@ -63,6 +72,8 @@ export default function EditRoutineScreen() {
   const [saving, setSaving] = useState(false);
   const [editingBlockId, setEditingBlockId] = useState<string | null>(null);
   const [allowLeave, setAllowLeave] = useState(false);
+  const seriesEnrollmentHydrated = useRef(false);
+  const planPrefillHydrated = useRef(false);
 
   const editingBlock = useMemo(
     () => blocks.find((b) => b.localId === editingBlockId),
@@ -84,6 +95,173 @@ export default function EditRoutineScreen() {
     }
     setHydrated(true);
   }, [hydrated, isLoading, routine]);
+
+  const syncBlockToServer = useCallback(
+    async (block: EditableRoutineBlock, routineId: string | undefined) => {
+      const request = blockToTimeBlockRequest(block);
+      if (!routineId) {
+        const created = await createRoutine.mutateAsync(request);
+        setApiRoutineId(created.id);
+        setBlocks((prev) =>
+          prev.map((b) =>
+            b.localId === block.localId
+              ? { ...b, apiTimeBlockId: created.time_blocks[0]?.id }
+              : b,
+          ),
+        );
+        return created.id;
+      }
+      if (block.apiTimeBlockId) {
+        await saveTimeBlock.mutateAsync({
+          routineId,
+          blockId: block.apiTimeBlockId,
+          request,
+        });
+      } else {
+        const created = await addTimeBlock.mutateAsync({ routineId, request });
+        setBlocks((prev) =>
+          prev.map((b) =>
+            b.localId === block.localId ? { ...b, apiTimeBlockId: created.id } : b,
+          ),
+        );
+      }
+      return routineId;
+    },
+    [addTimeBlock, createRoutine, saveTimeBlock],
+  );
+
+  useEffect(() => {
+    if (!hydrated || !enrollSeriesId || seriesEnrollmentHydrated.current) return;
+
+    seriesEnrollmentHydrated.current = true;
+
+    const hydrateSeriesEnrollment = async () => {
+      try {
+        const series = await fetchSeriesById(enrollSeriesId, contentLanguage);
+        const meta = pickSeriesMetadata(series.metadata, contentLanguage);
+        const seriesItem: RoutineItem = {
+          id: series.id,
+          title: meta?.title ?? '',
+          coverImage: series.image,
+          type: 'series',
+          enrolledAt: new Date().toISOString(),
+          language: meta?.language ?? contentLanguage,
+        };
+
+        let targetBlock: EditableRoutineBlock | null = null;
+        let nextBlocks: EditableRoutineBlock[] = [];
+
+        setBlocks((prev) => {
+          const alreadyExists = prev.some((b) =>
+            b.items.some((i) => i.id === series.id && i.type === 'series'),
+          );
+          if (alreadyExists) {
+            nextBlocks = prev;
+            return prev;
+          }
+
+          const emptyIndex = prev.findIndex((b) => b.items.length === 0);
+          if (emptyIndex >= 0) {
+            const next = [...prev];
+            const block = {
+              ...next[emptyIndex],
+              timeInt: defaultBlockTimeInt(),
+              formattedTime: formatRoutineTimeFromInt(defaultBlockTimeInt()),
+              items: [seriesItem],
+            };
+            next[emptyIndex] = block;
+            targetBlock = block;
+            nextBlocks = sortBlocksByTime(next);
+            return nextBlocks;
+          }
+
+          const adjusted = adjustTimeForMinimumGap(
+            defaultBlockTimeInt(),
+            prev.map((b) => b.timeInt),
+          );
+          const timeInt = adjusted ?? defaultBlockTimeInt();
+          const block = {
+            ...createEmptyBlock(timeInt),
+            formattedTime: formatRoutineTimeFromInt(timeInt),
+            items: [seriesItem],
+          };
+          targetBlock = block;
+          nextBlocks = sortBlocksByTime([...prev, block]);
+          return nextBlocks;
+        });
+
+        if (targetBlock) {
+          await syncBlockToServer(targetBlock, apiRoutineId);
+        }
+      } catch {
+        Alert.alert(t('series.enroll_error'));
+      }
+    };
+
+    void hydrateSeriesEnrollment();
+  }, [hydrated, enrollSeriesId, contentLanguage, apiRoutineId, syncBlockToServer, t]);
+
+  useEffect(() => {
+    if (!hydrated || !initialPlanId || planPrefillHydrated.current) return;
+    planPrefillHydrated.current = true;
+
+    const hydratePlanPrefill = async () => {
+      try {
+        const plan = await fetchPlanById(initialPlanId, contentLanguage);
+        const planItem: RoutineItem = {
+          id: plan.id,
+          title: plan.title,
+          coverImage: plan.image ?? null,
+          type: 'plan',
+          enrolledAt: new Date().toISOString(),
+          language: plan.language,
+          startDate: plan.start_date,
+        };
+
+        let targetBlock: EditableRoutineBlock | null = null;
+
+        setBlocks((prev) => {
+          const alreadyExists = prev.some((b) =>
+            b.items.some((i) => i.id === plan.id && i.type === 'plan'),
+          );
+          if (alreadyExists) return prev;
+
+          const emptyIndex = prev.findIndex((b) => b.items.length === 0);
+          if (emptyIndex >= 0) {
+            const next = [...prev];
+            const block = {
+              ...next[emptyIndex],
+              items: [...next[emptyIndex].items, planItem],
+            };
+            next[emptyIndex] = block;
+            targetBlock = block;
+            return sortBlocksByTime(next);
+          }
+
+          const adjusted = adjustTimeForMinimumGap(
+            defaultBlockTimeInt(),
+            prev.map((b) => b.timeInt),
+          );
+          const timeInt = adjusted ?? defaultBlockTimeInt();
+          const block = {
+            ...createEmptyBlock(timeInt),
+            formattedTime: formatRoutineTimeFromInt(timeInt),
+            items: [planItem],
+          };
+          targetBlock = block;
+          return sortBlocksByTime([...prev, block]);
+        });
+
+        if (targetBlock) {
+          await syncBlockToServer(targetBlock, apiRoutineId);
+        }
+      } catch {
+        Alert.alert(t('series.enroll_error'));
+      }
+    };
+
+    void hydratePlanPrefill();
+  }, [hydrated, initialPlanId, contentLanguage, apiRoutineId, syncBlockToServer, t]);
 
   useFocusEffect(
     useCallback(() => {

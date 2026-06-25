@@ -19,6 +19,32 @@ interface RoutineBlockSectionProps {
   onItemPress?: (item: RoutineItem) => void;
 }
 
+function RoutineSeriesItem({
+  item,
+  onItemPress,
+}: {
+  item: RoutineItem;
+  onItemPress?: (item: RoutineItem) => void;
+}) {
+  const coverUri = routineItemCoverUri(item.coverImage, item.imageUrl);
+
+  return (
+    <RoutineItemCard
+      title={item.title}
+      coverUri={coverUri}
+      type="series"
+      onPress={onItemPress ? () => onItemPress(item) : undefined}
+      subtitle={
+        item.currentPlanTitle ? (
+          <Text style={{ fontSize: 13, color: '#8a8a8a' }} numberOfLines={1}>
+            {item.currentPlanTitle}
+          </Text>
+        ) : undefined
+      }
+    />
+  );
+}
+
 function RoutinePlanItem({
   item,
   userPlans,
@@ -80,9 +106,12 @@ export function RoutineBlockSection({
               userPlans={userPlans}
               onItemPress={onItemPress}
             />
+          ) : item.type === 'series' ? (
+            <RoutineSeriesItem item={item} onItemPress={onItemPress} />
           ) : (
             <RoutineItemCard
               title={item.title}
+              coverUri={routineItemCoverUri(item.coverImage, item.imageUrl)}
               type="recitation"
               onPress={onItemPress ? () => onItemPress(item) : undefined}
             />

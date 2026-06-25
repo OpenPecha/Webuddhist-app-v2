@@ -77,6 +77,12 @@ export function RoutineItemCard({
           style={{ width: 74, height: 74, borderRadius: 10 }}
           contentFit="cover"
         />
+      ) : type === 'series' && !coverUri ? (
+        <Image
+          source={APP_ASSETS.seriesCoverFallback}
+          style={{ width: 74, height: 74, borderRadius: 10 }}
+          contentFit="cover"
+        />
       ) : coverUri ? (
         <Image
           source={{ uri: coverUri }}

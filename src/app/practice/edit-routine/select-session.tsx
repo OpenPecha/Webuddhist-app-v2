@@ -2,10 +2,14 @@ import { APP_ASSETS } from '@/constants/app-assets';
 import { SessionListTile } from '@/components/practice/SessionListTile';
 import { routineItemCoverUri } from '@/components/practice/RoutineItemCard';
 import { useRecitations } from '@/hooks/api/useRecitations';
+import { useSeries } from '@/hooks/api/useSeries';
 import { useUserPlans } from '@/hooks/api/useUserPlans';
 import { setPendingRoutineItem } from '@/stores/edit-routine-selection';
+import { pickSeriesMetadata } from '@/types/series';
 import type { UserPlan } from '@/types/plans';
 import type { RoutineItem } from '@/types/routine';
+import { imageUrl } from '@/utils/image-url';
+import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -19,16 +23,18 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-type TabKey = 'plan' | 'recitation';
+type TabKey = 'plan' | 'series' | 'recitation';
 
 export default function SelectSessionScreen() {
   const { blockLocalId } = useLocalSearchParams<{ blockLocalId: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
+  const language = useContentLanguage();
   const [tab, setTab] = useState<TabKey>('plan');
 
   const { data: plansData, isLoading: plansLoading } = useUserPlans();
+  const { data: seriesData, isLoading: seriesLoading } = useSeries(0, 50);
   const { data: recitationsData, isLoading: recitationsLoading } = useRecitations();
 
   const onSelectPlan = (plan: UserPlan) => {
@@ -46,6 +52,20 @@ export default function SelectSessionScreen() {
     router.back();
   };
 
+  const onSelectSeries = (series: (typeof seriesList)[number]) => {
+    const metaList = Array.isArray(series.metadata) ? series.metadata : [series.metadata];
+    const meta = pickSeriesMetadata(metaList, language);
+    const item: RoutineItem = {
+      id: series.id,
+      title: meta?.title ?? series.id,
+      coverImage: series.image,
+      type: 'series',
+      language: meta?.language,
+    };
+    setPendingRoutineItem(blockLocalId, item);
+    router.back();
+  };
+
   const onSelectRecitation = (recitation: { text_id: string; title: string }) => {
     const item: RoutineItem = {
       id: recitation.text_id,
@@ -58,8 +78,12 @@ export default function SelectSessionScreen() {
   };
 
   const plans = plansData?.plans ?? [];
+  const seriesList = seriesData?.series ?? [];
   const recitations = recitationsData?.recitations ?? [];
-  const isLoading = tab === 'plan' ? plansLoading : recitationsLoading;
+  const isLoading =
+    tab === 'plan' ? plansLoading : tab === 'series' ? seriesLoading : recitationsLoading;
+
+  const tabs: TabKey[] = ['plan', 'series', 'recitation'];
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
@@ -83,8 +107,14 @@ export default function SelectSessionScreen() {
       </View>
 
       <View style={{ flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#e8e8e4' }}>
-        {(['plan', 'recitation'] as const).map((key) => {
+        {tabs.map((key) => {
           const selected = tab === key;
+          const label =
+            key === 'plan'
+              ? t('editRoutine.add_plan')
+              : key === 'series'
+                ? t('editRoutine.add_series')
+                : t('editRoutine.add_recitation');
           return (
             <Pressable
               key={key}
@@ -93,15 +123,13 @@ export default function SelectSessionScreen() {
             >
               <Text
                 style={{
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: selected ? '700' : '400',
                   fontFamily: selected ? 'Inter-Bold' : 'Inter-Regular',
                   color: selected ? '#000' : 'rgba(0,0,0,0.5)',
                 }}
               >
-                {key === 'plan'
-                  ? t('editRoutine.add_plan')
-                  : t('editRoutine.add_recitation')}
+                {label}
               </Text>
             </Pressable>
           );
@@ -130,6 +158,29 @@ export default function SelectSessionScreen() {
               onPress={() => onSelectPlan(item)}
             />
           )}
+        />
+      ) : tab === 'series' ? (
+        <FlatList
+          data={seriesList}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 16 }}
+          ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#e8e8e4' }} />}
+          ListEmptyComponent={
+            <Text style={{ textAlign: 'center', color: '#8a8a8a', marginTop: 24 }}>
+              {t('editRoutine.no_series')}
+            </Text>
+          }
+          renderItem={({ item }) => {
+            const metaList = Array.isArray(item.metadata) ? item.metadata : [item.metadata];
+            const meta = pickSeriesMetadata(metaList, language);
+            return (
+              <SessionListTile
+                title={meta?.title ?? item.id}
+                coverUri={imageUrl(item.image, 'thumbnail')}
+                onPress={() => onSelectSeries(item)}
+              />
+            );
+          }}
         />
       ) : (
         <FlatList
