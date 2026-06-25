@@ -8,6 +8,10 @@ export interface PlanDaySubTask {
   content_type: string;
   content: string;
   source_text_id?: string | null;
+  segment_ids?: string[] | null;
+  pecha_segment_id?: string | null;
+  start_ms?: number | null;
+  end_ms?: number | null;
   audio_url?: string | null;
 }
 

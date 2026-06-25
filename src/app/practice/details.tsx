@@ -51,6 +51,10 @@ function mapTasksFromDayDetails(
       is_completed: boolean;
       content_type: string;
       source_text_id?: string | null;
+      segment_ids?: string[] | null;
+      pecha_segment_id?: string | null;
+      start_ms?: number | null;
+      end_ms?: number | null;
       audio_url?: string | null;
       display_order: number | null;
     }[];
@@ -67,6 +71,10 @@ function mapTasksFromDayDetails(
       is_completed: sub.is_completed,
       content_type: sub.content_type,
       source_text_id: sub.source_text_id,
+      segment_ids: sub.segment_ids ?? null,
+      pecha_segment_id: sub.pecha_segment_id ?? null,
+      start_ms: sub.start_ms ?? null,
+      end_ms: sub.end_ms ?? null,
       audio_url: sub.audio_url,
       display_order: sub.display_order,
     })),

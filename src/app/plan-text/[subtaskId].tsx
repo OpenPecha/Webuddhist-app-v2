@@ -1,12 +1,16 @@
 import { PlanReadingLayout } from '@/components/plans/PlanReadingLayout';
 import { usePlanReadingSession } from '@/hooks/usePlanReadingSession';
+import { usePlanSegmentAudio } from '@/hooks/usePlanSegmentAudio';
 import { useLocalSearchParams } from 'expo-router';
+import { useRef } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 export default function PlanTextScreen() {
   const { subtaskId } = useLocalSearchParams<{ subtaskId: string }>();
   const { t } = useTranslation();
+  const cancelAudioRef = useRef<() => void>(() => {});
+
   const {
     isLoading,
     currentItem,
@@ -17,8 +21,18 @@ export default function PlanTextScreen() {
     handlePrev,
     handleNext,
     handleFinish,
+    navigate,
     tasks,
-  } = usePlanReadingSession();
+  } = usePlanReadingSession({ onBeforeNavigate: () => cancelAudioRef.current() });
+
+  const audio = usePlanSegmentAudio({
+    subTaskId: currentItem?.subTaskId,
+    url: resolveAudioUrl(currentItem),
+    startMs: currentItem?.startMs,
+    endMs: currentItem?.endMs,
+    autoPlay,
+  });
+  cancelAudioRef.current = audio.cancel;
 
   const subtask = tasks
     .flatMap((task) => task.subtasks.map((sub) => ({ sub, task })))
@@ -46,13 +60,18 @@ export default function PlanTextScreen() {
     <PlanReadingLayout
       content={content}
       sectionTitle={currentItem?.taskTitle ?? t('reader.title')}
-      audioUrl={resolveAudioUrl(currentItem)}
-      autoPlay={autoPlay}
+      audioReady={audio.ready}
+      isPlaying={audio.isPlaying}
+      isAudioLoading={audio.buttonState === 'loading'}
+      onAudioToggle={audio.toggle}
+      onBeforeBack={audio.cancel}
       canPrev={canPrev}
       canNext={canNext}
       onPrev={handlePrev}
       onNext={handleNext}
       onFinish={handleFinish}
+      onSwipeNext={() => navigate('next')}
+      onSwipePrev={() => navigate('prev')}
     />
   );
 }

@@ -56,6 +56,8 @@ export const QUERY_KEYS = {
   },
   texts: {
     detail: (id: string) => ['texts', 'detail', id] as const,
+    readerDetails: (textId: string, segmentId: string) =>
+      ['texts', 'readerDetails', textId, segmentId] as const,
   },
   profile: {
     all: ['profile'] as const,

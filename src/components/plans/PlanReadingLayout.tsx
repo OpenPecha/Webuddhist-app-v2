@@ -1,11 +1,14 @@
 import { MarkdownText } from '@/components/common/MarkdownText';
 import { PlanNavigator } from '@/components/plans/PlanNavigator';
-import { usePlanAudioPlayer } from '@/components/plans/PlanAudioPlayer';
+import { SWIPE_DISTANCE_RATIO, SWIPE_VELOCITY_THRESHOLD } from '@/constants/plan-reading';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  ActivityIndicator,
+  Dimensions,
+  PanResponder,
   Pressable,
   ScrollView,
   Text,
@@ -18,13 +21,19 @@ const PREVIEW_LINE_LIMIT = 6;
 interface PlanReadingLayoutProps {
   content: string;
   sectionTitle: string;
-  audioUrl?: string | null;
-  autoPlay?: boolean;
+  audioReady?: boolean;
+  isPlaying?: boolean;
+  isAudioLoading?: boolean;
+  onAudioToggle?: () => void;
+  onBeforeBack?: () => void;
   canPrev: boolean;
   canNext: boolean;
   onPrev?: () => void;
   onNext?: () => void;
   onFinish?: () => void;
+  onSwipeNext?: () => void;
+  onSwipePrev?: () => void;
+  swipeEnabled?: boolean;
   headerExtra?: ReactNode;
   footerMeta?: ReactNode;
 }
@@ -32,13 +41,19 @@ interface PlanReadingLayoutProps {
 export function PlanReadingLayout({
   content,
   sectionTitle,
-  audioUrl,
-  autoPlay,
+  audioReady,
+  isPlaying,
+  isAudioLoading,
+  onAudioToggle,
+  onBeforeBack,
   canPrev,
   canNext,
   onPrev,
   onNext,
   onFinish,
+  onSwipeNext,
+  onSwipePrev,
+  swipeEnabled,
   headerExtra,
   footerMeta,
 }: PlanReadingLayoutProps) {
@@ -47,7 +62,59 @@ export function PlanReadingLayout({
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const [fontSize, setFontSize] = useState(16);
-  const { ready, isPlaying, toggle, play } = usePlanAudioPlayer(audioUrl);
+  const [dragOffset, setDragOffset] = useState(0);
+
+  const screenWidth = Dimensions.get('window').width;
+  const swipeDistanceThreshold = screenWidth * SWIPE_DISTANCE_RATIO;
+  const gesturesActive =
+    swipeEnabled !== false && (onSwipeNext != null || onSwipePrev != null);
+
+  const canSwipeNext = canNext || !!onFinish;
+  const canSwipePrev = canPrev;
+
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onMoveShouldSetPanResponder: (_, gestureState) => {
+          if (!gesturesActive) return false;
+          const { dx, dy } = gestureState;
+          return Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10;
+        },
+        onPanResponderMove: (_, gestureState) => {
+          setDragOffset(gestureState.dx);
+        },
+        onPanResponderRelease: (_, gestureState) => {
+          const { dx, vx } = gestureState;
+          const triggered =
+            Math.abs(vx) >= SWIPE_VELOCITY_THRESHOLD ||
+            Math.abs(dx) > swipeDistanceThreshold;
+
+          if (triggered) {
+            const swipeLeft = dx < 0 || vx < -SWIPE_VELOCITY_THRESHOLD;
+            const swipeRight = dx > 0 || vx > SWIPE_VELOCITY_THRESHOLD;
+
+            if (swipeLeft && canSwipeNext) {
+              onSwipeNext?.();
+            } else if (swipeRight && canSwipePrev) {
+              onSwipePrev?.();
+            }
+          }
+
+          setDragOffset(0);
+        },
+        onPanResponderTerminate: () => {
+          setDragOffset(0);
+        },
+      }),
+    [
+      canSwipeNext,
+      canSwipePrev,
+      gesturesActive,
+      onSwipeNext,
+      onSwipePrev,
+      swipeDistanceThreshold,
+    ],
+  );
 
   const lineCount = content.split('\n').length;
   const showReadFull = !expanded && lineCount > PREVIEW_LINE_LIMIT;
@@ -56,9 +123,10 @@ export function PlanReadingLayout({
       ? content.split('\n').slice(0, PREVIEW_LINE_LIMIT).join('\n')
       : content;
 
-  useEffect(() => {
-    if (autoPlay && ready) play();
-  }, [autoPlay, ready, play]);
+  const handleBack = () => {
+    onBeforeBack?.();
+    router.back();
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: '#F9F8F4' }}>
@@ -73,7 +141,7 @@ export function PlanReadingLayout({
           borderBottomColor: '#e8e8e4',
         }}
       >
-        <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
+        <Pressable onPress={handleBack} style={{ padding: 8 }}>
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <View style={{ flex: 1 }} />
@@ -93,68 +161,79 @@ export function PlanReadingLayout({
         {headerExtra}
       </View>
 
-      <ScrollView
-        contentContainerStyle={{
-          paddingHorizontal: 20,
-          paddingTop: 24,
-          paddingBottom: ready ? 120 : 80,
-        }}
-        showsVerticalScrollIndicator={false}
+      <View
+        style={{ flex: 1, transform: [{ translateX: dragOffset * 0.25 }] }}
+        {...(gesturesActive ? panResponder.panHandlers : {})}
       >
-        <MarkdownText
-          content={displayContent}
-          style={{
-            fontSize,
-            lineHeight: fontSize * 1.6,
-            color: '#000',
-            fontFamily: 'Georgia',
+        <ScrollView
+          contentContainerStyle={{
+            paddingHorizontal: 20,
+            paddingTop: 24,
+            paddingBottom: audioReady ? 120 : 80,
           }}
-        />
-
-        {showReadFull ? (
-          <Pressable
-            onPress={() => setExpanded(true)}
+          showsVerticalScrollIndicator={false}
+        >
+          <MarkdownText
+            content={displayContent}
             style={{
-              marginTop: 20,
-              backgroundColor: '#e8e8e4',
-              borderRadius: 12,
-              paddingVertical: 14,
-              alignItems: 'center',
+              fontSize,
+              lineHeight: fontSize * 1.6,
+              color: '#000',
+              fontFamily: 'Georgia',
             }}
-          >
-            <Text style={{ fontSize: 15, fontWeight: '700', fontFamily: 'Inter-Bold', color: '#000' }}>
-              {t('reader.read_full_text')}
-            </Text>
-          </Pressable>
-        ) : null}
+          />
 
-        {footerMeta}
-
-        {ready ? (
-          <View style={{ alignItems: 'center', marginTop: 32 }}>
+          {showReadFull ? (
             <Pressable
-              onPress={toggle}
+              onPress={() => setExpanded(true)}
               style={{
-                width: 56,
-                height: 56,
-                borderRadius: 28,
-                borderWidth: 1,
-                borderColor: '#000',
-                backgroundColor: '#fff',
+                marginTop: 20,
+                backgroundColor: '#e8e8e4',
+                borderRadius: 12,
+                paddingVertical: 14,
                 alignItems: 'center',
-                justifyContent: 'center',
               }}
             >
-              <Ionicons
-                name={isPlaying ? 'pause' : 'play'}
-                size={24}
-                color="#000"
-                style={!isPlaying ? { marginLeft: 3 } : undefined}
-              />
+              <Text style={{ fontSize: 15, fontWeight: '700', fontFamily: 'Inter-Bold', color: '#000' }}>
+                {t('reader.read_full_text')}
+              </Text>
             </Pressable>
-          </View>
-        ) : null}
-      </ScrollView>
+          ) : null}
+
+          {footerMeta}
+
+          {audioReady ? (
+            <View style={{ alignItems: 'center', marginTop: 32 }}>
+              <Pressable
+                onPress={onAudioToggle}
+                disabled={isAudioLoading}
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 28,
+                  borderWidth: 1,
+                  borderColor: '#000',
+                  backgroundColor: '#fff',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: isAudioLoading ? 0.6 : 1,
+                }}
+              >
+                {isAudioLoading ? (
+                  <ActivityIndicator size="small" color="#000" />
+                ) : (
+                  <Ionicons
+                    name={isPlaying ? 'pause' : 'play'}
+                    size={24}
+                    color="#000"
+                    style={!isPlaying ? { marginLeft: 3 } : undefined}
+                  />
+                )}
+              </Pressable>
+            </View>
+          ) : null}
+        </ScrollView>
+      </View>
 
       <View style={{ paddingBottom: insets.bottom }}>
         <PlanNavigator

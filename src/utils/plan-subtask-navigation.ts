@@ -11,6 +11,10 @@ export interface PlanTaskForNavigation {
     is_completed?: boolean;
     content_type?: string;
     source_text_id?: string | null;
+    segment_ids?: string[] | null;
+    pecha_segment_id?: string | null;
+    start_ms?: number | null;
+    end_ms?: number | null;
     audio_url?: string | null;
     display_order?: number | null;
   }[];
@@ -32,6 +36,25 @@ function hasSourceText(sourceTextId?: string | null): boolean {
   return !!sourceTextId && sourceTextId.length > 0;
 }
 
+function segmentFields(sub: PlanTaskForNavigation['subtasks'][number]) {
+  return {
+    segmentIds: sub.segment_ids ?? null,
+    pechaSegmentId: sub.pecha_segment_id ?? null,
+  };
+}
+
+function audioSegmentFields(sub: PlanTaskForNavigation['subtasks'][number]) {
+  return {
+    startMs: sub.start_ms ?? null,
+    endMs: sub.end_ms ?? null,
+  };
+}
+
+export function resolveInitialSegmentId(item: PlanTextItem): string | undefined {
+  if (item.segmentIds?.length) return item.segmentIds[0];
+  return item.pechaSegmentId ?? undefined;
+}
+
 export function subtaskToPlanTextItem(
   sub: PlanTaskForNavigation['subtasks'][number],
   task: PlanTaskForNavigation,
@@ -48,6 +71,8 @@ export function subtaskToPlanTextItem(
       content: sub.content,
       audioUrl: sub.audio_url,
       isCompleted: sub.is_completed,
+      ...segmentFields(sub),
+      ...audioSegmentFields(sub),
     };
   }
 
@@ -60,6 +85,7 @@ export function subtaskToPlanTextItem(
       content: sub.content,
       audioUrl: sub.audio_url,
       isCompleted: sub.is_completed,
+      ...audioSegmentFields(sub),
     };
   }
 
@@ -74,6 +100,8 @@ export function subtaskToPlanTextItem(
       content: sub.content,
       audioUrl: sub.audio_url,
       isCompleted: sub.is_completed,
+      ...segmentFields(sub),
+      ...audioSegmentFields(sub),
     };
   }
 
@@ -86,6 +114,7 @@ export function subtaskToPlanTextItem(
       content: sub.content,
       audioUrl: sub.audio_url,
       isCompleted: sub.is_completed,
+      ...audioSegmentFields(sub),
     };
   }
 

@@ -6,8 +6,12 @@ export interface PlanTextItem {
   taskTitle: string;
   contentType: PlanContentType;
   sourceTextId?: string | null;
+  segmentIds?: string[] | null;
+  pechaSegmentId?: string | null;
   content?: string | null;
   audioUrl?: string | null;
+  startMs?: number | null;
+  endMs?: number | null;
   isCompleted?: boolean;
 }
 

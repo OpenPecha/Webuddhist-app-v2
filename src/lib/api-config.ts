@@ -50,6 +50,7 @@ export const ENDPOINTS = {
   texts: {
     list: '/texts',
     detail: (id: string) => `/texts/${id}`,
+    textDetails: (id: string) => `/texts/${id}/details`,
     chapters: (textId: string) => `/texts/${textId}/chapters`,
     versions: (textId: string) => `/texts/${textId}/versions`,
   },
