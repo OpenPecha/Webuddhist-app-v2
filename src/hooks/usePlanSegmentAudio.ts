@@ -26,12 +26,14 @@ export function usePlanSegmentAudio({
   const [isPlaying, setIsPlaying] = useState(false);
   const [buttonState, setButtonState] = useState<PlanAudioButtonState>('play');
   const controllerRef = useRef<ReturnType<typeof createPlanSegmentAudioController> | null>(null);
+  const controllerSubTaskIdRef = useRef<string | undefined>(undefined);
   const onSegmentCompleteRef = useRef(onSegmentComplete);
   onSegmentCompleteRef.current = onSegmentComplete;
 
   useEffect(() => {
     controllerRef.current?.dispose();
     controllerRef.current = null;
+    controllerSubTaskIdRef.current = undefined;
     setReady(false);
     setIsPlaying(false);
     setButtonState('play');
@@ -49,11 +51,15 @@ export function usePlanSegmentAudio({
       },
     });
     controllerRef.current = controller;
+    controllerSubTaskIdRef.current = subTaskId;
     setReady(controller.hasAudio);
 
     return () => {
       controller.dispose();
-      controllerRef.current = null;
+      if (controllerRef.current === controller) {
+        controllerRef.current = null;
+        controllerSubTaskIdRef.current = undefined;
+      }
     };
   }, [subTaskId, url, startMs, endMs]);
 
@@ -65,12 +71,14 @@ export function usePlanSegmentAudio({
 
   useFocusEffect(
     useCallback(() => {
+      const focusedSubTaskId = subTaskId;
       return () => {
+        if (controllerSubTaskIdRef.current !== focusedSubTaskId) return;
         controllerRef.current?.cancel();
         setIsPlaying(false);
         setButtonState('play');
       };
-    }, []),
+    }, [subTaskId]),
   );
 
   useEffect(() => {

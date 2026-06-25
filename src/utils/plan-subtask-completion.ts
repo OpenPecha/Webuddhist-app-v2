@@ -2,8 +2,13 @@ import { ConflictFailure } from '@/lib/api-error';
 import { completeSubTask } from '@/services/plans';
 import type { PlanTextItem } from '@/types/plan-navigation';
 
+export interface PlanSubtaskCompletionSessionOptions {
+  onSuccess: () => void;
+  onError?: (error: unknown) => void;
+}
+
 /** Flutter parity: container-scoped subtask completion for plan reading navigation. */
-export function createPlanSubtaskCompletionSession(onSuccess: () => void) {
+export function createPlanSubtaskCompletionSession(options: PlanSubtaskCompletionSessionOptions) {
   const completedIds = new Set<string>();
 
   async function completeCurrentSubtask(item: PlanTextItem | undefined): Promise<void> {
@@ -15,13 +20,15 @@ export function createPlanSubtaskCompletionSession(onSuccess: () => void) {
     completedIds.add(subTaskId);
     try {
       await completeSubTask(subTaskId);
-      onSuccess();
+      options.onSuccess();
     } catch (error) {
       if (error instanceof ConflictFailure) {
-        onSuccess();
+        options.onSuccess();
         return;
       }
       completedIds.delete(subTaskId);
+      options.onError?.(error);
+      throw error;
     }
   }
 

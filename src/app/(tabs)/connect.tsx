@@ -7,7 +7,6 @@ import { useDiscoverGroups, useJoinedGroups } from '@/hooks/api/useDiscoverGroup
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/constants/query-keys';
-import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
@@ -23,7 +22,6 @@ export default function ConnectScreen() {
   const insets = useSafeAreaInsets();
   const { scaffoldBackground, mutedForeground } = useThemeColors();
   const queryClient = useQueryClient();
-  const language = useContentLanguage();
   const {
     data,
     isLoading,
@@ -40,7 +38,7 @@ export default function ConnectScreen() {
   const refreshAll = async () => {
     await Promise.all([
       refetch(),
-      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.groups.joined(language, 0, 20) }),
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.groups.all }),
     ]);
   };
 

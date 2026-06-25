@@ -8,9 +8,11 @@ import {
   resolvePlanReadingRouteForIndex,
   type PlanTaskForNavigation,
 } from '@/utils/plan-subtask-navigation';
+import { showAppToast } from '@/utils/show-app-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useCallback, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 function mapDayTasksFromApi(
   rawTasks: {
@@ -55,6 +57,7 @@ function mapDayTasksFromApi(
 }
 
 export function usePlanReadingSession(options?: { onBeforeNavigate?: () => void }) {
+  const { t } = useTranslation();
   const params = useLocalSearchParams<{
     planId: string;
     dayNumber: string;
@@ -88,12 +91,16 @@ export function usePlanReadingSession(options?: { onBeforeNavigate?: () => void 
   const invalidateRef = useRef(invalidatePlanDay);
   invalidateRef.current = invalidatePlanDay;
 
+  const onCompleteErrorRef = useRef<() => void>(() => {});
+  onCompleteErrorRef.current = () => showAppToast(t('planTrack.complete_error'));
+
   const completionSessionRef = useRef<ReturnType<typeof createPlanSubtaskCompletionSession> | null>(
     null,
   );
   if (!completionSessionRef.current) {
-    completionSessionRef.current = createPlanSubtaskCompletionSession(() => {
-      invalidateRef.current();
+    completionSessionRef.current = createPlanSubtaskCompletionSession({
+      onSuccess: () => invalidateRef.current(),
+      onError: () => onCompleteErrorRef.current(),
     });
   }
 
@@ -117,7 +124,7 @@ export function usePlanReadingSession(options?: { onBeforeNavigate?: () => void 
   );
 
   const navigateToIndex = useCallback(
-    (index: number, autoPlay = false) => {
+    (index: number, autoPlay = false): boolean => {
       const route = resolvePlanReadingRouteForIndex({
         planId,
         dayNumber,
@@ -126,7 +133,7 @@ export function usePlanReadingSession(options?: { onBeforeNavigate?: () => void 
         dayAudioUrl: dayAudioUrl ?? undefined,
         autoPlay,
       });
-      if (!route) return;
+      if (!route) return false;
       if (route.pathname === '/plan-text/[subtaskId]') {
         router.replace({
           pathname: '/plan-text/[subtaskId]',
@@ -138,6 +145,7 @@ export function usePlanReadingSession(options?: { onBeforeNavigate?: () => void 
           params: route.params as { textId: string; planId: string; dayNumber: string },
         });
       }
+      return true;
     },
     [planId, dayNumber, items, dayAudioUrl, router],
   );
@@ -152,42 +160,40 @@ export function usePlanReadingSession(options?: { onBeforeNavigate?: () => void 
 
       if (direction === 'prev') {
         if (currentIndex <= 0) return;
-        isNavigatingRef.current = true;
-        navigateToIndex(currentIndex - 1);
+        if (navigateToIndex(currentIndex - 1)) {
+          isNavigatingRef.current = true;
+        }
         return;
       }
 
       if (direction === 'next') {
         if (currentIndex >= items.length - 1) {
           isNavigatingRef.current = true;
-          await completion.completeCurrentSubtask(currentItem);
-          router.back();
+          try {
+            await completion.completeCurrentSubtask(currentItem);
+            router.back();
+          } catch {
+            isNavigatingRef.current = false;
+          }
           return;
         }
-        isNavigatingRef.current = true;
         void completion.completeCurrentSubtask(currentItem);
-        navigateToIndex(currentIndex + 1);
+        if (navigateToIndex(currentIndex + 1)) {
+          isNavigatingRef.current = true;
+        }
         return;
       }
 
       isNavigatingRef.current = true;
-      await completion.completeCurrentSubtask(currentItem);
-      router.back();
+      try {
+        await completion.completeCurrentSubtask(currentItem);
+        router.back();
+      } catch {
+        isNavigatingRef.current = false;
+      }
     },
     [currentIndex, currentItem, items.length, navigateToIndex, router],
   );
-
-  const handlePrev = useCallback(() => {
-    void navigate('prev');
-  }, [navigate]);
-
-  const handleNext = useCallback(() => {
-    void navigate('next');
-  }, [navigate]);
-
-  const handleFinish = useCallback(() => {
-    void navigate('finish');
-  }, [navigate]);
 
   return {
     isLoading,
@@ -199,9 +205,6 @@ export function usePlanReadingSession(options?: { onBeforeNavigate?: () => void 
     autoPlay: params.autoPlay === '1',
     canPrev: currentIndex > 0,
     canNext: currentIndex < items.length - 1,
-    handlePrev,
-    handleNext,
-    handleFinish,
     navigate,
     tasks,
   };

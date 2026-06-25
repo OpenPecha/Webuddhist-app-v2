@@ -18,9 +18,6 @@ export default function PlanTextScreen() {
     autoPlay,
     canPrev,
     canNext,
-    handlePrev,
-    handleNext,
-    handleFinish,
     navigate,
     tasks,
   } = usePlanReadingSession({ onBeforeNavigate: () => cancelAudioRef.current() });
@@ -67,9 +64,9 @@ export default function PlanTextScreen() {
       onBeforeBack={audio.cancel}
       canPrev={canPrev}
       canNext={canNext}
-      onPrev={handlePrev}
-      onNext={handleNext}
-      onFinish={handleFinish}
+      onPrev={() => navigate('prev')}
+      onNext={() => navigate('next')}
+      onFinish={() => navigate('finish')}
       onSwipeNext={() => navigate('next')}
       onSwipePrev={() => navigate('prev')}
     />

@@ -109,7 +109,8 @@
     "start_reading": "Start Reading",
     "continue": "Continue",
     "day_complete_title": "Day complete!",
-    "day_complete_body": "Great work — you've finished all tasks for today."
+    "day_complete_body": "Great work — you've finished all tasks for today.",
+    "complete_error": "Couldn't save your progress. Please try again."
   },
   "plans": {
     "preview": {

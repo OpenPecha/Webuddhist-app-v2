@@ -24,7 +24,23 @@ function normalizeContentType(raw?: string): 'TEXT' | 'SOURCE_REFERENCE' | null 
   const upper = (raw ?? '').toUpperCase();
   if (upper === 'TEXT' || upper === 'INLINE_TEXT') return 'TEXT';
   if (upper === 'SOURCE_REFERENCE') return 'SOURCE_REFERENCE';
-  if (raw) return null;
+  return null;
+}
+
+function resolveSubtaskContentType(
+  sub: PlanTaskForNavigation['subtasks'][number],
+): 'TEXT' | 'SOURCE_REFERENCE' | null {
+  const normalized = normalizeContentType(sub.content_type);
+  if (normalized === 'SOURCE_REFERENCE' && hasSourceText(sub.source_text_id)) {
+    return 'SOURCE_REFERENCE';
+  }
+  if (normalized === 'TEXT' && hasInlineContent(sub.content)) {
+    return 'TEXT';
+  }
+  if (normalized) return null;
+
+  if (hasSourceText(sub.source_text_id)) return 'SOURCE_REFERENCE';
+  if (hasInlineContent(sub.content)) return 'TEXT';
   return null;
 }
 
@@ -59,78 +75,33 @@ export function subtaskToPlanTextItem(
   sub: PlanTaskForNavigation['subtasks'][number],
   task: PlanTaskForNavigation,
 ): PlanTextItem | null {
-  const contentType = normalizeContentType(sub.content_type);
+  const contentType = resolveSubtaskContentType(sub);
+  if (!contentType) return null;
 
-  if (contentType === 'SOURCE_REFERENCE' && hasSourceText(sub.source_text_id)) {
+  const base = {
+    subTaskId: sub.id,
+    taskId: task.id,
+    taskTitle: task.title ?? '',
+    contentType,
+    content: sub.content,
+    audioUrl: sub.audio_url,
+    isCompleted: sub.is_completed,
+    ...audioSegmentFields(sub),
+  };
+
+  if (contentType === 'SOURCE_REFERENCE') {
     return {
-      subTaskId: sub.id,
-      taskId: task.id,
-      taskTitle: task.title ?? '',
-      contentType: 'SOURCE_REFERENCE',
+      ...base,
       sourceTextId: sub.source_text_id,
-      content: sub.content,
-      audioUrl: sub.audio_url,
-      isCompleted: sub.is_completed,
       ...segmentFields(sub),
-      ...audioSegmentFields(sub),
     };
   }
 
-  if (contentType === 'TEXT' && hasInlineContent(sub.content)) {
-    return {
-      subTaskId: sub.id,
-      taskId: task.id,
-      taskTitle: task.title ?? '',
-      contentType: 'TEXT',
-      content: sub.content,
-      audioUrl: sub.audio_url,
-      isCompleted: sub.is_completed,
-      ...audioSegmentFields(sub),
-    };
-  }
-
-  // Fallback: infer from fields when content_type is missing or unknown
-  if (hasSourceText(sub.source_text_id)) {
-    return {
-      subTaskId: sub.id,
-      taskId: task.id,
-      taskTitle: task.title ?? '',
-      contentType: 'SOURCE_REFERENCE',
-      sourceTextId: sub.source_text_id,
-      content: sub.content,
-      audioUrl: sub.audio_url,
-      isCompleted: sub.is_completed,
-      ...segmentFields(sub),
-      ...audioSegmentFields(sub),
-    };
-  }
-
-  if (hasInlineContent(sub.content)) {
-    return {
-      subTaskId: sub.id,
-      taskId: task.id,
-      taskTitle: task.title ?? '',
-      contentType: 'TEXT',
-      content: sub.content,
-      audioUrl: sub.audio_url,
-      isCompleted: sub.is_completed,
-      ...audioSegmentFields(sub),
-    };
-  }
-
-  return null;
-}
-
-export function isSubtaskNavigable(sub: PlanTaskForNavigation['subtasks'][number]): boolean {
-  const contentType = normalizeContentType(sub.content_type);
-  if (contentType === 'SOURCE_REFERENCE') return hasSourceText(sub.source_text_id);
-  if (contentType === 'TEXT') return hasInlineContent(sub.content);
-  if (hasSourceText(sub.source_text_id)) return true;
-  return hasInlineContent(sub.content);
+  return base;
 }
 
 export function isTaskNavigable(task: PlanTaskForNavigation): boolean {
-  return task.subtasks.some((sub) => isSubtaskNavigable(sub));
+  return task.subtasks.some((sub) => resolveSubtaskContentType(sub) != null);
 }
 
 /** First navigable subtask per task, sorted by display_order (Flutter parity). */

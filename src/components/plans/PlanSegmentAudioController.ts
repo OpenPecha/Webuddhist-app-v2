@@ -21,6 +21,25 @@ export interface PlanSegmentAudioController {
   buttonState: PlanAudioButtonState;
 }
 
+/** Ensures only one plan-reading native player is active app-wide. */
+let globalActivePlayer: AudioPlayer | null = null;
+
+function clearGlobalActivePlayer(player: AudioPlayer | null) {
+  if (player == null || globalActivePlayer !== player) return;
+  globalActivePlayer = null;
+}
+
+function stopGlobalActivePlayer(except?: AudioPlayer | null) {
+  if (globalActivePlayer == null || globalActivePlayer === except) return;
+  try {
+    globalActivePlayer.pause();
+    globalActivePlayer.remove();
+  } catch {
+    // Player may already be released.
+  }
+  globalActivePlayer = null;
+}
+
 export function createPlanSegmentAudioController(
   options: PlanSegmentAudioControllerOptions,
 ): PlanSegmentAudioController {
@@ -30,6 +49,7 @@ export function createPlanSegmentAudioController(
   let nativePlayer: AudioPlayer | null = null;
   let statusSub: EventSubscription | null = null;
   let buttonState: PlanAudioButtonState = 'play';
+  let ignoreNextIdleStatus = false;
 
   const setButtonState = (state: PlanAudioButtonState) => {
     if (isDisposed || buttonState === state) return;
@@ -41,6 +61,7 @@ export function createPlanSegmentAudioController(
     statusSub?.remove();
     statusSub = null;
     if (nativePlayer) {
+      clearGlobalActivePlayer(nativePlayer);
       try {
         nativePlayer.pause();
         nativePlayer.remove();
@@ -75,6 +96,13 @@ export function createPlanSegmentAudioController(
       return;
     }
 
+    if (ignoreNextIdleStatus) {
+      if (status.playing) {
+        ignoreNextIdleStatus = false;
+      }
+      return;
+    }
+
     if (!status.playing && status.isLoaded) {
       setButtonState('play');
     }
@@ -97,7 +125,9 @@ export function createPlanSegmentAudioController(
       if (isDisposed || sessionId !== audioSessionId) return;
 
       releasePlayer();
+      stopGlobalActivePlayer();
       nativePlayer = createAudioPlayer({ uri: url });
+      globalActivePlayer = nativePlayer;
       statusSub = nativePlayer.addListener('playbackStatusUpdate', onPlaybackStatus);
 
       const startSec = (options.startMs ?? 0) / 1000;
@@ -105,6 +135,7 @@ export function createPlanSegmentAudioController(
       if (isDisposed || sessionId !== audioSessionId) return;
 
       hasCompleted = false;
+      ignoreNextIdleStatus = true;
       nativePlayer.play();
       setButtonState('pause');
     } catch {
@@ -117,6 +148,7 @@ export function createPlanSegmentAudioController(
   const cancel = () => {
     audioSessionId++;
     hasCompleted = true;
+    ignoreNextIdleStatus = false;
     releasePlayer();
     if (!isDisposed) {
       setButtonState('play');
@@ -148,6 +180,9 @@ export function createPlanSegmentAudioController(
           return;
         }
         hasCompleted = false;
+        ignoreNextIdleStatus = true;
+        stopGlobalActivePlayer(nativePlayer);
+        globalActivePlayer = nativePlayer;
         nativePlayer.play();
         setButtonState('pause');
     }
