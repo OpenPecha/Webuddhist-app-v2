@@ -48,7 +48,7 @@ export default function PlanPreviewScreen() {
   const { data: plan, isLoading: planLoading, error: planError, refetch } = usePlanDetail(planId);
   const { data: daysData, isLoading: daysLoading } = usePlanDays(planId);
   const { data: isEnrolled, isLoading: enrolledLoading } = useIsPlanEnrolled(planId);
-  const { data: userPlansData } = useUserPlans();
+  const { data: userPlansData, isLoading: userPlansLoading } = useUserPlans();
   const { isInRoutine: isPlanInRoutine, isLoading: routineLoading } = useIsPlanInRoutine(planId);
   const { isInRoutine: isSeriesInRoutine } = useIsSeriesInRoutine(seriesId ?? '');
 
@@ -71,16 +71,18 @@ export default function PlanPreviewScreen() {
   const { data: dayDetail, isLoading: dayLoading } = usePublicPlanDay(planId, selectedDay);
 
   useEffect(() => {
-    if (!user || isGuest || !isAuthReady || enrolledLoading) return;
+    if (!user || isGuest || !isAuthReady || enrolledLoading || !dayInitialized) return;
+    if (isEnrolled && userPlansLoading) return;
     if (isEnrolled && plan) {
       const userPlan = resolveUserPlanForItem(planId, userPlansData?.plans ?? []);
-      const selectedDay = userPlan ? getCurrentDay(userPlan) : undefined;
+      const redirectDay =
+        (userPlan ? getCurrentDay(userPlan) : undefined) ?? selectedDay;
       router.replace({
         pathname: '/practice/details',
         params: {
           planId,
           title: plan.title,
-          ...(selectedDay != null ? { selectedDay: String(selectedDay) } : {}),
+          selectedDay: String(redirectDay),
         },
       });
     }
@@ -90,9 +92,12 @@ export default function PlanPreviewScreen() {
     isAuthReady,
     isEnrolled,
     enrolledLoading,
+    dayInitialized,
+    userPlansLoading,
     plan,
     planId,
     router,
+    selectedDay,
     userPlansData?.plans,
   ]);
 

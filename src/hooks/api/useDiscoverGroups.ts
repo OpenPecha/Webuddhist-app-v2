@@ -3,6 +3,11 @@ import { fetchDiscoverGroups, fetchJoinedGroups, fetchGroupProfile, joinGroup, l
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useAuthTokenReady } from '@/providers/auth-token';
 import { useGuest } from '@/providers/guest';
+import {
+  clearGroupPending,
+  markGroupJoinedOptimistic,
+  markGroupUnjoinedOptimistic,
+} from '@/stores/pending-groups';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth0 } from 'react-native-auth0';
 
@@ -49,6 +54,15 @@ export function useJoinGroup(groupId: string) {
 
   return useMutation({
     mutationFn: () => joinGroup(groupId),
+    onMutate: () => {
+      markGroupJoinedOptimistic(groupId);
+    },
+    onError: () => {
+      clearGroupPending(groupId);
+    },
+    onSettled: () => {
+      clearGroupPending(groupId);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.groups.all });
     },
@@ -71,6 +85,15 @@ export function useLeaveGroup(groupId: string) {
 
   return useMutation({
     mutationFn: () => leaveGroup(groupId),
+    onMutate: () => {
+      markGroupUnjoinedOptimistic(groupId);
+    },
+    onError: () => {
+      clearGroupPending(groupId);
+    },
+    onSettled: () => {
+      clearGroupPending(groupId);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.groups.all });
     },

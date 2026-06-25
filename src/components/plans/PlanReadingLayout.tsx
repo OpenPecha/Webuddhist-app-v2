@@ -1,6 +1,7 @@
 import { MarkdownText } from '@/components/common/MarkdownText';
 import { PlanNavigator } from '@/components/plans/PlanNavigator';
 import { SWIPE_DISTANCE_RATIO, SWIPE_VELOCITY_THRESHOLD } from '@/constants/plan-reading';
+import { useReaderFontSize } from '@/hooks/useReaderFontSize';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useMemo, useState, type ReactNode } from 'react';
@@ -61,7 +62,7 @@ export function PlanReadingLayout({
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
-  const [fontSize, setFontSize] = useState(16);
+  const { fontSize, canDecrease, canIncrease, decrease, increase } = useReaderFontSize();
   const [dragOffset, setDragOffset] = useState(0);
 
   const screenWidth = Dimensions.get('window').width;
@@ -146,11 +147,18 @@ export function PlanReadingLayout({
         </Pressable>
         <View style={{ flex: 1 }} />
         <Pressable
-          onPress={() => setFontSize((s) => Math.min(24, s + 2))}
-          onLongPress={() => setFontSize((s) => Math.max(12, s - 2))}
-          style={{ padding: 8, opacity: 0.5 }}
+          onPress={decrease}
+          disabled={!canDecrease}
+          style={{ padding: 8, opacity: canDecrease ? 0.7 : 0.25 }}
         >
-          <Text style={{ fontSize: 16, fontWeight: '600', color: '#000' }}>Aa</Text>
+          <Text style={{ fontSize: 14, fontWeight: '600', color: '#000' }}>A</Text>
+        </Pressable>
+        <Pressable
+          onPress={increase}
+          disabled={!canIncrease}
+          style={{ padding: 8, opacity: canIncrease ? 0.7 : 0.25 }}
+        >
+          <Text style={{ fontSize: 20, fontWeight: '600', color: '#000' }}>A</Text>
         </Pressable>
         <Pressable disabled style={{ padding: 8, opacity: 0.35 }}>
           <Ionicons name="search" size={20} color="#000" />

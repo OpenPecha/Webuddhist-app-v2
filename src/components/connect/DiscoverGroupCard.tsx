@@ -6,10 +6,8 @@ import { useLoginDrawer } from '@/hooks/useLoginDrawer';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useGuest } from '@/providers/guest';
 import {
-  clearGroupPending,
   getPendingGroupsSnapshot,
   isGroupOptimisticallyJoined,
-  markGroupJoinedOptimistic,
   subscribePendingGroups,
 } from '@/stores/pending-groups';
 import { Image } from 'expo-image';
@@ -43,10 +41,7 @@ export function DiscoverGroupCard({ group, isJoined = false }: DiscoverGroupCard
       showLoginDrawer();
       return;
     }
-    markGroupJoinedOptimistic(group.id);
-    joinMutation.mutate(undefined, {
-      onError: () => clearGroupPending(group.id),
-    });
+    joinMutation.mutate();
   };
 
   return (
