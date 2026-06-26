@@ -9,6 +9,10 @@ import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useGuest } from '@/providers/guest';
 import { routineHasItems, type RoutineItem } from '@/types/routine';
 import {
+  getCurrentDay,
+  resolveUserPlanForItem,
+} from '@/utils/plan-utils';
+import {
   resolveUserPlanForRoutineItem,
   selectedDayForRoutinePlan,
 } from '@/utils/routine-navigation';
@@ -261,6 +265,24 @@ export default function PracticeScreen() {
 
       if (item.type === 'recitation') {
         router.push({ pathname: '/reader/[textId]', params: { textId: item.id } });
+        return;
+      }
+
+      if (item.type === 'series') {
+        if (item.currentPlanId) {
+          const userPlan = resolveUserPlanForItem(item.currentPlanId, userPlans);
+          const selectedDay = userPlan ? getCurrentDay(userPlan) : undefined;
+          router.push({
+            pathname: '/practice/details',
+            params: {
+              planId: item.currentPlanId,
+              title: item.currentPlanTitle ?? item.title,
+              ...(selectedDay != null ? { selectedDay: String(selectedDay) } : {}),
+            },
+          });
+        } else {
+          router.push(`/series/${item.id}`);
+        }
         return;
       }
 

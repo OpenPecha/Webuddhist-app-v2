@@ -7,7 +7,7 @@
 | **Flutter baseline** | `lib/features/home` (series), `lib/features/home/data/repositories/series_repository.dart` |
 | **v2 target** | `src/app/series/[id].tsx`, `src/hooks/useSeries.ts` |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-11 |
+| **Last updated** | 2026-06-22 (mockup research + implementation alignment) |
 
 ---
 
@@ -22,6 +22,8 @@ authenticated users.
 | Element | Flutter source | Route |
 |---------|----------------|-------|
 | Series detail | `features/home/presentation/screens/series_detail_screen.dart` | `/home/series/:id` |
+| Series info (About) | `features/home/presentation/screens/series_info_screen.dart` | `/home/series/:id/info` |
+| Plan list (in series) | `features/home/presentation/widgets/plan_list_view.dart` | embedded in series detail |
 | Series repository | `features/home/data/repositories/series_repository.dart` | — |
 | Series model | `features/home/data/models/series_model.dart` | — |
 | Series entity | `features/home/domain/entities/series.dart` | — |
@@ -31,7 +33,32 @@ authenticated users.
 `src/app/series/[id].tsx` already renders cover image, metadata (title/description),
 day/plan counts, and a list of `PlanCard`s via `useSeriesById`. **Missing:** enrollment
 action, enrollment-state awareness, and language selection of metadata (currently
-hardcoded `'EN'`).
+hardcoded `'EN'`). Plan row navigation goes to a **non-existent** route
+(`/series/{planId}/plan`). See research docs in `devdocs/research/`.
+
+## 3a. Mockup redesign (`series_page`)
+
+Design reference: shared mockup set `series_page`. Full frame index:
+[`devdocs/research/mockup-screen-index.md`](../research/mockup-screen-index.md).
+
+| Mockup element | v2 target | Priority |
+|----------------|-----------|----------|
+| Stats row: N plans · M days · K enrolled | Below hero on featured card | P0 |
+| Sticky Enroll (black full-width) | Bottom of `series/[id].tsx` | P0 |
+| Enroll → loading; hide when enrolled | Mutation + `GET /users/me/series` | P0 |
+| Plan rows: thumbnail, title, date range | `PlanRow` (exists) — add date range | P1 |
+| Plan row lock icon (future `start_date`) | Opacity + disabled tap (Flutter parity — all viewers) | P1 |
+| Plan row "On track" when enrolled | `EnrolledPlanStatusIndicator` via `GET /users/me/series/{id}` `started_at` | P1 |
+| Tap featured card → About | `series/[id]/info` route | P1 |
+| Org row (ITCC) → group profile | `/group/[id]` — see [connect](./connect.md) | P1 |
+
+**Flutter parity note:** Flutter uses `PlanListView` with featured card + list (not separate
+sticky enroll at screen bottom). Mockup sticky enroll matches UX intent; implement as
+screen-level sticky CTA calling the same `POST /users/me/series` API.
+
+**Config warning:** Do **not** use `ENDPOINTS.series.enroll` (`/series/{id}/enroll`) — invalid.
+Use `POST /users/me/series`. See [`api-to-screen-matrix.md`](../research/api-to-screen-matrix.md).
+
 
 ## 4. User stories
 
@@ -192,14 +219,46 @@ Flutter repository methods to match: `getSeriesList`, `getSeriesById`, `enrollIn
 `getUserSeriesEnrollments`. Unenroll API exists on backend but has **no Flutter datasource
 method** yet.
 
+### 6a. SERIES routine session (post-enroll)
+
+After `POST /users/me/series`, Flutter navigates to edit-routine with `enrollSeriesId` and
+injects the **whole series** as a routine session (`RoutineItemType.series` /
+`SessionType.SERIES`) — not individual plans. See Flutter
+[`edit_routine_screen.dart`](../../../WeBuddhist-app/lib/features/practice/presentation/screens/edit_routine_screen.dart)
+`_hydrateSeriesEnrollment` → `_injectSeries`.
+
+**v2 gap:** routine layer today only supports PLAN | RECITATION in
+[`routine-edit.ts`](../../src/utils/routine-edit.ts) and [`routine-mapper.ts`](../../src/utils/routine-mapper.ts).
+Implementation must extend:
+
+| File | Change |
+|------|--------|
+| `src/types/routine.ts` | Add `'series'` to `RoutineItemType`; `SessionDTO.session_type` includes `'SERIES'` |
+| `src/types/routine-mutations.ts` | Add `'SERIES'` to `SessionTypeApi` |
+| `src/utils/routine-mapper.ts` | Map `SERIES` → `type: 'series'` |
+| `src/utils/routine-edit.ts` | `routineItemToSession`: series → `session_type: 'SERIES'` |
+| `src/app/practice/edit-routine/index.tsx` | Read `enrollSeriesId` param; fetch series; inject into earliest empty time block |
+
+**Backend:** Saving a routine with SERIES/PLAN sessions triggers `_enroll_plans()` in
+`routines_service.py` when plan sessions are added. The SERIES session represents the series
+in the daily routine UI. See [open-questions §1](../research/open-questions.md) and
+[practice.md](./practice.md).
+
 ## 7. Navigation
 
 | Flutter route | v2 route | Params |
 |---------------|----------|--------|
-| `/home/series/:id` | `src/app/series/[id].tsx` | `id` (search param) |
+| `/home/series/:id` | `src/app/series/[id].tsx` | `id` |
+| `/home/series/:id/info` | `src/app/series/[id]/info.tsx` (TBD) | series About |
+| Plan row tap (not enrolled) | `src/app/plans/[id].tsx` (TBD) | plan preview |
+| Plan row tap (enrolled) | `src/app/practice/details.tsx` | `planId`, `selectedDay` |
+| Post series enroll | `src/app/practice/edit-routine/index.tsx` | `enrollSeriesId` — edit-routine after `POST /users/me/series` ([open-questions §1](../research/open-questions.md)) |
 
 > Flutter passes the `Series` object via `extra` to avoid refetch. v2 refetches by id
 > via React Query — acceptable; document as intentional.
+
+> **Plan preview redirect:** If an enrolled user opens `/plans/[id]`, redirect to
+> `/practice/details` — see [plans.md §8](./plans.md).
 
 ## 8. Acceptance criteria
 
@@ -211,10 +270,14 @@ method** yet.
 
 ## 9. Open questions
 
-- ~~Exact enroll endpoint + payload~~ → resolved: `POST /users/me/series` with
-  `{ "series_id": "..." }` (see §6).
-- Author display (`author_id`) — `creator_info` module is out of v2 scope; show author
-  from plan/series DTO only if needed.
+All resolved via backend API — see [`open-questions.md`](../research/open-questions.md).
+
+- ~~Exact enroll endpoint + payload~~ → `POST /users/me/series` with `{ "series_id": "..." }` (see §6).
+- ~~Author display~~ → group profile via `series.group` — see [connect](./connect.md).
+- ~~Post-enroll navigation~~ → edit-routine (Option A); API does not enroll plans without routine or `start_immediately` — §1.
+- ~~Plan row lock~~ → future `start_date` only (Flutter parity) — §2.
+- ~~Enrolled count in stats~~ → always show `SeriesDTO.enrolled_count` — §8.
+- ~~SERIES routine type in v2~~ → required for series enroll E2E (see §6a).
 
 ## 10. Migration status checklist
 
@@ -223,5 +286,19 @@ method** yet.
 | Load by id | yes | yes | `useSeriesById` |
 | Render detail | yes | yes | |
 | Locale-aware metadata | yes | no | hardcoded EN |
-| Enrollment | yes | no | |
+| Enrollment | yes | no | stub Alert; wrong api-config path |
 | Enrollment state | yes | no | |
+| Stats row (mockup) | partial | no | Include `enrolled_count` from API — [open-questions §8](../research/open-questions.md) |
+| Series About route | yes | no | |
+| Plan row → plan preview | yes | no | broken route today |
+| Plan row lock / on-track | yes | no | |
+| SERIES routine session | yes | no | see §6a |
+
+## 11. Research references
+
+| Document | Purpose |
+|----------|---------|
+| [flutter-series-plans-connect-routes.md](../research/flutter-series-plans-connect-routes.md) | Flutter route + enrollment audit |
+| [mockup-screen-index.md](../research/mockup-screen-index.md) | Frame-by-frame mockup specs |
+| [series-plans-connect-gap-matrix.md](../research/series-plans-connect-gap-matrix.md) | Mockup vs Flutter vs v2 gaps |
+| [open-questions.md](../research/open-questions.md) | API-resolved product decisions |

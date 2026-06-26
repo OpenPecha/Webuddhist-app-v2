@@ -52,7 +52,8 @@
     "calendar_day_month": "ཟླ་བ་{{month}} ཚེས་{{day}}",
     "load_error": "Couldn't load. Check your connection and try again.",
     "share_this_quote": "Share this quote",
-    "verse_share_error": "Unable to share quote. Please try again"
+    "verse_share_error": "Unable to share quote. Please try again",
+    "shortcut_coming_soon": "Coming soon."
   },
   "nav": {
     "home": "འདུན་ངོས།",
@@ -61,7 +62,31 @@
     "me": "ང།"
   },
   "connect": {
-    "coming_soon": "Connect is coming soon."
+    "coming_soon": "Connect is coming soon.",
+    "subtitle": "Find communities and teachers to practice with",
+    "discover": "Discover",
+    "my_groups": "My groups",
+    "my_groups_empty": "You haven't joined any groups yet.",
+    "see_all": "See all",
+    "search_placeholder": "Search groups",
+    "search_empty": "No groups match your search.",
+    "empty": "No communities to discover yet.",
+    "not_found": "Group not found",
+    "action_error": "Something went wrong. Please try again.",
+    "tab_practices": "Practices",
+    "tab_about": "About",
+    "no_practices": "No practices yet.",
+    "no_about": "No description available.",
+    "join": "Join",
+    "joined": "Joined",
+    "follow": "Follow",
+    "following": "Following",
+    "followers_count": "{{count}} followers",
+    "members_count": "{{count}} members",
+    "social_links": "Social links",
+    "social_links_title": "Links",
+    "show_more": "Show more",
+    "show_less": "Show less"
   },
   "practice": {
     "routine_title": "འཆར་ཅན་ཉམས་ལེན།",
@@ -83,7 +108,9 @@
   },
   "reader": {
     "title": "Reader",
-    "placeholder": "Full reader experience is coming in a future update."
+    "placeholder": "Full reader experience is coming in a future update.",
+    "read_full_text": "Read Full Text",
+    "font_size": "Text size"
   },
   "editRoutine": {
     "title": "ཉམས་ལེན་གོམས་གཤིས་བཟོ་བཅོས།",
@@ -129,6 +156,9 @@
     "n_days_other": "{{count}} days",
     "enroll": "Enroll",
     "enrolled": "Enrolled",
+    "stats_plans": "{{count}} PLANS",
+    "stats_days": "{{count}} DAYS",
+    "stats_enrolled": "{{count}} ENROLLED",
     "unenroll": "Unenroll",
     "unenroll_title": "Unenroll from this series?",
     "unenroll_body": "You'll lose all your progress in this series. You can re-enroll any time.",

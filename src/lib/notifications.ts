@@ -7,6 +7,7 @@ import {
 } from '@/constants/special-plan-notifications';
 import { StorageKeys, getBoolean, setBoolean } from '@/lib/storage';
 import type { UserPlan } from '@/types/plans';
+import { getEffectiveStartDate } from '@/utils/plan-utils';
 
 /** Matches Flutter `NotificationChannels.routineBlockId`. */
 export const ROUTINE_BLOCK_CHANNEL_ID = 'routine_block_reminder';
@@ -107,7 +108,7 @@ export async function syncPlanNotificationsOnLaunch(
   const today = new Date();
 
   for (const plan of plans) {
-    const daysSince = daysSinceEnrollment(plan.started_at, today);
+    const daysSince = daysSinceEnrollment(getEffectiveStartDate(plan).toISOString(), today);
     const dayNumber = daysSince + 1;
 
     if (isSpecialPlan(plan.id)) {

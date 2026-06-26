@@ -43,8 +43,10 @@ export function defaultBlockTimeInt(): number {
 }
 
 function routineItemToSession(item: RoutineItem, displayOrder: number): SessionRequest {
+  const session_type =
+    item.type === 'plan' ? 'PLAN' : item.type === 'series' ? 'SERIES' : 'RECITATION';
   return {
-    session_type: item.type === 'plan' ? 'PLAN' : 'RECITATION',
+    session_type,
     source_id: item.id,
     display_order: displayOrder,
   };

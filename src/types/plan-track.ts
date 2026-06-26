@@ -1,3 +1,5 @@
+import type { DayVideoSummary } from '@/types/plan-catalog';
+
 export interface PlanDaySubTask {
   id: string;
   display_order: number | null;
@@ -5,6 +7,12 @@ export interface PlanDaySubTask {
   duration: string | null;
   content_type: string;
   content: string;
+  source_text_id?: string | null;
+  segment_ids?: string[] | null;
+  pecha_segment_id?: string | null;
+  start_ms?: number | null;
+  end_ms?: number | null;
+  audio_url?: string | null;
 }
 
 export interface PlanDayTask {
@@ -21,6 +29,8 @@ export interface UserPlanDayDetails {
   day_number: number;
   tasks: PlanDayTask[];
   is_completed: boolean;
+  videos?: DayVideoSummary[];
+  audio_url?: string | null;
 }
 
 export interface UserPlanProgress {

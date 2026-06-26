@@ -26,19 +26,29 @@ implementation changes.
 | Feature | Flutter routes | v2 route | PRD | Priority | Status |
 |---------|----------------|----------|-----|----------|--------|
 | Home | `/home` | `src/app/(tabs)/index.tsx` | [home](../features/home.md) | P0 | Improved — Home1.12 layout; Events section; header calendar icon |
-| Connect (stub) | — | `src/app/(tabs)/connect.tsx` | [home](../features/home.md) | P2 | Partial — tab shell placeholder; full feature TBD |
+| Connect (stub) | — | `src/app/(tabs)/connect.tsx` | [connect](../features/connect.md) | P1 | Parity — header, search, discover + my groups |
+| Connect — discover + profile | Connect tab | `src/app/group/[id].tsx` | [connect](../features/connect.md) | P1 | Parity — join/follow, practices/about, social links, markdown |
 | Home — calendar | `/home/calendar` | `src/app/calendar/index.tsx` | [home](../features/home.md) | P0 | Parity — month grid + nav |
 | Home — Mala shortcut | `/mala` | `src/app/mala/index.tsx` | [mala](../features/mala.md) | P0 | Improved — mockup UI + core parity |
 | Home — Timer shortcut | `/home/timers` | `src/app/timers/index.tsx` + `timers/active.tsx` | [timer](../features/timer.md) | P0 | Parity — preset grid + active timer screen |
 | Mala (screen) | `/mala` | `src/app/mala/index.tsx` | [mala](../features/mala.md) | P0 | Improved — settings, reset, bead arc |
 | Timer (screen) | `/home/timers` | `src/app/timers/*` | [timer](../features/timer.md) | P0 | Parity — v2 route `/timers` |
-| Series | `/home/series/:id` | `src/app/series/[id].tsx` | [series](../features/series.md) | P0 | In progress |
-| Plans | `/home/plans/:tag`, `/plans/info`, `/plans/details` | TBD | [plans](../features/plans.md) | P0 | Not started |
+| Series | `/home/series/:id` | `src/app/series/[id].tsx` | [series](../features/series.md) | P0 | Parity — stats, enroll, plan rows, group link |
+| Series — enroll | — | `series/[id].tsx` + edit-routine | [series](../features/series.md) | P0 | Parity — POST `/users/me/series` → edit-routine |
+| Routine — SERIES session | edit-routine | `practice/edit-routine/index.tsx` | [series](../features/series.md) §6a, [practice](../features/practice.md) | P0 | Parity — `enrollSeriesId` prefill + SERIES type |
+| Series — info (About) | `/home/series/:id/info` | `src/app/series/[id]/info.tsx` | [series](../features/series.md) | P1 | Parity — markdown body, group row, error/retry |
+| Plans — preview | `/practice/plans/preview` | `src/app/plans/[id].tsx` | [plans](../features/plans.md) | P0 | Parity — Add to Routine CTA, default day, enrolled redirect |
+| Plans — track | `/practice/details` | `src/app/practice/details.tsx` | [plans](../features/plans.md) | P0 | Parity — subtasks, Start Reading, day carousel dates, completion sheet |
+| Group profile | `/home/group/:groupId` | `src/app/group/[id].tsx` | [connect](../features/connect.md) | P1 | Parity — banner, tabs, join/follow CTA |
 | Recitation | `/recitations/detail` | `src/app/(tabs)/screens/recitation` | [recitation](../features/recitation.md) | P0 | In progress (partial) |
-| Reader | `/reader/:textId` (+ versions/language) | TBD | [reader](../features/reader.md) | P1 | Not started |
-| Practice | `/practice/*` | TBD | [practice](../features/practice.md) | P1 | Not started |
+| Reader | `/reader/:textId` (+ versions/language) | `reader/[textId].tsx`, `plan-text/[subtaskId].tsx` | [reader](../features/reader.md) | P1 | Partial — plan-context reading session |
+| Practice | `/practice/*` | `src/app/(tabs)/practice.tsx`, `practice/edit-routine/*`, `practice/details.tsx` | [practice](../features/practice.md) | P1 | Parity — routine + SERIES session + plan track |
 | Settings / Profile | `/settings`, `/profile`, `/about`, `/privacy-policy` | `src/app/(tabs)/screens/setting` | [settings-profile](../features/settings-profile.md) | P2 | In progress (partial) |
 | Onboarding | `/onboarding` | TBD | [onboarding](../features/onboarding.md) | P0 | Not started |
+
+> **Series / Plans / Connect:** Product decisions resolved via API —
+> [open-questions.md](../research/open-questions.md). Implementation backlog: sprints 1–4
+> (Cursor plan `detailed_series_plans_connect`).
 
 ## Home sections (detail)
 
@@ -77,4 +87,4 @@ only — **no v2 implementation, no API endpoints in scope.**
 | Module | Status |
 |--------|--------|
 | `learn`, `explore`, `creator_info` | Won't migrate — no Flutter routes in main shell; no PRD |
-| `connect` (full feature) | Partial — stub tab only; groups/social TBD |
+| `connect` (full feature) | P1 done — discover + group profile shipped |

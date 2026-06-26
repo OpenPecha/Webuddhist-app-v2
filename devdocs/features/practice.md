@@ -2,12 +2,12 @@
 
 | | |
 |---|---|
-| **Status** | Not started |
+| **Status** | In progress (Practice tab + edit-routine exist) |
 | **Priority** | P1 |
 | **Flutter baseline** | `lib/features/practice` |
-| **v2 target** | TBD |
+| **v2 target** | `src/app/(tabs)/practice.tsx`, `src/app/practice/edit-routine/*`, `src/app/practice/details.tsx` |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-08 |
+| **Last updated** | 2026-06-22 (implementation alignment) |
 
 ---
 
@@ -34,6 +34,16 @@ the routine drives scheduled notifications.
 | Repository | `features/practice/data/repositories/practice_items_repository_impl.dart` | — |
 | API mapper | `features/practice/data/utils/routine_api_mapper.dart` | — |
 | Providers | `features/practice/presentation/providers/{routine_provider,routine_api_providers}.dart` | — |
+
+## 2a. v2 current state
+
+| Screen / flow | v2 file | Status |
+|---------------|---------|--------|
+| Practice tab | `src/app/(tabs)/practice.tsx` | Partial — routine display, login gating, plan card nav |
+| Edit routine | `src/app/practice/edit-routine/index.tsx` | Partial — time blocks, plan/recitation select; **missing SERIES session type + `enrollSeriesId` prefill** |
+| Select plan | `src/app/practice/edit-routine/select-plan.tsx` | Exists |
+| Select recitation | `src/app/practice/edit-routine/select-recitation.tsx` | Exists |
+| Plan track | `src/app/practice/details.tsx` | Minimal — chevron day nav; see [plans.md](./plans.md) |
 
 ## 3. User stories
 
@@ -75,8 +85,14 @@ the routine drives scheduled notifications.
 ## 7. Navigation
 
 Mirror nested routes under `src/app/practice/*`:
-`edit-routine`, `edit-routine/select-plan`, `edit-routine/select-recitation`,
-`details`, `plans/preview`, `plans/info`, `plans/info/details`.
+`edit-routine`, `edit-routine/select-plan`, `edit-routine/select-recitation`.
+
+| Flow | v2 route | Notes |
+|------|----------|-------|
+| Plan track (enrolled) | `src/app/practice/details.tsx` | Dual-route parity — not merged into `/plans/[id]`; see [plans.md §8](./plans.md) |
+| Post-series enroll | `src/app/practice/edit-routine/index.tsx` | Param `enrollSeriesId`; inject SERIES session — [series.md §6a](./series.md), [open-questions §1](../research/open-questions.md) |
+
+Legacy Flutter routes `plans/preview`, `plans/info` map to [plans.md](./plans.md) preview at `/plans/[id]`.
 
 ## 8. Acceptance criteria
 
@@ -92,11 +108,24 @@ Mirror nested routes under `src/app/practice/*`:
 - Keep the launch-time auto-switch-to-practice behavior?
 - Practice tab placement (see shell PRD).
 
+**Resolved (series enroll):** Post-series enroll → edit-routine with `enrollSeriesId` and
+SERIES routine session — see [open-questions.md §1](../research/open-questions.md).
+
 ## 10. Migration status checklist
 
 | Requirement | Flutter | v2 | Notes |
 |-------------|---------|-----|-------|
-| Practice screen | yes | no | |
-| Edit routine | yes | no | |
-| Select plan/recitation | yes | no | |
-| Persist + notifications | yes | no | |
+| Practice screen | yes | partial | routine tab exists |
+| Edit routine | yes | partial | missing SERIES type |
+| Select plan/recitation | yes | yes | |
+| SERIES enroll prefill | yes | no | see series.md §6a |
+| Plan track screen | yes | partial | `practice/details.tsx` |
+| Persist + notifications | yes | partial | |
+
+## 11. Research references
+
+| Document | Purpose |
+|----------|---------|
+| [open-questions.md](../research/open-questions.md) | Post-enroll navigation §1 |
+| [series.md](./series.md) | SERIES routine session §6a |
+| [plans.md](./plans.md) | Plan track dual routes |

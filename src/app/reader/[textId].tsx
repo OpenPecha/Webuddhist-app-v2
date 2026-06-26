@@ -1,77 +1,113 @@
-import { useTextDetail } from '@/hooks/api/useTextDetail';
-import { Ionicons } from '@expo/vector-icons';
+import { PlanReadingLayout } from '@/components/plans/PlanReadingLayout';
+import { useTextReaderDetails } from '@/hooks/api/useTextReaderDetails';
+import { usePlanReadingSession } from '@/hooks/usePlanReadingSession';
+import { usePlanSegmentAudio } from '@/hooks/usePlanSegmentAudio';
+import { resolveInitialSegmentId } from '@/utils/plan-subtask-navigation';
+import { extractSegmentContent } from '@/utils/text-reader-content';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useMemo, useRef } from 'react';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ReaderScreen() {
   const { textId } = useLocalSearchParams<{ textId: string }>();
   const router = useRouter();
-  const insets = useSafeAreaInsets();
   const { t } = useTranslation();
-  const { data, isLoading, error } = useTextDetail(textId);
+  const cancelAudioRef = useRef<() => void>(() => {});
+
+  const {
+    isLoading: planLoading,
+    currentItem,
+    resolveAudioUrl,
+    autoPlay,
+    canPrev,
+    canNext,
+    navigate,
+    tasks,
+  } = usePlanReadingSession({ onBeforeNavigate: () => cancelAudioRef.current() });
+
+  const audio = usePlanSegmentAudio({
+    subTaskId: currentItem?.subTaskId,
+    url: resolveAudioUrl(currentItem),
+    startMs: currentItem?.startMs,
+    endMs: currentItem?.endMs,
+    autoPlay,
+  });
+  cancelAudioRef.current = audio.cancel;
+
+  const subtaskContent = tasks
+    .flatMap((task) => task.subtasks)
+    .find((sub) => sub.id === currentItem?.subTaskId)?.content;
+
+  const hasPlanContext = !!currentItem;
+  const isSourceReference = currentItem?.contentType === 'SOURCE_REFERENCE';
+  const inlineContent = subtaskContent?.trim() ?? currentItem?.content?.trim() ?? '';
+  const needsReaderFetch = hasPlanContext && isSourceReference && !inlineContent;
+
+  const segmentId = currentItem ? resolveInitialSegmentId(currentItem) : undefined;
+
+  const { data: readerDetails, isLoading: readerLoading } = useTextReaderDetails(
+    textId,
+    segmentId,
+    needsReaderFetch || (!hasPlanContext && !!textId),
+  );
+
+  const segmentContent = useMemo(() => {
+    if (!readerDetails) return '';
+    return extractSegmentContent(readerDetails, currentItem?.segmentIds);
+  }, [readerDetails, currentItem?.segmentIds]);
+
+  const content =
+    inlineContent ||
+    segmentContent ||
+    readerDetails?.text_detail?.summary?.trim() ||
+    t('reader.placeholder');
+
+  const isLoading = planLoading || (needsReaderFetch && readerLoading);
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F9F8F4' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  if (!hasPlanContext) {
+    return (
+      <PlanReadingLayout
+        content={content}
+        sectionTitle={readerDetails?.text_detail?.title ?? t('reader.title')}
+        canPrev={false}
+        canNext={false}
+        onFinish={() => router.back()}
+      />
+    );
+  }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 8,
-          paddingVertical: 8,
-        }}
-      >
-        <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
-          <Ionicons name="chevron-back" size={24} color="#000" />
-        </Pressable>
-        <Text
-          style={{
-            flex: 1,
-            fontSize: 17,
-            fontWeight: '600',
-            fontFamily: 'Inter-SemiBold',
-            color: '#000',
-          }}
-          numberOfLines={1}
-        >
-          {data?.title ?? t('reader.title')}
-        </Text>
-      </View>
-
-      {isLoading ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <ActivityIndicator size="large" />
-        </View>
-      ) : error ? (
-        <View style={{ flex: 1, padding: 24, justifyContent: 'center' }}>
-          <Text style={{ textAlign: 'center', color: '#8a8a8a' }}>
-            {t('practice.routine_load_error')}
+    <PlanReadingLayout
+      content={content}
+      sectionTitle={currentItem?.taskTitle ?? readerDetails?.text_detail?.title ?? t('reader.title')}
+      audioReady={audio.ready}
+      isPlaying={audio.isPlaying}
+      isAudioLoading={audio.buttonState === 'loading'}
+      onAudioToggle={audio.toggle}
+      onBeforeBack={audio.cancel}
+      canPrev={canPrev}
+      canNext={canNext}
+      onPrev={() => navigate('prev')}
+      onNext={() => navigate('next')}
+      onFinish={() => navigate('finish')}
+      onSwipeNext={() => navigate('next')}
+      onSwipePrev={() => navigate('prev')}
+      footerMeta={
+        readerDetails?.text_detail?.title ? (
+          <Text style={{ fontSize: 11, color: '#8a8a8a', textAlign: 'center', marginTop: 16 }}>
+            {readerDetails.text_detail.title}
           </Text>
-        </View>
-      ) : (
-        <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 40 }}>
-          <Text
-            style={{
-              fontSize: 24,
-              fontWeight: '700',
-              fontFamily: 'Inter-Bold',
-              color: '#000',
-              marginBottom: 12,
-            }}
-          >
-            {data?.title}
-          </Text>
-          {data?.description ? (
-            <Text style={{ fontSize: 16, color: '#444', lineHeight: 24, marginBottom: 16 }}>
-              {data.description}
-            </Text>
-          ) : null}
-          <Text style={{ fontSize: 15, color: '#8a8a8a', lineHeight: 22 }}>
-            {t('reader.placeholder')}
-          </Text>
-        </ScrollView>
-      )}
-    </View>
+        ) : null
+      }
+    />
   );
 }

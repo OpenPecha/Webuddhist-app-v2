@@ -1,6 +1,6 @@
 import type { ImageSizes } from '@/types/api';
 
-export type RoutineItemType = 'plan' | 'recitation';
+export type RoutineItemType = 'plan' | 'recitation' | 'series';
 
 export interface RoutineItem {
   id: string;
@@ -11,6 +11,8 @@ export interface RoutineItem {
   enrolledAt?: string | null;
   language?: string | null;
   startDate?: string | null;
+  currentPlanId?: string | null;
+  currentPlanTitle?: string | null;
 }
 
 export interface RoutineBlock {
@@ -34,7 +36,7 @@ export function routineHasItems(routine: RoutineData | null | undefined): boolea
 
 export interface SessionDTO {
   id: string;
-  session_type: 'PLAN' | 'RECITATION';
+  session_type: 'PLAN' | 'RECITATION' | 'SERIES';
   source_id: string;
   title: string;
   language: string;
@@ -43,6 +45,8 @@ export interface SessionDTO {
   display_order: number;
   start_date?: string | null;
   started_at?: string | null;
+  current_plan_id?: string | null;
+  current_plan_title?: string | null;
 }
 
 export interface TimeBlockDTO {

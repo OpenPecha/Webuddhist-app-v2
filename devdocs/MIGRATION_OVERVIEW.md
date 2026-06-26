@@ -127,7 +127,14 @@ From `WeBuddhist-app/lib/features/`:
 | `story_view` | `stalled_features/story-view` | — won't migrate |
 | `meditation_of_day`, `prayer_of_the_day` | `stalled_features/meditation-prayer-of-day` | — won't migrate |
 
-**Not in v2 scope (full feature):** `connect` (stub tab in shell only), `learn`, `explore`, `creator_info`.
+**Connect:** Tab shell **done** (`connect.tsx` stub). Discover + group profile are **P1 next**
+(full feature in scope; API-complete per [connect PRD](../features/connect.md)).
+
+**Series / Plans:** Implementation follows PRDs + [open-questions.md](../research/open-questions.md)
+(all product decisions resolved via backend API). P0 backlog in
+[PARITY_MATRIX.md](./parity/PARITY_MATRIX.md).
+
+Research: [`devdocs/research/`](../research/README.md) — Series, Plans, Connect mockup + Flutter audit (2026-06-22).
 
 ## 9. Known navigation/IA difference to resolve early
 

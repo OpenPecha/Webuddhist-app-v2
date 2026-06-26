@@ -8,7 +8,7 @@ export interface UserPlan {
   difficulty_level: string | null;
   image: ImageSizes | null;
   image_url?: string | null;
-  started_at: string;
+  started_at: string | null;
   total_days: number;
   start_date: string | null;
   tags?: { id: string; name: string }[];
