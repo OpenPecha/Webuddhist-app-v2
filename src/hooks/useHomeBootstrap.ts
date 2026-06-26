@@ -2,7 +2,7 @@ import { QUERY_KEYS } from '@/constants/query-keys';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import {
   requestNotificationPermissions,
-  syncPlanNotificationsOnLaunch,
+  triggerNotificationSync,
 } from '@/lib/notifications';
 import { fetchUserPlans } from '@/services/plans';
 import { usePendingOnboardingPlan } from '@/providers/pending-onboarding-plan';
@@ -56,9 +56,16 @@ export function useHomeBootstrap() {
         }
       }
 
-      if (permissionGranted && plansData?.plans?.length) {
+      if (permissionGranted) {
         try {
-          await syncPlanNotificationsOnLaunch(plansData.plans, permissionGranted);
+          await triggerNotificationSync({
+            trigger: 'appLaunch',
+            queryClient,
+            language,
+            loggedIn: true,
+            isGuest: false,
+            plans: plansData?.plans,
+          });
         } catch {
           // Notification sync is best-effort on launch.
         }
