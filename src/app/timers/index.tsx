@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import {
   FlatList,
   Pressable,
+  RefreshControl,
   Text,
   View,
 } from 'react-native';
@@ -29,7 +30,7 @@ export default function TimersScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { foreground, mutedForeground, scaffoldBackground } = useThemeColors();
-  const { data: timers = [], isLoading, isError, refetch } = usePresetTimers();
+  const { data: timers = [], isLoading, isError, refetch, isRefetching } = usePresetTimers();
 
   const sortedTimers = useMemo(() => sortPresetTimers(timers), [timers]);
 
@@ -103,6 +104,9 @@ export default function TimersScreen() {
             padding: HORIZONTAL_PADDING,
             gap: GRID_SPACING,
           }}
+          refreshControl={
+            <RefreshControl refreshing={isRefetching} onRefresh={() => void refetch()} />
+          }
           renderItem={({ item }) => (
             <View style={{ flex: 1 }}>
               <PresetTimerCard

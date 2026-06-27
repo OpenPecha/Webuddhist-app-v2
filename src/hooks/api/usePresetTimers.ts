@@ -6,5 +6,6 @@ export function usePresetTimers(skip = 0, limit = 20) {
   return useQuery({
     queryKey: QUERY_KEYS.timers.list(skip, limit),
     queryFn: () => fetchPresetTimers(skip, limit),
+    staleTime: 5 * 60_000,
   });
 }

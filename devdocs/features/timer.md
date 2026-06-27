@@ -15,7 +15,7 @@
 
 Preset meditation timers. User picks a duration from a grid, runs an active countdown
 with pause/resume, hears completion sound, and reports elapsed time to the backend on
-exit or completion. Entry is via the Home shortcuts row.
+completion, pause, or finish. Entry is via the Home shortcuts row.
 
 **Disambiguation:** Not the same as backend `timer_session_type` (Practice routine
 sessions).
@@ -39,31 +39,31 @@ sessions).
 
 ## 4. Functional requirements
 
-- **FR-1:** Load preset list from `GET /timers` with pagination params; filter to
-  meditation presets; **fallback presets** when API fails or returns empty.
-- **FR-2:** Sort presets by duration ascending; grid layout with skeleton while loading.
+- **FR-1:** Load preset list from `GET /timers` with pagination params (`skip`, `limit`);
+  show all timers returned by the API; **error UI + retry** on failure (no silent fallback).
+- **FR-2:** Sort presets by duration ascending; grid layout with skeleton while loading;
+  pull-to-refresh to refetch.
 - **FR-3:** Tap preset → active timer screen with circular progress ring, remaining time,
   pause/resume.
-- **FR-4:** On back, discard, or completion — fire-and-forget
-  `POST /timers/user/timer_stop` with `timer_id` and elapsed `duration` (ms).
-- **FR-5:** Completion sound via `TimerSoundPlayer` (expo-audio).
+- **FR-4:** Fire-and-forget `POST /timers/user/timer_stop` with `timer_id` and elapsed
+  `duration` (ms) on natural completion, pause, and finish — **not** on discard.
+- **FR-5:** Completion sound via `TimerSoundPlayer` (expo-audio, local asset).
 - **FR-6:** Guest gating on Home shortcut only (same as Mala).
 
 ## 5. API contracts
 
 | Endpoint | Method | Auth | Notes |
 |----------|--------|------|-------|
-| `/timers` | GET | guest ok | `skip`, `limit`; returns `{ timers: [...] }` |
+| `/timers` | GET | guest ok | `skip`, `limit`; returns `{ timers: [...], total, skip, limit }` |
 | `/timers/user/timer_stop` | POST | required | `{ timer_id, duration }` (ms); fire-and-forget |
 
-Preset shape: `id`, `name`, `duration` / `durationMs`, optional `audioUrl`.
-
-Fallback presets: `src/constants/timer-presets.ts` (`FALLBACK_PRESET_TIMERS`).
+Backend preset shape (snake_case): `id`, `name`, `duration` (ms), `audio_url`, `type`
+(`preset` | `user_created`). Mapped to domain `PresetTimer` in `services/timers.ts`.
 
 ## 6. State & persistence
 
 - No local persistence of timer sessions (ephemeral active session only).
-- Fallback presets used offline or on API error.
+- Preset list cached in React Query only (`staleTime: 5 min`); no offline fallback grid.
 
 ## 7. Navigation (Expo Router)
 
@@ -77,7 +77,7 @@ Fallback presets: `src/constants/timer-presets.ts` (`FALLBACK_PRESET_TIMERS`).
 
 - v2 route is `/timers` instead of Flutter `/home/timers` — document in parity matrix.
 - Grid uses 2-column `FlatList`; matches Flutter grid intent.
-- `stopUserTimer` skips reporting for non-API fallback timer ids (`isTimerApiId`).
+- API errors surface retry UI (matches Flutter); empty API response shows empty state.
 
 ## 9. Platform / Expo considerations
 
@@ -87,28 +87,32 @@ Fallback presets: `src/constants/timer-presets.ts` (`FALLBACK_PRESET_TIMERS`).
 ## 10. Acceptance criteria
 
 - [ ] Guest tap Timer → login drawer; authenticated → `/timers`.
-- [ ] Presets load from API or fallback; sorted by duration.
+- [ ] Presets load from API; sorted by duration; error + retry on failure.
 - [ ] Active timer counts down; pause/resume works.
-- [ ] Back/discard/complete reports stop to API when timer id is from API.
+- [ ] Complete/pause/finish reports stop to API; discard does not.
 - [ ] Completion plays sound.
 - [ ] Behavior verified on iOS and Android.
 
 ## 11. Out of scope (this phase)
 
-- Custom user-created timer durations.
+- Offline preset cache and pending `timer_stop` queue (Flutter Hive parity — Phase 2).
+- Custom user-created timer CRUD UI.
 - Background timer / lock-screen controls.
 - Practice routine session timers (`timer_session_type`).
+- Per-preset `audio_url` for completion sound (Flutter also uses local asset).
 
 ## 12. Open questions
 
-- N/A — v2 implementation matches Flutter for P0 scope.
+- N/A — v2 preset list matches Flutter for Phase 1 scope.
 
 ## 13. Migration status checklist
 
 | Requirement | Flutter | v2 | Notes |
 |-------------|---------|-----|-------|
 | Preset grid + skeleton | yes | yes | `timers/index.tsx` |
-| API + fallback | yes | yes | `services/timers.ts` |
+| API-driven presets | yes | yes | `services/timers.ts` |
+| Error + retry (no fallback) | yes | yes | React Query + grid error UI |
+| Pull-to-refresh | yes | yes | `RefreshControl` on grid |
 | Active countdown ring | yes | yes | `timers/active.tsx` |
 | Pause/resume | yes | yes | |
 | timer_stop reporting | yes | yes | `stopUserTimer` |
@@ -121,5 +125,4 @@ Fallback presets: `src/constants/timer-presets.ts` (`FALLBACK_PRESET_TIMERS`).
 - `src/components/timer/*`
 - `src/hooks/api/usePresetTimers.ts`, `useActiveTimer`
 - `src/services/timers.ts`
-- `src/constants/timer-presets.ts`
 - `src/types/timers.ts`
