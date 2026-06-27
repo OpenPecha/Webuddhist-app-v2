@@ -1,4 +1,6 @@
 import '@/lib/i18n';
+import { normalizeBeadImageUrl } from '@/lib/mala-bead-image';
+import { MalaBeadArcPlaceholder } from '@/components/mala/MalaBeadArcPlaceholder';
 import { MalaBeads } from '@/components/mala/MalaBeads';
 import { MalaCounterDisplay } from '@/components/mala/MalaCounterDisplay';
 import { MalaSeedError } from '@/components/mala/MalaSeedError';
@@ -83,8 +85,17 @@ export default function MalaScreen() {
     ? localizedMantraName(activeMantra, language)
     : t('mala.title');
 
+  const [beadsVisualReady, setBeadsVisualReady] = useState(false);
+
   const beadImageUrl =
     state.beadImageUrl ?? activeMantra?.beadImageUrl ?? activeMantra?.mantra?.beadImageUrl;
+
+  const normalizedBeadUrl = normalizeBeadImageUrl(beadImageUrl);
+  const waitingForBeadTexture = Boolean(normalizedBeadUrl) && !beadsVisualReady;
+
+  useEffect(() => {
+    setBeadsVisualReady(false);
+  }, [activeMantra?.presetId, normalizedBeadUrl]);
 
   const handleIncrement = () => {
     void incrementBead({
@@ -101,39 +112,50 @@ export default function MalaScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: scaffoldBackground, paddingTop: insets.top }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 4,
-          paddingVertical: 2,
-        }}
-      >
-        <Pressable onPress={() => router.back()} style={{ padding: 8, width: 48, height: 48, justifyContent: 'center' }}>
-          <ArrowLeftIcon size={24} color={foreground} />
-        </Pressable>
-        <Text
+      {isLoading ? (
+        <View style={{ padding: 4 }}>
+          <Pressable
+            onPress={() => router.back()}
+            style={{ padding: 8, width: 48, height: 48, justifyContent: 'center' }}
+          >
+            <ArrowLeftIcon size={24} color={foreground} />
+          </Pressable>
+        </View>
+      ) : (
+        <View
           style={{
-            flex: 1,
-            fontSize: 18,
-            fontWeight: '600',
-            fontFamily: 'Inter-SemiBold',
-            color: foreground,
-            textAlign: 'center',
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingHorizontal: 4,
+            paddingVertical: 2,
           }}
-          numberOfLines={1}
         >
-          {headerTitle}
-        </Text>
-        <Pressable
-          onPress={() => setSettingsVisible(true)}
-          style={{ padding: 8, width: 48, height: 48, justifyContent: 'center', alignItems: 'center' }}
-          accessibilityRole="button"
-          accessibilityLabel={t('mala.settings_title')}
-        >
-          <DotsThreeVerticalIcon size={30} color={foreground} />
-        </Pressable>
-      </View>
+          <Pressable onPress={() => router.back()} style={{ padding: 8, width: 48, height: 48, justifyContent: 'center' }}>
+            <ArrowLeftIcon size={24} color={foreground} />
+          </Pressable>
+          <Text
+            style={{
+              flex: 1,
+              fontSize: 18,
+              fontWeight: '600',
+              fontFamily: 'Inter-SemiBold',
+              color: foreground,
+              textAlign: 'center',
+            }}
+            numberOfLines={1}
+          >
+            {headerTitle}
+          </Text>
+          <Pressable
+            onPress={() => setSettingsVisible(true)}
+            style={{ padding: 8, width: 48, height: 48, justifyContent: 'center', alignItems: 'center' }}
+            accessibilityRole="button"
+            accessibilityLabel={t('mala.settings_title')}
+          >
+            <DotsThreeVerticalIcon size={30} color={foreground} />
+          </Pressable>
+        </View>
+      )}
 
       {isLoading ? (
         <MalaSkeleton />
@@ -165,17 +187,32 @@ export default function MalaScreen() {
                 onRetry={() => void seed()}
               />
             ) : (
-              <View style={{
-                flex: 1,
-                justifyContent: 'flex-end', paddingBottom: 80, minHeight: 220
-              }}>
-                <MalaBeads
-                  key={activeMantra?.presetId}
-                  total={state.total}
-                  beadImageUrl={beadImageUrl}
-                  enabled={!state.isSeeding}
-                  onIncrement={handleIncrement}
-                />
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'flex-end',
+                  paddingBottom: 80,
+                  minHeight: 220,
+                }}
+              >
+                {(state.isSeeding || waitingForBeadTexture) && <MalaBeadArcPlaceholder />}
+                {!state.isSeeding && (
+                  <View
+                    style={
+                      waitingForBeadTexture
+                        ? { opacity: 0, position: 'absolute', width: '100%', bottom: 80 }
+                        : undefined
+                    }
+                  >
+                    <MalaBeads
+                      key={`${activeMantra?.presetId}-${normalizedBeadUrl ?? 'gradient'}`}
+                      total={state.total}
+                      beadImageUrl={beadImageUrl}
+                      onVisualReady={() => setBeadsVisualReady(true)}
+                      onIncrement={handleIncrement}
+                    />
+                  </View>
+                )}
               </View>
             )}
           </View>
