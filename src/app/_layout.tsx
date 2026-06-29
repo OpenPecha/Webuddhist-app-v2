@@ -8,6 +8,8 @@ import { Auth0ProviderWrapper } from '@/providers/auth0';
 import { GuestProvider, useGuest } from '@/providers/guest';
 import { MalaSyncBootstrap } from '@/providers/mala-sync';
 import { PendingOnboardingPlanProvider } from '@/providers/pending-onboarding-plan';
+import { PendingNotificationNavProvider } from '@/providers/pending-notification-nav';
+import { NotificationSyncBootstrap } from '@/providers/notification-sync';
 import { OnboardingProvider, useOnboarding } from '@/providers/onboarding';
 import { QueryProvider } from '@/providers/query';
 import { ThemeProvider } from '@/providers/theme';
@@ -118,15 +120,20 @@ export default function RootLayout() {
         <Auth0ProviderWrapper>
           <GuestProvider>
             <AuthTokenSync>
-              <MalaSyncBootstrap />
-              <OnboardingProvider>
-                <ThemeProvider>
-                  <BottomSheetModalProvider>
-                    <AuthGate />
-                    <AppToastHost />
-                  </BottomSheetModalProvider>
-                </ThemeProvider>
-              </OnboardingProvider>
+              <PendingNotificationNavProvider>
+                <NotificationSyncBootstrap />
+                <PendingOnboardingPlanProvider>
+                  <MalaSyncBootstrap />
+                  <OnboardingProvider>
+                    <ThemeProvider>
+                      <BottomSheetModalProvider>
+                        <AuthGate />
+                        <AppToastHost />
+                      </BottomSheetModalProvider>
+                    </ThemeProvider>
+                  </OnboardingProvider>
+                </PendingOnboardingPlanProvider>
+              </PendingNotificationNavProvider>
             </AuthTokenSync>
           </GuestProvider>
         </Auth0ProviderWrapper>

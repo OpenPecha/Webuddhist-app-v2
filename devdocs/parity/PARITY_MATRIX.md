@@ -18,7 +18,7 @@ implementation changes.
 | Local storage / offline | `core/storage/*` | TBD | [03](../foundation/03-local-storage-offline.md) | P1 | PRD draft |
 | i18n / theming | `core/l10n/*`, `core/theme/*` | `global.css`, fonts in `_layout.tsx` | [04](../foundation/04-i18n-theming.md) | P1 | PRD draft |
 | Analytics | `core/analytics/*` | TBD | [05](../foundation/05-analytics.md) | P2 | PRD draft |
-| Notifications | `features/notifications` | TBD (`expo-notifications`) | [06](../foundation/06-notifications.md) | P1 | PRD draft |
+| Notifications | `features/notifications` | `src/lib/notifications` (`expo-notifications`) | [06](../foundation/06-notifications.md) | P1 | Engine + lifecycle wired |
 | Force update | `core/services/upgrade/force_update_gate.dart` | `src/components/ForceUpdateGate.tsx` | [07](../foundation/07-force-update.md) | P0 | In progress — env min-version gate; store API check TBD |
 
 ## Features
@@ -65,7 +65,7 @@ Sub-components of the Home tab. See [home](../features/home.md) for full require
 | Featured plans | `featured_plan_section.dart` | Parity | `/series/featured` + random hero layout |
 | Share prompt | `home_share_prompt.dart` | Parity | App share CTA |
 | Series gate | `series_provider.dart` | Parity | Empty/error states localized |
-| Notification on load | `home_screen.dart` init | In progress | Permission + Day-1 sync stub with idempotency keys |
+| Notification on load | `home_screen.dart` init | Done | `useHomeBootstrap` + `NotificationSyncEngine` |
 | Post-onboarding plan nav | `pendingOnboardingPlanProvider` | Parity | Push plan detail then Practice tab |
 | Pull-to-refresh | `_onRefresh()` | Parity | Invalidates all home queries |
 | Per-section skeletons | verse/stats skeletons | Parity | Verse, stats, featured skeletons |
