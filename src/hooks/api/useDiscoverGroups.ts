@@ -1,10 +1,12 @@
 import { QUERY_KEYS } from '@/constants/query-keys';
 import { fetchDiscoverGroups, fetchJoinedGroups, fetchGroupProfile, joinGroup, leaveGroup, followGroup, unfollowGroup } from '@/services/groups';
+import type { AuthorGroupSummary } from '@/types/groups';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useAuthTokenReady } from '@/providers/auth-token';
 import { useGuest } from '@/providers/guest';
 import {
   clearGroupPending,
+  markGroupFollowedOptimistic,
   markGroupJoinedOptimistic,
   markGroupUnjoinedOptimistic,
 } from '@/stores/pending-groups';
@@ -49,18 +51,15 @@ export function useGroupProfile(groupId: string) {
   });
 }
 
-export function useJoinGroup(groupId: string) {
+export function useJoinGroup(groupId: string, group?: AuthorGroupSummary) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: () => joinGroup(groupId),
     onMutate: () => {
-      markGroupJoinedOptimistic(groupId);
+      markGroupJoinedOptimistic(groupId, group);
     },
     onError: () => {
-      clearGroupPending(groupId);
-    },
-    onSettled: () => {
       clearGroupPending(groupId);
     },
     onSuccess: () => {
@@ -74,6 +73,12 @@ export function useFollowGroup(groupId: string) {
 
   return useMutation({
     mutationFn: () => followGroup(groupId),
+    onMutate: () => {
+      markGroupFollowedOptimistic(groupId);
+    },
+    onError: () => {
+      clearGroupPending(groupId);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.groups.all });
     },
@@ -91,9 +96,6 @@ export function useLeaveGroup(groupId: string) {
     onError: () => {
       clearGroupPending(groupId);
     },
-    onSettled: () => {
-      clearGroupPending(groupId);
-    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.groups.all });
     },
@@ -105,6 +107,12 @@ export function useUnfollowGroup(groupId: string) {
 
   return useMutation({
     mutationFn: () => unfollowGroup(groupId),
+    onMutate: () => {
+      markGroupUnjoinedOptimistic(groupId);
+    },
+    onError: () => {
+      clearGroupPending(groupId);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.groups.all });
     },

@@ -2,12 +2,12 @@
 
 | | |
 |---|---|
-| **Status** | PRD draft (research complete) |
-| **Priority** | P1 (tab shell done) |
+| **Status** | **Parity** (v2 implementation complete) |
+| **Priority** | P1 |
 | **Flutter baseline** | `lib/features/connect`, `lib/features/group_profile` |
-| **v2 target** | `src/app/(tabs)/connect.tsx`, `src/app/group/[id].tsx` (planned Sprint 3) |
+| **v2 target** | `src/app/(tabs)/connect.tsx`, `src/app/connect/*`, `src/app/group/[id].tsx` |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-22 (implementation alignment) |
+| **Last updated** | 2026-06-22 |
 
 ---
 
@@ -18,43 +18,39 @@ groups, and open **group profiles** that host series and practices. Mockups labe
 like "ITCC" or "Light Of Buddhadharma Foundation International" — these map to
 `GroupProfileScreen`, not a separate creator profile.
 
-v2 today: Connect tab exists as a **placeholder** only (`connect.coming_soon`).
+v2 implements full Connect parity: discover feed, my groups, search, and group profile
+with join/follow, Practices/About tabs, and social links.
 
 ---
 
 ## 2. Flutter reference map
 
-| Screen / element | Flutter source | Route / navigation |
-|------------------|----------------|-------------------|
-| Connect tab | `features/connect/presentation/screens/connect_screen.dart` | Main tab (no route) |
+| Screen / element | Flutter source | v2 route |
+|------------------|----------------|----------|
+| Connect tab | `connect_screen.dart` | `/(tabs)/connect` |
 | Discover groups | `discover_group_card.dart` + providers | Scroll feed on Connect |
 | My groups | `my_groups_section.dart` | Horizontal list on Connect |
-| Group search | `group_search_screen.dart` | `MaterialPageRoute` |
-| My groups full list | `my_groups_screen.dart` | `MaterialPageRoute` |
-| Group profile | `features/group_profile/presentation/screens/group_profile_screen.dart` | `/home/group/:groupId` |
+| Group search | `group_search_screen.dart` | `/connect/search` |
+| My groups full list | `my_groups_screen.dart` | `/connect/my-groups` |
+| Group profile | `group_profile_screen.dart` | `/group/[id]` |
 | Profile body | `group_profile_body.dart` | Practices + About tabs |
 | Social links | `group_profile_links_drawer.dart` | Bottom sheet |
-| Series About → org | `series_info_screen.dart` group row | Push group profile |
+| Series About → org | `series_info_screen.dart` group row | `/group/[id]` via `SeriesGroupRow` |
 
 **Note:** No standalone "creator profile" route in Flutter.
 
 ---
 
-## 3. Mockup redesign (`series_page` community frames)
+## 3. Parity helpers (v2)
 
-| Mockup element | Flutter | v2 target | API |
-|----------------|---------|-----------|-----|
-| Banner hero | Yes | `group/[id]` | `GET /author/groups/{id}` |
-| Avatar overlap | Yes | Same | `image` |
-| Member count | Yes | Same | `member_count` |
-| Description (expandable) | Yes | Same | `description` |
-| Join button (black CTA) | Yes | Sticky bottom | `POST .../join` or `.../follow` |
-| Practices tab | Yes | Tab → series list | series on profile DTO |
-| About tab (MISSION/VISION) | Yes | Markdown sections | `description_long` |
-| Social links sheet | Yes | Bottom sheet | `social_links[]` |
-| Connect discover feed | Yes | Connect tab scroll | `GET /author/groups?group_type=COMMUNITY` |
+| Flutter provider | v2 module |
+|------------------|-----------|
+| `filterDiscoverGroups` | `src/lib/connect-groups.ts` |
+| `mergeMyGroupsWithPending` | `src/lib/connect-groups.ts` |
+| Optimistic join/follow | `src/stores/pending-groups.ts` |
 
-Full frame index: [`devdocs/research/mockup-screen-index.md`](../research/mockup-screen-index.md) Set D.
+Discover feed excludes joined groups. My-groups carousel merges optimistic joins ahead of
+API results until refetch confirms membership.
 
 ---
 
@@ -76,7 +72,7 @@ Full frame index: [`devdocs/research/mockup-screen-index.md`](../research/mockup
 - **FR-3:** Practices tab listing series → tap opens `/series/[id]`.
 - **FR-4:** About tab when long description exists.
 - **FR-5:** Social links drawer when multiple links exist.
-- **FR-6:** Group search (optional P2).
+- **FR-6:** Group search with debounced query.
 - **FR-7:** Guest can browse; join/follow requires auth (login drawer).
 - **FR-8:** Loading / error / empty / pull-to-refresh.
 
@@ -96,50 +92,61 @@ Full frame index: [`devdocs/research/mockup-screen-index.md`](../research/mockup
 | `/users/me/joined/author/groups?group_id=` | GET | Auth | Join status |
 | `/users/me/following/author/groups?group_id=` | GET | Auth | Follow status |
 
-Flutter sources: `connect_remote_datasource.dart`, `group_profile_remote_datasource.dart`.
-
-**Group type behavior:** `GroupType.page` uses follow/unfollow; `GroupType.community` uses join/leave.
+**Group type behavior:** `PAGE` uses follow/unfollow; `COMMUNITY` uses join/leave.
 
 ---
 
 ## 7. Navigation
 
-| Flutter route | v2 route (planned) |
-|---------------|-------------------|
+| Flutter route | v2 route |
+|---------------|----------|
 | Connect tab | `src/app/(tabs)/connect.tsx` |
 | `/home/group/:groupId` | `src/app/group/[id].tsx` |
-| Series About org row | `group/[id]` from `series/[id]/info` |
+| Series About org row | `group/[id]` from `SeriesGroupRow` |
 
-Register group profile in root stack (`_layout.tsx`) — full screen, no tab bar (mirror calendar/events).
+Register group profile in root stack (`_layout.tsx`) — full screen, no tab bar.
 
-**Cross-links:** Series org row ([series.md §3a](./series.md)) and series About navigate here.
-Group profile `series[]` opens [series detail](./series.md). Standalone plans on group DTO
-link to [plans preview](./plans.md).
+**Cross-links:** Series org row ([series.md §3a](./series.md)) navigates to group profile.
+Group profile `series[]` opens [series detail](./series.md). Standalone plans link to
+[plans preview](./plans.md).
+
+### Group profile UI (Flutter / mockup parity)
+
+Refactored into `src/components/group-profile/*` to match `group_profile_body.dart`:
+
+| Element | v2 behavior |
+|---------|-------------|
+| App bar | Fixed top back row on scaffold (not overlaid on banner) |
+| Banner | Horizontal inset 16px, radius 16, 16:9 aspect ratio |
+| Header | 44px avatar beside title; subtitle; bold member/follower count |
+| Description | 15px expandable short bio |
+| Social links | Primary host URL + `and {{count}} more links` → sheet or open |
+| Join CTA | Inline full-width stadium button (48px, radius 24) — no sticky footer |
+| Tabs | Left-aligned Practices / About; About hidden when no `description_long` |
+| Practices | 56px thumbs, subtitle from `sub_title` or formatted date range; includes plans |
 
 ---
 
 ## 8. Scope tiers
 
-| Priority | Scope |
-|----------|-------|
-| **Done** | Connect tab placeholder in bottom nav |
-| **P1** | Discover feed, my groups, group profile (Practices + About), join/follow |
-| **P2** | Group search, my groups full list, social links polish |
-| **P3** | In-app messaging, feeds beyond hosted series |
-
-P1 scope is **fully API-backed** — see [`open-questions.md`](../research/open-questions.md) §5 and [`api-to-screen-matrix.md`](../research/api-to-screen-matrix.md) Connect section.
+| Priority | Scope | Status |
+|----------|-------|--------|
+| **P1** | Discover feed, my groups, group profile, join/follow, search | **Done** |
+| **P2** | Offline cache (Flutter Hive), shared toast vs Alert | Deferred |
+| **P3** | In-app messaging, feeds beyond hosted series | Out of scope |
 
 ---
 
 ## 9. Acceptance criteria
 
-- [ ] Connect tab shows discover groups with pagination and pull-to-refresh.
-- [ ] Authenticated user sees joined groups section.
-- [ ] Group profile loads with banner, avatar, description, member count.
-- [ ] Join/Follow works; button reflects current state.
-- [ ] Practices tab opens series detail on tap.
-- [ ] About tab shows long description when present.
-- [ ] Series About screen links to group profile.
+- [x] Connect tab shows discover groups with pagination and pull-to-refresh.
+- [x] Authenticated user sees joined groups section (with optimistic merge).
+- [x] Joined groups hidden from discover feed.
+- [x] Group profile loads with banner, avatar, description, member count.
+- [x] Join/Follow works; button reflects current state (COMMUNITY vs PAGE).
+- [x] Practices tab opens series detail on tap.
+- [x] About tab shows long description when present.
+- [x] Series About screen links to group profile.
 
 ---
 
@@ -147,13 +154,13 @@ P1 scope is **fully API-backed** — see [`open-questions.md`](../research/open-
 
 | Requirement | Flutter | v2 | Notes |
 |-------------|---------|-----|-------|
-| Connect tab | yes | partial | stub only |
-| Discover groups | yes | no | |
-| My groups | yes | no | |
-| Group profile | yes | no | |
-| Join / Follow | yes | no | |
-| Group search | yes | no | imperative push |
-| Link from series About | yes | no | |
+| Connect tab | yes | yes | |
+| Discover groups | yes | yes | Filtered by joined set |
+| My groups | yes | yes | Optimistic merge |
+| Group profile | yes | yes | |
+| Join / Follow | yes | yes | PAGE vs COMMUNITY |
+| Group search | yes | yes | `/connect/search` |
+| Link from series About | yes | yes | `SeriesGroupRow` |
 
 ---
 

@@ -1,3 +1,4 @@
+import { NotFoundFailure } from '@/lib/api-error';
 import { ENDPOINTS } from '@/lib/api-config';
 import { http } from '@/lib/http';
 import type {
@@ -62,19 +63,27 @@ export async function unfollowGroup(id: string): Promise<void> {
 }
 
 export async function checkGroupJoined(groupId: string): Promise<boolean> {
-  const { status } = await http.get(ENDPOINTS.groups.joined, {
-    params: { group_id: groupId, skip: 0, limit: 1 },
-    validateStatus: (code) => code === 200 || code === 404,
-  });
-  return status === 200;
+  try {
+    await http.get(ENDPOINTS.groups.joined, {
+      params: { group_id: groupId, skip: 0, limit: 1 },
+    });
+    return true;
+  } catch (error) {
+    if (error instanceof NotFoundFailure) return false;
+    throw error;
+  }
 }
 
 export async function checkGroupFollowed(groupId: string): Promise<boolean> {
-  const { status } = await http.get(ENDPOINTS.groups.following, {
-    params: { group_id: groupId, skip: 0, limit: 1 },
-    validateStatus: (code) => code === 200 || code === 404,
-  });
-  return status === 200;
+  try {
+    await http.get(ENDPOINTS.groups.following, {
+      params: { group_id: groupId, skip: 0, limit: 1 },
+    });
+    return true;
+  } catch (error) {
+    if (error instanceof NotFoundFailure) return false;
+    throw error;
+  }
 }
 
 export function groupSummaryFromDetail(detail: PublicGroupDetail): AuthorGroupSummary {
