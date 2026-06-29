@@ -62,6 +62,8 @@ export const ENDPOINTS = {
     upload: '/users/upload',
     username: '/users/username',
     stats: '/users/me/stats',
+    mantraCounts: '/users/me/mantra-counts',
+    seriesDayCompleted: '/users/me/series/day-completed',
     streak: '/users/me/streak',
     routineInfo: '/users/me/routine/info',
   },

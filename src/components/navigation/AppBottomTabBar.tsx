@@ -1,8 +1,14 @@
 import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs';
+import { avatarCacheKey } from '@/lib/username-validation';
+import { resolveProfileAvatarUrl } from '@/lib/profile-display';
+import { useUserProfile } from '@/hooks/api/useUserProfile';
+import { useGuest } from '@/providers/guest';
 import { Bell, House, UserCircle, UsersThree, type IconProps } from 'phosphor-react-native';
+import { Image } from 'expo-image';
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
+import { useAuth0 } from 'react-native-auth0';
 import { useCSSVariable, useUniwind } from 'uniwind';
 
 /** Icon 24 + gap 2 + label ~14 + top padding 8 — matches Flutter AppBottomNavBar content height */
@@ -27,10 +33,15 @@ const TAB_ICONS: Record<TabRouteName, TabIcon> = {
 export function AppBottomTabBar({ state, navigation, insets }: BottomTabBarProps) {
   const { t } = useTranslation();
   const { theme } = useUniwind();
+  const { user } = useAuth0();
+  const { isGuest } = useGuest();
+  const { data: profile } = useUserProfile();
   const isDark = theme === 'dark';
   const cardBackground = String(useCSSVariable('--color-card') ?? '#fdfdfc');
   const activeColor = isDark ? '#ffffff' : '#000000';
   const inactiveColor = isDark ? TAB_INACTIVE_DARK : TAB_INACTIVE_LIGHT;
+  const meAvatarUrl =
+    user && !isGuest ? resolveProfileAvatarUrl(profile, user) : null;
 
   const labels: Record<TabRouteName, string> = {
     index: t('nav.home'),
@@ -56,6 +67,7 @@ export function AppBottomTabBar({ state, navigation, insets }: BottomTabBarProps
           const isFocused = state.index === routeIndex;
           const color = isFocused ? activeColor : inactiveColor;
           const Icon = TAB_ICONS[name];
+          const showMeAvatar = name === 'me' && !!meAvatarUrl;
 
           return (
             <Pressable
@@ -74,7 +86,22 @@ export function AppBottomTabBar({ state, navigation, insets }: BottomTabBarProps
               }}
               style={{ flex: 1, alignItems: 'center', paddingVertical: 4 }}
             >
-              <Icon size={24} color={color} weight={isFocused ? 'fill' : 'regular'} />
+              {showMeAvatar ? (
+                <Image
+                  source={{ uri: meAvatarUrl }}
+                  recyclingKey={avatarCacheKey(meAvatarUrl)}
+                  style={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: 12,
+                    borderWidth: isFocused ? 2 : 0,
+                    borderColor: activeColor,
+                  }}
+                  contentFit="cover"
+                />
+              ) : (
+                <Icon size={24} color={color} weight={isFocused ? 'fill' : 'regular'} />
+              )}
               <View style={{ height: 2 }} />
               <Text
                 style={{

@@ -63,6 +63,10 @@ export const QUERY_KEYS = {
     all: ['profile'] as const,
     info: () => ['profile', 'info'] as const,
     stats: () => ['profile', 'stats'] as const,
+    mantraCounts: (language: string, skip: number, limit: number) =>
+      ['profile', 'mantraCounts', language, skip, limit] as const,
+    seriesDayCompleted: (language: string, skip: number, limit: number) =>
+      ['profile', 'seriesDayCompleted', language, skip, limit] as const,
   },
   timers: {
     list: (skip: number, limit: number) => ['timers', 'list', skip, limit] as const,
