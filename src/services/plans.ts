@@ -49,9 +49,15 @@ export async function fetchUserPlans(
   language = 'en',
   skip = 0,
   limit = 50,
+  seriesId?: string,
 ): Promise<UserPlansResponse> {
   const { data } = await http.get<UserPlansResponse>(ENDPOINTS.plans.userPlans, {
-    params: { language, skip, limit },
+    params: {
+      language,
+      skip,
+      limit,
+      ...(seriesId ? { series_id: seriesId } : {}),
+    },
   });
   return data;
 }

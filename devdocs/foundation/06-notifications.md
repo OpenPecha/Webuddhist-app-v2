@@ -105,29 +105,26 @@ dialog is open (same issue Flutter solves with `ProviderScope.containerOf`).
 
 ## 8. Acceptance criteria
 
-- [ ] Permission requested and handled (grant/deny) on iOS + Android.
-- [ ] Routine and recitation reminders fire at correct local times.
-- [ ] Plan day notifications fire once per day (idempotency holds across restarts).
-- [ ] Master + category toggles work and persist.
-- [ ] Notification tap opens the correct screen.
-- [ ] Re-launch reschedules without duplicates.
-- [ ] Home load after onboarding triggers permission request + special-plan Day 1 sync
-  (see §7).
-
-## 9. Open questions
-
-- Full per-day content payload structure for special plans (extract from
-  `special_plan_notifications.dart`).
-- Do we need background tasks, or is launch-time + enrollment-time rescheduling enough?
-- Rich notifications (cover images) parity — required for v1?
+- [x] Permission requested and handled (grant/deny) on iOS + Android.
+- [ ] Routine and recitation reminders fire at correct local times (manual QA on dev client).
+- [x] Plan day notifications fire once per day (idempotency via metadata stores).
+- [x] Master + category toggles work, persist, and trigger sync.
+- [x] Notification tap opens the correct screen (Practice tab consumer).
+- [x] Re-launch reschedules via `NotificationSyncEngine` diff pass.
+- [x] Home load after onboarding triggers permission request + sync (see §7).
 
 ## 10. Migration status checklist
 
 | Requirement | Flutter | v2 | Notes |
 |-------------|---------|-----|-------|
-| Local scheduling | yes | no | needs `expo-notifications` |
-| Routine reminders | yes | no | |
-| Plan day notifications | yes | no | idempotency scheme to port |
-| Settings toggles | yes | no | |
-| Deep-link on tap | yes | no | |
-| Permission on Home load | yes | no | see §7 + home FR-10 |
+| Local scheduling | yes | yes | `src/lib/notifications/` |
+| Routine reminders | yes | yes | daily repeat at block time |
+| Plan day series | yes | yes | 60-day cap + immediate catch-up |
+| Settings toggles | yes | yes | defaults `true`; sync on change |
+| Tap deep-link | yes | yes | `pending-notification-nav` provider |
+| Rich images | yes | no | follow-up |
+
+## 9. Open questions
+
+- Rich notifications (cover images) parity — required for v1?
+- Custom `routine.ogg` sound asset (Flutter) — v2 uses default channel sound for now.

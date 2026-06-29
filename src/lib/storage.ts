@@ -27,6 +27,7 @@ export const StorageKeys = {
   planStartedAtPrefix: 'plan_started_at_',
   planTotalDaysPrefix: 'plan_total_days_',
   planImmediateShownPrefix: 'plan_immediate_shown_',
+  planSeriesScheduledPrefix: 'plan_series_scheduled_',
   readerSecondaryEnabled: 'reader_secondary_enabled',
   profileData: 'profile_data',
   lastProfileUpdate: 'last_profile_update',
@@ -52,4 +53,8 @@ export async function setBoolean(key: string, value: boolean): Promise<void> {
 
 export async function remove(key: string): Promise<void> {
   await AsyncStorage.removeItem(key);
+}
+
+export async function getAllKeys(): Promise<string[]> {
+  return [...(await AsyncStorage.getAllKeys())];
 }

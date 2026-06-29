@@ -1,13 +1,18 @@
 import { requestNotificationPermissions } from '@/lib/notifications';
 import { StorageKeys, getBoolean, setBoolean } from '@/lib/storage';
+import { useTriggerNotificationSync } from '@/hooks/useTriggerNotificationSync';
 import * as Notifications from 'expo-notifications';
 import { useCallback, useEffect, useState } from 'react';
 import { AppState, Linking, Platform } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { showAppToast } from '@/utils/show-app-toast';
 
 export function useNotificationSettings() {
-  const [master, setMaster] = useState(false);
-  const [routine, setRoutine] = useState(false);
-  const [recitation, setRecitation] = useState(false);
+  const { t } = useTranslation();
+  const triggerSync = useTriggerNotificationSync();
+  const [master, setMaster] = useState(true);
+  const [routine, setRoutine] = useState(true);
+  const [recitation, setRecitation] = useState(true);
   const [hasPermission, setHasPermission] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
@@ -23,9 +28,9 @@ export function useNotificationSettings() {
       getBoolean(StorageKeys.notificationRecitationEnabled),
       refreshPermission(),
     ]).then(([masterVal, routineVal, recitationVal]) => {
-      setMaster(masterVal ?? false);
-      setRoutine(routineVal ?? false);
-      setRecitation(recitationVal ?? false);
+      setMaster(masterVal ?? true);
+      setRoutine(routineVal ?? true);
+      setRecitation(recitationVal ?? true);
       setLoaded(true);
     });
   }, [refreshPermission]);
@@ -42,6 +47,7 @@ export function useNotificationSettings() {
       const granted = await requestNotificationPermissions();
       setHasPermission(granted);
       if (!granted) {
+        showAppToast(t('notifications.permission_denied'));
         await Linking.openSettings();
         return false;
       }
@@ -54,8 +60,9 @@ export function useNotificationSettings() {
       await setBoolean(StorageKeys.notificationRoutineEnabled, false);
       await setBoolean(StorageKeys.notificationRecitationEnabled, false);
     }
+    await triggerSync('masterToggle');
     return true;
-  }, []);
+  }, [t, triggerSync]);
 
   const updateRoutine = useCallback(
     async (enabled: boolean) => {
@@ -65,8 +72,9 @@ export function useNotificationSettings() {
       }
       setRoutine(enabled);
       await setBoolean(StorageKeys.notificationRoutineEnabled, enabled);
+      await triggerSync('routineToggle');
     },
-    [updateMaster],
+    [triggerSync, updateMaster],
   );
 
   const updateRecitation = useCallback(
@@ -77,8 +85,9 @@ export function useNotificationSettings() {
       }
       setRecitation(enabled);
       await setBoolean(StorageKeys.notificationRecitationEnabled, enabled);
+      await triggerSync('recitationToggle');
     },
-    [updateMaster],
+    [triggerSync, updateMaster],
   );
 
   const openBatterySettings = useCallback(async () => {
