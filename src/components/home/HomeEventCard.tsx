@@ -2,7 +2,7 @@ import { APP_ASSETS } from '@/constants/app-assets';
 import type { AppEvent } from '@/types/event';
 import { formatEventDateRange } from '@/utils/event-parse';
 import { Image } from 'expo-image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, Text, View, type ImageStyle, type StyleProp } from 'react-native';
 import { useThemeColors } from '@/hooks/useThemeColors';
 
@@ -12,20 +12,26 @@ interface HomeEventCardProps {
 }
 
 function EventCoverImage({
-  imageUrl,
+  imageUrl: coverUrl,
   style,
 }: {
   imageUrl: string | null | undefined;
   style: StyleProp<ImageStyle>;
 }) {
-  const [failed, setFailed] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
+
+  useEffect(() => {
+    setLoadFailed(false);
+  }, [coverUrl]);
+
+  const useFallback = !coverUrl || loadFailed;
 
   return (
     <Image
-      source={failed || !imageUrl ? APP_ASSETS.seriesCoverFallback : { uri: imageUrl }}
+      source={useFallback ? APP_ASSETS.seriesCoverFallback : { uri: coverUrl }}
       style={style}
       contentFit="cover"
-      onError={() => setFailed(true)}
+      onError={() => setLoadFailed(true)}
     />
   );
 }

@@ -9,5 +9,7 @@ export function useEventsToday(limit = 20) {
   return useQuery({
     queryKey: QUERY_KEYS.events.today(language, limit),
     queryFn: () => fetchEventsToday(language, limit),
+    staleTime: 0,
+    refetchOnMount: 'always',
   });
 }
