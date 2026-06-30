@@ -1,6 +1,12 @@
-import { computeBeadPositions, malaThreadPath } from '@/lib/mala-bead-geometry';
+import {
+  computeBeadPositions,
+  MALA_BEADS_LAYOUT_HEIGHT,
+  MALA_BEADS_LAYOUT_WIDTH,
+  malaThreadPath,
+} from '@/lib/mala-bead-geometry';
+import { normalizeBeadImageUrl } from '@/lib/mala-bead-image';
 import { useThemeColors } from '@/hooks/useThemeColors';
-import { Image } from 'expo-image';
+import { Image, useImage, type ImageRef } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -21,32 +27,43 @@ const SWIPE_VELOCITY = 200;
 const ANIMATION_MS = 280;
 /** Subtle anticlockwise tilt while a bead slides right → left (Flutter strand motion). */
 const ROTATION_DEG = 0;
-const LAYOUT_WIDTH = 360;
-const LAYOUT_HEIGHT = 220;
+/** Bead texture is drawn small; cap decode size to match Flutter single-load pattern. */
+const BEAD_TEXTURE_MAX = 128;
 
 interface MalaBeadsProps {
   total: number;
   beadImageUrl?: string | null;
   enabled?: boolean;
   onIncrement: () => void;
+  /** Fired once bead texture is ready (loaded, failed, or no URL). */
+  onVisualReady?: () => void;
 }
+
+interface MalaBeadsShellProps {
+  total: number;
+  /** When false, gestures are ignored and the strand is dimmed. */
+  enabled: boolean;
+  onIncrement: () => void;
+  beadImage: ImageRef | null;
+}
+
+/** Shell props without beadImage — texture layer supplies its own via useImage. */
+type MalaBeadsShellInput = Omit<MalaBeadsShellProps, 'beadImage'>;
 
 function BeadCircle({
   x,
   y,
   radius,
-  beadImageUrl,
+  beadImage,
   beadColor,
 }: {
   x: number;
   y: number;
   radius: number;
-  beadImageUrl?: string | null;
+  beadImage: ImageRef | null;
   beadColor: string;
 }) {
   const size = radius * 2;
-  const [imageFailed, setImageFailed] = useState(false);
-  const showImage = beadImageUrl && !imageFailed;
 
   return (
     <View
@@ -65,12 +82,11 @@ function BeadCircle({
         elevation: 2,
       }}
     >
-      {showImage ? (
+      {beadImage ? (
         <Image
-          source={{ uri: beadImageUrl }}
+          source={beadImage}
           style={{ width: size, height: size }}
           contentFit="cover"
-          onError={() => setImageFailed(true)}
         />
       ) : (
         <LinearGradient
@@ -104,12 +120,7 @@ function blend(hex: string, target: string, amount: number): string {
   return `#${mix(r1, r2).toString(16).padStart(2, '0')}${mix(g1, g2).toString(16).padStart(2, '0')}${mix(b1, b2).toString(16).padStart(2, '0')}`;
 }
 
-export function MalaBeads({
-  total,
-  beadImageUrl,
-  enabled = true,
-  onIncrement,
-}: MalaBeadsProps) {
+function MalaBeadsShell({ total, enabled, onIncrement, beadImage }: MalaBeadsShellProps) {
   const { isDark } = useThemeColors();
   const threadColor = '#c62828';
   const beadColor = isDark ? '#8d6e63' : '#8d6e63';
@@ -154,12 +165,12 @@ export function MalaBeads({
   }, [total, phase, rotation]);
 
   const beads = useMemo(
-    () => computeBeadPositions(LAYOUT_WIDTH, LAYOUT_HEIGHT, displayPhase),
+    () => computeBeadPositions(MALA_BEADS_LAYOUT_WIDTH, MALA_BEADS_LAYOUT_HEIGHT, displayPhase),
     [displayPhase],
   );
 
   const threadPath = useMemo(
-    () => malaThreadPath(LAYOUT_WIDTH, LAYOUT_HEIGHT),
+    () => malaThreadPath(MALA_BEADS_LAYOUT_WIDTH, MALA_BEADS_LAYOUT_HEIGHT),
     [],
   );
 
@@ -190,7 +201,7 @@ export function MalaBeads({
       <View
         style={{
           width: '100%',
-          height: LAYOUT_HEIGHT,
+          height: MALA_BEADS_LAYOUT_HEIGHT,
           alignItems: 'center',
           justifyContent: 'center',
           opacity: enabled ? 1 : 0.5,
@@ -201,16 +212,16 @@ export function MalaBeads({
         <Animated.View
           style={[
             {
-              width: LAYOUT_WIDTH,
-              height: LAYOUT_HEIGHT,
+              width: MALA_BEADS_LAYOUT_WIDTH,
+              height: MALA_BEADS_LAYOUT_HEIGHT,
               overflow: 'hidden',
             },
             strandStyle,
           ]}
         >
           <Svg
-            width={LAYOUT_WIDTH}
-            height={LAYOUT_HEIGHT}
+            width={MALA_BEADS_LAYOUT_WIDTH}
+            height={MALA_BEADS_LAYOUT_HEIGHT}
             style={{ position: 'absolute' }}
             pointerEvents="none"
           >
@@ -229,12 +240,81 @@ export function MalaBeads({
               x={bead.x}
               y={bead.y}
               radius={bead.radius}
-              beadImageUrl={beadImageUrl}
+              beadImage={beadImage}
               beadColor={beadColor}
             />
           ))}
         </Animated.View>
       </View>
     </GestureDetector>
+  );
+}
+
+function MalaBeadsWithTexture({
+  imageUrl,
+  onVisualReady,
+  ...shellProps
+}: MalaBeadsShellInput & { imageUrl: string; onVisualReady?: () => void }) {
+  const [imageFailed, setImageFailed] = useState(false);
+
+  useEffect(() => {
+    setImageFailed(false);
+  }, [imageUrl]);
+
+  const beadImage = useImage(
+    imageUrl,
+    {
+      maxWidth: BEAD_TEXTURE_MAX,
+      maxHeight: BEAD_TEXTURE_MAX,
+      onError: () => setImageFailed(true),
+    },
+    [imageUrl],
+  );
+
+  const beadTexture = imageFailed ? null : beadImage;
+
+  useEffect(() => {
+    if (beadTexture || imageFailed) {
+      onVisualReady?.();
+    }
+  }, [beadTexture, imageFailed, onVisualReady]);
+
+  return <MalaBeadsShell {...shellProps} beadImage={beadTexture} />;
+}
+
+export function MalaBeads({
+  total,
+  beadImageUrl,
+  enabled = true,
+  onIncrement,
+  onVisualReady,
+}: MalaBeadsProps) {
+  const normalizedUrl = normalizeBeadImageUrl(beadImageUrl);
+
+  useEffect(() => {
+    if (!normalizedUrl) {
+      onVisualReady?.();
+    }
+  }, [normalizedUrl, onVisualReady]);
+
+  if (normalizedUrl) {
+    return (
+      <MalaBeadsWithTexture
+        imageUrl={normalizedUrl}
+        total={total}
+        enabled={enabled}
+        onIncrement={onIncrement}
+        onVisualReady={onVisualReady}
+      />
+    );
+  }
+
+  return (
+    <MalaBeadsShell
+      total={total}
+      enabled={enabled}
+      onIncrement={onIncrement}
+      beadImage={null}
+    />
   );
 }

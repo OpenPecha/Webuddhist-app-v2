@@ -8,6 +8,7 @@ import { useLoginDrawer } from '@/hooks/useLoginDrawer';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useGuest } from '@/providers/guest';
 import { routineHasItems, type RoutineItem } from '@/types/routine';
+import { usePendingNotificationNav } from '@/providers/pending-notification-nav';
 import {
   getCurrentDay,
   resolveUserPlanForItem,
@@ -18,7 +19,7 @@ import {
 } from '@/utils/routine-navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { type Href, useRouter } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
@@ -242,6 +243,31 @@ export default function PracticeScreen() {
   const userPlans = userPlansData?.plans ?? [];
   const refreshing = routineFetching || plansFetching;
   const [resolvingItemId, setResolvingItemId] = useState<string | null>(null);
+  const { pending, consumePendingNav } = usePendingNotificationNav();
+
+  useEffect(() => {
+    if (!pending || isGuest || !user) return;
+
+    const nav = consumePendingNav();
+    if (!nav) return;
+
+    if (nav.itemType === 'recitation') {
+      router.push({ pathname: '/reader/[textId]', params: { textId: nav.itemId } });
+      return;
+    }
+
+    const planId = nav.planId ?? nav.itemId;
+    const userPlan = resolveUserPlanForItem(planId, userPlans);
+    const selectedDay = userPlan ? getCurrentDay(userPlan) : nav.day;
+    router.push({
+      pathname: '/practice/details',
+      params: {
+        planId,
+        title: userPlan?.title ?? '',
+        ...(selectedDay != null ? { selectedDay: String(selectedDay) } : {}),
+      },
+    });
+  }, [consumePendingNav, isGuest, pending, router, user, userPlans]);
 
   const refreshAll = useCallback(async () => {
     await Promise.all([refetchRoutine(), refetchUserPlans()]);

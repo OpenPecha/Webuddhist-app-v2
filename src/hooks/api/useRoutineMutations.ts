@@ -6,23 +6,27 @@ import {
   updateTimeBlock,
 } from '@/services/routine';
 import type { TimeBlockRequest } from '@/types/routine-mutations';
+import { useTriggerNotificationSync } from '@/hooks/useTriggerNotificationSync';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export function useRoutineMutations() {
   const queryClient = useQueryClient();
+  const triggerSync = useTriggerNotificationSync();
 
-  const invalidateRoutine = () =>
-    queryClient.invalidateQueries({ queryKey: QUERY_KEYS.routine.all });
+  const afterRoutineChange = async (trigger: 'routineSaved' | 'blockDeleted') => {
+    await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.routine.all });
+    await triggerSync(trigger);
+  };
 
   const createRoutine = useMutation({
     mutationFn: (request: TimeBlockRequest) => createRoutineWithTimeBlock(request),
-    onSuccess: invalidateRoutine,
+    onSuccess: () => afterRoutineChange('routineSaved'),
   });
 
   const addTimeBlock = useMutation({
     mutationFn: ({ routineId, request }: { routineId: string; request: TimeBlockRequest }) =>
       createTimeBlock(routineId, request),
-    onSuccess: invalidateRoutine,
+    onSuccess: () => afterRoutineChange('routineSaved'),
   });
 
   const saveTimeBlock = useMutation({
@@ -35,13 +39,13 @@ export function useRoutineMutations() {
       blockId: string;
       request: TimeBlockRequest;
     }) => updateTimeBlock(routineId, blockId, request),
-    onSuccess: invalidateRoutine,
+    onSuccess: () => afterRoutineChange('routineSaved'),
   });
 
   const removeTimeBlock = useMutation({
     mutationFn: ({ routineId, blockId }: { routineId: string; blockId: string }) =>
       deleteTimeBlock(routineId, blockId),
-    onSuccess: invalidateRoutine,
+    onSuccess: () => afterRoutineChange('blockDeleted'),
   });
 
   return { createRoutine, addTimeBlock, saveTimeBlock, removeTimeBlock };

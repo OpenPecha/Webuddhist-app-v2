@@ -3,6 +3,7 @@ import { TimePickerSheet } from '@/components/practice/TimePickerSheet';
 import { useDialog } from '@/hooks/useDialog';
 import { useRoutine } from '@/hooks/api/useRoutine';
 import { useRoutineMutations } from '@/hooks/api/useRoutineMutations';
+import { requestNotificationPermissions } from '@/lib/notifications';
 import { takePendingRoutineItem } from '@/stores/edit-routine-selection';
 import type { RoutineItem } from '@/types/routine';
 import {
@@ -542,11 +543,17 @@ export default function EditRoutineScreen() {
                 notificationEnabled={block.notificationEnabled}
                 items={block.items}
                 onTimePress={() => pickTime(block.localId)}
-                onNotificationToggle={() =>
-                  updateBlock(block.localId, {
-                    notificationEnabled: !block.notificationEnabled,
-                  })
-                }
+                onNotificationToggle={() => {
+                  void (async () => {
+                    const nextEnabled = !block.notificationEnabled;
+                    if (nextEnabled) {
+                      await requestNotificationPermissions();
+                    }
+                    updateBlock(block.localId, {
+                      notificationEnabled: nextEnabled,
+                    });
+                  })();
+                }}
                 onDeleteBlock={() => removeBlock(block.localId)}
                 onAddSession={() =>
                   router.push({
