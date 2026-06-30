@@ -7,8 +7,3 @@ export interface PresetTimer {
   audioUrl?: string | null;
   type?: TimerType;
 }
-
-export interface TimersResponse {
-  timers: PresetTimer[];
-  total: number;
-}

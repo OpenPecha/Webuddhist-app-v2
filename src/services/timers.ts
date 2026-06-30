@@ -1,7 +1,9 @@
 import { ENDPOINTS } from '@/lib/api-config';
 import { http } from '@/lib/http';
 import type { PresetTimer, TimerType } from '@/types/timers';
-import { isTimerApiId } from '@/utils/timer-api';
+
+/** Meditation preset catalogue is small; no infinite scroll yet. */
+export const PRESET_TIMERS_FETCH_LIMIT = 50;
 
 interface TimerDto {
   id?: string;
@@ -29,9 +31,9 @@ function mapTimerDto(dto: TimerDto): PresetTimer {
   };
 }
 
-export async function fetchPresetTimers(skip = 0, limit = 20): Promise<PresetTimer[]> {
+export async function fetchPresetTimers(): Promise<PresetTimer[]> {
   const { data } = await http.get<TimersResponseDto>(ENDPOINTS.timers.list, {
-    params: { skip, limit },
+    params: { skip: 0, limit: PRESET_TIMERS_FETCH_LIMIT },
   });
 
   return (data.timers ?? []).map(mapTimerDto).filter((timer) => timer.id.length > 0);
@@ -39,9 +41,7 @@ export async function fetchPresetTimers(skip = 0, limit = 20): Promise<PresetTim
 
 /** Reports elapsed meditation time — fire-and-forget, mirrors Flutter stopUserTimer. */
 export async function stopUserTimer(timerId: string, durationMs: number): Promise<void> {
-  if (!isTimerApiId(timerId)) {
-    return;
-  }
+  if (!timerId) return;
 
   try {
     await http.post(ENDPOINTS.timers.stop, {

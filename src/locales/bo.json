@@ -278,7 +278,9 @@
     "discard_session": "Discard session",
     "running": "དུས་ཚོད་རྩིས་བཞིན་པ།",
     "complete": "དུས་ཚོད་མཇུག་བསྡུས།",
-    "close": "ཁ་བསྡམས།"
+    "close": "ཁ་བསྡམས།",
+    "load_error": "Couldn't load timers. Please try again.",
+    "no_timers": "No meditation timers available."
   },
   "force_update": {
     "title": "གསར་སྒྱུར་དགོས།",

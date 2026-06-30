@@ -278,7 +278,9 @@
     "discard_session": "捨棄本次",
     "running": "計時中",
     "complete": "時間到",
-    "close": "關閉"
+    "close": "關閉",
+    "load_error": "無法載入計時器，請再試一次。",
+    "no_timers": "目前沒有可用的禪修計時。"
   },
   "force_update": {
     "title": "需要更新",

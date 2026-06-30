@@ -79,7 +79,7 @@ export default function TimersScreen() {
       ) : isError ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 12 }}>
           <Text style={{ color: mutedForeground, textAlign: 'center', fontFamily: 'Inter-Regular' }}>
-            {t('home.load_error')}
+            {t('timers.load_error')}
           </Text>
           <Pressable
             onPress={() => void refetch()}
@@ -91,7 +91,7 @@ export default function TimersScreen() {
       ) : sortedTimers.length === 0 ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 32 }}>
           <Text style={{ color: mutedForeground, textAlign: 'center', fontFamily: 'Inter-Regular' }}>
-            {t('home.no_feature_content')}
+            {t('timers.no_timers')}
           </Text>
         </View>
       ) : (
