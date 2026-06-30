@@ -1,5 +1,10 @@
 /** Bead strand layout — ported from Flutter `mala_beads.dart` painter. */
 
+export const MALA_BEADS_LAYOUT_WIDTH = 360;
+export const MALA_BEADS_LAYOUT_HEIGHT = 220;
+/** Bottom padding for the bead strand container on the mala screen. */
+export const MALA_BEADS_BOTTOM_INSET = 80;
+
 export interface BeadPoint {
   x: number;
   y: number;

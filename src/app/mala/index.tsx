@@ -1,5 +1,6 @@
 import '@/lib/i18n';
 import { normalizeBeadImageUrl } from '@/lib/mala-bead-image';
+import { MALA_BEADS_BOTTOM_INSET, MALA_BEADS_LAYOUT_HEIGHT } from '@/lib/mala-bead-geometry';
 import { MalaBeadArcPlaceholder } from '@/components/mala/MalaBeadArcPlaceholder';
 import { MalaBeads } from '@/components/mala/MalaBeads';
 import { MalaCounterDisplay } from '@/components/mala/MalaCounterDisplay';
@@ -85,17 +86,13 @@ export default function MalaScreen() {
     ? localizedMantraName(activeMantra, language)
     : t('mala.title');
 
-  const [beadsVisualReady, setBeadsVisualReady] = useState(false);
-
   const beadImageUrl =
     state.beadImageUrl ?? activeMantra?.beadImageUrl ?? activeMantra?.mantra?.beadImageUrl;
 
   const normalizedBeadUrl = normalizeBeadImageUrl(beadImageUrl);
-  const waitingForBeadTexture = Boolean(normalizedBeadUrl) && !beadsVisualReady;
-
-  useEffect(() => {
-    setBeadsVisualReady(false);
-  }, [activeMantra?.presetId, normalizedBeadUrl]);
+  const beadsKey = `${activeMantra?.presetId}-${normalizedBeadUrl ?? 'gradient'}`;
+  const [visualReadyKey, setVisualReadyKey] = useState<string | null>(null);
+  const waitingForBeadTexture = Boolean(normalizedBeadUrl) && visualReadyKey !== beadsKey;
 
   const handleIncrement = () => {
     void incrementBead({
@@ -191,8 +188,8 @@ export default function MalaScreen() {
                 style={{
                   flex: 1,
                   justifyContent: 'flex-end',
-                  paddingBottom: 80,
-                  minHeight: 220,
+                  paddingBottom: MALA_BEADS_BOTTOM_INSET,
+                  minHeight: MALA_BEADS_LAYOUT_HEIGHT,
                 }}
               >
                 {(state.isSeeding || waitingForBeadTexture) && <MalaBeadArcPlaceholder />}
@@ -200,15 +197,20 @@ export default function MalaScreen() {
                   <View
                     style={
                       waitingForBeadTexture
-                        ? { opacity: 0, position: 'absolute', width: '100%', bottom: 80 }
+                        ? {
+                            opacity: 0,
+                            position: 'absolute',
+                            width: '100%',
+                            bottom: MALA_BEADS_BOTTOM_INSET,
+                          }
                         : undefined
                     }
                   >
                     <MalaBeads
-                      key={`${activeMantra?.presetId}-${normalizedBeadUrl ?? 'gradient'}`}
+                      key={beadsKey}
                       total={state.total}
                       beadImageUrl={beadImageUrl}
-                      onVisualReady={() => setBeadsVisualReady(true)}
+                      onVisualReady={() => setVisualReadyKey(beadsKey)}
                       onIncrement={handleIncrement}
                     />
                   </View>
