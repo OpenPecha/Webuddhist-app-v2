@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import {
   FlatList,
   Pressable,
+  RefreshControl,
   Text,
   View,
 } from 'react-native';
@@ -29,7 +30,7 @@ export default function TimersScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { foreground, mutedForeground, scaffoldBackground } = useThemeColors();
-  const { data: timers = [], isLoading, isError, refetch } = usePresetTimers();
+  const { data: timers = [], isLoading, isError, refetch, isRefetching } = usePresetTimers();
 
   const sortedTimers = useMemo(() => sortPresetTimers(timers), [timers]);
 
@@ -78,7 +79,7 @@ export default function TimersScreen() {
       ) : isError ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 12 }}>
           <Text style={{ color: mutedForeground, textAlign: 'center', fontFamily: 'Inter-Regular' }}>
-            {t('home.load_error')}
+            {t('timers.load_error')}
           </Text>
           <Pressable
             onPress={() => void refetch()}
@@ -90,7 +91,7 @@ export default function TimersScreen() {
       ) : sortedTimers.length === 0 ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 32 }}>
           <Text style={{ color: mutedForeground, textAlign: 'center', fontFamily: 'Inter-Regular' }}>
-            {t('home.no_feature_content')}
+            {t('timers.no_timers')}
           </Text>
         </View>
       ) : (
@@ -103,6 +104,9 @@ export default function TimersScreen() {
             padding: HORIZONTAL_PADDING,
             gap: GRID_SPACING,
           }}
+          refreshControl={
+            <RefreshControl refreshing={isRefetching} onRefresh={() => void refetch()} />
+          }
           renderItem={({ item }) => (
             <View style={{ flex: 1 }}>
               <PresetTimerCard

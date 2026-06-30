@@ -69,7 +69,7 @@ export const QUERY_KEYS = {
       ['profile', 'seriesDayCompleted', language, skip, limit] as const,
   },
   timers: {
-    list: (skip: number, limit: number) => ['timers', 'list', skip, limit] as const,
+    list: () => ['timers', 'list'] as const,
   },
   mala: {
     presets: (language: string) => ['mala', 'presets', language] as const,

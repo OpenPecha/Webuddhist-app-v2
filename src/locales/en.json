@@ -333,7 +333,9 @@
     "discard_session": "Discard session",
     "running": "Timer running",
     "complete": "Time's up",
-    "close": "Close"
+    "close": "Close",
+    "load_error": "Couldn't load timers. Please try again.",
+    "no_timers": "No meditation timers available."
   },
   "force_update": {
     "title": "Update required",
