@@ -1,6 +1,7 @@
 import { SocialLoginButtons } from '@/components/auth/SocialLoginButtons';
 import { MeProfileHeader } from '@/components/me/MeProfileHeader';
 import { MeStatsSection } from '@/components/me/MeStatsSection';
+import { MeStatsSectionSkeleton } from '@/components/me/MeStatsSectionSkeleton';
 import { ProfileAvatar } from '@/components/settings/ProfileAvatar';
 import { Text } from '@/components/ui/text';
 import { Gear } from '@/constants/settings-icons';
@@ -11,9 +12,9 @@ import { useThemeColors } from '@/hooks/useThemeColors';
 import { useGuest } from '@/providers/guest';
 import { EMPTY_USER_STATS } from '@/types/user-stats';
 import { type Href } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, RefreshControl, ScrollView, View } from 'react-native';
+import { ActivityIndicator, AppState, Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -46,6 +47,17 @@ export default function MeScreen() {
       setRefreshing(false);
     }
   }, [refetchProfile, refetchStats]);
+
+  const appState = useRef(AppState.currentState);
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', (nextState) => {
+      if (appState.current.match(/inactive|background/) && nextState === 'active') {
+        void refetchStats();
+      }
+      appState.current = nextState;
+    });
+    return () => subscription.remove();
+  }, [refetchStats]);
 
   return (
     <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
@@ -94,7 +106,7 @@ export default function MeScreen() {
             loading={profileLoading && !profile}
           />
           {statsLoading && !stats ? (
-            <ActivityIndicator size="large" className="mt-8" />
+            <MeStatsSectionSkeleton />
           ) : (
             <MeStatsSection stats={stats ?? EMPTY_USER_STATS} />
           )}

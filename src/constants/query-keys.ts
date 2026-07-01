@@ -40,8 +40,8 @@ export const QUERY_KEYS = {
   },
   groups: {
     all: ['groups'] as const,
-    discover: (language: string, search: string, skip: number, limit: number) =>
-      ['groups', 'discover', language, search, skip, limit] as const,
+    discover: (language: string, search: string) =>
+      ['groups', 'discover', language, search] as const,
     joined: (language: string, skip: number, limit: number) =>
       ['groups', 'joined', language, skip, limit] as const,
     detail: (id: string, language: string) => ['groups', 'detail', id, language] as const,
@@ -63,6 +63,10 @@ export const QUERY_KEYS = {
     all: ['profile'] as const,
     info: () => ['profile', 'info'] as const,
     stats: () => ['profile', 'stats'] as const,
+    mantraCounts: (language: string, skip: number, limit: number) =>
+      ['profile', 'mantraCounts', language, skip, limit] as const,
+    seriesDayCompleted: (language: string, skip: number, limit: number) =>
+      ['profile', 'seriesDayCompleted', language, skip, limit] as const,
   },
   timers: {
     list: () => ['timers', 'list'] as const,

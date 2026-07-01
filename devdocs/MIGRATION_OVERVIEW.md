@@ -127,8 +127,9 @@ From `WeBuddhist-app/lib/features/`:
 | `story_view` | `stalled_features/story-view` | — won't migrate |
 | `meditation_of_day`, `prayer_of_the_day` | `stalled_features/meditation-prayer-of-day` | — won't migrate |
 
-**Connect:** Tab shell **done** (`connect.tsx` stub). Discover + group profile are **P1 next**
-(full feature in scope; API-complete per [connect PRD](../features/connect.md)).
+**Connect:** Tab and child screens at **Flutter parity** — discover feed (filtered),
+my-groups carousel (optimistic merge), group search, group profile, join/follow CTAs.
+See [connect PRD](../features/connect.md).
 
 **Series / Plans:** Implementation follows PRDs + [open-questions.md](../research/open-questions.md)
 (all product decisions resolved via backend API). P0 backlog in

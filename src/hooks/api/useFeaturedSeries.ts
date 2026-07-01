@@ -13,5 +13,8 @@ export function useFeaturedSeries(limit = 10) {
       const series = await fetchFeaturedSeries(language, limit);
       return buildFeaturedSeriesLayout(series);
     },
+    // Presigned S3 URLs expire (~1h); refetch on each home mount for fresh URLs.
+    staleTime: 0,
+    refetchOnMount: 'always',
   });
 }

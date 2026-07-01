@@ -6,10 +6,10 @@ import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import type { FeaturedSeriesLayout } from '@/types/featured-series';
 import type { Series } from '@/types/series';
-import { imageUrl } from '@/utils/image-url';
+import { resolveCoverImage } from '@/utils/image-url';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View, type ImageStyle, type StyleProp } from 'react-native';
 
@@ -25,19 +25,28 @@ function formatSeriesDateRange(series: Series): string | null {
 function SeriesCoverImage({
   series,
   style,
+  size = 'medium',
 }: {
   series: Series;
   style: StyleProp<ImageStyle>;
+  size?: 'thumbnail' | 'medium' | 'original';
 }) {
-  const [failed, setFailed] = useState(false);
-  const remote = imageUrl(series.image);
+  const uri = resolveCoverImage(series.image, series.image_url, size);
+  const [loadFailed, setLoadFailed] = useState(false);
+
+  useEffect(() => {
+    setLoadFailed(false);
+  }, [uri]);
+
+  const useFallback = !uri || loadFailed;
 
   return (
     <Image
-      source={failed || !remote ? APP_ASSETS.seriesCoverFallback : { uri: remote }}
+      source={useFallback ? APP_ASSETS.seriesCoverFallback : { uri }}
       style={style}
       contentFit="cover"
-      onError={() => setFailed(true)}
+      recyclingKey={`${series.id}-${size}`}
+      onError={() => setLoadFailed(true)}
     />
   );
 }
@@ -79,6 +88,7 @@ function FeaturedPlanListItem({
       >
         <SeriesCoverImage
           series={series}
+          size="thumbnail"
           style={{ width: 72, height: 72, borderRadius: 12 }}
         />
         <View style={{ flex: 1, marginLeft: 12 }}>
@@ -140,10 +150,12 @@ function FeaturedPlanHeroCard({
         opacity: pressed ? 0.9 : 1,
       })}
     >
-      <SeriesCoverImage
-        series={series}
-        style={{ width: '100%', aspectRatio: 16 / 9 }}
-      />
+      <View style={{ width: '100%', aspectRatio: 16 / 9 }}>
+        <SeriesCoverImage
+          series={series}
+          style={{ width: '100%', height: '100%' }}
+        />
+      </View>
       <View
         style={{
           paddingLeft: contentPadding,

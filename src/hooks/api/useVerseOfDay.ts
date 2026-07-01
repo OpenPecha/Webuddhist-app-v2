@@ -9,5 +9,7 @@ export function useVerseOfDay() {
   return useQuery({
     queryKey: QUERY_KEYS.verseOfDay.today(language),
     queryFn: () => fetchVerseOfDay(language),
+    staleTime: 0,
+    refetchOnMount: 'always',
   });
 }

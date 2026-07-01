@@ -41,9 +41,10 @@ function parseEventJson(raw: Record<string, unknown>, language: string): AppEven
 
   const image = raw.image as AppEvent['image'];
   const imageFromField = imageUrl(image);
+  const legacyUrl = typeof raw.image_url === 'string' ? raw.image_url : null;
   const imageUrlValue =
-    (typeof raw.image_url === 'string' ? raw.image_url : null) ||
     imageFromField ||
+    (legacyUrl?.startsWith('http') ? legacyUrl : null) ||
     null;
 
   return {

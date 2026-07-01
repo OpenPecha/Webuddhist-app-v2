@@ -1,5 +1,5 @@
 import type { ImageSizes } from '@/types/api';
-import type { Series } from '@/types/series';
+import type { Plan, Series } from '@/types/series';
 
 export interface GroupMetadata {
   id: string;
@@ -29,7 +29,7 @@ export interface AuthorGroupSummary {
 export interface PublicGroupDetail extends AuthorGroupSummary {
   social_links?: { id: string; platform: string; url: string }[];
   series?: Series[];
-  plans?: unknown[];
+  plans?: Plan[];
 }
 
 export interface GroupListResponse {

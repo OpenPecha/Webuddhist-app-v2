@@ -1,0 +1,13 @@
+export const GP_PADDING = 16;
+export const GP_BANNER_RADIUS = 16;
+export const GP_BANNER_ASPECT = 16 / 9;
+export const GP_AVATAR_SIZE = 44;
+export const GP_SERIES_THUMB = 56;
+export const GP_SERIES_THUMB_RADIUS = 10;
+export const GP_JOIN_HEIGHT = 48;
+export const GP_JOIN_RADIUS = 24;
+export const GP_TITLE_SIZE = 18;
+export const GP_BODY_SIZE = 15;
+export const GP_SECONDARY_SIZE = 14;
+export const GP_CAPTION_SIZE = 13;
+export const GP_DESCRIPTION_CLAMP = 6;

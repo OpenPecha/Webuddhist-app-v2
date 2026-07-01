@@ -14,6 +14,7 @@ export interface Series {
   metadata: SeriesMetadata;
   image: ImageSizes;
   image_key: string;
+  image_url?: string | null;
   author_id: string;
   featured: boolean;
   status: string;

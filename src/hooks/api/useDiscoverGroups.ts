@@ -1,10 +1,22 @@
 import { QUERY_KEYS } from '@/constants/query-keys';
-import { fetchDiscoverGroups, fetchJoinedGroups, fetchGroupProfile, joinGroup, leaveGroup, followGroup, unfollowGroup } from '@/services/groups';
+import {
+  DISCOVER_PAGE_SIZE,
+  fetchDiscoverGroups,
+  fetchJoinedGroups,
+  fetchGroupProfile,
+  joinGroup,
+  leaveGroup,
+  followGroup,
+  unfollowGroup,
+  JOINED_GROUPS_FETCH_LIMIT,
+} from '@/services/groups';
+import type { AuthorGroupSummary } from '@/types/groups';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useAuthTokenReady } from '@/providers/auth-token';
 import { useGuest } from '@/providers/guest';
 import {
   clearGroupPending,
+  markGroupFollowedOptimistic,
   markGroupJoinedOptimistic,
   markGroupUnjoinedOptimistic,
 } from '@/stores/pending-groups';
@@ -15,9 +27,9 @@ export function useDiscoverGroups(search = '') {
   const language = useContentLanguage();
 
   return useInfiniteQuery({
-    queryKey: QUERY_KEYS.groups.discover(language, search, 0, 20),
+    queryKey: QUERY_KEYS.groups.discover(language, search),
     queryFn: ({ pageParam = 0 }) =>
-      fetchDiscoverGroups(language, pageParam, 20, search || undefined),
+      fetchDiscoverGroups(language, pageParam, DISCOVER_PAGE_SIZE, search || undefined),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       const next = lastPage.skip + lastPage.limit;
@@ -26,7 +38,7 @@ export function useDiscoverGroups(search = '') {
   });
 }
 
-export function useJoinedGroups(skip = 0, limit = 20) {
+export function useJoinedGroups(skip = 0, limit = JOINED_GROUPS_FETCH_LIMIT) {
   const language = useContentLanguage();
   const { user } = useAuth0();
   const { isGuest } = useGuest();
@@ -49,18 +61,15 @@ export function useGroupProfile(groupId: string) {
   });
 }
 
-export function useJoinGroup(groupId: string) {
+export function useJoinGroup(groupId: string, group?: AuthorGroupSummary) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: () => joinGroup(groupId),
     onMutate: () => {
-      markGroupJoinedOptimistic(groupId);
+      markGroupJoinedOptimistic(groupId, group);
     },
     onError: () => {
-      clearGroupPending(groupId);
-    },
-    onSettled: () => {
       clearGroupPending(groupId);
     },
     onSuccess: () => {
@@ -74,6 +83,12 @@ export function useFollowGroup(groupId: string) {
 
   return useMutation({
     mutationFn: () => followGroup(groupId),
+    onMutate: () => {
+      markGroupFollowedOptimistic(groupId);
+    },
+    onError: () => {
+      clearGroupPending(groupId);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.groups.all });
     },
@@ -91,9 +106,6 @@ export function useLeaveGroup(groupId: string) {
     onError: () => {
       clearGroupPending(groupId);
     },
-    onSettled: () => {
-      clearGroupPending(groupId);
-    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.groups.all });
     },
@@ -105,6 +117,12 @@ export function useUnfollowGroup(groupId: string) {
 
   return useMutation({
     mutationFn: () => unfollowGroup(groupId),
+    onMutate: () => {
+      markGroupUnjoinedOptimistic(groupId);
+    },
+    onError: () => {
+      clearGroupPending(groupId);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.groups.all });
     },

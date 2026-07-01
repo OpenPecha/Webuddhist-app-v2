@@ -139,11 +139,11 @@ upperBound = planOver ? totalDays : todayDayNumber - 1
 
 | Mockup element | Spec | Flutter | v2 target | API |
 |----------------|------|---------|-----------|-----|
-| Banner hero | Cover photo | `GroupProfileBody` banner | `group/[id].tsx` | `GET /author/groups/{id}` |
-| Avatar overlap | Circular logo on banner | Avatar stack | Same | `group.image` |
-| Member count | "2,345 members" | Formatted count | Text | `member_count` |
+| Banner hero | Cover photo, inset + rounded | `GroupProfileBody` banner | `group/[id].tsx` | `GET /author/groups/{id}` |
+| Avatar + title | 44px circle beside title row | Inline header row | Same | `group.image` |
+| Member count | Bold number + "members" | Formatted count + label | Same | `joiner_count` / `follower_count` |
 | Description | Expandable bio | Tap to expand | Same | `description` |
-| Join button | Full-width black CTA | `followGroup` / join | Sticky CTA | `POST .../join` or `.../follow` |
+| Join button | Full-width black CTA inline | `followGroup` / join | Inline stadium CTA | `POST .../join` or `.../follow` |
 | Practices tab | Series list | Tab → series cards | Tab content | `group.series[]` or separate fetch |
 | About tab | MISSION, VISION | `descriptionLong` markdown sections | Second tab | `description_long` |
 | Social links sheet | Website, IG, FB, X, YT | `GroupProfileLinksDrawer` | Bottom sheet | `social_links[]` |

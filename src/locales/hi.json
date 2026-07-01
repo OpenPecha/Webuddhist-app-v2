@@ -123,6 +123,8 @@
     "accumulation": "Accumulation",
     "counts": "counts",
     "minutes": "minutes",
+    "hours": "hours",
+    "total_meditation_time": "Total meditation time",
     "days_plan_practiced_suffix": "days plan practiced",
     "streak_share_message": "I'm on a {{count}}-day streak on {{appName}}!",
     "streak_share_quote": "My daily practice is growing",
