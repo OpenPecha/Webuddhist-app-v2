@@ -20,7 +20,7 @@ export const APP_ASSETS = {
   recitationCoverDefault: require('../../assets/images/recitation_cover/recitation_05.jpg'),
   malaIcon: require('../../assets/images/mala-icon.png'),
   seriesCoverFallback: require('../../assets/images/tag_cover/cover_image.jpg'),
-  connect: require('../../assets/images/connect.png'),
+  connect: require('../../assets/images/connect.jpg'),
 } as const;
 
 /** Moon phase PNGs — `MoonPhaseIcon` falls back to `PaintedMoon` on load error. */
