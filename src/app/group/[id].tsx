@@ -27,16 +27,14 @@ import type { GroupSocialLink } from '@/lib/group-profile-format';
 import { pickGroupMetadata } from '@/types/groups';
 import type { Plan, Series } from '@/types/series';
 import { checkGroupFollowed, checkGroupJoined } from '@/services/groups';
+import { usePendingGroups } from '@/hooks/usePendingGroups';
 import {
-  getPendingGroupsSnapshot,
   isGroupOptimisticallyFollowed,
   isGroupOptimisticallyJoined,
-  subscribePendingGroups,
 } from '@/stores/pending-groups';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useSyncExternalStore } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Alert, Linking, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -73,11 +71,11 @@ export default function GroupProfileScreen() {
     retry: false,
   });
 
-  useSyncExternalStore(subscribePendingGroups, getPendingGroupsSnapshot);
+  const pending = usePendingGroups();
 
   const isActive = isPage
-    ? isGroupOptimisticallyFollowed(groupId, isMember ?? false)
-    : isGroupOptimisticallyJoined(groupId, isMember ?? false);
+    ? isGroupOptimisticallyFollowed(groupId, isMember ?? false, pending)
+    : isGroupOptimisticallyJoined(groupId, isMember ?? false, pending);
 
   const meta = group ? pickGroupMetadata(group.metadata, language) : undefined;
   const seriesList = useMemo(() => (group?.series ?? []) as Series[], [group]);

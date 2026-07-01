@@ -18,7 +18,7 @@ interface GroupListCardProps {
 export function GroupListCard({ group, showChevron = false }: GroupListCardProps) {
   const router = useRouter();
   const language = useContentLanguage();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { foreground, mutedForeground, cardSurface, cardBorder, skeleton } = useThemeColors();
 
   const meta = pickGroupMetadata(group.metadata, language);
@@ -27,6 +27,7 @@ export function GroupListCard({ group, showChevron = false }: GroupListCardProps
     meta,
     t('connect.member'),
     t('connect.members'),
+    i18n.language,
   );
 
   return (

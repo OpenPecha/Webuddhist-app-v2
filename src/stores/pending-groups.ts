@@ -1,5 +1,12 @@
 import type { AuthorGroupSummary } from '@/types/groups';
 
+/**
+ * In-memory optimistic join/follow state. Lost on JS bundle reload if an API
+ * call is still in-flight — acceptable for v1; query invalidation reconciles
+ * on success.
+ *
+ * TODO: persist pending ops across reload if product requires it.
+ */
 const pendingJoinedIds = new Set<string>();
 const pendingFollowedIds = new Set<string>();
 const pendingUnjoinedIds = new Set<string>();
@@ -12,6 +19,8 @@ let cachedSnapshot = {
   pendingUnjoinedIds: new Set<string>(),
   pendingJoinedGroups: [] as AuthorGroupSummary[],
 };
+
+export type PendingGroupsSnapshot = typeof cachedSnapshot;
 
 function rebuildSnapshot() {
   cachedSnapshot = {
@@ -66,14 +75,22 @@ export function clearGroupPending(groupId: string) {
   emit();
 }
 
-export function isGroupOptimisticallyJoined(groupId: string, apiJoined: boolean) {
-  if (pendingUnjoinedIds.has(groupId)) return false;
-  if (pendingJoinedIds.has(groupId)) return true;
+export function isGroupOptimisticallyJoined(
+  groupId: string,
+  apiJoined: boolean,
+  snapshot: PendingGroupsSnapshot = getPendingGroupsSnapshot(),
+) {
+  if (snapshot.pendingUnjoinedIds.has(groupId)) return false;
+  if (snapshot.pendingJoinedIds.has(groupId)) return true;
   return apiJoined;
 }
 
-export function isGroupOptimisticallyFollowed(groupId: string, apiFollowed: boolean) {
-  if (pendingUnjoinedIds.has(groupId)) return false;
-  if (pendingFollowedIds.has(groupId)) return true;
+export function isGroupOptimisticallyFollowed(
+  groupId: string,
+  apiFollowed: boolean,
+  snapshot: PendingGroupsSnapshot = getPendingGroupsSnapshot(),
+) {
+  if (snapshot.pendingUnjoinedIds.has(groupId)) return false;
+  if (snapshot.pendingFollowedIds.has(groupId)) return true;
   return apiFollowed;
 }

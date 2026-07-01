@@ -7,10 +7,13 @@ import type {
   PublicGroupDetail,
 } from '@/types/groups';
 
+export const DISCOVER_PAGE_SIZE = 20;
+export const JOINED_GROUPS_FETCH_LIMIT = 50;
+
 export async function fetchDiscoverGroups(
   language = 'en',
   skip = 0,
-  limit = 20,
+  limit = DISCOVER_PAGE_SIZE,
   search?: string,
 ): Promise<GroupListResponse> {
   const params: Record<string, string | number> = {
@@ -28,7 +31,7 @@ export async function fetchDiscoverGroups(
 export async function fetchJoinedGroups(
   language = 'en',
   skip = 0,
-  limit = 20,
+  limit = JOINED_GROUPS_FETCH_LIMIT,
 ): Promise<GroupListResponse> {
   const { data } = await http.get<GroupListResponse>(ENDPOINTS.groups.joined, {
     params: { language, skip, limit },
@@ -62,6 +65,13 @@ export async function unfollowGroup(id: string): Promise<void> {
   await http.delete(ENDPOINTS.groups.follow(id));
 }
 
+/**
+ * Whether the current user has joined a community group.
+ *
+ * GET `/users/me/joined/author/groups?group_id=` returns 200 + group DTO when
+ * joined; 404 when not joined (backend `get_joined_group`). Matches Flutter
+ * `validateStatus: 200 || 404` and `statusCode == 200`.
+ */
 export async function checkGroupJoined(groupId: string): Promise<boolean> {
   try {
     await http.get(ENDPOINTS.groups.joined, {
@@ -74,6 +84,13 @@ export async function checkGroupJoined(groupId: string): Promise<boolean> {
   }
 }
 
+/**
+ * Whether the current user follows a page group.
+ *
+ * GET `/users/me/following/author/groups?group_id=` returns 200 + group DTO when
+ * following; 404 when not following (backend `get_followed_group`). Matches Flutter
+ * `validateStatus: 200 || 404` and `statusCode == 200`.
+ */
 export async function checkGroupFollowed(groupId: string): Promise<boolean> {
   try {
     await http.get(ENDPOINTS.groups.following, {

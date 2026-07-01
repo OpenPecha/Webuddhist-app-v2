@@ -8,15 +8,13 @@ import { groupCardSubtitle } from '@/lib/connect-groups';
 import { useGuest } from '@/providers/guest';
 import { pickGroupMetadata } from '@/types/groups';
 import type { AuthorGroupSummary } from '@/types/groups';
+import { usePendingGroups } from '@/hooks/usePendingGroups';
 import {
-  getPendingGroupsSnapshot,
   isGroupOptimisticallyFollowed,
   isGroupOptimisticallyJoined,
-  subscribePendingGroups,
 } from '@/stores/pending-groups';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { useSyncExternalStore } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
@@ -34,7 +32,7 @@ export function DiscoverGroupCard({
 }: DiscoverGroupCardProps) {
   const router = useRouter();
   const language = useContentLanguage();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth0();
   const { isGuest } = useGuest();
   const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
@@ -46,18 +44,19 @@ export function DiscoverGroupCard({
   const followMutation = useFollowGroup(group.id);
   const actionPending = isPage ? followMutation.isPending : joinMutation.isPending;
 
-  useSyncExternalStore(subscribePendingGroups, getPendingGroupsSnapshot);
+  const pending = usePendingGroups();
 
   const meta = pickGroupMetadata(group.metadata, language);
   const active = isPage
-    ? isGroupOptimisticallyFollowed(group.id, isFollowed)
-    : isGroupOptimisticallyJoined(group.id, isJoined);
+    ? isGroupOptimisticallyFollowed(group.id, isFollowed, pending)
+    : isGroupOptimisticallyJoined(group.id, isJoined, pending);
 
   const subtitle = groupCardSubtitle(
     group,
     meta,
     t('connect.member'),
     t('connect.members'),
+    i18n.language,
   );
 
   const handleCta = () => {

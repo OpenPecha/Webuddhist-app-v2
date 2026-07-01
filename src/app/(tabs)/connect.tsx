@@ -16,10 +16,9 @@ import {
 } from '@/lib/connect-groups';
 import { useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/constants/query-keys';
+import { usePendingGroups } from '@/hooks/usePendingGroups';
 import {
   clearGroupPending,
-  getPendingGroupsSnapshot,
-  subscribePendingGroups,
 } from '@/stores/pending-groups';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +31,6 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useSyncExternalStore } from 'react';
 
 function ConnectErrorState({ onRetry }: { onRetry: () => void }) {
   const { t } = useTranslation();
@@ -71,7 +69,7 @@ export default function ConnectScreen() {
   const insets = useSafeAreaInsets();
   const { scaffoldBackground, mutedForeground } = useThemeColors();
   const queryClient = useQueryClient();
-  const pending = useSyncExternalStore(subscribePendingGroups, getPendingGroupsSnapshot);
+  const pending = usePendingGroups();
 
   const {
     data,
@@ -85,7 +83,7 @@ export default function ConnectScreen() {
   } = useDiscoverGroups('');
   const { data: joinedData, isLoading: myGroupsLoading } = useJoinedGroups();
 
-  const apiMyGroups = joinedData?.groups ?? [];
+  const apiMyGroups = useMemo(() => joinedData?.groups ?? [], [joinedData?.groups]);
   const mergedMyGroups = useMemo(
     () =>
       mergeMyGroupsWithPending(

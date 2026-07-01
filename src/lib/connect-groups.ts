@@ -1,4 +1,5 @@
 import type { AuthorGroupSummary, GroupMetadata } from '@/types/groups';
+import { formatCompactCount } from '@/lib/format-compact-count';
 
 /** Exclude groups the user has already joined (API + optimistic). */
 export function filterDiscoverGroups(
@@ -54,20 +55,6 @@ export function syncPendingUnjoinWithApi(
   }
 }
 
-export function formatCompactCount(count: number): string {
-  if (count >= 1_000_000) {
-    return `${trimTrailingZero((count / 1_000_000).toFixed(1))}M`;
-  }
-  if (count >= 1000) {
-    return `${trimTrailingZero((count / 1000).toFixed(1))}k`;
-  }
-  return count.toLocaleString();
-}
-
-function trimTrailingZero(value: string): string {
-  return value.endsWith('.0') ? value.slice(0, -2) : value;
-}
-
 export function firstGroupTag(group: AuthorGroupSummary): string | undefined {
   const tags = group.tags;
   if (!tags?.length) return undefined;
@@ -80,10 +67,11 @@ export function groupCardSubtitle(
   meta: GroupMetadata | undefined,
   memberSingular: string,
   memberPlural: string,
+  locale = 'en',
 ): string {
   const typeLabel = firstGroupTag(group) ?? meta?.sub_title ?? group.group_type;
   const count = group.member_count ?? group.joiner_count ?? 0;
-  const formatted = formatCompactCount(count);
+  const formatted = formatCompactCount(count, locale);
   const memberLabel = count === 1 ? memberSingular : memberPlural;
   return `${typeLabel} · ${formatted} ${memberLabel}`;
 }

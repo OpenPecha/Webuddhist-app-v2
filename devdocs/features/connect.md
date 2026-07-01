@@ -89,8 +89,8 @@ API results until refetch confirms membership.
 | `/author/groups/{id}/follow` | POST | Auth | Page follow |
 | `DELETE /author/groups/{id}/join` | DELETE | Auth | Leave |
 | `DELETE /author/groups/{id}/follow` | DELETE | Auth | Unfollow |
-| `/users/me/joined/author/groups?group_id=` | GET | Auth | Join status |
-| `/users/me/following/author/groups?group_id=` | GET | Auth | Follow status |
+| `/users/me/joined/author/groups?group_id=` | GET | Auth | Join status | **200** = joined; **404** = not joined |
+| `/users/me/following/author/groups?group_id=` | GET | Auth | Follow status | **200** = following; **404** = not following |
 
 **Group type behavior:** `PAGE` uses follow/unfollow; `COMMUNITY` uses join/leave.
 

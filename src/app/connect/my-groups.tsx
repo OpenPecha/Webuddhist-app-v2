@@ -3,12 +3,11 @@ import { GroupListCard } from '@/components/connect/GroupListCard';
 import { CONNECT_PADDING } from '@/components/connect/connect-styles';
 import { useJoinedGroups } from '@/hooks/api/useDiscoverGroups';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { usePendingGroups } from '@/hooks/usePendingGroups';
 import { mergeMyGroupsWithPending } from '@/lib/connect-groups';
-import { getPendingGroupsSnapshot, subscribePendingGroups } from '@/stores/pending-groups';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
-import { useSyncExternalStore } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, FlatList, Pressable, RefreshControl, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -18,8 +17,8 @@ export default function MyGroupsScreen() {
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const { scaffoldBackground, foreground, mutedForeground } = useThemeColors();
-  const pending = useSyncExternalStore(subscribePendingGroups, getPendingGroupsSnapshot);
-  const { data, isLoading, isRefetching, refetch } = useJoinedGroups(0, 50);
+  const pending = usePendingGroups();
+  const { data, isLoading, isRefetching, refetch } = useJoinedGroups();
 
   const groups = useMemo(
     () =>

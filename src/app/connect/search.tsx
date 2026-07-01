@@ -5,11 +5,10 @@ import { SearchEmptyState } from '@/components/connect/SearchEmptyState';
 import { CONNECT_PADDING } from '@/components/connect/connect-styles';
 import { useDiscoverGroups, useJoinedGroups } from '@/hooks/api/useDiscoverGroups';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { usePendingGroups } from '@/hooks/usePendingGroups';
 import { filterDiscoverGroups, mergeMyGroupsWithPending } from '@/lib/connect-groups';
-import { getPendingGroupsSnapshot, subscribePendingGroups } from '@/stores/pending-groups';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
-import { useSyncExternalStore } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, FlatList, RefreshControl, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,7 +20,7 @@ export default function GroupSearchScreen() {
   const { scaffoldBackground } = useThemeColors();
   const [query, setQuery] = useState('');
   const [debounced, setDebounced] = useState('');
-  const pending = useSyncExternalStore(subscribePendingGroups, getPendingGroupsSnapshot);
+  const pending = usePendingGroups();
 
   useEffect(() => {
     const timer = setTimeout(() => setDebounced(query.trim()), 300);
