@@ -8,7 +8,11 @@ import * as Haptics from 'expo-haptics';
 
 export function hapticSelection(): void {
   try {
-    void Haptics.selectionAsync();
+    // Guard both a synchronous throw AND a rejected promise: when the native
+    // ExpoHaptics module is missing (dev client not rebuilt), selectionAsync
+    // rejects asynchronously, which would otherwise surface as an uncaught
+    // promise rejection.
+    Haptics.selectionAsync().catch(() => {});
   } catch {
     // no-op when native module is unavailable
   }
@@ -16,7 +20,7 @@ export function hapticSelection(): void {
 
 export function hapticLight(): void {
   try {
-    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
   } catch {
     // no-op when native module is unavailable
   }
