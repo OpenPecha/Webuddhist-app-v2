@@ -10,7 +10,11 @@ import { MalaSkeleton } from '@/components/mala/MalaSkeleton';
 import { createMalaSoundPlayer } from '@/components/mala/MalaSoundPlayer';
 import { MantraSwitcher } from '@/components/mala/MantraSwitcher';
 import { ArrowLeftIcon } from '@/components/home/HomeIcon';
+import { LoginDrawer } from '@/components/auth/LoginDrawer';
 import { DestructiveConfirmDialog } from '@/components/ui/DestructiveConfirmDialog';
+import { useToggleBookmark } from '@/hooks/api/useToggleBookmark';
+import { useLoginDrawer } from '@/hooks/useLoginDrawer';
+import { useGuest } from '@/providers/guest';
 import { useMalaPresets } from '@/hooks/api/useMalaPresets';
 import { useMalaCounter } from '@/hooks/useMalaCounter';
 import { useMalaPreferences } from '@/hooks/useMalaPreferences';
@@ -33,6 +37,9 @@ export default function MalaScreen() {
   const insets = useSafeAreaInsets();
   const { foreground, scaffoldBackground } = useThemeColors();
   const { user } = useAuth0();
+  const { isGuest } = useGuest();
+  const toggleBookmark = useToggleBookmark();
+  const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
   const language = i18n.language.split('-')[0] ?? 'en';
 
   const params = useLocalSearchParams<{ initialPresetId?: string; }>();
@@ -228,7 +235,21 @@ export default function MalaScreen() {
         onResetPress={() => setResetVisible(true)}
         onSoundChange={(v) => void setSoundEnabled(v)}
         onVibrationChange={(v) => void setVibrationEnabled(v)}
+        onBookmarkPress={() => {
+          if (isGuest || !user) {
+            showLoginDrawer();
+            return;
+          }
+          if (!activeMantra?.presetId) return;
+          toggleBookmark.mutate({
+            type: 'ACCUMULATOR',
+            sourceId: activeMantra.presetId,
+            name: localizedMantraName(activeMantra, language),
+          });
+        }}
       />
+
+      <LoginDrawer key={session} visible={visible} onClose={hideLoginDrawer} />
 
       <DestructiveConfirmDialog
         visible={resetVisible}

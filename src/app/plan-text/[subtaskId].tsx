@@ -1,8 +1,12 @@
 import { PlanReadingLayout } from '@/components/plans/PlanReadingLayout';
+import { ReaderBookmarkButton } from '@/components/reader/ReaderBookmarkButton';
+import { useTextReaderDetails } from '@/hooks/api/useTextReaderDetails';
 import { usePlanReadingSession } from '@/hooks/usePlanReadingSession';
 import { usePlanSegmentAudio } from '@/hooks/usePlanSegmentAudio';
+import { resolveInitialSegmentId } from '@/utils/plan-subtask-navigation';
+import { extractSegmentContent, flattenReaderSegments } from '@/utils/text-reader-content';
 import { useLocalSearchParams } from 'expo-router';
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
@@ -12,7 +16,7 @@ export default function PlanTextScreen() {
   const cancelAudioRef = useRef<() => void>(() => {});
 
   const {
-    isLoading,
+    isLoading: planLoading,
     currentItem,
     resolveAudioUrl,
     autoPlay,
@@ -35,7 +39,41 @@ export default function PlanTextScreen() {
     .flatMap((task) => task.subtasks.map((sub) => ({ sub, task })))
     .find(({ sub }) => sub.id === subtaskId);
 
-  const content = subtask?.sub.content ?? currentItem?.content ?? '';
+  const inlineContent = subtask?.sub.content?.trim() ?? currentItem?.content?.trim() ?? '';
+  const textId = subtask?.sub.source_text_id ?? currentItem?.sourceTextId ?? undefined;
+  const segmentId = currentItem ? resolveInitialSegmentId(currentItem) : undefined;
+  const needsReaderFetch = !!textId;
+
+  const { data: readerDetails, isLoading: readerLoading } = useTextReaderDetails(
+    textId ?? '',
+    segmentId,
+    needsReaderFetch,
+  );
+
+  const segments = useMemo(() => {
+    if (!readerDetails || !textId) return undefined;
+    const flat = flattenReaderSegments(readerDetails);
+    return flat.length > 0 ? flat : undefined;
+  }, [readerDetails, textId]);
+
+  const segmentContent = useMemo(() => {
+    if (!readerDetails) return '';
+    return extractSegmentContent(readerDetails, currentItem?.segmentIds);
+  }, [readerDetails, currentItem?.segmentIds]);
+
+  const content =
+    (segments ? segmentContent : '') ||
+    inlineContent ||
+    readerDetails?.text_detail?.summary?.trim() ||
+    '';
+
+  const textTitle = readerDetails?.text_detail?.title ?? t('reader.title');
+  const isLoading = planLoading || (needsReaderFetch && readerLoading);
+  const collapsedSegmentPreview = !!currentItem?.segmentIds?.length;
+
+  const bookmarkHeader = textId ? (
+    <ReaderBookmarkButton textId={textId} textTitle={textTitle} />
+  ) : null;
 
   if (isLoading) {
     return (
@@ -56,7 +94,10 @@ export default function PlanTextScreen() {
   return (
     <PlanReadingLayout
       content={content}
-      sectionTitle={currentItem?.taskTitle ?? t('reader.title')}
+      sectionTitle={currentItem?.taskTitle ?? textTitle}
+      textId={textId}
+      segments={segments}
+      headerExtra={bookmarkHeader}
       audioReady={audio.ready}
       isPlaying={audio.isPlaying}
       isAudioLoading={audio.buttonState === 'loading'}
@@ -69,6 +110,15 @@ export default function PlanTextScreen() {
       onFinish={() => navigate('finish')}
       onSwipeNext={() => navigate('next')}
       onSwipePrev={() => navigate('prev')}
+      collapsedSegmentPreview={collapsedSegmentPreview}
+      activeSegmentIds={currentItem?.segmentIds}
+      footerMeta={
+        readerDetails?.text_detail?.title ? (
+          <Text style={{ fontSize: 11, color: '#8a8a8a', textAlign: 'center', marginTop: 16 }}>
+            {readerDetails.text_detail.title}
+          </Text>
+        ) : null
+      }
     />
   );
 }

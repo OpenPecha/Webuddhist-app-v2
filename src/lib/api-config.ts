@@ -82,4 +82,15 @@ export const ENDPOINTS = {
     today: '/events/today',
     detail: (id: string) => `/events/${id}`,
   },
+  bookmarks: {
+    list: '/users/me/bookmarks',
+    create: '/users/me/bookmarks',
+    exists: '/users/me/bookmarks/exists',
+    delete: (id: string) => `/users/me/bookmarks/${id}`,
+  },
+  segments: {
+    info: (segmentId: string) => `/segments/${segmentId}/info`,
+    commentaries: (segmentId: string) => `/segments/${segmentId}/commentaries`,
+    translations: (segmentId: string) => `/segments/${segmentId}/translations`,
+  },
 } as const;

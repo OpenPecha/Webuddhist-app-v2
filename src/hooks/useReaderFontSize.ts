@@ -1,8 +1,8 @@
 import { getString, setString, StorageKeys } from '@/lib/storage';
 import { useCallback, useEffect, useState } from 'react';
 
-/** Mirrors Flutter `ReaderFontSizeBottomSheet.fontSizeSteps`. */
-export const READER_FONT_SIZE_STEPS = [12, 14, 18, 22, 28, 36, 44] as const;
+/** Reader font size steps (14px–28px per product spec). */
+export const READER_FONT_SIZE_STEPS = [14, 16, 18, 20, 22, 24, 26, 28] as const;
 
 export const DEFAULT_READER_FONT_SIZE = 18;
 

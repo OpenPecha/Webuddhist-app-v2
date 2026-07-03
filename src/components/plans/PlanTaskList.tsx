@@ -20,10 +20,8 @@ export interface PlanTaskListItem {
 interface PlanTaskListProps {
   tasks: PlanTaskListItem[];
   readOnly?: boolean;
-  variant?: 'card' | 'activity';
   dayAudioUrl?: string | null;
   onToggleTask?: (taskId: string, completed: boolean) => void;
-  onToggleSubTask?: (subTaskId: string, completed: boolean) => void;
   onPressTask?: (taskId: string) => void;
   onPressTaskWithAudio?: (taskId: string) => void;
   optimisticCompleted?: Record<string, boolean>;
@@ -46,7 +44,6 @@ function TaskCheckbox({
         borderRadius: 12,
         borderWidth: completed ? 0 : 1,
         borderColor: '#000',
-        backgroundColor: completed ? 'transparent' : 'transparent',
         alignItems: 'center',
         justifyContent: 'center',
       }}
@@ -89,10 +86,8 @@ function CircleActionButton({
 export function PlanTaskList({
   tasks,
   readOnly = true,
-  variant = 'card',
   dayAudioUrl,
   onToggleTask,
-  onToggleSubTask,
   onPressTask,
   onPressTaskWithAudio,
   optimisticCompleted = {},
@@ -107,170 +102,54 @@ export function PlanTaskList({
     );
   }
 
-  if (variant === 'activity') {
-    return (
-      <View style={{ paddingHorizontal: 16, paddingBottom: 32 }}>
-        {tasks.map((task) => {
-          const completed = optimisticCompleted[task.id] ?? task.is_completed === true;
-          const navigable = isTaskNavigable(task);
-          const hasAudio = taskHasAudio(task, dayAudioUrl);
-
-          return (
-            <View
-              key={task.id}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginVertical: 10,
-                gap: 10,
-              }}
-            >
-              {!readOnly && onToggleTask ? (
-                <TaskCheckbox
-                  completed={completed}
-                  onToggle={() => onToggleTask(task.id, completed)}
-                />
-              ) : completed ? (
-                <Ionicons name="checkmark" size={20} color="#000" />
-              ) : (
-                <View
-                  style={{
-                    width: 24,
-                    height: 24,
-                    borderRadius: 12,
-                    borderWidth: 1,
-                    borderColor: '#000',
-                  }}
-                />
-              )}
-
-              <Pressable
-                style={{ flex: 1 }}
-                disabled={!navigable}
-                onPress={() => onPressTask?.(task.id)}
-              >
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: '500',
-                    fontFamily: 'Inter-Medium',
-                    color: '#000',
-                  }}
-                  numberOfLines={2}
-                >
-                  {task.title ?? t('plans.preview.untitled_task')}
-                </Text>
-              </Pressable>
-
-              {navigable && hasAudio && onPressTaskWithAudio ? (
-                <CircleActionButton icon="play" onPress={() => onPressTaskWithAudio(task.id)} />
-              ) : navigable ? (
-                <CircleActionButton icon="chevron-forward" onPress={() => onPressTask?.(task.id)} />
-              ) : null}
-            </View>
-          );
-        })}
-      </View>
-    );
-  }
-
   return (
-    <View style={{ paddingHorizontal: 20, paddingBottom: 32 }}>
+    <View style={{ paddingHorizontal: 16, paddingBottom: 32 }}>
       {tasks.map((task) => {
         const completed = optimisticCompleted[task.id] ?? task.is_completed === true;
+        const navigable = isTaskNavigable(task);
+        const hasAudio = taskHasAudio(task, dayAudioUrl);
+
         return (
-          <Pressable
+          <View
             key={task.id}
-            disabled={readOnly && !onPressTask}
-            onPress={() => onPressTask?.(task.id)}
             style={{
-              backgroundColor: '#fff',
-              borderRadius: 12,
-              padding: 16,
-              marginBottom: 12,
-              borderWidth: 1,
-              borderColor: '#e8e8e4',
-              opacity: completed && readOnly ? 0.7 : 1,
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginVertical: 10,
+              gap: 10,
             }}
           >
-            <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
-              {!readOnly && onToggleTask ? (
-                <Pressable
-                  onPress={() => onToggleTask(task.id, !completed)}
-                  hitSlop={8}
-                  style={{
-                    width: 24,
-                    height: 24,
-                    borderRadius: 12,
-                    borderWidth: 2,
-                    borderColor: completed ? '#000' : '#ccc',
-                    backgroundColor: completed ? '#000' : 'transparent',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginTop: 2,
-                  }}
-                >
-                  {completed ? <Ionicons name="checkmark" size={14} color="#fff" /> : null}
-                </Pressable>
-              ) : completed ? (
-                <Ionicons name="checkmark-circle" size={22} color="#000" style={{ marginTop: 2 }} />
-              ) : null}
-              <View style={{ flex: 1 }}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontWeight: '600',
-                    fontFamily: 'Inter-SemiBold',
-                    marginBottom: task.subtasks.length ? 8 : 0,
-                    textDecorationLine: completed ? 'line-through' : 'none',
-                  }}
-                >
-                  {task.title ?? t('plans.preview.untitled_task')}
-                </Text>
-                {task.subtasks.map((sub) => {
-                  const subCompleted = optimisticCompleted[sub.id] ?? sub.is_completed === true;
-                  return (
-                    <View
-                      key={sub.id}
-                      style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8, marginTop: 4 }}
-                    >
-                      {!readOnly && onToggleSubTask ? (
-                        <Pressable
-                          onPress={() => onToggleSubTask(sub.id, !subCompleted)}
-                          hitSlop={8}
-                          style={{
-                            width: 20,
-                            height: 20,
-                            borderRadius: 10,
-                            borderWidth: 1.5,
-                            borderColor: subCompleted ? '#000' : '#ccc',
-                            backgroundColor: subCompleted ? '#000' : 'transparent',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginTop: 2,
-                          }}
-                        >
-                          {subCompleted ? <Ionicons name="checkmark" size={12} color="#fff" /> : null}
-                        </Pressable>
-                      ) : null}
-                      <Text
-                        style={{
-                          flex: 1,
-                          fontSize: 14,
-                          color: '#444',
-                          lineHeight: 20,
-                          textDecorationLine: subCompleted ? 'line-through' : 'none',
-                        }}
-                        numberOfLines={6}
-                      >
-                        {sub.content}
-                      </Text>
-                    </View>
-                  );
-                })}
-              </View>
-            </View>
-          </Pressable>
+            {!readOnly && onToggleTask ? (
+              <TaskCheckbox
+                completed={completed}
+                onToggle={() => onToggleTask(task.id, completed)}
+              />
+            ) : null}
+
+            <Pressable
+              style={{ flex: 1 }}
+              disabled={!navigable}
+              onPress={() => onPressTask?.(task.id)}
+            >
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: '500',
+                  fontFamily: 'Inter-Medium',
+                  color: '#000',
+                }}
+                numberOfLines={2}
+              >
+                {task.title ?? t('plans.preview.untitled_task')}
+              </Text>
+            </Pressable>
+
+            {navigable && hasAudio && onPressTaskWithAudio ? (
+              <CircleActionButton icon="play" onPress={() => onPressTaskWithAudio(task.id)} />
+            ) : navigable && onPressTask ? (
+              <CircleActionButton icon="chevron-forward" onPress={() => onPressTask(task.id)} />
+            ) : null}
+          </View>
         );
       })}
     </View>

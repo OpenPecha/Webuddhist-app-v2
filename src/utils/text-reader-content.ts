@@ -1,4 +1,34 @@
-import type { DetailSection, DetailTableOfContentResponse } from '@/types/texts';
+import type { DetailSection, DetailTableOfContentResponse, DetailTextSegment } from '@/types/texts';
+
+function collectSegmentObjectsFromSection(
+  section: DetailSection,
+  targetIds: Set<string> | null,
+  out: DetailTextSegment[],
+): void {
+  for (const segment of section.segments ?? []) {
+    if (!segment.content?.trim()) continue;
+    if (targetIds && !targetIds.has(segment.segment_id)) continue;
+    out.push(segment);
+  }
+  for (const child of section.sections ?? []) {
+    collectSegmentObjectsFromSection(child, targetIds, out);
+  }
+}
+
+/** Flatten segments from reader details for tappable list rendering. */
+export function flattenReaderSegments(
+  response: DetailTableOfContentResponse,
+  segmentIds?: string[] | null,
+): DetailTextSegment[] {
+  const targetIds = segmentIds?.length ? new Set(segmentIds.map(String)) : null;
+  const segments: DetailTextSegment[] = [];
+
+  for (const section of response.content?.sections ?? []) {
+    collectSegmentObjectsFromSection(section, targetIds, segments);
+  }
+
+  return segments;
+}
 
 function collectSegmentsFromSection(
   section: DetailSection,

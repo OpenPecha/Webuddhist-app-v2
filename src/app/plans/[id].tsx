@@ -20,9 +20,14 @@ import {
   parseCalendarDate,
   resolveUserPlanForItem,
 } from '@/utils/plan-utils';
+import {
+  isTaskNavigable,
+  mapPublicPlanTasksToNavigation,
+  resolvePlanReadingRoute,
+} from '@/utils/plan-subtask-navigation';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
@@ -70,10 +75,14 @@ export default function PlanPreviewScreen() {
 
   const { data: dayDetail, isLoading: dayLoading } = usePublicPlanDay(planId, selectedDay);
 
+  const signedIn = !!user && !isGuest && isAuthReady;
+  const awaitingEnrollmentCheck = signedIn && enrolledLoading;
+  const redirectingToTrack = signedIn && !enrolledLoading && isEnrolled === true;
+
   useEffect(() => {
-    if (!user || isGuest || !isAuthReady || enrolledLoading || !dayInitialized) return;
+    if (!signedIn || enrolledLoading || !dayInitialized || !plan) return;
     if (isEnrolled && userPlansLoading) return;
-    if (isEnrolled && plan) {
+    if (isEnrolled) {
       const userPlan = resolveUserPlanForItem(planId, userPlansData?.plans ?? []);
       const redirectDay =
         (userPlan ? getCurrentDay(userPlan) : undefined) ?? selectedDay;
@@ -87,9 +96,7 @@ export default function PlanPreviewScreen() {
       });
     }
   }, [
-    user,
-    isGuest,
-    isAuthReady,
+    signedIn,
     isEnrolled,
     enrolledLoading,
     dayInitialized,
@@ -122,7 +129,10 @@ export default function PlanPreviewScreen() {
   const isLoading =
     planLoading ||
     daysLoading ||
-    (user && !isGuest && (enrolledLoading || routineLoading));
+    !dayInitialized ||
+    routineLoading ||
+    awaitingEnrollmentCheck ||
+    redirectingToTrack;
 
   const handleAddToRoutine = () => {
     if (isGuest || !user) {
@@ -135,18 +145,48 @@ export default function PlanPreviewScreen() {
     });
   };
 
+  const navTasks = useMemo(
+    () => mapPublicPlanTasksToNavigation(dayDetail?.tasks ?? []),
+    [dayDetail],
+  );
+
   const tasks = useMemo(
     () =>
-      (dayDetail?.tasks ?? []).map((task) => ({
+      navTasks.map((task) => ({
         id: task.id,
         title: task.title,
-        subtasks: task.subtasks.map((sub) => ({
-          id: sub.id,
-          content: sub.content,
-          content_type: sub.content_type,
-        })),
+        subtasks: task.subtasks,
       })),
-    [dayDetail],
+    [navTasks],
+  );
+
+  const dayAudioUrl = dayDetail?.audio_url ?? null;
+
+  const openPlanReading = useCallback(
+    (startAt: { taskId: string } | 'first-incomplete', autoPlay = false) => {
+      const route = resolvePlanReadingRoute({
+        planId,
+        dayNumber: selectedDay,
+        tasks: navTasks,
+        dayAudioUrl,
+        startAt,
+        autoPlay,
+        preview: true,
+      });
+      if (!route) return;
+      if (route.pathname === '/plan-text/[subtaskId]') {
+        router.push({
+          pathname: '/plan-text/[subtaskId]',
+          params: route.params as { subtaskId: string; planId: string; dayNumber: string },
+        });
+      } else {
+        router.push({
+          pathname: '/reader/[textId]',
+          params: route.params as { textId: string; planId: string; dayNumber: string },
+        });
+      }
+    },
+    [planId, selectedDay, navTasks, dayAudioUrl, router],
   );
 
   if (isLoading) {
@@ -220,7 +260,23 @@ export default function PlanPreviewScreen() {
         {dayLoading ? (
           <ActivityIndicator style={{ marginTop: 24 }} />
         ) : (
-          <PlanTaskList tasks={tasks} readOnly />
+          <PlanTaskList
+            tasks={tasks}
+            readOnly
+            dayAudioUrl={dayAudioUrl}
+            onPressTask={(taskId) => {
+              const task = navTasks.find((item) => item.id === taskId);
+              if (task && isTaskNavigable(task)) {
+                openPlanReading({ taskId }, false);
+              }
+            }}
+            onPressTaskWithAudio={(taskId) => {
+              const task = navTasks.find((item) => item.id === taskId);
+              if (task && isTaskNavigable(task)) {
+                openPlanReading({ taskId }, true);
+              }
+            }}
+          />
         )}
       </ScrollView>
 

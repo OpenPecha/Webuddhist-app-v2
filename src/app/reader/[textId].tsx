@@ -1,9 +1,10 @@
 import { PlanReadingLayout } from '@/components/plans/PlanReadingLayout';
+import { ReaderBookmarkButton } from '@/components/reader/ReaderBookmarkButton';
 import { useTextReaderDetails } from '@/hooks/api/useTextReaderDetails';
 import { usePlanReadingSession } from '@/hooks/usePlanReadingSession';
 import { usePlanSegmentAudio } from '@/hooks/usePlanSegmentAudio';
 import { resolveInitialSegmentId } from '@/utils/plan-subtask-navigation';
-import { extractSegmentContent } from '@/utils/text-reader-content';
+import { extractSegmentContent, flattenReaderSegments } from '@/utils/text-reader-content';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useRef } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
@@ -40,17 +41,23 @@ export default function ReaderScreen() {
     .find((sub) => sub.id === currentItem?.subTaskId)?.content;
 
   const hasPlanContext = !!currentItem;
-  const isSourceReference = currentItem?.contentType === 'SOURCE_REFERENCE';
   const inlineContent = subtaskContent?.trim() ?? currentItem?.content?.trim() ?? '';
-  const needsReaderFetch = hasPlanContext && isSourceReference && !inlineContent;
+  const needsReaderFetch = !!textId;
+  const collapsedSegmentPreview = !!currentItem?.segmentIds?.length;
 
   const segmentId = currentItem ? resolveInitialSegmentId(currentItem) : undefined;
 
   const { data: readerDetails, isLoading: readerLoading } = useTextReaderDetails(
-    textId,
+    textId!,
     segmentId,
-    needsReaderFetch || (!hasPlanContext && !!textId),
+    needsReaderFetch,
   );
+
+  const segments = useMemo(() => {
+    if (!readerDetails || !textId) return undefined;
+    const flat = flattenReaderSegments(readerDetails);
+    return flat.length > 0 ? flat : undefined;
+  }, [readerDetails, textId]);
 
   const segmentContent = useMemo(() => {
     if (!readerDetails) return '';
@@ -58,12 +65,17 @@ export default function ReaderScreen() {
   }, [readerDetails, currentItem?.segmentIds]);
 
   const content =
+    (segments ? segmentContent : '') ||
     inlineContent ||
-    segmentContent ||
     readerDetails?.text_detail?.summary?.trim() ||
     t('reader.placeholder');
 
+  const textTitle = readerDetails?.text_detail?.title ?? t('reader.title');
   const isLoading = planLoading || (needsReaderFetch && readerLoading);
+
+  const bookmarkHeader = textId ? (
+    <ReaderBookmarkButton textId={textId} textTitle={textTitle} />
+  ) : null;
 
   if (isLoading) {
     return (
@@ -77,7 +89,10 @@ export default function ReaderScreen() {
     return (
       <PlanReadingLayout
         content={content}
-        sectionTitle={readerDetails?.text_detail?.title ?? t('reader.title')}
+        sectionTitle={textTitle}
+        textId={textId}
+        segments={segments}
+        headerExtra={bookmarkHeader}
         canPrev={false}
         canNext={false}
         onFinish={() => router.back()}
@@ -88,7 +103,10 @@ export default function ReaderScreen() {
   return (
     <PlanReadingLayout
       content={content}
-      sectionTitle={currentItem?.taskTitle ?? readerDetails?.text_detail?.title ?? t('reader.title')}
+      sectionTitle={currentItem?.taskTitle ?? textTitle}
+      textId={textId}
+      segments={segments}
+      headerExtra={bookmarkHeader}
       audioReady={audio.ready}
       isPlaying={audio.isPlaying}
       isAudioLoading={audio.buttonState === 'loading'}
@@ -101,6 +119,8 @@ export default function ReaderScreen() {
       onFinish={() => navigate('finish')}
       onSwipeNext={() => navigate('next')}
       onSwipePrev={() => navigate('prev')}
+      collapsedSegmentPreview={collapsedSegmentPreview}
+      activeSegmentIds={currentItem?.segmentIds}
       footerMeta={
         readerDetails?.text_detail?.title ? (
           <Text style={{ fontSize: 11, color: '#8a8a8a', textAlign: 'center', marginTop: 16 }}>

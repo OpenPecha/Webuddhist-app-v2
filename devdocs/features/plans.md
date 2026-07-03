@@ -21,10 +21,10 @@ completion.
 
 | Screen | v2 file | Status |
 |--------|---------|--------|
-| Plan preview | — | **Missing** — series taps broken route |
-| Plan track | `src/app/practice/details.tsx` | **Partial** — chevron day nav, task list only |
-| Plan components | `src/components/plans/*` | Partial — `PlanCard`, `EnrolledPlanStatusIndicator` exist |
-| Services | `src/services/plans.ts` | Partial — enrolled reads only; no catalog fetch or enroll |
+| Plan preview | `src/app/plans/[id].tsx` | **Parity** — square day cards, activity task rows, tap → reader/plan-text (`preview=1`, no completion) |
+| Plan track | `src/app/practice/details.tsx` | **Parity** — day cards, checkboxes, Practice Now, completion APIs |
+| Plan components | `src/components/plans/*` | `PlanDayCarousel` (card only), `PlanTaskList` (activity rows), `PlanNavigator` |
+| Services | `src/services/plans.ts` | Catalog + enrolled reads; preview uses `GET /plans/{id}/days/{n}` |
 
 ## 2b. Mockup redesign (`plan_design_revamp`, `Missed_days_flow`)
 
@@ -38,8 +38,8 @@ Design reference: shared mockup sets. Full index:
 | Hero cover | Top image ~25–40% | `PlanCoverImage` | `GET /plans/{id}` |
 | Title + day count | Header area | preview + info screens | `total_days` |
 | Intro description | Body text | plan description | |
-| Day carousel | Horizontal 1..N; border = selected; check = completed | `DayCarousel` | `/plans/{id}/days` + completion when enrolled |
-| Task list | Title + icon + chevron | `PreviewActivityList` / `ActivityList` | day endpoint |
+| Day carousel | Horizontal 1..N square cards; day # + date; check = completed | `DayCarousel` | `PlanDayCarousel` (same card UI on preview + track) |
+| Task list | Title + chevron/play (preview read-only; track + checkbox) | `PreviewActivityList` / `ActivityList` | `PlanTaskList` — tap opens child reader |
 | Practice Now | Sticky black CTA | opens first incomplete task | enrolled only |
 
 ### Plan track enhancements — P1

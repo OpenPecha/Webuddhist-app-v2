@@ -4,7 +4,7 @@ import { PlanDayHeader } from '@/components/plans/PlanDayHeader';
 import { PlanDayVideosStrip } from '@/components/plans/PlanDayVideosStrip';
 import { PlanHero } from '@/components/plans/PlanHero';
 import { PlanTaskList } from '@/components/plans/PlanTaskList';
-import { useCompleteSubTask, useCompleteTask } from '@/hooks/api/useCompleteTask';
+import { useCompleteTask } from '@/hooks/api/useCompleteTask';
 import { usePlanCompletionStatus } from '@/hooks/api/usePlanCompletionStatus';
 import { usePlanDays } from '@/hooks/api/usePlanDays';
 import { usePlanDetail } from '@/hooks/api/usePlanDetail';
@@ -114,7 +114,6 @@ export default function PlanTrackScreen() {
   const { data: completionMap } = usePlanCompletionStatus(planId);
   const { data: dayDetails, isLoading: dayLoading } = useUserPlanDay(planId, selectedDay);
   const completeTask = useCompleteTask(planId, selectedDay);
-  const completeSubTask = useCompleteSubTask(planId, selectedDay);
 
   const userPlan: UserPlan | null = useMemo(() => {
     const plans = userPlansData?.plans ?? [];
@@ -237,21 +236,6 @@ export default function PlanTrackScreen() {
     [completeTask],
   );
 
-  const handleToggleSubTask = useCallback(
-    (subTaskId: string, completed: boolean) => {
-      if (completed) return;
-      setOptimisticCompleted((prev) => ({ ...prev, [subTaskId]: true }));
-      completeSubTask.mutate(subTaskId, {
-        onError: () =>
-          setOptimisticCompleted((prev) => {
-            const next = { ...prev };
-            delete next[subTaskId];
-            return next;
-          }),
-      });
-    },
-    [completeSubTask],
-  );
   const showPracticeNow = hasNavigableContent;
   const isLoading = userPlansLoading || dayLoading;
   const notEnrolled = !userPlansLoading && !userPlan;
@@ -326,7 +310,6 @@ export default function PlanTrackScreen() {
             />
           ) : null}
           <PlanDayCarousel
-            variant="card"
             days={carouselDays}
             selectedDay={selectedDay}
             onSelectDay={setSelectedDay}
@@ -336,12 +319,10 @@ export default function PlanTrackScreen() {
           />
           <PlanDayVideosStrip videos={dayDetails?.videos ?? []} />
           <PlanTaskList
-            variant="activity"
             tasks={tasks}
             readOnly={false}
             dayAudioUrl={dayAudioUrl}
             onToggleTask={handleToggleTask}
-            onToggleSubTask={handleToggleSubTask}
             optimisticCompleted={optimisticCompleted}
             onPressTask={(taskId) => {
               const task = navTasks.find((t) => t.id === taskId);

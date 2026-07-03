@@ -1,3 +1,4 @@
+import type { PublicPlanTask } from '@/types/plan-catalog';
 import type { PlanReadingStartAt, PlanTextItem } from '@/types/plan-navigation';
 
 export interface PlanTaskForNavigation {
@@ -30,16 +31,20 @@ function normalizeContentType(raw?: string): 'TEXT' | 'SOURCE_REFERENCE' | null 
 function resolveSubtaskContentType(
   sub: PlanTaskForNavigation['subtasks'][number],
 ): 'TEXT' | 'SOURCE_REFERENCE' | null {
-  const normalized = normalizeContentType(sub.content_type);
-  if (normalized === 'SOURCE_REFERENCE' && hasSourceText(sub.source_text_id)) {
+  // Prefer linked text reader when source_text_id exists (even if inline content is present).
+  if (hasSourceText(sub.source_text_id)) {
     return 'SOURCE_REFERENCE';
   }
+
+  const normalized = normalizeContentType(sub.content_type);
   if (normalized === 'TEXT' && hasInlineContent(sub.content)) {
     return 'TEXT';
   }
+  if (normalized === 'SOURCE_REFERENCE') {
+    return null;
+  }
   if (normalized) return null;
 
-  if (hasSourceText(sub.source_text_id)) return 'SOURCE_REFERENCE';
   if (hasInlineContent(sub.content)) return 'TEXT';
   return null;
 }
@@ -167,6 +172,52 @@ export interface PlanReadingRoute {
   params: Record<string, string>;
 }
 
+export function mapPublicPlanTasksToNavigation(tasks: PublicPlanTask[]): PlanTaskForNavigation[] {
+  return [...tasks]
+    .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0))
+    .map((task) => ({
+      id: task.id,
+      title: task.title,
+      display_order: task.display_order,
+      subtasks: [...task.subtasks]
+        .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0))
+        .map((sub) => ({
+          id: sub.id,
+          content: sub.content,
+          content_type: sub.content_type,
+          source_text_id: sub.source_text_id,
+          display_order: sub.display_order,
+        })),
+    }));
+}
+
+function buildReadingRouteParams(options: {
+  planId: string;
+  dayNumber: number;
+  subTaskId: string;
+  taskIndex: number;
+  itemCount: number;
+  autoPlay?: boolean;
+  dayAudioUrl?: string | null;
+  preview?: boolean;
+}): Record<string, string> {
+  const baseParams: Record<string, string> = {
+    planId: options.planId,
+    dayNumber: String(options.dayNumber),
+    subTaskId: options.subTaskId,
+    taskIndex: String(options.taskIndex),
+    itemCount: String(options.itemCount),
+    autoPlay: options.autoPlay ? '1' : '0',
+  };
+  if (options.dayAudioUrl) {
+    baseParams.dayAudioUrl = options.dayAudioUrl;
+  }
+  if (options.preview) {
+    baseParams.preview = '1';
+  }
+  return baseParams;
+}
+
 export function resolvePlanReadingRoute(options: {
   planId: string;
   dayNumber: number;
@@ -174,6 +225,7 @@ export function resolvePlanReadingRoute(options: {
   dayAudioUrl?: string | null;
   startAt: PlanReadingStartAt;
   autoPlay?: boolean;
+  preview?: boolean;
 }): PlanReadingRoute | null {
   const items = buildPlanTextItems(options.tasks);
   if (items.length === 0) return null;
@@ -182,30 +234,28 @@ export function resolvePlanReadingRoute(options: {
   const item = items[index];
   if (!item) return null;
 
-  const baseParams: Record<string, string> = {
+  const baseParams = buildReadingRouteParams({
     planId: options.planId,
-    dayNumber: String(options.dayNumber),
+    dayNumber: options.dayNumber,
     subTaskId: item.subTaskId,
-    taskIndex: String(index),
-    itemCount: String(items.length),
-    autoPlay: options.autoPlay ? '1' : '0',
-  };
+    taskIndex: index,
+    itemCount: items.length,
+    autoPlay: options.autoPlay,
+    dayAudioUrl: options.dayAudioUrl,
+    preview: options.preview,
+  });
 
-  if (options.dayAudioUrl) {
-    baseParams.dayAudioUrl = options.dayAudioUrl;
+  if (item.sourceTextId) {
+    return {
+      pathname: '/reader/[textId]',
+      params: { textId: item.sourceTextId, ...baseParams },
+    };
   }
 
   if (item.contentType === 'TEXT') {
     return {
       pathname: '/plan-text/[subtaskId]',
       params: { subtaskId: item.subTaskId, ...baseParams },
-    };
-  }
-
-  if (item.sourceTextId) {
-    return {
-      pathname: '/reader/[textId]',
-      params: { textId: item.sourceTextId, ...baseParams },
     };
   }
 
@@ -219,34 +269,33 @@ export function resolvePlanReadingRouteForIndex(options: {
   index: number;
   dayAudioUrl?: string | null;
   autoPlay?: boolean;
+  preview?: boolean;
 }): PlanReadingRoute | null {
   const item = options.items[options.index];
   if (!item) return null;
 
-  const baseParams: Record<string, string> = {
+  const baseParams = buildReadingRouteParams({
     planId: options.planId,
-    dayNumber: String(options.dayNumber),
+    dayNumber: options.dayNumber,
     subTaskId: item.subTaskId,
-    taskIndex: String(options.index),
-    itemCount: String(options.items.length),
-    autoPlay: options.autoPlay ? '1' : '0',
-  };
+    taskIndex: options.index,
+    itemCount: options.items.length,
+    autoPlay: options.autoPlay,
+    dayAudioUrl: options.dayAudioUrl,
+    preview: options.preview,
+  });
 
-  if (options.dayAudioUrl) {
-    baseParams.dayAudioUrl = options.dayAudioUrl;
+  if (item.sourceTextId) {
+    return {
+      pathname: '/reader/[textId]',
+      params: { textId: item.sourceTextId, ...baseParams },
+    };
   }
 
   if (item.contentType === 'TEXT') {
     return {
       pathname: '/plan-text/[subtaskId]',
       params: { subtaskId: item.subTaskId, ...baseParams },
-    };
-  }
-
-  if (item.sourceTextId) {
-    return {
-      pathname: '/reader/[textId]',
-      params: { textId: item.sourceTextId, ...baseParams },
     };
   }
 

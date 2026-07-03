@@ -2,137 +2,78 @@
 
 | | |
 |---|---|
-| **Status** | Not started |
+| **Status** | In progress |
 | **Priority** | P1 |
 | **Flutter baseline** | `lib/features/reader`, `lib/features/texts` |
-| **v2 target** | TBD (`src/app/reader/[textId].tsx`) |
-| **Owner** | @migration-lead |
-| **Last updated** | 2026-06-08 |
+| **v2 target** | `src/app/reader/[textId].tsx`, `PlanReadingLayout` |
+| **Last updated** | 2026-06-22 |
 
 ---
 
 ## 1. Summary
 
-The reader is the core text-reading experience and the **most complex** feature.
-It renders Buddhist texts segment-by-segment and supports:
+The reader renders Buddhist texts for plan subtasks and standalone deep links. Current v2 scope (this migration slice):
 
-- **Version, language, and script selection** for the text being read
-- **Commentaries and translations** in a separate panel below the text
-- **Segment actions**, including loading segment-level commentaries and translations,
-  sharing a segment, and creating a shareable image (built from a selected segment and
-  a choice of background images)
-- **Dual-reader mode**, opened from an inline version picker, for viewing the source
-  text and another version side by side
-- **Navigation from plans**
+- **Font size** — header `Aa` button → bottom sheet, 14–28px steps, persisted via `StorageKeys.fontSize`
+- **Segment mode** — when API returns segments, tap opens action sheet (copy, share, verse bookmark, related counts, video thumbnails in browser)
+- **TEXT bookmark** — header toggle on reader
+- **Plan navigation** — prev/next via `PlanReadingLayout` + `usePlanReadingSession`
 
-> Recommendation: this PRD should be split into sub-PRDs as scope firms up
-> (reader-core, versions-languages, commentary, segment-actions, dual-panel).
+Deferred: version/language picker, commentary dual-panel, create-image, TOC, full virtualization.
 
 ## 2. Flutter reference map
 
-| Element | Flutter source | Route |
-|---------|----------------|-------|
-| Reader screen | `features/reader/presentation/screens/reader_screen.dart` | `/reader/:textId` |
-| Reader content | `features/reader/presentation/widgets/reader_content/*` | — |
-| Reader constants | `features/reader/constants/reader_constants.dart` | — |
-| Navigation context | `features/reader/data/models/navigation_context.dart` | — |
-| Version selection | `features/texts/presentation/version_selection/version_selection_screen.dart` | `/reader/:textId/versions` |
-| Language selection | `features/texts/presentation/version_selection/language_selection.dart` | `/reader/:textId/versions/language` |
-| Commentary | `features/texts/presentation/widgets/commentary_*` | `/texts/commentary` |
-| Segment actions | `features/texts/presentation/widgets/segment_action_bar.dart` | — |
-| Create/choose image | `features/texts/presentation/segment_image/*` | `/choose-image`, `/create-image` |
+| Element | Flutter source | RN target |
+|---------|----------------|-----------|
+| Reader screen | `reader_screen.dart` | `reader/[textId].tsx` |
+| Font size | `reader_font_size_button.dart` | `ReaderFontSizeButton` + `ReaderFontSizeSheet` |
+| Segment actions | `segment_action_bar.dart` | `SegmentActionSheet` |
+| Segment list | `reader_content/*` | `ReaderSegmentList` / `ReaderSegmentBlock` |
 
-## 3. NavigationContext (must preserve)
+## 3. Segment actions
 
-Reader is opened with a `NavigationContext` carrying `source`
-(`normal` / `plan` / `search` / `deepLink`), `targetSegmentId`, and for plan navigation
-`planTextItems` + `currentTextIndex`. Plan navigation uses directional page transitions.
-v2 must carry equivalent context (serializable params or a context store).
+- **API:** `GET /segments/{segmentId}/info` → commentaries count, translations count, videos
+- **Copy:** system share sheet via `copy-to-clipboard.ts` (upgrade to `expo-clipboard` after native rebuild)
+- **Share:** deep link via `buildReaderSegmentShareUrl`
+- **Videos:** `expo-web-browser` (no in-app YouTube)
+- **Guest:** copy/share allowed; bookmark requires auth
 
-## 4. User stories
+## 4. Layout integration
 
-- As any user, I can read a text and scroll through its segments.
-- As a user, I can switch version / language / script.
-- As a user, I can open a translation or commentary for a segment in a dual panel mode.
-- As a user, I can act on a segment: share, create an image.
-- As a user, I can choose another version of the text to view in altertanting segments with the main version
+`PlanReadingLayout` accepts optional `segments` + `textId`:
 
-## 5. Functional requirements
+- Segment list replaces blob `MarkdownText` when segments available
+- Collapsed preview limits segment taps until "Read Full Text"
+- Opening font size sheet clears segment selection
+- `SegmentActionSheet` rendered when a segment is selected
 
-- **FR-1:** Render a text by `textId`, segment-based, with scroll + table of contents.
-- **FR-2:** Scroll/jump to `targetSegmentId` when provided.
-- **FR-3:** Version selection (`/reader/:textId/versions`) and language selection.
-- **FR-4:** Commentary panel/tab per segment.
-- **FR-5:** Segment action bar: translation, commentary, share, create image.
-- **FR-6:** Font-size control (persisted via `font_size`).
-- **FR-7:** Optional interlinear mode, persisted via `reader_secondary_enabled`
-  (slot picks are in-memory, text-scoped — match Flutter semantics).
-- **FR-8:** Plan-mode navigation between texts with directional transitions and
-  prev/next across `planTextItems`.
-- **FR-9:** Guest-accessible (reader is in `guestAccessibleRoutes`).
-- **FR-10:** Loading / error / empty states.
+## 5. State & persistence
 
-## 6. API contracts
+| Data | Storage |
+|------|---------|
+| Font size | AsyncStorage `font_size` — steps `[14,16,18,20,22,24,26,28]` |
 
-| Endpoint | Method | Auth | Notes |
-|----------|--------|------|-------|
-| text by id | GET | guest ok | segments/content |
-| text versions | GET | guest ok | available versions/languages/scripts |
-| commentary | GET | guest ok | commentary per segment/text |
-| segment image create | POST | required? | create-image flow |
+## 6. Acceptance criteria (this slice)
 
-> Confirm exact endpoints + models from `features/texts/data/models/text/*` and reader
-> data sources.
+- [x] Font size button + sheet; range 14–28px; persisted
+- [x] Segment tap → underline + action sheet
+- [x] Copy / share / verse bookmark
+- [x] Segment info counts + video carousel (browser)
+- [x] TEXT bookmark in reader header
+- [x] Plan prev/next + swipe
+- [ ] Version/language/commentary (deferred)
+- [ ] Full reader TOC / jump-to-segment (deferred)
 
-## 7. State & persistence
+## 7. Files
 
-| Data | Flutter key |
-|------|-------------|
-| Dual-panel enabled | `reader_secondary_enabled` |
-| Font size | `font_size` |
-| Highlights | confirm storage (local vs server) |
+| Area | Path |
+|------|------|
+| Screen | `src/app/reader/[textId].tsx` |
+| Layout | `src/components/plans/PlanReadingLayout.tsx` |
+| Segments | `ReaderSegmentList`, `SegmentActionSheet` |
+| Hooks | `useReaderFontSize`, `useReaderSegmentSelection`, `useSegmentInfo` |
+| Utils | `flattenReaderSegments`, `segment-plain-text`, `reader-deep-link` |
 
-## 8. Navigation (Expo Router)
+See also: [bookmarks.md](./bookmarks.md) for bookmark hooks and Me tab screen.
 
-| Flutter route | v2 route (TBD) | Params |
-|---------------|----------------|--------|
-| `/reader/:textId` | `src/app/reader/[textId].tsx` | textId, segmentId, source |
-| `/reader/:textId/versions` | `src/app/reader/[textId]/versions.tsx` | textId |
-| `/reader/:textId/versions/language` | `.../versions/language.tsx` | uniqueLanguages |
-| `/plan-text/:subtaskId` | `src/app/plan-text/[subtaskId].tsx` | NavigationContext |
-
-## 9. Platform / Expo considerations
-
-- Rich text rendering of multiple scripts (incl. Tibetan) — verify shaping/line-height
-  (ties to `foundation/04-i18n-theming`).
-- "Create image" likely needs view-to-image capture (`react-native-view-shot`) + share.
-- Performance: long texts need virtualization (FlashList / FlatList).
-
-## 10. Acceptance criteria
-
-- [ ] Text renders with correct segments and TOC.
-- [ ] Jump-to-segment works from search/plan/deep link.
-- [ ] Version/language/script switching works.
-- [ ] Commentary opens per segment.
-- [ ] Segment actions (highlight/share/create image) work.
-- [ ] Font size + dual-panel preferences persist with Flutter semantics.
-- [ ] Plan prev/next navigation works with transitions.
-- [ ] Verified on iOS + Android, incl. Tibetan script.
-
-## 11. Open questions
-
-- Are highlights stored locally or server-side?
-- Full text/version/commentary API shapes.
-- Which segment actions are P1 vs deferrable?
-- Best RN library for segment rendering + selection.
-
-## 12. Migration status checklist
-
-| Requirement | Flutter | v2 | Notes |
-|-------------|---------|-----|-------|
-| Render text | yes | no | |
-| Versions/languages | yes | no | |
-| Commentary | yes | no | |
-| Segment actions | yes | no | |
-| Dual-panel | yes | no | |
-| Plan navigation | yes | no | |
+**QA checklist:** [reader-bookmarks-manual-qa.md](../qa/reader-bookmarks-manual-qa.md)

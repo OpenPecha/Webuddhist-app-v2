@@ -78,4 +78,15 @@ export const QUERY_KEYS = {
     today: (language: string, limit: number) =>
       ['events', 'today', language, limit] as const,
   },
+  bookmarks: {
+    all: ['bookmarks'] as const,
+    list: (language: string) => ['bookmarks', 'list', language] as const,
+    exists: (sourceId: string, type: string) =>
+      ['bookmarks', 'exists', sourceId, type] as const,
+  },
+  segments: {
+    info: (segmentId: string) => ['segments', 'info', segmentId] as const,
+    commentaries: (segmentId: string) => ['segments', 'commentaries', segmentId] as const,
+    translations: (segmentId: string) => ['segments', 'translations', segmentId] as const,
+  },
 } as const;

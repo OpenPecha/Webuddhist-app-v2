@@ -1,10 +1,17 @@
 import { MarkdownText } from '@/components/common/MarkdownText';
 import { PlanNavigator } from '@/components/plans/PlanNavigator';
+import { ReaderFontSizeButton } from '@/components/reader/ReaderFontSizeButton';
+import { ReaderFontSizeSheet } from '@/components/reader/ReaderFontSizeSheet';
+import { ReaderSegmentList } from '@/components/reader/ReaderSegmentList';
+import { SegmentActionSheet } from '@/components/reader/SegmentActionSheet';
 import { SWIPE_DISTANCE_RATIO, SWIPE_VELOCITY_THRESHOLD } from '@/constants/plan-reading';
 import { useReaderFontSize } from '@/hooks/useReaderFontSize';
+import { useReaderSegmentSelection } from '@/hooks/useReaderSegmentSelection';
+import { hapticSelection } from '@/utils/haptics';
+import type { DetailTextSegment } from '@/types/texts';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
@@ -22,6 +29,8 @@ const PREVIEW_LINE_LIMIT = 6;
 interface PlanReadingLayoutProps {
   content: string;
   sectionTitle: string;
+  textId?: string;
+  segments?: DetailTextSegment[];
   audioReady?: boolean;
   isPlaying?: boolean;
   isAudioLoading?: boolean;
@@ -37,11 +46,15 @@ interface PlanReadingLayoutProps {
   swipeEnabled?: boolean;
   headerExtra?: ReactNode;
   footerMeta?: ReactNode;
+  collapsedSegmentPreview?: boolean;
+  activeSegmentIds?: string[] | null;
 }
 
 export function PlanReadingLayout({
   content,
   sectionTitle,
+  textId,
+  segments,
   audioReady,
   isPlaying,
   isAudioLoading,
@@ -57,13 +70,28 @@ export function PlanReadingLayout({
   swipeEnabled,
   headerExtra,
   footerMeta,
+  collapsedSegmentPreview = false,
+  activeSegmentIds,
 }: PlanReadingLayoutProps) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
+  const [fontSheetVisible, setFontSheetVisible] = useState(false);
   const { fontSize, canDecrease, canIncrease, decrease, increase } = useReaderFontSize();
   const [dragOffset, setDragOffset] = useState(0);
+
+  const segmentMode = !!segments?.length && !!textId;
+  const { selected, selectedSegmentId, toggle, clear } = useReaderSegmentSelection(textId ?? '');
+
+  const displaySegments = useMemo(() => {
+    if (!segments?.length) return segments;
+    if (collapsedSegmentPreview && !expanded && activeSegmentIds?.length) {
+      const active = new Set(activeSegmentIds.map(String));
+      return segments.filter((s) => active.has(s.segment_id));
+    }
+    return segments;
+  }, [segments, collapsedSegmentPreview, expanded, activeSegmentIds]);
 
   const screenWidth = Dimensions.get('window').width;
   const swipeDistanceThreshold = screenWidth * SWIPE_DISTANCE_RATIO;
@@ -118,15 +146,48 @@ export function PlanReadingLayout({
   );
 
   const lineCount = content.split('\n').length;
-  const showReadFull = !expanded && lineCount > PREVIEW_LINE_LIMIT;
+  const showReadFull = !expanded && lineCount > PREVIEW_LINE_LIMIT && !segmentMode;
   const displayContent =
-    showReadFull
-      ? content.split('\n').slice(0, PREVIEW_LINE_LIMIT).join('\n')
-      : content;
+    showReadFull ? content.split('\n').slice(0, PREVIEW_LINE_LIMIT).join('\n') : content;
+
+  const previewSegmentLimit =
+    collapsedSegmentPreview && !expanded && segmentMode && displaySegments
+      ? countPreviewSegments(displaySegments, PREVIEW_LINE_LIMIT)
+      : undefined;
+
+  const showSegmentReadFull =
+    collapsedSegmentPreview &&
+    !expanded &&
+    segmentMode &&
+    segments != null &&
+    ((displaySegments != null &&
+      previewSegmentLimit != null &&
+      displaySegments.length > previewSegmentLimit) ||
+      (!!activeSegmentIds?.length &&
+        segments.length > (displaySegments?.length ?? 0)));
+
+  const segmentListKey =
+    displaySegments?.map((s) => s.segment_id).join(',') ?? segments?.map((s) => s.segment_id).join(',') ?? '';
+
+  useEffect(() => {
+    setExpanded(false);
+    clear();
+  }, [sectionTitle, segmentListKey, clear]);
 
   const handleBack = () => {
     onBeforeBack?.();
+    clear();
     router.back();
+  };
+
+  const openFontSheet = () => {
+    clear();
+    setFontSheetVisible(true);
+  };
+
+  const handleSegmentPress = (segment: DetailTextSegment) => {
+    hapticSelection();
+    toggle(segment);
   };
 
   return (
@@ -146,27 +207,14 @@ export function PlanReadingLayout({
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <View style={{ flex: 1 }} />
-        <Pressable
-          onPress={decrease}
-          disabled={!canDecrease}
-          style={{ padding: 8, opacity: canDecrease ? 0.7 : 0.25 }}
-        >
-          <Text style={{ fontSize: 14, fontWeight: '600', color: '#000' }}>A</Text>
-        </Pressable>
-        <Pressable
-          onPress={increase}
-          disabled={!canIncrease}
-          style={{ padding: 8, opacity: canIncrease ? 0.7 : 0.25 }}
-        >
-          <Text style={{ fontSize: 20, fontWeight: '600', color: '#000' }}>A</Text>
-        </Pressable>
+        {headerExtra}
+        <ReaderFontSizeButton onPress={openFontSheet} />
         <Pressable disabled style={{ padding: 8, opacity: 0.35 }}>
           <Ionicons name="search" size={20} color="#000" />
         </Pressable>
         <Pressable disabled style={{ padding: 8, opacity: 0.35 }}>
           <Ionicons name="globe-outline" size={20} color="#000" />
         </Pressable>
-        {headerExtra}
       </View>
 
       <View
@@ -177,21 +225,31 @@ export function PlanReadingLayout({
           contentContainerStyle={{
             paddingHorizontal: 20,
             paddingTop: 24,
-            paddingBottom: audioReady ? 120 : 80,
+            paddingBottom: (audioReady ? 120 : 80) + (selected ? 120 : 0),
           }}
           showsVerticalScrollIndicator={false}
         >
-          <MarkdownText
-            content={displayContent}
-            style={{
-              fontSize,
-              lineHeight: fontSize * 1.6,
-              color: '#000',
-              fontFamily: 'Georgia',
-            }}
-          />
+          {segmentMode && displaySegments ? (
+            <ReaderSegmentList
+              segments={displaySegments}
+              fontSize={fontSize}
+              selectedSegmentId={selectedSegmentId}
+              onSegmentPress={handleSegmentPress}
+              maxSegments={previewSegmentLimit}
+            />
+          ) : (
+            <MarkdownText
+              content={displayContent}
+              style={{
+                fontSize,
+                lineHeight: fontSize * 1.6,
+                color: '#000',
+                fontFamily: 'Georgia',
+              }}
+            />
+          )}
 
-          {showReadFull ? (
+          {showReadFull || showSegmentReadFull ? (
             <Pressable
               onPress={() => setExpanded(true)}
               style={{
@@ -253,6 +311,30 @@ export function PlanReadingLayout({
           onFinish={onFinish}
         />
       </View>
+
+      <ReaderFontSizeSheet
+        visible={fontSheetVisible}
+        onClose={() => setFontSheetVisible(false)}
+        fontSize={fontSize}
+        canDecrease={canDecrease}
+        canIncrease={canIncrease}
+        onDecrease={decrease}
+        onIncrease={increase}
+      />
+
+      {selected ? <SegmentActionSheet selected={selected} onClose={clear} /> : null}
     </View>
   );
+}
+
+function countPreviewSegments(segments: DetailTextSegment[], lineLimit: number): number {
+  let lines = 0;
+  let count = 0;
+  for (const segment of segments) {
+    const segmentLines = (segment.content ?? '').split('\n').length;
+    if (lines + segmentLines > lineLimit && count > 0) break;
+    lines += segmentLines;
+    count += 1;
+  }
+  return count || 1;
 }

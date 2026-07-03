@@ -37,7 +37,11 @@ devdocs/
 │   ├── recitation.md
 │   ├── practice.md
 │   ├── settings-profile.md
-│   └── onboarding.md
+│   ├── onboarding.md
+│   ├── connect.md
+│   └── (see qa/ for manual test checklists)
+├── qa/                         # Manual QA checklists
+│   └── reader-bookmarks-manual-qa.md
 └── stalled_features/           # Out of scope — reference only, no v2 build
     ├── README.md
     ├── texts-library.md

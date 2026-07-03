@@ -63,8 +63,8 @@ Maps to [`SeriesInfoScreen`](WeBuddhist-app/lib/features/home/presentation/scree
 | Hero image | ~25–40% viewport | `PlanCoverImage` | Top `Image` | `plan.image` |
 | Intro text | Welcome paragraph | Plan description / day intro | Text block | `GET /plans/{id}` |
 | "Day N of M" + status | On track label | Plan details header | Status row | progress + completion |
-| Day carousel | Horizontal pills 1–7; border = selected; check = done | `DayCarousel` | **Parity** — `PlanDayCarousel` `variant="card"` | `GET /plans/{id}/days` + completion_status |
-| Task list | Title + circle/check + chevron | `ActivityList` | **Parity** — `PlanTaskList` `variant="activity"` | `GET /users/me/plan/{id}/days/{n}` |
+| Day carousel | Horizontal square cards 1–7; day # + date; check = done | `DayCarousel` | **Parity** — `PlanDayCarousel` (preview + track) | `GET /plans/{id}/days` + completion_status |
+| Task list | Title + circle/check + chevron | `ActivityList` | **Parity** — `PlanTaskList` activity rows | day endpoint |
 | Practice Now | Sticky black CTA | Opens first incomplete task | **Parity** — sticky CTA in `practice/details.tsx` | task list |
 | Missed days | Badge on header | `MissedDaysBadge` | **Parity** — `PlanDayHeader` + `EnrolledPlanStatusIndicator` | completion_status |
 
