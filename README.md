@@ -296,9 +296,17 @@ Native config changes require a **new** EAS or local build — Metro alone is no
 
 ## Production builds (maintainers only)
 
+| Profile | Output | Use |
+|---------|--------|-----|
+| `production` | `.aab` | Play Store release (`org.pecha.app`) |
+| `production-apk` | `.apk` | Internal / sideload production testing |
+
 ```bash
 # Android — AAB for Play Store (org.pecha.app, Flutter upload keystore)
 eas build --platform android --profile production
+
+# Android — APK for sideload / internal prod testing (same signing as production)
+eas build --platform android --profile production-apk
 
 # iOS — App Store (org.pecha.app)
 eas build --platform ios --profile production
@@ -334,5 +342,6 @@ eas credentials -p android --profile production
 | Android dev credentials | `eas credentials -p android --profile development` |
 | Android prod credentials (Flutter key) | `eas credentials -p android --profile production` |
 | iOS credentials | `eas credentials -p ios --profile development` |
-| Production Android build | `eas build --platform android --profile production` |
+| Production Android build (AAB) | `eas build --platform android --profile production` |
+| Production Android build (APK) | `eas build --platform android --profile production-apk` |
 | Production iOS build | `eas build --platform ios --profile production` |
