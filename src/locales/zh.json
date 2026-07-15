@@ -134,6 +134,7 @@
     "commentaries": "註釋",
     "translations": "譯文",
     "version": "版本",
+    "coming_soon": "即將推出。",
     "no_commentary": "未找到註釋",
     "no_translations": "未找到譯文",
     "load_error": "無法載入內容",

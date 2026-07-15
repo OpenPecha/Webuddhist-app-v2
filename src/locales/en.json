@@ -151,6 +151,7 @@
     "commentaries": "Commentaries",
     "translations": "Translations",
     "version": "Version",
+    "coming_soon": "Coming soon.",
     "no_commentary": "No commentaries found",
     "no_translations": "No translations found",
     "load_error": "Could not load content",

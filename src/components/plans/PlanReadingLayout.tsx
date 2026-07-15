@@ -10,6 +10,7 @@ import { useReaderSegmentSelection } from '@/hooks/useReaderSegmentSelection';
 import { hapticSelection } from '@/utils/haptics';
 import type { DetailTextSegment } from '@/types/texts';
 import { Ionicons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +28,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const PREVIEW_LINE_LIMIT = 6;
 
 interface PlanReadingLayoutProps {
+  variant: 'planText' | 'reader';
   content: string;
+  contentMode?: 'markdown' | 'segments' | 'image';
   sectionTitle: string;
   textId?: string;
   segments?: DetailTextSegment[];
@@ -51,7 +54,9 @@ interface PlanReadingLayoutProps {
 }
 
 export function PlanReadingLayout({
+  variant,
   content,
+  contentMode,
   sectionTitle,
   textId,
   segments,
@@ -81,17 +86,26 @@ export function PlanReadingLayout({
   const { fontSize, canDecrease, canIncrease, decrease, increase } = useReaderFontSize();
   const [dragOffset, setDragOffset] = useState(0);
 
-  const segmentMode = !!segments?.length && !!textId;
+  const isReader = variant === 'reader';
+  const allowCollapse = isReader && collapsedSegmentPreview;
+
+  const resolvedContentMode = useMemo(() => {
+    if (contentMode) return contentMode;
+    return segments?.length && textId ? 'segments' : 'markdown';
+  }, [contentMode, segments, textId]);
+  const segmentMode = resolvedContentMode === 'segments';
+  const imageMode = resolvedContentMode === 'image';
+  const showFontControls = !imageMode;
   const { selected, selectedSegmentId, toggle, clear } = useReaderSegmentSelection(textId ?? '');
 
   const displaySegments = useMemo(() => {
     if (!segments?.length) return segments;
-    if (collapsedSegmentPreview && !expanded && activeSegmentIds?.length) {
+    if (allowCollapse && !expanded && activeSegmentIds?.length) {
       const active = new Set(activeSegmentIds.map(String));
       return segments.filter((s) => active.has(s.segment_id));
     }
     return segments;
-  }, [segments, collapsedSegmentPreview, expanded, activeSegmentIds]);
+  }, [segments, allowCollapse, expanded, activeSegmentIds]);
 
   const screenWidth = Dimensions.get('window').width;
   const swipeDistanceThreshold = screenWidth * SWIPE_DISTANCE_RATIO;
@@ -146,17 +160,19 @@ export function PlanReadingLayout({
   );
 
   const lineCount = content.split('\n').length;
-  const showReadFull = !expanded && lineCount > PREVIEW_LINE_LIMIT && !segmentMode;
+  const showReadFull =
+    isReader && !expanded && lineCount > PREVIEW_LINE_LIMIT && !segmentMode && !imageMode;
   const displayContent =
     showReadFull ? content.split('\n').slice(0, PREVIEW_LINE_LIMIT).join('\n') : content;
 
   const previewSegmentLimit =
-    collapsedSegmentPreview && !expanded && segmentMode && displaySegments
+    allowCollapse && !expanded && segmentMode && displaySegments
       ? countPreviewSegments(displaySegments, PREVIEW_LINE_LIMIT)
       : undefined;
 
   const showSegmentReadFull =
-    collapsedSegmentPreview &&
+    isReader &&
+    allowCollapse &&
     !expanded &&
     segmentMode &&
     segments != null &&
@@ -166,8 +182,7 @@ export function PlanReadingLayout({
       (!!activeSegmentIds?.length &&
         segments.length > (displaySegments?.length ?? 0)));
 
-  const segmentListKey =
-    displaySegments?.map((s) => s.segment_id).join(',') ?? segments?.map((s) => s.segment_id).join(',') ?? '';
+  const segmentListKey = segments?.map((s) => s.segment_id).join(',') ?? '';
 
   useEffect(() => {
     setExpanded(false);
@@ -186,6 +201,7 @@ export function PlanReadingLayout({
   };
 
   const handleSegmentPress = (segment: DetailTextSegment) => {
+    if (!isReader) return;
     hapticSelection();
     toggle(segment);
   };
@@ -207,14 +223,34 @@ export function PlanReadingLayout({
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <View style={{ flex: 1 }} />
-        {headerExtra}
-        <ReaderFontSizeButton onPress={openFontSheet} />
-        <Pressable disabled style={{ padding: 8, opacity: 0.35 }}>
-          <Ionicons name="search" size={20} color="#000" />
-        </Pressable>
-        <Pressable disabled style={{ padding: 8, opacity: 0.35 }}>
-          <Ionicons name="globe-outline" size={20} color="#000" />
-        </Pressable>
+        {isReader ? headerExtra : null}
+        {isReader ? (
+          <Pressable
+            onPress={() => {
+              clear();
+              router.push('/reader/search');
+            }}
+            style={{ padding: 8 }}
+            accessibilityRole="button"
+            accessibilityLabel={t('home.search')}
+          >
+            <Ionicons name="search" size={20} color="#000" />
+          </Pressable>
+        ) : null}
+        {showFontControls ? <ReaderFontSizeButton onPress={openFontSheet} /> : null}
+        {isReader ? (
+          <Pressable
+            onPress={() => {
+              clear();
+              router.push('/reader/versions');
+            }}
+            style={{ padding: 8 }}
+            accessibilityRole="button"
+            accessibilityLabel={t('reader.version')}
+          >
+            <Ionicons name="globe-outline" size={20} color="#000" />
+          </Pressable>
+        ) : null}
       </View>
 
       <View
@@ -225,7 +261,7 @@ export function PlanReadingLayout({
           contentContainerStyle={{
             paddingHorizontal: 20,
             paddingTop: 24,
-            paddingBottom: (audioReady ? 120 : 80) + (selected ? 120 : 0),
+            paddingBottom: (audioReady ? 120 : 80) + (isReader && selected ? 120 : 0),
           }}
           showsVerticalScrollIndicator={false}
         >
@@ -233,10 +269,19 @@ export function PlanReadingLayout({
             <ReaderSegmentList
               segments={displaySegments}
               fontSize={fontSize}
-              selectedSegmentId={selectedSegmentId}
+              selectedSegmentId={isReader ? selectedSegmentId : null}
               onSegmentPress={handleSegmentPress}
               maxSegments={previewSegmentLimit}
             />
+          ) : imageMode ? (
+            <View style={{ width: '100%', minHeight: 280 }}>
+              <Image
+                source={{ uri: content }}
+                style={{ width: '100%', minHeight: 280, height: 420, borderRadius: 12 }}
+                contentFit="contain"
+                transition={150}
+              />
+            </View>
           ) : (
             <MarkdownText
               content={displayContent}
@@ -312,17 +357,19 @@ export function PlanReadingLayout({
         />
       </View>
 
-      <ReaderFontSizeSheet
-        visible={fontSheetVisible}
-        onClose={() => setFontSheetVisible(false)}
-        fontSize={fontSize}
-        canDecrease={canDecrease}
-        canIncrease={canIncrease}
-        onDecrease={decrease}
-        onIncrease={increase}
-      />
+      {showFontControls ? (
+        <ReaderFontSizeSheet
+          visible={fontSheetVisible}
+          onClose={() => setFontSheetVisible(false)}
+          fontSize={fontSize}
+          canDecrease={canDecrease}
+          canIncrease={canIncrease}
+          onDecrease={decrease}
+          onIncrease={increase}
+        />
+      ) : null}
 
-      {selected ? <SegmentActionSheet selected={selected} onClose={clear} /> : null}
+      {isReader && selected ? <SegmentActionSheet selected={selected} onClose={clear} /> : null}
     </View>
   );
 }

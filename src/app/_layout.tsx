@@ -15,7 +15,13 @@ import { QueryProvider } from '@/providers/query';
 import { ThemeProvider } from '@/providers/theme';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { useFonts } from 'expo-font';
-import { Stack, useRouter, useSegments } from 'expo-router';
+import {
+  Stack,
+  useGlobalSearchParams,
+  usePathname,
+  useRouter,
+  useSegments,
+} from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
@@ -25,6 +31,17 @@ import '../../global.css';
 
 SplashScreen.preventAutoHideAsync();
 configureNotificationHandler();
+
+function RouteChangeLogger() {
+  const pathname = usePathname();
+  const params = useGlobalSearchParams();
+
+  useEffect(() => {
+    console.log('[route]', pathname, params);
+  }, [pathname, params]);
+
+  return null;
+}
 
 function AuthGate() {
   const { user, isLoading: authLoading } = useAuth0();
@@ -72,24 +89,29 @@ function AuthGate() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: AppColors.surfaceLight } }}>
-      <Stack.Screen name="login" />
-      <Stack.Screen name="onboarding" />
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="series/[id]" />
-      <Stack.Screen name="series/[id]/info" />
-      <Stack.Screen name="plans/[id]" />
-      <Stack.Screen name="group/[id]" />
-      <Stack.Screen name="connect/search" />
-      <Stack.Screen name="connect/my-groups" />
-      <Stack.Screen name="practice" />
-      <Stack.Screen name="calendar" />
-      <Stack.Screen name="events" />
-      <Stack.Screen name="mala" />
-      <Stack.Screen name="timers/index" />
-      <Stack.Screen name="timers/active" />
-      <Stack.Screen name="reader/[textId]" />
-    </Stack>
+    <>
+      <RouteChangeLogger />
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: AppColors.surfaceLight } }}>
+        <Stack.Screen name="login" />
+        <Stack.Screen name="onboarding" />
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="series/[id]" />
+        <Stack.Screen name="series/[id]/info" />
+        <Stack.Screen name="plans/[id]" />
+        <Stack.Screen name="group/[id]" />
+        <Stack.Screen name="connect/search" />
+        <Stack.Screen name="connect/my-groups" />
+        <Stack.Screen name="practice" />
+        <Stack.Screen name="calendar" />
+        <Stack.Screen name="events" />
+        <Stack.Screen name="mala" />
+        <Stack.Screen name="timers/index" />
+        <Stack.Screen name="timers/active" />
+        <Stack.Screen name="reader/[textId]" />
+        <Stack.Screen name="reader/search" />
+        <Stack.Screen name="reader/versions" />
+      </Stack>
+    </>
   );
 }
 

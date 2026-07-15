@@ -1,4 +1,4 @@
-export type PlanContentType = 'TEXT' | 'SOURCE_REFERENCE' | string;
+export type PlanContentType = 'TEXT' | 'SOURCE_REFERENCE' | 'IMAGE';
 
 export interface PlanTextItem {
   subTaskId: string;
@@ -9,6 +9,7 @@ export interface PlanTextItem {
   segmentIds?: string[] | null;
   pechaSegmentId?: string | null;
   content?: string | null;
+  imageUrl?: string | null;
   audioUrl?: string | null;
   startMs?: number | null;
   endMs?: number | null;
