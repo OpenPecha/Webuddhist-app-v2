@@ -1,0 +1,124 @@
+import { QUERY_KEYS } from '@/constants/query-keys';
+import { useContentLanguage } from '@/hooks/useContentLanguage';
+import { ConflictFailure } from '@/lib/api-error';
+import {
+  checkBookmarkExists,
+  createBookmark,
+  deleteBookmark,
+  findBookmarkInList,
+} from '@/services/bookmarks';
+import type { BookmarkCreateType, BookmarkDTO, BookmarkExistsResult } from '@/types/bookmarks';
+import { showAppToast } from '@/utils/show-app-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
+
+export interface ToggleBookmarkInput {
+  type: BookmarkCreateType;
+  sourceId: string;
+  name?: string;
+}
+
+export function useToggleBookmark() {
+  const queryClient = useQueryClient();
+  const language = useContentLanguage();
+  const { t } = useTranslation();
+
+  return useMutation({
+    mutationFn: async ({ type, sourceId, name }: ToggleBookmarkInput) => {
+      const existsKey = QUERY_KEYS.bookmarks.exists(sourceId, type);
+      const previous =
+        queryClient.getQueryData<BookmarkExistsResult>(existsKey) ??
+        (await checkBookmarkExists(sourceId, type));
+
+      queryClient.setQueryData<BookmarkExistsResult>(existsKey, {
+        exists: !previous.exists,
+        id: previous.exists ? previous.id : null,
+      });
+
+      try {
+        if (previous.exists) {
+          let bookmarkId = previous.id;
+          if (!bookmarkId) {
+            const resolved = await checkBookmarkExists(sourceId, type);
+            bookmarkId = resolved.id ?? undefined;
+          }
+          if (!bookmarkId) {
+            const list = queryClient.getQueryData<BookmarkDTO[]>(
+              QUERY_KEYS.bookmarks.list(language),
+            );
+            bookmarkId = list ? findBookmarkInList(list, type, sourceId)?.id : undefined;
+          }
+          if (bookmarkId) {
+            await deleteBookmark(bookmarkId);
+          }
+        } else {
+          await createBookmark(type, sourceId, name);
+          const resolved = await checkBookmarkExists(sourceId, type);
+          queryClient.setQueryData<BookmarkExistsResult>(existsKey, resolved);
+        }
+
+        await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.bookmarks.all });
+        return !previous.exists;
+      } catch (error) {
+        queryClient.setQueryData(existsKey, previous);
+        if (error instanceof ConflictFailure) {
+          queryClient.setQueryData<BookmarkExistsResult>(existsKey, {
+            exists: true,
+            id: previous.id,
+          });
+          await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.bookmarks.all });
+          return true;
+        }
+        showAppToast(
+          previous.exists ? t('bookmarks.remove_failed') : t('bookmarks.save_failed'),
+        );
+        throw error;
+      }
+    },
+    onSuccess: (saved) => {
+      showAppToast(saved ? t('bookmarks.saved') : t('bookmarks.removed'));
+    },
+  });
+}
+
+export function useRemoveBookmark() {
+  const queryClient = useQueryClient();
+  const language = useContentLanguage();
+  const { t } = useTranslation();
+
+  return useMutation({
+    mutationFn: async (input: {
+      bookmarkId: string;
+      sourceId?: string;
+      type?: BookmarkCreateType;
+    }) => {
+      const listKey = QUERY_KEYS.bookmarks.list(language);
+      const previous = queryClient.getQueryData<BookmarkDTO[]>(listKey);
+
+      if (previous) {
+        queryClient.setQueryData(
+          listKey,
+          previous.filter((b) => b.id !== input.bookmarkId),
+        );
+      }
+
+      try {
+        await deleteBookmark(input.bookmarkId);
+        if (input.sourceId && input.type) {
+          queryClient.setQueryData<BookmarkExistsResult>(
+            QUERY_KEYS.bookmarks.exists(input.sourceId, input.type),
+            { exists: false, id: null },
+          );
+        }
+        await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.bookmarks.all });
+      } catch {
+        if (previous) queryClient.setQueryData(listKey, previous);
+        showAppToast(t('bookmarks.remove_failed'));
+        throw new Error('remove failed');
+      }
+    },
+    onSuccess: () => {
+      showAppToast(t('bookmarks.removed'));
+    },
+  });
+}

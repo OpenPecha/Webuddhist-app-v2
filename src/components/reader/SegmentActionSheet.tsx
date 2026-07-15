@@ -1,0 +1,392 @@
+import { LoginDrawer } from '@/components/auth/LoginDrawer';
+import { AppBottomSheet } from '@/components/settings/AppBottomSheet';
+import { SegmentCommentaryPanel } from '@/components/reader/SegmentCommentaryPanel';
+import { SegmentTranslationPanel } from '@/components/reader/SegmentTranslationPanel';
+import { useIsBookmarked } from '@/hooks/api/useBookmarkExists';
+import { useToggleBookmark } from '@/hooks/api/useToggleBookmark';
+import { useSegmentInfo } from '@/hooks/api/useSegmentInfo';
+import { useContentLanguage } from '@/hooks/useContentLanguage';
+import { useLoginDrawer } from '@/hooks/useLoginDrawer';
+import type { SelectedSegment } from '@/hooks/useReaderSegmentSelection';
+import { buildReaderSegmentShareUrl } from '@/utils/reader-deep-link';
+import { segmentPlainText } from '@/utils/segment-plain-text';
+import { copyToClipboard } from '@/utils/copy-to-clipboard';
+import { hapticLight, hapticSelection } from '@/utils/haptics';
+import { showAppToast } from '@/utils/show-app-toast';
+import { useGuest } from '@/providers/guest';
+import { Ionicons } from '@expo/vector-icons';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { Image } from 'expo-image';
+import * as WebBrowser from 'expo-web-browser';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  Share,
+  Text,
+  View,
+} from 'react-native';
+import { useAuth0 } from 'react-native-auth0';
+import type { SegmentInfo, SegmentVideo } from '@/types/segment-info';
+
+type SheetView = 'actions' | 'commentaries' | 'versions';
+
+interface SegmentActionSheetProps {
+  selected: SelectedSegment | null;
+  onClose: () => void;
+}
+
+function ActionButton({
+  label,
+  icon,
+  onPress,
+  loading,
+  active,
+}: {
+  label: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  onPress: () => void;
+  loading?: boolean;
+  active?: boolean;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={loading}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ disabled: !!loading, selected: !!active }}
+      style={{ width: 78, alignItems: 'center', opacity: loading ? 0.6 : 1 }}
+    >
+      {loading ? (
+        <ActivityIndicator size="small" color="#000" style={{ height: 28 }} />
+      ) : (
+        <View style={{ height: 28, justifyContent: 'center' }}>
+          <Ionicons name={icon} size={24} color={active ? '#0066cc' : '#000'} />
+        </View>
+      )}
+      <Text
+        style={{
+          fontSize: 12,
+          fontWeight: '600',
+          color: active ? '#0066cc' : '#000',
+          marginTop: 4,
+        }}
+      >
+        {label}
+      </Text>
+    </Pressable>
+  );
+}
+
+function ResourceTile({
+  label,
+  icon,
+  count,
+  onPress,
+}: {
+  label: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  count?: number;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={count === undefined ? label : `${label}, ${count}`}
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f0f0ec',
+      }}
+    >
+      <Ionicons name={icon} size={20} color="#000" style={{ marginRight: 12 }} />
+      <Text style={{ flex: 1, fontSize: 15, color: '#000' }}>{label}</Text>
+      <View
+        style={{
+          minWidth: 28,
+          paddingHorizontal: 8,
+          paddingVertical: 2,
+          borderRadius: 12,
+          backgroundColor: '#f0f0ec',
+          alignItems: 'center',
+          marginRight: 8,
+        }}
+      >
+        <Text style={{ fontSize: 13, fontWeight: '600', color: '#000' }}>
+          {count === undefined ? '—' : count}
+        </Text>
+      </View>
+      <Ionicons name="chevron-forward" size={18} color="#8a8a8a" />
+    </Pressable>
+  );
+}
+
+function SheetHeader({
+  title,
+  onBack,
+}: {
+  title: string;
+  onBack?: () => void;
+}) {
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 12,
+        minHeight: 32,
+      }}
+    >
+      {onBack ? (
+        <Pressable onPress={onBack} style={{ padding: 4, marginRight: 8 }}>
+          <Ionicons name="chevron-back" size={22} color="#000" />
+        </Pressable>
+      ) : null}
+      <Text style={{ fontSize: 16, fontWeight: '700', color: '#000' }}>{title}</Text>
+    </View>
+  );
+}
+
+function ActionsBody({
+  onCopy,
+  onShare,
+  onBookmark,
+  bookmarkPending,
+  isBookmarked,
+  infoLoading,
+  infoError,
+  info,
+  videos,
+  onOpenCommentaries,
+  onOpenVersions,
+}: {
+  onCopy: () => void;
+  onShare: () => void;
+  onBookmark: () => void;
+  bookmarkPending: boolean;
+  isBookmarked: boolean;
+  infoLoading: boolean;
+  infoError: boolean;
+  info?: SegmentInfo;
+  videos: SegmentVideo[];
+  onOpenCommentaries: () => void;
+  onOpenVersions: () => void;
+}) {
+  const { t } = useTranslation();
+  const countUnavailable = infoLoading || infoError;
+
+  return (
+    <>
+      <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 16, marginTop: 8 }}>
+        <ActionButton label={t('reader.copy')} icon="copy-outline" onPress={onCopy} />
+        <ActionButton label={t('reader.share')} icon="share-outline" onPress={onShare} />
+        <ActionButton
+          label={isBookmarked ? t('reader.bookmarked') : t('reader.bookmark')}
+          icon={isBookmarked ? 'bookmark' : 'bookmark-outline'}
+          active={isBookmarked}
+          onPress={onBookmark}
+          loading={bookmarkPending}
+        />
+      </View>
+
+      <Text style={{ fontSize: 13, fontWeight: '600', marginTop: 24, marginBottom: 8, color: '#000' }}>
+        {t('reader.related_resources')}
+      </Text>
+      <View style={{ height: 1, backgroundColor: '#e8e8e4', marginBottom: 12 }} />
+
+      <ResourceTile
+        label={t('reader.commentaries')}
+        icon="chatbubble-ellipses-outline"
+        count={countUnavailable ? undefined : (info?.relatedText.commentaries ?? 0)}
+        onPress={onOpenCommentaries}
+      />
+      <ResourceTile
+        label={t('reader.version')}
+        icon="language-outline"
+        count={countUnavailable ? undefined : (info?.translations ?? 0)}
+        onPress={onOpenVersions}
+      />
+
+      {videos.length > 0 ? (
+        <>
+          <Text style={{ fontSize: 13, fontWeight: '600', marginTop: 20, marginBottom: 12, color: '#000' }}>
+            {t('reader.videos')}
+          </Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {videos.map((video) => (
+              <Pressable
+                key={video.id}
+                onPress={() => {
+                  void WebBrowser.openBrowserAsync(video.url, {
+                    presentationStyle: WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
+                  });
+                }}
+                style={{ width: 160, marginRight: 12 }}
+              >
+                {video.thumbnailUrl ? (
+                  <Image
+                    source={{ uri: video.thumbnailUrl }}
+                    style={{ width: 160, height: 90, borderRadius: 8, backgroundColor: '#000' }}
+                    contentFit="cover"
+                  />
+                ) : (
+                  <View style={{ width: 160, height: 90, borderRadius: 8, backgroundColor: '#000' }} />
+                )}
+                <Text numberOfLines={2} style={{ fontSize: 12, marginTop: 6, color: '#333' }}>
+                  {video.title}
+                </Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+        </>
+      ) : null}
+    </>
+  );
+}
+
+export function SegmentActionSheet({ selected, onClose }: SegmentActionSheetProps) {
+  const { t } = useTranslation();
+  const language = useContentLanguage();
+  const { user } = useAuth0();
+  const { isGuest } = useGuest();
+  const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
+  const [view, setView] = useState<SheetView>('actions');
+
+  const { data: info, isLoading: infoLoading, isError: infoError } = useSegmentInfo(
+    selected?.segmentId ?? null,
+    !!selected,
+  );
+  const { isBookmarked } = useIsBookmarked(
+    selected?.segmentId ?? '',
+    'VERSE',
+    !!selected && !isGuest,
+  );
+  const toggleBookmark = useToggleBookmark();
+
+  useEffect(() => {
+    setView('actions');
+  }, [selected?.segmentId]);
+
+  if (!selected) return null;
+
+  const handleCopy = async () => {
+    hapticLight();
+    const text = segmentPlainText(selected.content);
+    const result = await copyToClipboard(text);
+    if (result.ok) {
+      showAppToast(t('reader.copied'));
+      onClose();
+    } else if (result.cancelled) {
+      onClose();
+    } else {
+      showAppToast(t('reader.copy_error'));
+    }
+  };
+
+  const handleShare = async () => {
+    hapticLight();
+    try {
+      const url = buildReaderSegmentShareUrl(selected.textId, selected.segmentId, language);
+      await Share.share({ message: url });
+      onClose();
+    } catch {
+      showAppToast(t('reader.share_error'));
+    }
+  };
+
+  const handleBookmark = () => {
+    hapticLight();
+    if (isGuest || !user) {
+      showLoginDrawer();
+      return;
+    }
+    toggleBookmark.mutate({ type: 'VERSE', sourceId: selected.segmentId });
+  };
+
+  const openCommentaries = () => {
+    hapticSelection();
+    setView('commentaries');
+  };
+
+  const openVersions = () => {
+    hapticSelection();
+    setView('versions');
+  };
+
+  const videos = info?.videos ?? [];
+  const sheetTitle =
+    view === 'commentaries'
+      ? t('reader.commentaries')
+      : view === 'versions'
+        ? t('reader.translations')
+        : '';
+
+  const maxHeight =
+    view === 'actions'
+      ? videos.length > 0
+        ? '85%'
+        : '50%'
+      : '75%';
+
+  const body =
+    view === 'actions' ? (
+      <ActionsBody
+        onCopy={() => void handleCopy()}
+        onShare={() => void handleShare()}
+        onBookmark={handleBookmark}
+        bookmarkPending={toggleBookmark.isPending}
+        isBookmarked={isBookmarked}
+        infoLoading={infoLoading}
+        infoError={infoError}
+        info={info}
+        videos={videos}
+        onOpenCommentaries={openCommentaries}
+        onOpenVersions={openVersions}
+      />
+    ) : view === 'commentaries' ? (
+      <SegmentCommentaryPanel segmentId={selected.segmentId} />
+    ) : (
+      <SegmentTranslationPanel segmentId={selected.segmentId} />
+    );
+
+  const handleClose = () => {
+    if (view !== 'actions') {
+      setView('actions');
+      return;
+    }
+    onClose();
+  };
+
+  return (
+    <>
+      <AppBottomSheet
+        visible
+        onClose={handleClose}
+        placement="fullscreen"
+        maxHeight={maxHeight}
+        scrollable={view !== 'actions' || videos.length > 0}
+      >
+        {view !== 'actions' || videos.length > 0 ? (
+          <BottomSheetScrollView contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 24 }}>
+            {view !== 'actions' ? (
+              <SheetHeader
+                title={sheetTitle}
+                onBack={() => setView('actions')}
+              />
+            ) : null}
+            {body}
+          </BottomSheetScrollView>
+        ) : (
+          <View style={{ paddingHorizontal: 20, paddingBottom: 24 }}>{body}</View>
+        )}
+      </AppBottomSheet>
+      <LoginDrawer key={session} visible={visible} onClose={hideLoginDrawer} />
+    </>
+  );
+}

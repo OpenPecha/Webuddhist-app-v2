@@ -1,0 +1,82 @@
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
+import { Ionicons } from '@expo/vector-icons';
+import React, { forwardRef, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Linking, Pressable, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+interface SocialLink {
+  id: string;
+  platform: string;
+  url: string;
+}
+
+interface GroupSocialLinksSheetProps {
+  links: SocialLink[];
+}
+
+function platformIcon(platform: string): keyof typeof Ionicons.glyphMap {
+  const key = platform.toLowerCase();
+  if (key.includes('instagram')) return 'logo-instagram';
+  if (key.includes('facebook')) return 'logo-facebook';
+  if (key.includes('youtube')) return 'logo-youtube';
+  if (key.includes('twitter') || key === 'x') return 'logo-twitter';
+  if (key.includes('website') || key.includes('web')) return 'globe-outline';
+  return 'link-outline';
+}
+
+export const GroupSocialLinksSheet = forwardRef<BottomSheetModal, GroupSocialLinksSheetProps>(
+  function GroupSocialLinksSheet({ links }, ref) {
+    const { t } = useTranslation();
+    const insets = useSafeAreaInsets();
+    const snapPoints = useMemo(() => ['40%'], []);
+
+    const renderBackdrop = useCallback(
+      (props: React.ComponentProps<typeof BottomSheetBackdrop>) => (
+        <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} />
+      ),
+      [],
+    );
+
+    return (
+      <BottomSheetModal ref={ref} snapPoints={snapPoints} backdropComponent={renderBackdrop}>
+        <BottomSheetView style={{ paddingHorizontal: 20, paddingBottom: insets.bottom + 16 }}>
+          <Text
+            style={{
+              fontSize: 17,
+              fontWeight: '700',
+              fontFamily: 'Inter-Bold',
+              marginBottom: 16,
+            }}
+          >
+            {t('connect.social_links_title')}
+          </Text>
+          {links.map((link) => (
+            <Pressable
+              key={link.id}
+              onPress={() => void Linking.openURL(link.url)}
+              style={({ pressed }) => ({
+                flexDirection: 'row',
+                alignItems: 'center',
+                paddingVertical: 14,
+                borderBottomWidth: 1,
+                borderBottomColor: '#e8e8e4',
+                opacity: pressed ? 0.75 : 1,
+              })}
+            >
+              <Ionicons name={platformIcon(link.platform)} size={22} color="#000" />
+              <Text style={{ flex: 1, marginLeft: 12, fontSize: 15, fontWeight: '500' }}>
+                {link.platform}
+              </Text>
+              <Ionicons name="open-outline" size={18} color="#8a8a8a" />
+            </Pressable>
+          ))}
+        </BottomSheetView>
+      </BottomSheetModal>
+    );
+  },
+);

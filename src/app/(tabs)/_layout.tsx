@@ -1,20 +1,20 @@
-import { NativeTabs } from 'expo-router/unstable-native-tabs';
+import '@/lib/i18n';
+import { AppBottomTabBar } from '@/components/navigation/AppBottomTabBar';
+import { Tabs } from 'expo-router';
 
 export default function TabLayout() {
   return (
-    <NativeTabs>
-      <NativeTabs.Trigger name="index">
-        <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="house.fill" md="home" />
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="screens/recitation">
-        <NativeTabs.Trigger.Label>Recitation</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon sf="book.fill" md="book" />
-      </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="screens/setting" role="more">
-        <NativeTabs.Trigger.Icon sf="gear" md="settings" />
-        <NativeTabs.Trigger.Label>Setting</NativeTabs.Trigger.Label>
-      </NativeTabs.Trigger>
-    </NativeTabs>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: { display: 'none' },
+      }}
+      tabBar={(props) => <AppBottomTabBar {...props} />}
+    >
+      <Tabs.Screen name="index" />
+      <Tabs.Screen name="practice" />
+      <Tabs.Screen name="connect" />
+      <Tabs.Screen name="me" />
+    </Tabs>
   );
 }

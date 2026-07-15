@@ -1,4 +1,5 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,4 +20,10 @@ export function QueryProvider({ children }: QueryProviderProps) {
       {children}
     </QueryClientProvider>
   );
+}
+
+/** Clears all React Query caches (e.g. on logout or account deletion). */
+export function useClearAppQueryCache() {
+  const client = useQueryClient();
+  return useCallback(() => client.clear(), [client]);
 }

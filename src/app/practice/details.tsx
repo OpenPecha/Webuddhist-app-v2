@@ -1,0 +1,383 @@
+import { DayCompletionSheet } from '@/components/plans/DayCompletionSheet';
+import { PlanDayCarousel } from '@/components/plans/PlanDayCarousel';
+import { PlanDayHeader } from '@/components/plans/PlanDayHeader';
+import { PlanDayVideosStrip } from '@/components/plans/PlanDayVideosStrip';
+import { PlanHero } from '@/components/plans/PlanHero';
+import { PlanTaskList } from '@/components/plans/PlanTaskList';
+import { useCompleteTask } from '@/hooks/api/useCompleteTask';
+import { usePlanCompletionStatus } from '@/hooks/api/usePlanCompletionStatus';
+import { usePlanDays } from '@/hooks/api/usePlanDays';
+import { usePlanDetail } from '@/hooks/api/usePlanDetail';
+import { useUserPlanDay } from '@/hooks/api/usePlanTrack';
+import { useUserPlans } from '@/hooks/api/useUserPlans';
+import type { UserPlan } from '@/types/plans';
+import {
+  buildPlanTextItems,
+  isTaskNavigable,
+  resolvePlanReadingRoute,
+  type PlanTaskForNavigation,
+} from '@/utils/plan-subtask-navigation';
+import {
+  buildDisabledDaysForCarousel,
+  createPlanDateRange,
+  getCurrentDay,
+  getEffectiveStartDate,
+  parseCalendarDate,
+  resolveTrackUserPlan,
+  resolveUserPlanForItem,
+} from '@/utils/plan-utils';
+import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+function mapTasksFromDayDetails(
+  rawTasks: {
+    id: string;
+    title: string;
+    display_order: number;
+    is_completed: boolean;
+    sub_tasks: {
+      id: string;
+      content: string;
+      is_completed: boolean;
+      content_type: string;
+      source_text_id?: string | null;
+      segment_ids?: string[] | null;
+      pecha_segment_id?: string | null;
+      start_ms?: number | null;
+      end_ms?: number | null;
+      audio_url?: string | null;
+      display_order: number | null;
+    }[];
+  }[],
+): PlanTaskForNavigation[] {
+  return rawTasks.map((task) => ({
+    id: task.id,
+    title: task.title,
+    display_order: task.display_order,
+    is_completed: task.is_completed,
+    subtasks: task.sub_tasks.map((sub) => ({
+      id: sub.id,
+      content: sub.content,
+      is_completed: sub.is_completed,
+      content_type: sub.content_type,
+      source_text_id: sub.source_text_id,
+      segment_ids: sub.segment_ids ?? null,
+      pecha_segment_id: sub.pecha_segment_id ?? null,
+      start_ms: sub.start_ms ?? null,
+      end_ms: sub.end_ms ?? null,
+      audio_url: sub.audio_url,
+      display_order: sub.display_order,
+    })),
+  }));
+}
+
+export default function PlanTrackScreen() {
+  const params = useLocalSearchParams<{
+    planId: string;
+    selectedDay?: string;
+    title?: string;
+  }>();
+  const planId = params.planId;
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const { t } = useTranslation();
+
+  const hasSelectedDayParam = useMemo(() => {
+    const parsed = Number(params.selectedDay);
+    return Number.isFinite(parsed) && parsed > 0;
+  }, [params.selectedDay]);
+
+  const initialDay = useMemo(() => {
+    const parsed = Number(params.selectedDay);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
+  }, [params.selectedDay]);
+
+  const [selectedDay, setSelectedDay] = useState(initialDay);
+  const [dayInitialized, setDayInitialized] = useState(hasSelectedDayParam);
+  const [showDayComplete, setShowDayComplete] = useState(false);
+  const [optimisticCompleted, setOptimisticCompleted] = useState<Record<string, boolean>>({});
+  const prevDayCompletedRef = useRef<boolean | null>(null);
+
+  const { data: userPlansData, isLoading: userPlansLoading } = useUserPlans();
+  const { data: planDetail } = usePlanDetail(planId);
+  const { data: daysData } = usePlanDays(planId);
+  const { data: completionMap } = usePlanCompletionStatus(planId);
+  const { data: dayDetails, isLoading: dayLoading } = useUserPlanDay(planId, selectedDay);
+  const completeTask = useCompleteTask(planId, selectedDay);
+
+  const userPlan: UserPlan | null = useMemo(() => {
+    const plans = userPlansData?.plans ?? [];
+    if (!resolveUserPlanForItem(planId, plans)) return null;
+    return resolveTrackUserPlan(planId, plans, planDetail);
+  }, [planId, userPlansData?.plans, planDetail]);
+
+  useEffect(() => {
+    if (dayInitialized || !userPlan) return;
+    setSelectedDay(getCurrentDay(userPlan));
+    setDayInitialized(true);
+  }, [userPlan, dayInitialized]);
+
+  const totalDays = userPlan?.total_days ?? planDetail?.total_days ?? daysData?.days.length ?? 1;
+
+  const title = params.title ?? userPlan?.title ?? planDetail?.title ?? t('planTrack.title');
+
+  const planStartDate = userPlan ? getEffectiveStartDate(userPlan) : new Date();
+
+  const dateRange = userPlan ? createPlanDateRange(userPlan) : null;
+
+  const carouselStartDate = parseCalendarDate(userPlan?.start_date ?? planDetail?.start_date ?? null) ?? planStartDate;
+
+  const carouselDays = useMemo(() => {
+    if (daysData?.days.length) return daysData.days;
+    return Array.from({ length: totalDays }, (_, i) => ({
+      day_number: i + 1,
+      id: `day-${i + 1}`,
+    }));
+  }, [daysData, totalDays]);
+
+  const disabledDays = useMemo(
+    () =>
+      buildDisabledDaysForCarousel({
+        totalDays,
+        startDate: carouselStartDate,
+        isTrackMode: true,
+      }),
+    [totalDays, carouselStartDate],
+  );
+
+  const navTasks = useMemo(
+    () => mapTasksFromDayDetails(dayDetails?.tasks ?? []),
+    [dayDetails],
+  );
+
+  const tasks = useMemo(
+    () =>
+      navTasks.map((task) => ({
+        id: task.id,
+        title: task.title,
+        is_completed: task.is_completed,
+        subtasks: task.subtasks,
+      })),
+    [navTasks],
+  );
+
+  const dayAudioUrl = dayDetails?.audio_url ?? null;
+  const planTextItems = useMemo(() => buildPlanTextItems(navTasks), [navTasks]);
+  const hasNavigableContent = planTextItems.length > 0;
+  const allTasksComplete = tasks.length > 0 && tasks.every((task) => task.is_completed);
+
+  useEffect(() => {
+    const isComplete = dayDetails?.is_completed === true;
+    if (prevDayCompletedRef.current === null) {
+      prevDayCompletedRef.current = isComplete;
+      return;
+    }
+    if (!prevDayCompletedRef.current && isComplete) {
+      setShowDayComplete(true);
+    }
+    prevDayCompletedRef.current = isComplete;
+  }, [dayDetails?.is_completed]);
+
+  useEffect(() => {
+    prevDayCompletedRef.current = null;
+    setOptimisticCompleted({});
+  }, [selectedDay]);
+
+  const openPlanReading = useCallback(
+    (startAt: { taskId: string } | 'first-incomplete', autoPlay = false) => {
+      const route = resolvePlanReadingRoute({
+        planId,
+        dayNumber: selectedDay,
+        tasks: navTasks,
+        dayAudioUrl,
+        startAt,
+        autoPlay,
+      });
+      if (route) {
+        if (route.pathname === '/plan-text/[subtaskId]') {
+          router.push({
+            pathname: '/plan-text/[subtaskId]',
+            params: route.params as { subtaskId: string; planId: string; dayNumber: string },
+          });
+        } else {
+          router.push({
+            pathname: '/reader/[textId]',
+            params: route.params as { textId: string; planId: string; dayNumber: string },
+          });
+        }
+      }
+    },
+    [planId, selectedDay, navTasks, dayAudioUrl, router],
+  );
+
+  const handleToggleTask = useCallback(
+    (taskId: string, completed: boolean) => {
+      if (completed) return;
+      setOptimisticCompleted((prev) => ({ ...prev, [taskId]: true }));
+      completeTask.mutate(taskId, {
+        onError: () =>
+          setOptimisticCompleted((prev) => {
+            const next = { ...prev };
+            delete next[taskId];
+            return next;
+          }),
+      });
+    },
+    [completeTask],
+  );
+
+  const showPracticeNow = hasNavigableContent;
+  const isLoading = userPlansLoading || dayLoading;
+  const notEnrolled = !userPlansLoading && !userPlan;
+
+  return (
+    <View style={{ flex: 1, backgroundColor: '#FDFBF7' }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingTop: insets.top + 4,
+          paddingHorizontal: 8,
+          paddingVertical: 8,
+        }}
+      >
+        <Pressable onPress={() => router.back()} style={{ padding: 8, width: 40 }}>
+          <Ionicons name="chevron-back" size={24} color="#000" />
+        </Pressable>
+        <Text
+          style={{
+            flex: 1,
+            fontSize: 20,
+            fontWeight: '700',
+            fontFamily: 'Inter-Bold',
+            color: '#000',
+            textAlign: 'center',
+          }}
+          numberOfLines={1}
+        >
+          {title}
+        </Text>
+        <View style={{ width: 40 }} />
+      </View>
+
+      {isLoading ? (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <ActivityIndicator size="large" />
+        </View>
+      ) : notEnrolled ? (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 12 }}>
+          <Text style={{ color: '#dc341e', textAlign: 'center' }}>
+            {t('practice.not_found')}
+          </Text>
+          <Pressable
+            onPress={() => router.replace({ pathname: '/plans/[id]', params: { id: planId } })}
+            style={{ padding: 12 }}
+          >
+            <Text style={{ fontWeight: '600' }}>{t('practice.retry')}</Text>
+          </Pressable>
+        </View>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: showPracticeNow ? 100 : 32 }}
+        >
+          <PlanHero
+            variant="track"
+            title={title}
+            image={planDetail?.image ?? userPlan?.image}
+            totalDays={totalDays}
+            description={planDetail?.description ?? userPlan?.description}
+          />
+          {dateRange ? (
+            <PlanDayHeader
+              selectedDay={selectedDay}
+              totalDays={totalDays}
+              planId={planId}
+              dateRange={dateRange}
+              planStartDate={planStartDate}
+              completionMap={completionMap}
+              onMissedDaysPress={setSelectedDay}
+            />
+          ) : null}
+          <PlanDayCarousel
+            days={carouselDays}
+            selectedDay={selectedDay}
+            onSelectDay={setSelectedDay}
+            completionMap={completionMap}
+            disabledDays={disabledDays}
+            startDate={carouselStartDate}
+          />
+          <PlanDayVideosStrip videos={dayDetails?.videos ?? []} />
+          <PlanTaskList
+            tasks={tasks}
+            readOnly={false}
+            dayAudioUrl={dayAudioUrl}
+            onToggleTask={handleToggleTask}
+            optimisticCompleted={optimisticCompleted}
+            onPressTask={(taskId) => {
+              const task = navTasks.find((t) => t.id === taskId);
+              if (task && isTaskNavigable(task)) {
+                openPlanReading({ taskId }, false);
+              }
+            }}
+            onPressTaskWithAudio={(taskId) => {
+              const task = navTasks.find((t) => t.id === taskId);
+              if (task && isTaskNavigable(task)) {
+                openPlanReading({ taskId }, true);
+              }
+            }}
+          />
+        </ScrollView>
+      )}
+
+      {showPracticeNow && !notEnrolled && !isLoading ? (
+        <View
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: '#FDFBF7',
+            paddingHorizontal: 16,
+            paddingTop: 12,
+            paddingBottom: insets.bottom + 16,
+          }}
+        >
+          <Pressable
+            onPress={() => openPlanReading('first-incomplete', false)}
+            disabled={allTasksComplete}
+            style={({ pressed }) => ({
+              backgroundColor: '#000',
+              borderRadius: 999,
+              paddingVertical: 16,
+              alignItems: 'center',
+              opacity: allTasksComplete ? 0.5 : pressed ? 0.75 : 1,
+            })}
+          >
+            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700', fontFamily: 'Inter-Bold' }}>
+              {t('planTrack.practice_now')}
+            </Text>
+          </Pressable>
+        </View>
+      ) : null}
+
+      <DayCompletionSheet
+        visible={showDayComplete}
+        onClose={() => setShowDayComplete(false)}
+        dayNumber={selectedDay}
+        totalDays={totalDays}
+        planImage={planDetail?.image ?? userPlan?.image}
+      />
+    </View>
+  );
+}

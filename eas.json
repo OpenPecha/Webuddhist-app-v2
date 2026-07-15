@@ -1,24 +1,61 @@
 {
-  "cli": {
-    "version": ">= 20.0.0",
-    "appVersionSource": "remote"
-  },
-  "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal",
-      "ios": {
-        "simulator": true
-      }
-    },
-    "preview": {
-      "distribution": "internal"
-    },
-    "production": {
-      "autoIncrement": true
-    }
-  },
-  "submit": {
-    "production": {}
-  }
+	"cli": {
+		"version": ">= 20.0.0",
+		"appVersionSource": "remote"
+	},
+	"build": {
+		"development": {
+			"developmentClient": true,
+			"distribution": "internal",
+			"env": {
+				"APP_VARIANT": "development"
+			},
+			"android": {
+				"buildType": "apk"
+			},
+			"ios": {
+				"simulator": true
+			}
+		},
+		"development-prod": {
+			"developmentClient": true,
+			"distribution": "internal",
+			"env": {
+				"APP_VARIANT": "production",
+				"EXPO_PUBLIC_API_URL": "https://api.webuddhist.com/api/v1",
+				"EXPO_PUBLIC_AUTH0_AUDIENCE": "https://api.webuddhist.com"
+			},
+			"android": {
+				"buildType": "apk"
+			}
+		},
+		"preview": {
+			"distribution": "internal",
+			"env": {
+				"APP_VARIANT": "development"
+			},
+			"android": {
+				"buildType": "apk"
+			}
+		},
+		"production": {
+			"autoIncrement": true,
+			"env": {
+				"APP_VARIANT": "production",
+				"EXPO_PUBLIC_API_URL": "https://api.webuddhist.com/api/v1",
+				"EXPO_PUBLIC_AUTH0_DOMAIN": "we-buddhist-prod.us.auth0.com",
+				"EXPO_PUBLIC_AUTH0_CLIENT_ID": "AAhvPNisnq6lBDcvpKcNkw5d2nsPZEPD"
+			}
+		},
+		"production-apk": {
+			"extends": "production",
+			"distribution": "internal",
+			"android": {
+				"buildType": "apk"
+			}
+		}
+	},
+	"submit": {
+		"production": {}
+	}
 }

@@ -1,85 +1,171 @@
-import { PlanCard } from '@/components/ui/molecules/cards/plan-card';
-import { useSeriesById } from '@/hooks/useSeries';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
-import { useLocalSearchParams } from 'expo-router';
+import '@/lib/i18n';
+import { LoginDrawer } from '@/components/auth/LoginDrawer';
+import { FeaturedSeriesPlanCard } from '@/components/series/FeaturedSeriesPlanCard';
+import { SeriesPlanRow } from '@/components/series/SeriesPlanRow';
+import { useEnrollSeries } from '@/hooks/api/useEnrollSeries';
+import { useIsSeriesEnrolled } from '@/hooks/api/useSeriesEnrollments';
+import { useSeriesById } from '@/hooks/api/useSeries';
+import { useUserPlans } from '@/hooks/api/useUserPlans';
+import { useContentLanguage } from '@/hooks/useContentLanguage';
+import { useLoginDrawer } from '@/hooks/useLoginDrawer';
+import { pickSeriesMetadata } from '@/types/series';
+import { resolveUserPlanForItem } from '@/utils/plan-utils';
+import { Ionicons } from '@expo/vector-icons';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
+  Alert,
+  Pressable,
+  RefreshControl,
   ScrollView,
   Text,
   View,
 } from 'react-native';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useAuth0 } from 'react-native-auth0';
+import { useGuest } from '@/providers/guest';
 
 export default function SeriesDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { data: series, isLoading, error } = useSeriesById(id!);
+  const { data: series, isLoading, error, refetch, isRefetching } = useSeriesById(id!);
+  const { t } = useTranslation();
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const language = useContentLanguage();
+  const { user } = useAuth0();
+  const { isGuest } = useGuest();
+  const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
+  const enrollSeries = useEnrollSeries();
+  const { isEnrolled, isLoading: isEnrollmentLoading } = useIsSeriesEnrolled(id!);
+  const { data: userPlansData } = useUserPlans();
 
-  const metadata = series?.metadata[0];
+  const metadata = series ? pickSeriesMetadata(series.metadata, language) : undefined;
+  const headerTitle = metadata?.title?.trim() || metadata?.sub_title?.trim() || '';
+
+  const sorted = useMemo(
+    () =>
+      series
+        ? [...series.plans].sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0))
+        : [],
+    [series],
+  );
+
+  const featuredPlan = sorted[0];
+
+  const isPlanEnrolled = useCallback(
+    (planId: string) => {
+      const plans = userPlansData?.plans ?? [];
+      return !!resolveUserPlanForItem(planId, plans);
+    },
+    [userPlansData],
+  );
+
+  const handleEnroll = () => {
+    if (isGuest || !user) {
+      showLoginDrawer();
+      return;
+    }
+    enrollSeries.mutate(
+      { series_id: id! },
+      { onError: () => Alert.alert(t('series.enroll_error')) },
+    );
+  };
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
+        <Pressable onPress={() => router.back()} style={{ padding: 16 }}>
+          <Ionicons name="chevron-back" size={24} color="#000" />
+        </Pressable>
+        <ActivityIndicator style={{ marginTop: 48 }} />
+      </View>
+    );
+  }
+
+  if (error || !series || !featuredPlan) {
+    return (
+      <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
+        <Pressable onPress={() => router.back()} style={{ padding: 16 }}>
+          <Ionicons name="chevron-back" size={24} color="#000" />
+        </Pressable>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+          <Text style={{ color: '#dc341e' }}>{t('practice.routine_load_error')}</Text>
+          <Pressable onPress={() => refetch()} style={{ padding: 12 }}>
+            <Text>{t('practice.retry')}</Text>
+          </Pressable>
+        </View>
+      </View>
+    );
+  }
 
   return (
-    <View className="flex-1 bg-background">
-      {isLoading && (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator size="large" />
-        </View>
-      )}
+    <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingHorizontal: 8,
+          paddingVertical: 4,
+        }}
+      >
+        <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
+          <Ionicons name="chevron-back" size={24} color="#000" />
+        </Pressable>
+        <Text
+          style={{
+            flex: 1,
+            fontSize: 20,
+            fontWeight: '700',
+            fontFamily: 'Inter-Bold',
+            textAlign: 'center',
+            marginRight: 40,
+          }}
+          numberOfLines={1}
+        >
+          {headerTitle}
+        </Text>
+      </View>
 
-      {error && (
-        <View className="flex-1 items-center justify-center p-4">
-          <Text className="text-destructive text-center">
-            Failed to load series
-          </Text>
-        </View>
-      )}
+      <ScrollView
+        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => refetch()} />}
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <FeaturedSeriesPlanCard
+          series={series}
+          featuredPlan={featuredPlan}
+          metadata={metadata}
+          isEnrolled={isEnrolled}
+          isEnrollmentLoading={isEnrollmentLoading}
+          isEnrolling={enrollSeries.isPending}
+          onEnroll={handleEnroll}
+          seriesId={id!}
+        />
 
-      {series && (
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Image
-            source={{ uri: series.image }}
-            style={{ height: 250, width: '100%' }}
-            contentFit="cover"
-            transition={300}
-          />
-
-          <View className="gap-2 p-4">
-            <Text className="text-lg font-bold">
-              {metadata?.title}
-            </Text>
-            {metadata?.description ? (
-              <Text className="text-sm">
-                {metadata.description}
-              </Text>
-            ) : null}
-
-            <View className="flex-row items-center gap-2">
-              <View className="flex-row items-center gap-1 bg-white/80 rounded-full p-2">
-                <MaterialIcons name="calendar-month" size={14} />
-                <Text className="text-xs">
-                  {series.total_days} {series.total_days === 1 ? 'day' : 'days'}
-                </Text>
-              </View>
-              <View className="flex-row items-center gap-1 bg-white/80 rounded-full p-2">
-                <MaterialIcons name="list" size={14} />
-                <Text className="text-xs">
-                  {series.plans.length} {series.plans.length === 1 ? 'plan' : 'plans'}
-                </Text>
-              </View>
-            </View>
+        {sorted.length > 0 ? (
+          <View style={{ marginTop: 16 }}>
+            {sorted.map((plan) => {
+              const userPlan = resolveUserPlanForItem(
+                plan.id,
+                userPlansData?.plans ?? [],
+              );
+              return (
+                <SeriesPlanRow
+                  key={plan.id}
+                  plan={plan}
+                  isPlanEnrolled={isPlanEnrolled}
+                  userPlan={userPlan}
+                  seriesId={id!}
+                />
+              );
+            })}
           </View>
+        ) : null}
+      </ScrollView>
 
-          <View className="gap-4 p-4">
-            {series.plans.length > 0 && (
-              <View className="gap-2">
-                {series.plans.map((plan) => (
-                  <PlanCard key={plan.id} plan={plan} />
-                ))}
-              </View>
-            )}
-          </View>
-        </ScrollView >
-      )
-      }
+      <LoginDrawer key={session} visible={visible} onClose={hideLoginDrawer} />
     </View>
   );
 }
