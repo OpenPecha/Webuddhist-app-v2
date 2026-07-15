@@ -24,6 +24,11 @@ export interface PublicPlanSubTask {
   duration?: string | null;
   display_order?: number | null;
   source_text_id?: string | null;
+  segment_ids?: string[] | null;
+  pecha_segment_id?: string | null;
+  audio_url?: string | null;
+  start_ms?: number | null;
+  end_ms?: number | null;
 }
 
 export interface PublicPlanTask {

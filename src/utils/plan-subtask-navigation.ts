@@ -21,31 +21,27 @@ export interface PlanTaskForNavigation {
   }[];
 }
 
-function normalizeContentType(raw?: string): 'TEXT' | 'SOURCE_REFERENCE' | null {
+function normalizeContentType(raw?: string): 'TEXT' | 'SOURCE_REFERENCE' | 'IMAGE' | null {
   const upper = (raw ?? '').toUpperCase();
   if (upper === 'TEXT' || upper === 'INLINE_TEXT') return 'TEXT';
   if (upper === 'SOURCE_REFERENCE') return 'SOURCE_REFERENCE';
+  if (upper === 'IMAGE') return 'IMAGE';
   return null;
 }
 
 function resolveSubtaskContentType(
   sub: PlanTaskForNavigation['subtasks'][number],
-): 'TEXT' | 'SOURCE_REFERENCE' | null {
-  // Prefer linked text reader when source_text_id exists (even if inline content is present).
-  if (hasSourceText(sub.source_text_id)) {
-    return 'SOURCE_REFERENCE';
-  }
-
+): 'TEXT' | 'SOURCE_REFERENCE' | 'IMAGE' | null {
   const normalized = normalizeContentType(sub.content_type);
-  if (normalized === 'TEXT' && hasInlineContent(sub.content)) {
-    return 'TEXT';
-  }
   if (normalized === 'SOURCE_REFERENCE') {
-    return null;
+    return hasSourceText(sub.source_text_id) ? 'SOURCE_REFERENCE' : null;
   }
-  if (normalized) return null;
-
-  if (hasInlineContent(sub.content)) return 'TEXT';
+  if (normalized === 'TEXT') {
+    return hasInlineContent(sub.content) ? 'TEXT' : null;
+  }
+  if (normalized === 'IMAGE') {
+    return hasInlineContent(sub.content) ? 'IMAGE' : null;
+  }
   return null;
 }
 
@@ -99,6 +95,13 @@ export function subtaskToPlanTextItem(
       ...base,
       sourceTextId: sub.source_text_id,
       ...segmentFields(sub),
+    };
+  }
+
+  if (contentType === 'IMAGE') {
+    return {
+      ...base,
+      imageUrl: sub.content?.trim() ?? null,
     };
   }
 
@@ -186,6 +189,11 @@ export function mapPublicPlanTasksToNavigation(tasks: PublicPlanTask[]): PlanTas
           content: sub.content,
           content_type: sub.content_type,
           source_text_id: sub.source_text_id,
+          segment_ids: sub.segment_ids ?? null,
+          pecha_segment_id: sub.pecha_segment_id ?? null,
+          start_ms: sub.start_ms ?? null,
+          end_ms: sub.end_ms ?? null,
+          audio_url: sub.audio_url ?? null,
           display_order: sub.display_order,
         })),
     }));
@@ -252,7 +260,7 @@ export function resolvePlanReadingRoute(options: {
     };
   }
 
-  if (item.contentType === 'TEXT') {
+  if (item.contentType === 'TEXT' || item.contentType === 'IMAGE') {
     return {
       pathname: '/plan-text/[subtaskId]',
       params: { subtaskId: item.subTaskId, ...baseParams },
@@ -292,7 +300,7 @@ export function resolvePlanReadingRouteForIndex(options: {
     };
   }
 
-  if (item.contentType === 'TEXT') {
+  if (item.contentType === 'TEXT' || item.contentType === 'IMAGE') {
     return {
       pathname: '/plan-text/[subtaskId]',
       params: { subtaskId: item.subTaskId, ...baseParams },

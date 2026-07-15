@@ -33,6 +33,13 @@ export default function ReaderScreen() {
     startMs: currentItem?.startMs,
     endMs: currentItem?.endMs,
     autoPlay,
+    onSegmentComplete: () => {
+      if (canNext) {
+        void navigate('next', { autoPlay: true });
+      } else {
+        void navigate('finish');
+      }
+    },
   });
   cancelAudioRef.current = audio.cancel;
 
@@ -88,6 +95,7 @@ export default function ReaderScreen() {
   if (!hasPlanContext) {
     return (
       <PlanReadingLayout
+        variant="reader"
         content={content}
         sectionTitle={textTitle}
         textId={textId}
@@ -102,6 +110,7 @@ export default function ReaderScreen() {
 
   return (
     <PlanReadingLayout
+      variant="reader"
       content={content}
       sectionTitle={currentItem?.taskTitle ?? textTitle}
       textId={textId}
