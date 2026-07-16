@@ -9,11 +9,11 @@ import type { PresetTimer } from '@/types/timers';
 import { useRouter, type Href } from 'expo-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Text } from '@/components/ui/text';
 import {
   FlatList,
   Pressable,
   RefreshControl,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -29,7 +29,7 @@ export default function TimersScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { foreground, mutedForeground, scaffoldBackground } = useThemeColors();
+  const { foreground, scaffoldBackground } = useThemeColors();
   const { data: timers = [], isLoading, isError, refetch, isRefetching } = usePresetTimers();
 
   const sortedTimers = useMemo(() => sortPresetTimers(timers), [timers]);
@@ -59,14 +59,7 @@ export default function TimersScreen() {
           <ArrowLeftIcon size={24} color={foreground} />
         </Pressable>
         <Text
-          style={{
-            flex: 1,
-            fontSize: 20,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            color: foreground,
-            textAlign: 'center',
-          }}
+          className="flex-1 text-center text-xl font-bold text-foreground"
           numberOfLines={1}
         >
           {t('timers.meditation_timer')}
@@ -78,19 +71,19 @@ export default function TimersScreen() {
         <PresetTimersGridSkeleton />
       ) : isError ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 12 }}>
-          <Text style={{ color: mutedForeground, textAlign: 'center', fontFamily: 'Inter-Regular' }}>
+          <Text className="text-center text-muted-foreground">
             {t('timers.load_error')}
           </Text>
           <Pressable
             onPress={() => void refetch()}
             style={{ backgroundColor: AppColors.blue, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 8 }}
           >
-            <Text style={{ color: '#fff', fontFamily: 'Inter-Regular' }}>{t('practice.retry')}</Text>
+            <Text className="text-white">{t('practice.retry')}</Text>
           </Pressable>
         </View>
       ) : sortedTimers.length === 0 ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 32 }}>
-          <Text style={{ color: mutedForeground, textAlign: 'center', fontFamily: 'Inter-Regular' }}>
+          <Text className="text-center text-muted-foreground">
             {t('timers.no_timers')}
           </Text>
         </View>

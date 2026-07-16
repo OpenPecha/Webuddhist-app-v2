@@ -1,4 +1,5 @@
 import { MarkdownText } from '@/components/common/MarkdownText';
+import { Text } from '@/components/ui/text';
 import { PlanNavigator } from '@/components/plans/PlanNavigator';
 import { ReaderFontSizeButton } from '@/components/reader/ReaderFontSizeButton';
 import { ReaderFontSizeSheet } from '@/components/reader/ReaderFontSizeSheet';
@@ -20,7 +21,6 @@ import {
   PanResponder,
   Pressable,
   ScrollView,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -305,9 +305,7 @@ export function PlanReadingLayout({
                 alignItems: 'center',
               }}
             >
-              <Text style={{ fontSize: 15, fontWeight: '700', fontFamily: 'Inter-Bold', color: '#000' }}>
-                {t('reader.read_full_text')}
-              </Text>
+              <Text className="text-[15px] font-bold text-foreground">{t('reader.read_full_text')}</Text>
             </Pressable>
           ) : null}
 

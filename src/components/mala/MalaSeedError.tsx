@@ -1,7 +1,7 @@
 import { dialogColors } from '@/components/ui/dialog-styles';
-import { useThemeColors } from '@/hooks/useThemeColors';
+import { Text } from '@/components/ui/text';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 interface MalaSeedErrorProps {
   message?: string;
@@ -11,7 +11,6 @@ interface MalaSeedErrorProps {
 
 export function MalaSeedError({ message, onRetry, compact = false }: MalaSeedErrorProps) {
   const { t } = useTranslation();
-  const { destructive } = useThemeColors();
 
   return (
     <View
@@ -23,13 +22,7 @@ export function MalaSeedError({ message, onRetry, compact = false }: MalaSeedErr
         gap: 12,
       }}
     >
-      <Text
-        style={{
-          color: destructive,
-          textAlign: compact ? 'left' : 'center',
-          fontFamily: 'Inter-Regular',
-        }}
-      >
+      <Text className={`text-destructive ${compact ? 'text-left' : 'text-center'}`}>
         {message ?? t('mala.load_error')}
       </Text>
       <Pressable
@@ -42,9 +35,7 @@ export function MalaSeedError({ message, onRetry, compact = false }: MalaSeedErr
           paddingVertical: 10,
         }}
       >
-        <Text style={{ color: dialogColors.text, fontFamily: 'Inter-Regular', fontSize: 15 }}>
-          {t('practice.retry')}
-        </Text>
+        <Text className="text-[15px] text-foreground">{t('practice.retry')}</Text>
       </Pressable>
     </View>
   );

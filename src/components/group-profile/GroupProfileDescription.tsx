@@ -1,12 +1,11 @@
 import {
-  GP_BODY_SIZE,
   GP_DESCRIPTION_CLAMP,
   GP_PADDING,
 } from '@/components/group-profile/group-profile-styles';
-import { useThemeColors } from '@/hooks/useThemeColors';
+import { Text } from '@/components/ui/text';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text } from 'react-native';
+import { Pressable } from 'react-native';
 
 interface GroupProfileDescriptionProps {
   description: string;
@@ -14,7 +13,6 @@ interface GroupProfileDescriptionProps {
 
 export function GroupProfileDescription({ description }: GroupProfileDescriptionProps) {
   const { t } = useTranslation();
-  const { foreground } = useThemeColors();
   const [expanded, setExpanded] = useState(false);
 
   if (!description.trim()) return null;
@@ -25,13 +23,13 @@ export function GroupProfileDescription({ description }: GroupProfileDescription
       style={{ paddingHorizontal: GP_PADDING, paddingTop: 12 }}
     >
       <Text
-        style={{ fontSize: GP_BODY_SIZE, color: foreground, lineHeight: 22 }}
+        className="text-[15px] leading-[22px] text-foreground"
         numberOfLines={expanded ? undefined : GP_DESCRIPTION_CLAMP}
       >
         {description}
       </Text>
       {description.length > 120 ? (
-        <Text style={{ fontSize: 13, color: foreground, fontWeight: '600', marginTop: 4 }}>
+        <Text className="mt-1 text-[13px] font-semibold text-foreground">
           {expanded ? t('connect.show_less') : t('connect.show_more')}
         </Text>
       ) : null}

@@ -1,3 +1,5 @@
+import { Text } from '@/components/ui/text';
+import { cn } from '@/utils/cn';
 import { AppBottomSheet } from '@/components/settings/AppBottomSheet';
 import { AppToggleSwitch } from '@/components/settings/AppToggleSwitch';
 import { useThemeColors } from '@/hooks/useThemeColors';
@@ -11,7 +13,7 @@ import {
 } from 'phosphor-react-native';
 import type { IconProps } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface MalaSettingsSheetProps {
@@ -47,13 +49,7 @@ function SettingsActionRow({
     <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 16 }}>
       <Icon size={24} color={color} />
       <Text
-        style={{
-          flex: 1,
-          marginLeft: 12,
-          fontSize: 16,
-          color,
-          fontFamily: 'Inter-Regular',
-        }}
+        className={cn('ml-3 flex-1 text-base', destructive ? 'text-destructive' : 'text-foreground')}
       >
         {label}
       </Text>
@@ -85,17 +81,7 @@ function SettingsToggleRow({
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 16 }}>
       <Icon size={24} color={foreground} />
-      <Text
-        style={{
-          flex: 1,
-          marginLeft: 12,
-          fontSize: 16,
-          color: foreground,
-          fontFamily: 'Inter-Regular',
-        }}
-      >
-        {label}
-      </Text>
+      <Text className="ml-3 flex-1 text-base text-foreground">{label}</Text>
       <AppToggleSwitch value={value} onValueChange={onValueChange} />
     </View>
   );

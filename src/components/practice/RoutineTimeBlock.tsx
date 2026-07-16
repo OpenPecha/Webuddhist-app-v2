@@ -2,11 +2,12 @@ import {
   RoutineItemCard,
   routineItemCoverUri,
 } from '@/components/practice/RoutineItemCard';
+import { Text } from '@/components/ui/text';
 import { useDialog } from '@/hooks/useDialog';
 import type { RoutineItem } from '@/types/routine';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
 
 interface RoutineTimeBlockProps {
@@ -43,9 +44,7 @@ function TimeSelector({
         borderBottomLeftRadius: 20,
       }}
     >
-      <Text style={{ fontSize: 14, fontWeight: '600', fontFamily: 'Inter-SemiBold', color: '#000' }}>
-        {formattedTime}
-      </Text>
+      <Text className="text-sm font-semibold text-foreground">{formattedTime}</Text>
       <Ionicons name="chevron-down" size={18} color="#8a8a8a" style={{ marginLeft: 12 }} />
     </Pressable>
   );
@@ -122,7 +121,7 @@ export function RoutineTimeBlock({
         <NotificationToggle enabled={notificationEnabled} onPress={onNotificationToggle} />
         <View style={{ flex: 1 }} />
         <Pressable onPress={confirmDeleteBlock} hitSlop={8}>
-          <Text style={{ fontSize: 14, fontWeight: '600', color: '#f87171' }}>
+          <Text className="text-sm font-semibold text-[#f87171]">
             {t('editRoutine.delete_time_block')}
           </Text>
         </Pressable>
@@ -180,16 +179,7 @@ export function RoutineTimeBlock({
         >
           <Ionicons name="add" size={24} color="#000" />
         </View>
-        <Text
-          style={{
-            flex: 1,
-            marginLeft: 16,
-            fontSize: 16,
-            fontWeight: '600',
-            fontFamily: 'Inter-SemiBold',
-            color: '#000',
-          }}
-        >
+        <Text className="flex-1 ml-4 text-base font-semibold text-foreground">
           {t('editRoutine.add_session')}
         </Text>
       </Pressable>
@@ -213,15 +203,7 @@ function AddBlockButton({ onPress }: { onPress: () => void }) {
         }}
       >
         <Ionicons name="add" size={16} color="#000" />
-        <Text
-          style={{
-            marginLeft: 6,
-            fontSize: 14,
-            fontWeight: '600',
-            fontFamily: 'Inter-SemiBold',
-            color: '#000',
-          }}
-        >
+        <Text className="ml-1.5 text-sm font-semibold text-foreground">
           {t('editRoutine.add_block_label')}
         </Text>
       </View>

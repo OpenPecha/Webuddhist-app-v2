@@ -1,8 +1,6 @@
 import {
   GP_AVATAR_SIZE,
   GP_PADDING,
-  GP_SECONDARY_SIZE,
-  GP_TITLE_SIZE,
 } from '@/components/group-profile/group-profile-styles';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import {
@@ -14,8 +12,9 @@ import type { GroupMetadata } from '@/types/groups';
 import type { PublicGroupDetail } from '@/types/groups';
 import { Image } from 'expo-image';
 import { UsersThree } from 'phosphor-react-native';
+import { Text } from '@/components/ui/text';
 import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 interface GroupProfileHeaderProps {
   group: PublicGroupDetail;
@@ -25,7 +24,7 @@ interface GroupProfileHeaderProps {
 
 export function GroupProfileHeader({ group, meta, language }: GroupProfileHeaderProps) {
   const { t, i18n } = useTranslation();
-  const { foreground, mutedForeground, skeleton } = useThemeColors();
+  const { mutedForeground, skeleton } = useThemeColors();
 
   const isPage = group.group_type === 'PAGE';
   const count = getGroupMemberCount(group);
@@ -58,40 +57,20 @@ export function GroupProfileHeader({ group, meta, language }: GroupProfileHeader
           )}
         </View>
         {title ? (
-          <Text
-            style={{
-              flex: 1,
-              marginLeft: 12,
-              fontSize: GP_TITLE_SIZE,
-              fontWeight: '700',
-              fontFamily: 'Inter-Bold',
-              color: foreground,
-              lineHeight: 24,
-            }}
-            numberOfLines={2}
-          >
+          <Text className="ml-3 flex-1 text-lg font-bold leading-6 text-foreground" numberOfLines={2}>
             {title}
           </Text>
         ) : null}
       </View>
 
       {meta?.sub_title ? (
-        <Text
-          style={{
-            marginTop: 8,
-            fontSize: GP_SECONDARY_SIZE,
-            color: mutedForeground,
-            lineHeight: 20,
-          }}
-        >
-          {meta.sub_title}
-        </Text>
+        <Text className="mt-2 text-sm leading-5 text-muted-foreground">{meta.sub_title}</Text>
       ) : (
         <View style={{ height: 8 }} />
       )}
 
-      <Text style={{ marginTop: 4, fontSize: GP_SECONDARY_SIZE, color: foreground, lineHeight: 20 }}>
-        <Text style={{ fontWeight: '700', fontFamily: 'Inter-Bold' }}>{formattedCount}</Text>
+      <Text className="mt-1 text-sm leading-5 text-foreground">
+        <Text className="font-bold">{formattedCount}</Text>
         {` ${countLabel}`}
       </Text>
     </View>

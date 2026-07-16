@@ -25,7 +25,8 @@ import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 import { DotsThreeVerticalIcon } from 'phosphor-react-native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -138,14 +139,7 @@ export default function MalaScreen() {
             <ArrowLeftIcon size={24} color={foreground} />
           </Pressable>
           <Text
-            style={{
-              flex: 1,
-              fontSize: 18,
-              fontWeight: '600',
-              fontFamily: 'Inter-SemiBold',
-              color: foreground,
-              textAlign: 'center',
-            }}
+            className="flex-1 text-center text-lg font-semibold text-foreground"
             numberOfLines={1}
           >
             {headerTitle}
@@ -167,7 +161,7 @@ export default function MalaScreen() {
         <MalaSeedError onRetry={() => void refetch()} />
       ) : mantras.length === 0 ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-          <Text style={{ color: foreground, fontFamily: 'Inter-Regular', textAlign: 'center' }}>
+          <Text className="text-center text-foreground">
             {t('mala.no_mantras')}
           </Text>
         </View>

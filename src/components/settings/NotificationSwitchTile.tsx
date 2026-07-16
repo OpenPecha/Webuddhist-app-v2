@@ -1,7 +1,8 @@
+import { Text } from '@/components/ui/text';
 import { AppToggleSwitch } from '@/components/settings/AppToggleSwitch';
 import { Info } from '@/constants/settings-icons';
 import { useThemeColors } from '@/hooks/useThemeColors';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 interface NotificationSwitchTileProps {
   title: string;

@@ -22,29 +22,23 @@ import {
 } from '@/stores/pending-groups';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
   FlatList,
   Pressable,
   RefreshControl,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function ConnectErrorState({ onRetry }: { onRetry: () => void }) {
   const { t } = useTranslation();
-  const { destructive, foreground } = useThemeColors();
+  const { foreground } = useThemeColors();
 
   return (
     <View style={{ alignItems: 'center', gap: 12, paddingHorizontal: 24, marginTop: 48 }}>
-      <Text
-        style={{
-          color: destructive,
-          textAlign: 'center',
-          fontFamily: 'Inter-Regular',
-        }}
-      >
+      <Text className="text-center text-destructive">
         {t('connect.load_error')}
       </Text>
       <Pressable
@@ -56,7 +50,7 @@ function ConnectErrorState({ onRetry }: { onRetry: () => void }) {
           backgroundColor: foreground,
         }}
       >
-        <Text style={{ color: '#fff', fontWeight: '600', fontFamily: 'Inter-SemiBold' }}>
+        <Text className="font-semibold text-white">
           {t('practice.retry')}
         </Text>
       </Pressable>
@@ -67,7 +61,7 @@ function ConnectErrorState({ onRetry }: { onRetry: () => void }) {
 export default function ConnectScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const { scaffoldBackground, mutedForeground } = useThemeColors();
+  const { scaffoldBackground } = useThemeColors();
   const queryClient = useQueryClient();
   const pending = usePendingGroups();
 
@@ -127,14 +121,7 @@ export default function ConnectScreen() {
     if (isLoading) return <ActivityIndicator style={{ marginTop: 48 }} />;
     if (hasMyGroups) return <DiscoverEmptyState />;
     return (
-      <Text
-        style={{
-          textAlign: 'center',
-          color: mutedForeground,
-          marginTop: 48,
-          paddingHorizontal: 24,
-        }}
-      >
+      <Text className="mt-12 px-6 text-center text-muted-foreground">
         {t('connect.empty_title')}
       </Text>
     );

@@ -4,7 +4,8 @@ import { imageUrl } from '@/utils/image-url';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 
 interface FeaturedSeriesPlanCardProps {
   series: SeriesDetail;
@@ -60,14 +61,7 @@ export function FeaturedSeriesPlanCard({
           />
           {subtitle ? (
             <Text
-              style={{
-                fontSize: 16,
-                fontWeight: '600',
-                fontFamily: 'Inter-SemiBold',
-                color: '#000',
-                lineHeight: 24,
-                marginTop: 6,
-              }}
+              className="mt-1.5 text-base font-semibold leading-6 text-foreground"
               numberOfLines={2}
             >
               {subtitle}
@@ -92,9 +86,7 @@ export function FeaturedSeriesPlanCard({
             {isEnrolling ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', fontFamily: 'Inter-SemiBold' }}>
-                {t('series.enroll')}
-              </Text>
+              <Text className="text-base font-semibold text-white">{t('series.enroll')}</Text>
             )}
           </Pressable>
         ) : null}

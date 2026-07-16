@@ -1,7 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function ReaderSearchPlaceholderScreen() {
@@ -15,20 +16,12 @@ export default function ReaderSearchPlaceholderScreen() {
         <Pressable onPress={() => router.back()} style={{ padding: 8 }} accessibilityRole="button">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
-        <Text
-          style={{
-            flex: 1,
-            fontSize: 17,
-            fontWeight: '600',
-            fontFamily: 'Inter-SemiBold',
-            marginRight: 40,
-          }}
-        >
+        <Text className="mr-10 flex-1 text-[17px] font-semibold text-foreground">
           {t('home.search')}
         </Text>
       </View>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24 }}>
-        <Text style={{ color: '#8a8a8a', textAlign: 'center', fontSize: 15 }}>
+        <Text className="text-center text-[15px] text-muted-foreground">
           {t('reader.coming_soon')}
         </Text>
       </View>

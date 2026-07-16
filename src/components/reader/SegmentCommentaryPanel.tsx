@@ -1,10 +1,11 @@
 import { ExpandableSegmentHtml } from '@/components/reader/ExpandableSegmentHtml';
+import { Text } from '@/components/ui/text';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useSegmentCommentaries } from '@/hooks/api/useSegmentCommentaries';
 import type { SegmentCommentary } from '@/types/segment-commentary';
 import { groupByLanguage, languageDisplayName } from '@/utils/segment-resource-grouping';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 
 interface SegmentCommentaryPanelProps {
   segmentId: string;
@@ -19,15 +20,13 @@ function CommentaryItem({ commentary, fontSize }: { commentary: SegmentCommentar
 
   return (
     <View style={{ marginBottom: 24 }}>
-      <Text style={{ fontSize: 15, fontWeight: '700', color: '#000', marginBottom: 8 }}>
-        {commentary.title}
-      </Text>
+      <Text className="text-[15px] font-bold text-foreground mb-2">{commentary.title}</Text>
       {content ? <ExpandableSegmentHtml html={content} fontSize={fontSize} /> : null}
       {commentary.source ? (
-        <Text style={{ fontSize: 11, color: '#8a8a8a', marginTop: 8 }}>{commentary.source}</Text>
+        <Text className="text-[11px] text-muted-foreground mt-2">{commentary.source}</Text>
       ) : null}
       {commentary.license ? (
-        <Text style={{ fontSize: 11, color: '#8a8a8a', marginTop: 4 }}>{commentary.license}</Text>
+        <Text className="text-[11px] text-muted-foreground mt-1">{commentary.license}</Text>
       ) : null}
     </View>
   );
@@ -49,11 +48,9 @@ export function SegmentCommentaryPanel({ segmentId, fontSize = 16 }: SegmentComm
   if (isError) {
     return (
       <View style={{ paddingVertical: 24, alignItems: 'center' }}>
-        <Text style={{ fontSize: 14, color: '#8a8a8a', marginBottom: 12 }}>
-          {t('reader.load_error')}
-        </Text>
+        <Text className="text-sm text-muted-foreground mb-3">{t('reader.load_error')}</Text>
         <Pressable onPress={() => void refetch()}>
-          <Text style={{ fontSize: 14, fontWeight: '600', color: '#000' }}>{t('practice.retry')}</Text>
+          <Text className="text-sm font-semibold text-foreground">{t('practice.retry')}</Text>
         </Pressable>
       </View>
     );
@@ -63,7 +60,7 @@ export function SegmentCommentaryPanel({ segmentId, fontSize = 16 }: SegmentComm
   if (commentaries.length === 0) {
     return (
       <View style={{ paddingVertical: 24, alignItems: 'center' }}>
-        <Text style={{ fontSize: 14, color: '#8a8a8a' }}>{t('reader.no_commentary')}</Text>
+        <Text className="text-sm text-muted-foreground">{t('reader.no_commentary')}</Text>
       </View>
     );
   }
@@ -74,16 +71,7 @@ export function SegmentCommentaryPanel({ segmentId, fontSize = 16 }: SegmentComm
     <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled>
       {groups.map((group) => (
         <View key={group.language || 'unknown'} style={{ marginBottom: 8 }}>
-          <Text
-            style={{
-              fontSize: 13,
-              fontWeight: '700',
-              color: '#8a8a8a',
-              textTransform: 'uppercase',
-              letterSpacing: 0.5,
-              marginBottom: 12,
-            }}
-          >
+          <Text className="text-[13px] font-bold text-muted-foreground uppercase tracking-wide mb-3">
             {`${languageDisplayName(group.language)} (${group.items.length})`}
           </Text>
           {group.items.map((commentary, index) => (

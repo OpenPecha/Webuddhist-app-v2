@@ -1,4 +1,5 @@
 import '@/lib/i18n';
+import { Text } from '@/components/ui/text';
 import { ArrowLeftIcon } from '@/components/home/HomeIcon';
 import { HomeEventCard } from '@/components/home/HomeEventCard';
 import { useEventsToday } from '@/hooks/api/useEventsToday';
@@ -10,7 +11,6 @@ import {
   ActivityIndicator,
   Pressable,
   ScrollView,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -30,7 +30,7 @@ export default function EventsScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { foreground, scaffoldBackground, mutedForeground } = useThemeColors();
+  const { foreground, scaffoldBackground } = useThemeColors();
   const { data, isLoading, isError } = useEventsToday(EVENTS_LIST_LIMIT);
 
   return (
@@ -51,17 +51,7 @@ export default function EventsScreen() {
         >
           <ArrowLeftIcon size={24} color={foreground} />
         </Pressable>
-        <Text
-          style={{
-            flex: 1,
-            fontSize: 20,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            color: foreground,
-          }}
-        >
-          {t('home.events_title')}
-        </Text>
+        <Text className="flex-1 text-xl font-bold text-foreground">{t('home.events_title')}</Text>
       </View>
 
       {isLoading ? (
@@ -70,16 +60,7 @@ export default function EventsScreen() {
         </View>
       ) : isError || !data || data.events.length === 0 ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24 }}>
-          <Text
-            style={{
-              textAlign: 'center',
-              fontSize: 16,
-              fontFamily: 'Inter-Regular',
-              color: mutedForeground,
-            }}
-          >
-            {t('home.events_empty')}
-          </Text>
+          <Text className="text-center text-base text-muted-foreground">{t('home.events_empty')}</Text>
         </View>
       ) : (
         <ScrollView

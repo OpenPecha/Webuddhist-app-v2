@@ -2,7 +2,8 @@ import type { ReactNode } from 'react';
 import Constants from 'expo-constants';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Linking, Modal, Platform, Pressable, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { Linking, Modal, Platform, Pressable, View } from 'react-native';
 import { AppColors } from '@/constants/app-colors';
 
 const IOS_STORE_URL =
@@ -84,26 +85,10 @@ export function ForceUpdateGate({ children }: ForceUpdateGateProps) {
               gap: 12,
             }}
           >
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: '700',
-                fontFamily: 'Inter-Bold',
-                color: '#000',
-                textAlign: 'center',
-              }}
-            >
+            <Text className="text-center text-xl font-bold text-foreground">
               {t('force_update.title')}
             </Text>
-            <Text
-              style={{
-                fontSize: 15,
-                color: '#454545',
-                fontFamily: 'Inter-Regular',
-                textAlign: 'center',
-                lineHeight: 22,
-              }}
-            >
+            <Text className="text-center text-[15px] leading-[22px] text-[#454545]">
               {t('force_update.message')}
             </Text>
             <Pressable
@@ -116,15 +101,7 @@ export function ForceUpdateGate({ children }: ForceUpdateGateProps) {
                 opacity: pressed ? 0.9 : 1,
               })}
             >
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: '#fff',
-                  fontSize: 16,
-                  fontWeight: '700',
-                  fontFamily: 'Inter-Bold',
-                }}
-              >
+              <Text className="text-center text-base font-bold text-white">
                 {t('force_update.button')}
               </Text>
             </Pressable>

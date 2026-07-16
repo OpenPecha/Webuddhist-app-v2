@@ -1,7 +1,8 @@
+import { Text } from '@/components/ui/text';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { Ionicons } from '@expo/vector-icons';
 import { MagnifyingGlass } from 'phosphor-react-native';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 interface SearchEmptyStateProps {
   variant: 'hint' | 'no_results';
@@ -26,15 +27,7 @@ export function SearchEmptyState({ variant, message }: SearchEmptyStateProps) {
       ) : (
         <Ionicons name="search-outline" size={64} color={mutedForeground} />
       )}
-      <Text
-        style={{
-          marginTop: 16,
-          fontSize: 16,
-          color: mutedForeground,
-          textAlign: 'center',
-          lineHeight: 22,
-        }}
-      >
+      <Text className="mt-4 text-center text-base leading-[22px] text-muted-foreground">
         {message}
       </Text>
     </View>

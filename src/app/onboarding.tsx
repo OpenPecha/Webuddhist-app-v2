@@ -1,7 +1,8 @@
+import '@/lib/i18n';
+import { Text } from '@/components/ui/text';
 import { useOnboarding } from '@/providers/onboarding';
 import { usePendingOnboardingPlan } from '@/providers/pending-onboarding-plan';
 import type { UserPlan } from '@/types/plans';
-import '@/lib/i18n';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -9,13 +10,11 @@ import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
-  Animated,
   Dimensions,
   Pressable,
   ScrollView,
-  Text,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -47,7 +46,7 @@ function GoldButton({ label, onPress, loading }: { label: string; onPress: () =>
       {loading ? (
         <ActivityIndicator color="#fff" />
       ) : (
-        <Text style={{ color: '#fff', fontSize: 18, fontWeight: '600', fontFamily: 'Inter-SemiBold' }}>
+        <Text className="text-lg font-semibold text-white">
           {label}
         </Text>
       )}
@@ -71,10 +70,10 @@ function WelcomeScreen({ onNext }: { onNext: () => void }) {
     >
       {/* Title */}
       <View style={{ alignItems: 'center' }}>
-        <Text style={{ color: '#fff', fontSize: 28, fontWeight: '500', fontFamily: 'Inter-Regular' }}>
+        <Text className="text-[28px] font-medium text-white">
           {t('onboarding.welcome')}
         </Text>
-        <Text style={{ color: '#fff', fontSize: 36, fontWeight: '600', fontFamily: 'Inter-Bold' }}>
+        <Text className="text-4xl font-semibold text-white">
           {t('appTitle')}
         </Text>
       </View>
@@ -86,10 +85,10 @@ function WelcomeScreen({ onNext }: { onNext: () => void }) {
 
       {/* Quote */}
       <View style={{ marginBottom: 40, gap: 12 }}>
-        <Text style={{ color: '#fff', fontSize: 16, fontWeight: '500', fontFamily: 'EBGaramond-Regular', textAlign: 'center', lineHeight: 26 }}>
+        <Text className="text-center text-base font-medium leading-[26px] text-white font-garamond">
           "{t('onboarding.quote')}"
         </Text>
-        <Text style={{ color: 'rgba(255,255,255,0.6)', fontSize: 15, textAlign: 'center', fontFamily: 'EBGaramond-Regular' }}>
+        <Text className="text-center text-[15px] text-white/60 font-garamond">
           {t('onboarding.quote_citation')}
         </Text>
       </View>
@@ -126,14 +125,14 @@ function EventScreen({
     <View style={{ flex: 1, paddingHorizontal: 32, paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24 }}>
       {/* Back */}
       <TouchableOpacity onPress={onBack} style={{ marginBottom: 40 }}>
-        <Text style={{ color: '#fff', fontSize: 22 }}>←</Text>
+        <Text className="text-[22px] text-white">←</Text>
       </TouchableOpacity>
 
       {/* Title */}
-      <Text style={{ color: '#fff', fontSize: 36, fontWeight: '700', fontFamily: 'Inter-Bold', lineHeight: 42, marginBottom: 8 }}>
+      <Text className="mb-2 text-4xl font-bold leading-[42px] text-white">
         {t('onboarding.event_question')}
       </Text>
-      <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 15, marginBottom: 36 }}>
+      <Text className="mb-9 text-[15px] text-white/50">
         {t('onboarding.event_optional')}
       </Text>
 
@@ -158,14 +157,14 @@ function EventScreen({
         <View style={{ flex: 1, gap: 6 }}>
           {/* Badge */}
           <View style={{ backgroundColor: 'rgba(222,173,45,0.15)', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3, alignSelf: 'flex-start' }}>
-            <Text style={{ color: GOLD, fontSize: 11, fontWeight: '700', letterSpacing: 0.6 }}>
+            <Text className="text-[11px] font-bold tracking-[0.6px] text-brand">
               {ONBOARDING_EVENT.eventLabel.toUpperCase()}
             </Text>
           </View>
-          <Text style={{ color: '#fff', fontSize: 17, fontWeight: '600' }}>
+          <Text className="text-[17px] font-semibold text-white">
             {ONBOARDING_EVENT.planName}
           </Text>
-          <Text style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13 }}>
+          <Text className="text-[13px] text-white/50">
             {t('onboarding.event_duration', { description: ONBOARDING_EVENT.description, days: ONBOARDING_EVENT.totalDays })}
           </Text>
         </View>
@@ -177,14 +176,14 @@ function EventScreen({
           backgroundColor: selected ? GOLD : 'transparent',
           alignItems: 'center', justifyContent: 'center', marginLeft: 12,
         }}>
-          {selected && <Text style={{ color: '#fff', fontSize: 13, lineHeight: 13 }}>✓</Text>}
+          {selected && <Text className="text-[13px] leading-[13px] text-white">✓</Text>}
         </View>
       </Pressable>
 
       {/* Reminder note */}
       <View style={{ flexDirection: 'row', gap: 6, alignItems: 'flex-start' }}>
-        <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 16 }}>🔔</Text>
-        <Text style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13, flex: 1, lineHeight: 20 }}>
+        <Text className="text-base text-white/40">🔔</Text>
+        <Text className="flex-1 text-[13px] leading-5 text-white/40">
           {t('onboarding.event_reminder')}
         </Text>
       </View>
@@ -205,13 +204,13 @@ function AllSetScreen({ onComplete }: { onComplete: () => void }) {
     <View style={{ flex: 1, paddingHorizontal: 32, paddingTop: insets.top, paddingBottom: insets.bottom + 24, alignItems: 'center', justifyContent: 'center' }}>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 16 }}>
         <Image source={logo} style={{ width: 80, height: 80 }} contentFit="contain" />
-        <Text style={{ color: '#fff', fontSize: 32, fontWeight: '600', fontFamily: 'Inter-Bold', textAlign: 'center' }}>
+        <Text className="text-center text-[32px] font-semibold text-white">
           {t('appTitle')}
         </Text>
-        <Text style={{ color: '#fff', fontSize: 28, fontWeight: '400', fontStyle: 'italic', fontFamily: 'EBGaramond-Regular', textAlign: 'center', lineHeight: 38 }}>
+        <Text className="text-center text-[28px] italic leading-[38px] text-white font-garamond">
           {t('onboarding.all_set')}
         </Text>
-        <Text style={{ color: 'rgba(255,255,255,0.65)', fontSize: 16, textAlign: 'center', lineHeight: 26, marginTop: 4 }}>
+        <Text className="mt-1 text-center text-base leading-[26px] text-white/65">
           {t('onboarding.all_set_description')}
         </Text>
       </View>

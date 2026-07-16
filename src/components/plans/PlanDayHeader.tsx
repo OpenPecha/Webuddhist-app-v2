@@ -1,6 +1,7 @@
+import { Text } from '@/components/ui/text';
 import { EnrolledPlanStatusIndicator } from '@/components/plans/EnrolledPlanStatusIndicator';
 import type { PlanDateRange } from '@/utils/plan-utils';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 interface PlanDayHeaderProps {
@@ -34,14 +35,7 @@ export function PlanDayHeader({
         marginBottom: 4,
       }}
     >
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: '700',
-          fontFamily: 'Inter-Bold',
-          color: '#000',
-        }}
-      >
+      <Text className="text-lg font-bold text-foreground">
         {t('planTrack.day_of', { day: selectedDay, total: totalDays })}
       </Text>
       <EnrolledPlanStatusIndicator

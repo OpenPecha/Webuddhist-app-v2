@@ -30,11 +30,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
   Pressable,
   ScrollView,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -255,14 +255,7 @@ export default function PlanTrackScreen() {
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <Text
-          style={{
-            flex: 1,
-            fontSize: 20,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            color: '#000',
-            textAlign: 'center',
-          }}
+          className="flex-1 text-center text-xl font-bold text-foreground"
           numberOfLines={1}
         >
           {title}
@@ -276,14 +269,14 @@ export default function PlanTrackScreen() {
         </View>
       ) : notEnrolled ? (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 12 }}>
-          <Text style={{ color: '#dc341e', textAlign: 'center' }}>
+          <Text className="text-center text-destructive">
             {t('practice.not_found')}
           </Text>
           <Pressable
             onPress={() => router.replace({ pathname: '/plans/[id]', params: { id: planId } })}
             style={{ padding: 12 }}
           >
-            <Text style={{ fontWeight: '600' }}>{t('practice.retry')}</Text>
+            <Text className="font-semibold">{t('practice.retry')}</Text>
           </Pressable>
         </View>
       ) : (
@@ -364,7 +357,7 @@ export default function PlanTrackScreen() {
               opacity: allTasksComplete ? 0.5 : pressed ? 0.75 : 1,
             })}
           >
-            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700', fontFamily: 'Inter-Bold' }}>
+            <Text className="text-base font-bold text-white">
               {t('planTrack.practice_now')}
             </Text>
           </Pressable>

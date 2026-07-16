@@ -16,7 +16,8 @@ import {
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 
 interface DiscoverGroupCardProps {
@@ -36,8 +37,7 @@ export function DiscoverGroupCard({
   const { user } = useAuth0();
   const { isGuest } = useGuest();
   const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
-  const { foreground, mutedForeground, cardSurface, cardBorder, skeleton, shortcutCard } =
-    useThemeColors();
+  const { foreground, cardSurface, cardBorder, skeleton, shortcutCard } = useThemeColors();
 
   const isPage = group.group_type === 'PAGE';
   const joinMutation = useJoinGroup(group.id, group);
@@ -120,19 +120,10 @@ export function DiscoverGroupCard({
             ) : null}
           </View>
           <View style={{ flex: 1, marginLeft: 12, marginRight: 8 }}>
-            <Text
-              style={{
-                fontSize: 15,
-                fontWeight: '700',
-                fontFamily: 'Inter-Bold',
-                color: foreground,
-                lineHeight: 20,
-              }}
-              numberOfLines={2}
-            >
+            <Text className="text-[15px] font-bold leading-5 text-foreground" numberOfLines={2}>
               {meta?.title ?? group.slug}
             </Text>
-            <Text style={{ fontSize: 13, color: mutedForeground, marginTop: 4 }} numberOfLines={1}>
+            <Text className="mt-1 text-[13px] text-muted-foreground" numberOfLines={1}>
               {subtitle}
             </Text>
           </View>
@@ -154,15 +145,7 @@ export function DiscoverGroupCard({
           {actionPending ? (
             <ActivityIndicator size="small" color={foreground} />
           ) : (
-            <Text
-              style={{
-                fontSize: 13,
-                fontWeight: '600',
-                color: foreground,
-              }}
-            >
-              {ctaLabel}
-            </Text>
+            <Text className="text-[13px] font-semibold text-foreground">{ctaLabel}</Text>
           )}
         </Pressable>
       </View>

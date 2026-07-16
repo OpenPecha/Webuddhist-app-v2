@@ -36,7 +36,8 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Alert, Linking, Pressable, ScrollView, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { ActivityIndicator, Alert, Linking, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth0 } from 'react-native-auth0';
 import { useGuest } from '@/providers/guest';
@@ -52,7 +53,7 @@ export default function GroupProfileScreen() {
   const { isGuest } = useGuest();
   const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
   const socialSheetRef = useRef<BottomSheetModal>(null);
-  const { scaffoldBackground, foreground, destructive } = useThemeColors();
+  const { scaffoldBackground } = useThemeColors();
 
   const { data: group, isLoading, error, refetch } = useGroupProfile(groupId);
   const joinMutation = useJoinGroup(groupId);
@@ -144,9 +145,9 @@ export default function GroupProfileScreen() {
           justifyContent: 'center',
         }}
       >
-        <Text style={{ color: destructive }}>{t('connect.not_found')}</Text>
+        <Text className="text-destructive">{t('connect.not_found')}</Text>
         <Pressable onPress={() => refetch()} style={{ marginTop: 12 }}>
-          <Text style={{ color: foreground }}>{t('practice.retry')}</Text>
+          <Text className="text-foreground">{t('practice.retry')}</Text>
         </Pressable>
       </View>
     );

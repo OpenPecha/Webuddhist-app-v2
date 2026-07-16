@@ -1,6 +1,7 @@
 import { AppBottomSheet } from '@/components/settings/AppBottomSheet';
+import { Text } from '@/components/ui/text';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 interface ReaderFontSizeSheetProps {
   visible: boolean;
@@ -38,7 +39,9 @@ function FontSizeButton({
         opacity: enabled ? 1 : 0.5,
       }}
     >
-      <Text style={{ fontSize: labelFontSize, fontWeight: '500', color: '#000' }}>{label}</Text>
+      <Text className="font-medium text-foreground" style={{ fontSize: labelFontSize }}>
+        {label}
+      </Text>
     </Pressable>
   );
 }
@@ -57,14 +60,7 @@ export function ReaderFontSizeSheet({
   return (
     <AppBottomSheet visible={visible} onClose={onClose} maxHeight="30%" placement="fullscreen">
       <View style={{ paddingHorizontal: 24, paddingBottom: 16 }}>
-        <Text
-          style={{
-            textAlign: 'center',
-            fontSize: 13,
-            color: '#8a8a8a',
-            marginBottom: 16,
-          }}
-        >
+        <Text className="text-center text-[13px] text-muted-foreground mb-4">
           {t('reader.font_size')} · {fontSize}px
         </Text>
         <View style={{ flexDirection: 'row', gap: 12 }}>

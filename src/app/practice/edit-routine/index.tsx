@@ -23,12 +23,12 @@ import {
 import { type Href, useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
   Alert,
   Pressable,
   ScrollView,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -497,7 +497,7 @@ export default function EditRoutineScreen() {
         }}
       >
         <ActivityIndicator size="large" />
-        <Text style={{ marginTop: 16, fontWeight: '600', fontFamily: 'Inter-SemiBold' }}>
+        <Text className="mt-4 font-semibold">
           {t('editRoutine.title')}
         </Text>
       </View>
@@ -513,19 +513,12 @@ export default function EditRoutineScreen() {
           disabled={saving}
           style={{ alignSelf: 'flex-end', opacity: saving ? 0.5 : 1 }}
         >
-          <Text style={{ fontSize: 16, fontWeight: '500', fontFamily: 'Inter-Regular', color: '#000' }}>
+          <Text className="text-base font-medium text-foreground">
             {saving ? t('editRoutine.saving') : t('editRoutine.done')}
           </Text>
         </Pressable>
         <View style={{ height: 8 }} />
-        <Text
-          style={{
-            fontSize: 28,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            color: '#000',
-          }}
-        >
+        <Text className="text-[28px] font-bold text-foreground">
           {t('editRoutine.title')}
         </Text>
         <View style={{ height: 12 }} />

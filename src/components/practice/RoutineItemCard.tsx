@@ -1,10 +1,11 @@
+import { Text } from '@/components/ui/text';
 import { APP_ASSETS } from '@/constants/app-assets';
 import type { RoutineItemType } from '@/types/routine';
 import { imageUrl } from '@/utils/image-url';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import type { ReactNode } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 interface RoutineItemCardProps {
   title: string;
@@ -102,15 +103,7 @@ export function RoutineItemCard({
       )}
 
       <View style={{ flex: 1, marginLeft: 16, justifyContent: 'center' }}>
-        <Text
-          style={{
-            fontSize: 16,
-            fontWeight: '600',
-            fontFamily: 'Inter-SemiBold',
-            color: '#000',
-          }}
-          numberOfLines={2}
-        >
+        <Text className="text-base font-semibold text-foreground" numberOfLines={2}>
           {title}
         </Text>
 

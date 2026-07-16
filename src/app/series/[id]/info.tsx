@@ -9,7 +9,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SeriesInfoScreen() {
@@ -45,7 +46,7 @@ export default function SeriesInfoScreen() {
           justifyContent: 'center',
         }}
       >
-        <Text style={{ color: '#dc341e' }}>{t('series.load_error')}</Text>
+        <Text className="text-destructive">{t('series.load_error')}</Text>
         <Pressable onPress={() => refetch()} style={{ marginTop: 12 }}>
           <Text>{t('practice.retry')}</Text>
         </Pressable>
@@ -79,7 +80,7 @@ export default function SeriesInfoScreen() {
         </View>
 
         <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
-          <Text style={{ fontSize: 20, fontWeight: '700', fontFamily: 'Inter-Bold', color: '#000' }}>
+          <Text className="text-xl font-bold text-foreground">
             {metadata?.title}
           </Text>
         </View>
@@ -90,7 +91,7 @@ export default function SeriesInfoScreen() {
           {body ? (
             <MarkdownText content={body} />
           ) : (
-            <Text style={{ fontSize: 14, color: '#8a8a8a', textAlign: 'center' }}>
+            <Text className="text-center text-sm text-muted-foreground">
               {t('series.no_about')}
             </Text>
           )}

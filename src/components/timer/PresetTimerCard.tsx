@@ -1,6 +1,7 @@
+import { Text } from '@/components/ui/text';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import type { PresetTimer } from '@/types/timers';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 const CARD_BORDER_LIGHT = '#E4E4E4';
 
@@ -15,7 +16,7 @@ export function displayMinutes(durationMs: number): number {
 }
 
 export function PresetTimerCard({ timer, minLabel, onPress }: PresetTimerCardProps) {
-  const { foreground, cardSurface, cardBorder, isDark } = useThemeColors();
+  const { cardSurface, cardBorder, isDark } = useThemeColors();
   const borderColor = isDark ? cardBorder : CARD_BORDER_LIGHT;
 
   return (
@@ -34,28 +35,13 @@ export function PresetTimerCard({ timer, minLabel, onPress }: PresetTimerCardPro
     >
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text
-          style={{
-            fontSize: 48,
-            fontWeight: '600',
-            lineHeight: 48,
-            color: foreground,
-            fontFamily: 'Inter-SemiBold',
-          }}
+          className="text-foreground font-semibold"
+          style={{ fontSize: 48, lineHeight: 48 }}
         >
           {displayMinutes(timer.durationMs)}
         </Text>
         <View style={{ height: 4 }} />
-        <Text
-          style={{
-            fontSize: 16,
-            fontWeight: '400',
-            lineHeight: 19,
-            color: foreground,
-            fontFamily: 'Inter-Regular',
-          }}
-        >
-          {minLabel}
-        </Text>
+        <Text className="text-base text-foreground">{minLabel}</Text>
       </View>
     </Pressable>
   );

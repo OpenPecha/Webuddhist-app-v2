@@ -1,36 +1,20 @@
+import { Text } from '@/components/ui/text';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { UsersThree } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 export function DiscoverEmptyState() {
   const { t } = useTranslation();
-  const { foreground, mutedForeground } = useThemeColors();
+  const { mutedForeground } = useThemeColors();
 
   return (
     <View style={{ alignItems: 'center', paddingHorizontal: 32, paddingVertical: 32 }}>
       <UsersThree size={48} color={mutedForeground} weight="duotone" />
-      <Text
-        style={{
-          marginTop: 16,
-          fontSize: 16,
-          fontWeight: '700',
-          fontFamily: 'Inter-Bold',
-          color: foreground,
-          textAlign: 'center',
-        }}
-      >
+      <Text className="mt-4 text-center text-base font-bold text-foreground">
         {t('connect.empty_title')}
       </Text>
-      <Text
-        style={{
-          marginTop: 8,
-          fontSize: 15,
-          color: mutedForeground,
-          textAlign: 'center',
-          lineHeight: 22,
-        }}
-      >
+      <Text className="mt-2 text-center text-[15px] leading-[22px] text-muted-foreground">
         {t('connect.empty_subtitle')}
       </Text>
     </View>

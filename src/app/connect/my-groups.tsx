@@ -9,14 +9,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, FlatList, Pressable, RefreshControl, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { ActivityIndicator, FlatList, Pressable, RefreshControl, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function MyGroupsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
-  const { scaffoldBackground, foreground, mutedForeground } = useThemeColors();
+  const { scaffoldBackground, foreground } = useThemeColors();
   const pending = usePendingGroups();
   const { data, isLoading, isRefetching, refetch } = useJoinedGroups();
 
@@ -43,17 +44,7 @@ export default function MyGroupsScreen() {
         <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
           <Ionicons name="chevron-back" size={24} color={foreground} />
         </Pressable>
-        <Text
-          style={{
-            flex: 1,
-            fontSize: 17,
-            fontWeight: '600',
-            fontFamily: 'Inter-SemiBold',
-            color: foreground,
-            textAlign: 'center',
-            marginRight: 40,
-          }}
-        >
+        <Text className="mr-10 flex-1 text-center text-[17px] font-semibold text-foreground">
           {t('connect.my_groups')}
         </Text>
       </View>
@@ -67,7 +58,7 @@ export default function MyGroupsScreen() {
           isLoading ? (
             <ActivityIndicator style={{ marginTop: 48 }} />
           ) : (
-            <Text style={{ textAlign: 'center', color: mutedForeground, marginTop: 48 }}>
+            <Text className="mt-12 text-center text-muted-foreground">
               {t('connect.my_groups_empty')}
             </Text>
           )

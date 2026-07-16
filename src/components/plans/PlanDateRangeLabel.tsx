@@ -1,5 +1,6 @@
+import { Text } from '@/components/ui/text';
 import type { PlanDateRange } from '@/utils/plan-utils';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 export function PlanDateRangeLabel({ dateRange }: { dateRange: PlanDateRange }) {
   if (dateRange.isCurrent) {
@@ -13,25 +14,13 @@ export function PlanDateRangeLabel({ dateRange }: { dateRange: PlanDateRange }) 
           paddingVertical: 4,
         }}
       >
-        <Text
-          style={{
-            color: '#fff',
-            fontSize: 12,
-            fontWeight: '600',
-            fontFamily: 'Inter-SemiBold',
-          }}
-        >
-          {dateRange.formatted}
-        </Text>
+        <Text className="text-xs font-semibold text-white">{dateRange.formatted}</Text>
       </View>
     );
   }
 
   return (
-    <Text
-      style={{ fontSize: 13, color: '#8a8a8a', fontFamily: 'Inter-Regular' }}
-      numberOfLines={1}
-    >
+    <Text className="text-[13px] text-muted-foreground" numberOfLines={1}>
       {dateRange.formatted}
     </Text>
   );

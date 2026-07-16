@@ -1,3 +1,4 @@
+import { Text } from '@/components/ui/text';
 import { usePlanCompletionStatus } from '@/hooks/api/usePlanCompletionStatus';
 import {
   calculateMissedDays,
@@ -6,7 +7,7 @@ import {
 } from '@/utils/plan-utils';
 import type { PlanDateRange } from '@/utils/plan-utils';
 import { Ionicons } from '@expo/vector-icons';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 function OnTrackBadge() {
@@ -22,16 +23,7 @@ function OnTrackBadge() {
         paddingVertical: 3,
       }}
     >
-      <Text
-        style={{
-          fontSize: 12,
-          color: '#8a8a8a',
-          fontFamily: 'Inter-Regular',
-          textTransform: 'uppercase',
-        }}
-      >
-        {t('practice.plan_status_on_track')}
-      </Text>
+      <Text className="text-xs text-muted-foreground uppercase">{t('practice.plan_status_on_track')}</Text>
     </View>
   );
 }
@@ -65,9 +57,7 @@ function MissedDaysBadge({
       {onPress ? (
         <Ionicons name="arrow-back" size={10} color="#8a8a8a" style={{ marginRight: 4 }} />
       ) : null}
-      <Text style={{ fontSize: 10, color: '#8a8a8a', fontFamily: 'Inter-Regular' }}>
-        {label}
-      </Text>
+      <Text className="text-[10px] text-muted-foreground">{label}</Text>
     </View>
   );
 

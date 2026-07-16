@@ -6,7 +6,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { StatusBar } from 'expo-status-bar';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Platform, Pressable, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { ActivityIndicator, Platform, Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -40,7 +41,7 @@ function LoginButton({ icon, label, onPress, dark = false, bordered = false }: L
       })}
     >
       {icon}
-      <Text style={{ fontSize: 16, color: dark ? '#fff' : '#000', fontFamily: 'Inter-Regular' }}>
+      <Text className={`text-base ${dark ? 'text-white' : 'text-foreground'}`}>
         {label}
       </Text>
     </Pressable>
@@ -87,7 +88,7 @@ export default function Login() {
         alignItems: 'center', gap: 8,
       }}>
         <Image source={logo} style={{ width: 150, height: 150 }} contentFit="contain" />
-        <Text style={{ fontSize: 32, fontWeight: 'bold', fontFamily: 'Inter-Bold' }}>
+        <Text className="text-[32px] font-bold">
           {t('appTitle')}
         </Text>
       </View>

@@ -29,11 +29,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
   Pressable,
   ScrollView,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -207,7 +207,7 @@ export default function PlanPreviewScreen() {
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 }}>
-          <Text style={{ color: '#dc341e' }}>{t('practice.not_found')}</Text>
+          <Text className="text-destructive">{t('practice.not_found')}</Text>
           <Pressable onPress={() => refetch()}>
             <Text>{t('practice.retry')}</Text>
           </Pressable>
@@ -230,13 +230,7 @@ export default function PlanPreviewScreen() {
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <Text
-          style={{
-            flex: 1,
-            fontSize: 17,
-            fontWeight: '600',
-            fontFamily: 'Inter-SemiBold',
-            marginRight: 40,
-          }}
+          className="mr-10 flex-1 text-[17px] font-semibold text-foreground"
           numberOfLines={1}
         >
           {plan.title}
@@ -305,7 +299,7 @@ export default function PlanPreviewScreen() {
               opacity: pressed ? 0.75 : 1,
             })}
           >
-            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', fontFamily: 'Inter-SemiBold' }}>
+            <Text className="text-base font-semibold text-white">
               {t('plans.preview.add_to_routine')}
             </Text>
           </Pressable>

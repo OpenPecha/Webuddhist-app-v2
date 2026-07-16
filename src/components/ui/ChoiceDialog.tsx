@@ -1,5 +1,6 @@
-import { dialogColors, dialogLayout, dialogTypography } from '@/components/ui/dialog-styles';
-import { Modal, Pressable, Text, View } from 'react-native';
+import { dialogColors, dialogLayout } from '@/components/ui/dialog-styles';
+import { Text } from '@/components/ui/text';
+import { Modal, Pressable, View } from 'react-native';
 
 interface ChoiceDialogProps {
   visible: boolean;
@@ -37,8 +38,8 @@ export function ChoiceDialog({
               ...dialogLayout.paddingCard,
             }}
           >
-            <Text style={dialogTypography.title}>{title}</Text>
-            <Text style={{ ...dialogTypography.message, marginTop: 12 }}>{message}</Text>
+            <Text className="text-[17px] font-bold tracking-tight text-foreground">{title}</Text>
+            <Text className="mt-3 text-sm leading-[21px] text-foreground">{message}</Text>
             <View
               style={{
                 marginTop: 24,
@@ -49,9 +50,7 @@ export function ChoiceDialog({
               }}
             >
               <Pressable onPress={onSecondary} style={{ paddingVertical: 10, paddingHorizontal: 12 }}>
-                <Text style={{ ...dialogTypography.button, color: dialogColors.text }}>
-                  {secondaryLabel}
-                </Text>
+                <Text className="text-[15px] text-foreground">{secondaryLabel}</Text>
               </Pressable>
               <Pressable
                 onPress={onPrimary}
@@ -62,9 +61,7 @@ export function ChoiceDialog({
                   backgroundColor: dialogColors.destructive,
                 }}
               >
-                <Text style={{ ...dialogTypography.button, color: '#fff', fontWeight: '600' }}>
-                  {primaryLabel}
-                </Text>
+                <Text className="text-[15px] font-semibold text-white">{primaryLabel}</Text>
               </Pressable>
             </View>
           </View>

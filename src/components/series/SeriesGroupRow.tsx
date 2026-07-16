@@ -1,10 +1,11 @@
+import { Text } from '@/components/ui/text';
 import type { AuthorGroupSummary } from '@/types/groups';
 import { pickGroupMetadata } from '@/types/groups';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 interface SeriesGroupRowProps {
   group: AuthorGroupSummary;
@@ -49,23 +50,12 @@ export function SeriesGroupRow({ group }: SeriesGroupRowProps) {
       </View>
       <View style={{ flex: 1, marginLeft: 12 }}>
         {meta?.title ? (
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: '600',
-              fontFamily: 'Inter-SemiBold',
-              color: '#000',
-            }}
-            numberOfLines={1}
-          >
+          <Text className="text-base font-semibold text-foreground" numberOfLines={1}>
             {meta.title}
           </Text>
         ) : null}
         {meta?.sub_title ? (
-          <Text
-            style={{ fontSize: 13, color: '#8a8a8a', marginTop: 2 }}
-            numberOfLines={1}
-          >
+          <Text className="mt-0.5 text-[13px] text-muted-foreground" numberOfLines={1}>
             {meta.sub_title}
           </Text>
         ) : null}

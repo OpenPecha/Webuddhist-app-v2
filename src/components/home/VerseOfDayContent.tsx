@@ -1,10 +1,12 @@
+import { Text } from '@/components/ui/text';
+import { cn } from '@/utils/cn';
 import type { VerseOfDay } from '@/types/verse-of-day';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { Image } from 'expo-image';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import { Text, View, type TextStyle } from 'react-native';
+import { View, type TextStyle } from 'react-native';
 
 export interface VerseOfDayTypography {
   verseFontSize: number;
@@ -91,10 +93,10 @@ export function VerseOfDayContent({ verse, typography, footerAction }: VerseOfDa
       >
         <View style={{ paddingBottom: footerAction ? 32 : 0 }}>
           <Text
+            className={cn(!isTibetan && 'font-garamond')}
             style={{
               fontSize: typography.verseFontSize,
               lineHeight: typography.verseFontSize * 1.5,
-              fontFamily: isTibetan ? 'Inter-Regular' : 'EBGaramond-Regular',
               color: verseColor,
             }}
           >
@@ -103,12 +105,10 @@ export function VerseOfDayContent({ verse, typography, footerAction }: VerseOfDa
 
           {attribution ? (
             <Text
+              className={cn('mt-3 text-center', !isTibetan && 'font-garamond')}
               style={{
-                marginTop: 12,
                 fontSize: typography.attributionFontSize,
-                fontFamily: isTibetan ? 'Inter-Regular' : 'EBGaramond-Regular',
                 color: attributionColor,
-                textAlign: 'center',
                 fontWeight: typography.fontWeight,
               }}
             >

@@ -21,6 +21,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { type Href, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
   Alert,
@@ -28,7 +29,6 @@ import {
   Pressable,
   RefreshControl,
   ScrollView,
-  Text,
   View,
 } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
@@ -63,14 +63,7 @@ function EmptyScaffold({
   return (
     <View style={{ flex: 1 }}>
       <View style={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 8 }}>
-        <Text
-          style={{
-            fontSize: 28,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            color: '#000',
-          }}
-        >
+        <Text className="text-[28px] font-bold text-foreground">
           {title}
         </Text>
       </View>
@@ -109,38 +102,16 @@ function RoutineFilledHeader({
           alignItems: 'flex-start',
         }}
       >
-        <Text
-          style={{
-            flex: 1,
-            fontSize: 28,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            color: '#000',
-          }}
-        >
+        <Text className="flex-1 text-[28px] font-bold text-foreground">
           {title}
         </Text>
         <Pressable onPress={onEdit} style={{ paddingTop: 8 }}>
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: '500',
-              fontFamily: 'Inter-SemiBold',
-              color: '#000',
-            }}
-          >
+          <Text className="text-base font-semibold text-foreground">
             {editLabel}
           </Text>
         </Pressable>
       </View>
-      <Text
-        style={{
-          paddingHorizontal: 20,
-          fontSize: 15,
-          color: '#8a8a8a',
-          fontFamily: 'Inter-Regular',
-        }}
-      >
+      <Text className="px-5 text-[15px] text-muted-foreground">
         {formatTodayDate()}
       </Text>
       <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
@@ -173,26 +144,11 @@ function PracticeErrorState({
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
       <View style={{ alignItems: 'center', gap: 12 }}>
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: '600',
-            textAlign: 'center',
-            fontFamily: 'Inter-SemiBold',
-            color: '#000',
-          }}
-        >
+        <Text className="text-center text-xl font-semibold text-foreground">
           {t('practice.routine_load_error')}
         </Text>
         {message ? (
-          <Text
-            style={{
-              fontSize: 15,
-              textAlign: 'center',
-              color: '#8a8a8a',
-              fontFamily: 'Inter-Regular',
-            }}
-          >
+          <Text className="text-center text-[15px] text-muted-foreground">
             {message}
           </Text>
         ) : null}
@@ -206,7 +162,7 @@ function PracticeErrorState({
             paddingVertical: 12,
           }}
         >
-          <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600' }}>
+          <Text className="text-base font-semibold text-white">
             {t('practice.retry')}
           </Text>
         </Pressable>

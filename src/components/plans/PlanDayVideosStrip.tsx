@@ -1,8 +1,9 @@
 import type { DayVideoSummary } from '@/types/plan-catalog';
+import { Text } from '@/components/ui/text';
 import { Ionicons } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
 import { useTranslation } from 'react-i18next';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 
 interface PlanDayVideosStripProps {
   videos: DayVideoSummary[];
@@ -24,18 +25,7 @@ export function PlanDayVideosStrip({ videos }: PlanDayVideosStripProps) {
 
   return (
     <View style={{ marginTop: 8, marginBottom: 8 }}>
-      <Text
-        style={{
-          fontSize: 11,
-          fontWeight: '600',
-          fontFamily: 'Inter-SemiBold',
-          letterSpacing: 1,
-          color: '#8a8a8a',
-          textTransform: 'uppercase',
-          paddingHorizontal: 20,
-          marginBottom: 12,
-        }}
-      >
+      <Text className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase px-5 mb-3">
         {t('plans.videos.title')}
       </Text>
       <ScrollView
@@ -65,7 +55,7 @@ export function PlanDayVideosStrip({ videos }: PlanDayVideosStripProps) {
               <Ionicons name="play-circle" size={36} color="#fff" />
             </View>
             {video.title ? (
-              <Text style={{ fontSize: 12, marginTop: 6, color: '#333' }} numberOfLines={2}>
+              <Text className="text-xs mt-1.5 text-[#333]" numberOfLines={2}>
                 {video.title}
               </Text>
             ) : null}

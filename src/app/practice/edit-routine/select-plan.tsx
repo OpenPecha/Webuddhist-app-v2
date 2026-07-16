@@ -7,7 +7,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { ActivityIndicator, FlatList, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SelectPlanScreen() {
@@ -40,7 +41,7 @@ export default function SelectPlanScreen() {
         <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
-        <Text style={{ flex: 1, fontSize: 17, fontWeight: '600', textAlign: 'center' }}>
+        <Text className="flex-1 text-center text-[17px] font-semibold text-foreground">
           {t('editRoutine.select_plan_title')}
         </Text>
         <View style={{ width: 40 }} />
@@ -56,7 +57,7 @@ export default function SelectPlanScreen() {
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ padding: 20 }}
           ListEmptyComponent={
-            <Text style={{ textAlign: 'center', color: '#8a8a8a', marginTop: 24 }}>
+            <Text className="mt-6 text-center text-muted-foreground">
               {t('editRoutine.no_plans')}
             </Text>
           }
@@ -87,7 +88,7 @@ export default function SelectPlanScreen() {
                     }}
                   />
                 )}
-                <Text style={{ flex: 1, fontSize: 16, fontWeight: '500' }}>{item.title}</Text>
+                <Text className="flex-1 text-base font-medium text-foreground">{item.title}</Text>
               </Pressable>
             );
           }}

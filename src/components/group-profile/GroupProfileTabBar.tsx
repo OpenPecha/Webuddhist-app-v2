@@ -1,7 +1,9 @@
+import { Text } from '@/components/ui/text';
+import { cn } from '@/utils/cn';
 import { GP_PADDING } from '@/components/group-profile/group-profile-styles';
-import { useThemeColors } from '@/hooks/useThemeColors';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
+import { useThemeColors } from '@/hooks/useThemeColors';
 
 export type GroupProfileTab = 'practices' | 'about';
 
@@ -13,7 +15,7 @@ interface GroupProfileTabBarProps {
 
 export function GroupProfileTabBar({ tab, onTabChange, showAbout }: GroupProfileTabBarProps) {
   const { t } = useTranslation();
-  const { foreground, mutedForeground, cardBorder } = useThemeColors();
+  const { cardBorder } = useThemeColors();
 
   const tabs: { key: GroupProfileTab; label: string }[] = [
     { key: 'practices', label: t('connect.tab_practices') },
@@ -34,12 +36,10 @@ export function GroupProfileTabBar({ tab, onTabChange, showAbout }: GroupProfile
               style={{ marginRight: 24, paddingVertical: 12 }}
             >
               <Text
-                style={{
-                  fontSize: 15,
-                  fontWeight: active ? '700' : '500',
-                  fontFamily: active ? 'Inter-Bold' : 'Inter-Medium',
-                  color: active ? foreground : mutedForeground,
-                }}
+                className={cn(
+                  'text-[15px]',
+                  active ? 'font-bold text-foreground' : 'font-medium text-muted-foreground',
+                )}
               >
                 {label}
               </Text>

@@ -1,3 +1,4 @@
+import { Text } from '@/components/ui/text';
 import { FeaturedPlanSectionSkeleton } from '@/components/home/FeaturedPlanSectionSkeleton';
 import { APP_ASSETS } from '@/constants/app-assets';
 import { useFeaturedSeries } from '@/hooks/api/useFeaturedSeries';
@@ -11,7 +12,7 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View, type ImageStyle, type StyleProp } from 'react-native';
+import { Pressable, View, type ImageStyle, type StyleProp } from 'react-native';
 
 function formatSeriesDateRange(series: Series): string | null {
   if (!series.start_date || !series.end_date) return null;
@@ -66,7 +67,7 @@ function FeaturedPlanListItem({
   titleDateGap: number;
   contentPadding: number;
 }) {
-  const { foreground, mutedForeground, cardSurface } = useThemeColors();
+  const { cardSurface } = useThemeColors();
   const dateRange = formatSeriesDateRange(series);
 
   return (
@@ -93,24 +94,16 @@ function FeaturedPlanListItem({
         />
         <View style={{ flex: 1, marginLeft: 12 }}>
           <Text
-            style={{
-              fontSize: titleFontSize,
-              fontWeight: '600',
-              fontFamily: 'Inter-SemiBold',
-              color: foreground,
-            }}
+            className="font-semibold text-foreground"
+            style={{ fontSize: titleFontSize }}
             numberOfLines={2}
           >
             {series.metadata?.title}
           </Text>
           {dateRange ? (
             <Text
-              style={{
-                marginTop: titleDateGap,
-                fontSize: dateFontSize,
-                color: mutedForeground,
-                fontFamily: 'Inter-Regular',
-              }}
+              className="text-muted-foreground"
+              style={{ marginTop: titleDateGap, fontSize: dateFontSize }}
               numberOfLines={1}
             >
               {dateRange}
@@ -137,7 +130,7 @@ function FeaturedPlanHeroCard({
   titleDateGap: number;
   contentPadding: number;
 }) {
-  const { foreground, mutedForeground, cardSurface } = useThemeColors();
+  const { cardSurface } = useThemeColors();
   const dateRange = formatSeriesDateRange(series);
 
   return (
@@ -165,24 +158,16 @@ function FeaturedPlanHeroCard({
         }}
       >
         <Text
-          style={{
-            fontSize: titleFontSize,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            color: foreground,
-          }}
+          className="font-bold text-foreground"
+          style={{ fontSize: titleFontSize }}
           numberOfLines={2}
         >
           {series.metadata?.title}
         </Text>
         {dateRange ? (
           <Text
-            style={{
-              marginTop: titleDateGap,
-              fontSize: dateFontSize,
-              color: mutedForeground,
-              fontFamily: 'Inter-Regular',
-            }}
+            className="text-muted-foreground"
+            style={{ marginTop: titleDateGap, fontSize: dateFontSize }}
             numberOfLines={1}
           >
             {dateRange}
@@ -205,7 +190,6 @@ function FeaturedPlanContent({
   const { t } = useTranslation();
   const language = useContentLanguage();
   const isTibetan = language === 'bo';
-  const { foreground } = useThemeColors();
   const sectionTitleSize = isTibetan ? 16 : 18;
   const titleFontSize = isTibetan ? 14 : 16;
   const dateFontSize = isTibetan ? 12 : 13;
@@ -225,14 +209,7 @@ function FeaturedPlanContent({
 
   return (
     <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
-      <Text
-        style={{
-          fontSize: sectionTitleSize,
-          fontWeight: '700',
-          fontFamily: 'Inter-Bold',
-          color: foreground,
-        }}
-      >
+      <Text className="font-bold text-foreground" style={{ fontSize: sectionTitleSize }}>
         {t('home.creator_featured_plan')}
       </Text>
       <View style={{ height: sectionContentGap }} />

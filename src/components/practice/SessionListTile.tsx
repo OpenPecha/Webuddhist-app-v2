@@ -1,5 +1,6 @@
+import { Text } from '@/components/ui/text';
 import { Image } from 'expo-image';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 
 interface SessionListTileProps {
   title: string;
@@ -47,14 +48,11 @@ export function SessionListTile({
         />
       )}
       <View style={{ flex: 1, marginLeft: 16 }}>
-        <Text
-          style={{ fontSize: 16, fontWeight: '600', fontFamily: 'Inter-SemiBold', color: '#000' }}
-          numberOfLines={1}
-        >
+        <Text className="text-base font-semibold text-foreground" numberOfLines={1}>
           {title}
         </Text>
         {subtitle ? (
-          <Text style={{ fontSize: 14, color: '#8a8a8a', marginTop: 2 }} numberOfLines={1}>
+          <Text className="text-sm text-muted-foreground mt-0.5" numberOfLines={1}>
             {subtitle}
           </Text>
         ) : null}

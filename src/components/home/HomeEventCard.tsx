@@ -1,9 +1,10 @@
+import { Text } from '@/components/ui/text';
 import { APP_ASSETS } from '@/constants/app-assets';
 import type { AppEvent } from '@/types/event';
 import { formatEventDateRange } from '@/utils/event-parse';
 import { Image } from 'expo-image';
 import { useEffect, useState } from 'react';
-import { Pressable, Text, View, type ImageStyle, type StyleProp } from 'react-native';
+import { Pressable, View, type ImageStyle, type StyleProp } from 'react-native';
 import { useThemeColors } from '@/hooks/useThemeColors';
 
 interface HomeEventCardProps {
@@ -37,7 +38,7 @@ function EventCoverImage({
 }
 
 export function HomeEventCard({ event, onPress }: HomeEventCardProps) {
-  const { foreground, mutedForeground, cardSurface, cardBorder } = useThemeColors();
+  const { cardSurface, cardBorder } = useThemeColors();
   const dateRange = formatEventDateRange(event);
 
   return (
@@ -58,27 +59,11 @@ export function HomeEventCard({ event, onPress }: HomeEventCardProps) {
         style={{ width: 88, height: 88 }}
       />
       <View style={{ flex: 1, padding: 12, justifyContent: 'center', gap: 4 }}>
-        <Text
-          style={{
-            fontSize: 15,
-            fontWeight: '600',
-            fontFamily: 'Inter-SemiBold',
-            color: foreground,
-          }}
-          numberOfLines={2}
-        >
+        <Text className="text-[15px] font-semibold text-foreground" numberOfLines={2}>
           {event.name}
         </Text>
         {dateRange ? (
-          <Text
-            style={{
-              fontSize: 13,
-              fontFamily: 'Inter-Regular',
-              color: mutedForeground,
-            }}
-          >
-            {dateRange}
-          </Text>
+          <Text className="text-[13px] text-muted-foreground">{dateRange}</Text>
         ) : null}
       </View>
     </Pressable>

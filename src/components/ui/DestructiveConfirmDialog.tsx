@@ -1,5 +1,6 @@
-import { dialogColors, dialogLayout, dialogTypography } from '@/components/ui/dialog-styles';
-import { Modal, Pressable, Text, View } from 'react-native';
+import { dialogColors, dialogLayout } from '@/components/ui/dialog-styles';
+import { Text } from '@/components/ui/text';
+import { Modal, Pressable, View } from 'react-native';
 
 interface DestructiveConfirmDialogProps {
   visible: boolean;
@@ -35,8 +36,8 @@ export function DestructiveConfirmDialog({
               ...dialogLayout.paddingCard,
             }}
           >
-            <Text style={dialogTypography.title}>{title}</Text>
-            <Text style={{ ...dialogTypography.message, marginTop: 12 }}>{message}</Text>
+            <Text className="text-[17px] font-bold tracking-tight text-foreground">{title}</Text>
+            <Text className="mt-3 text-sm leading-[21px] text-foreground">{message}</Text>
             <Pressable
               onPress={onConfirm}
               style={{
@@ -49,9 +50,7 @@ export function DestructiveConfirmDialog({
                 justifyContent: 'center',
               }}
             >
-              <Text style={{ ...dialogTypography.button, color: dialogColors.destructive }}>
-                {confirmLabel}
-              </Text>
+              <Text className="text-[15px] text-destructive">{confirmLabel}</Text>
             </Pressable>
             <Pressable
               onPress={onClose}
@@ -65,9 +64,7 @@ export function DestructiveConfirmDialog({
                 justifyContent: 'center',
               }}
             >
-              <Text style={{ ...dialogTypography.button, color: dialogColors.text }}>
-                {cancelLabel}
-              </Text>
+              <Text className="text-[15px] text-foreground">{cancelLabel}</Text>
             </Pressable>
           </View>
         </Pressable>

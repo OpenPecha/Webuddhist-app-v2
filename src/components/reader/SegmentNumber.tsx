@@ -1,4 +1,5 @@
-import { Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { View } from 'react-native';
 
 const SEGMENT_NUMBER_WIDTH = 28;
 const SEGMENT_NUMBER_FONT_SCALE = 0.6;
@@ -12,12 +13,8 @@ export function SegmentNumber({ number, fontSize }: SegmentNumberProps) {
   return (
     <View style={{ width: SEGMENT_NUMBER_WIDTH, paddingTop: 6 }}>
       <Text
-        style={{
-          fontSize: fontSize * SEGMENT_NUMBER_FONT_SCALE,
-          fontWeight: '500',
-          color: '#8a8a8a',
-          textAlign: 'left',
-        }}
+        className="text-left font-medium text-muted-foreground"
+        style={{ fontSize: fontSize * SEGMENT_NUMBER_FONT_SCALE }}
       >
         {String(number).padStart(2, '0')}
       </Text>

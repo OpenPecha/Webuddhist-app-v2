@@ -4,6 +4,7 @@ import {
   RoutineItemCard,
   routineItemCoverUri,
 } from '@/components/practice/RoutineItemCard';
+import { Text } from '@/components/ui/text';
 import type { RoutineBlock, RoutineItem } from '@/types/routine';
 import type { UserPlan } from '@/types/plans';
 import {
@@ -11,7 +12,7 @@ import {
   getEffectiveStartDate,
   resolveUserPlanForItem,
 } from '@/utils/plan-utils';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 interface RoutineBlockSectionProps {
   block: RoutineBlock;
@@ -36,7 +37,7 @@ function RoutineSeriesItem({
       onPress={onItemPress ? () => onItemPress(item) : undefined}
       subtitle={
         item.currentPlanTitle ? (
-          <Text style={{ fontSize: 13, color: '#8a8a8a' }} numberOfLines={1}>
+          <Text className="text-[13px] text-muted-foreground" numberOfLines={1}>
             {item.currentPlanTitle}
           </Text>
         ) : undefined
@@ -86,17 +87,7 @@ export function RoutineBlockSection({
 }: RoutineBlockSectionProps) {
   return (
     <View style={{ marginBottom:  8 }}>
-      <Text
-        style={{
-          fontSize: 15,
-          fontWeight: '500',
-          fontFamily: 'Inter-SemiBold',
-          color: '#000',
-          marginBottom: 8,
-        }}
-      >
-        {block.formattedTime}
-      </Text>
+      <Text className="text-[15px] font-semibold text-foreground mb-2">{block.formattedTime}</Text>
 
       {block.items.map((item, index) => (
         <View key={`${item.type}-${item.id}-${index}`}>

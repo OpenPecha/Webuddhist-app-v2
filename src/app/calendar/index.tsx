@@ -11,11 +11,11 @@ import { useRouter } from 'expo-router';
 import { CaretLeft, CaretRight } from 'phosphor-react-native';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
   Pressable,
   ScrollView,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -60,7 +60,7 @@ export default function CalendarScreen() {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
-  const { foreground, mutedForeground, scaffoldBackground, cardSurface, cardBorder } =
+  const { foreground, scaffoldBackground, cardSurface, cardBorder } =
     useThemeColors();
 
   const { data: monthData, isLoading, isError, refetch } = useCalendarMonth(year, month);
@@ -112,16 +112,7 @@ export default function CalendarScreen() {
         <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
           <ArrowLeftIcon size={24} color={foreground} />
         </Pressable>
-        <Text
-          style={{
-            flex: 1,
-            fontSize: 17,
-            fontWeight: '600',
-            fontFamily: 'Inter-SemiBold',
-            color: foreground,
-            textAlign: 'center',
-          }}
-        >
+        <Text className="flex-1 text-center text-[17px] font-semibold text-foreground">
           {t('calendar.title')}
         </Text>
         <View style={{ width: 40 }} />
@@ -143,14 +134,14 @@ export default function CalendarScreen() {
           >
             <MoonPhaseIcon phase={moonPhaseForLunarDay(todayData.lunarDay)} size={48} />
             <View style={{ flex: 1 }}>
-              <Text style={{ fontSize: 18, fontWeight: '700', color: foreground, fontFamily: 'Inter-Bold' }}>
+              <Text className="text-lg font-bold text-foreground">
                 {t('home.calendar_day_month', {
                   day: todayData.lunarDay,
                   month: todayData.lunarMonth,
                 })}
               </Text>
               {todayData.monthDesignation ? (
-                <Text style={{ marginTop: 4, fontSize: 14, color: mutedForeground }}>
+                <Text className="mt-1 text-sm text-muted-foreground">
                   {todayData.monthDesignation}
                 </Text>
               ) : null}
@@ -164,7 +155,7 @@ export default function CalendarScreen() {
           <Pressable onPress={goPrevMonth} style={{ padding: 8 }}>
             <CaretLeft size={22} color={foreground} />
           </Pressable>
-          <Text style={{ fontSize: 16, fontWeight: '600', color: foreground, fontFamily: 'Inter-SemiBold' }}>
+          <Text className="text-base font-semibold text-foreground">
             {monthLabel}
           </Text>
           <Pressable onPress={goNextMonth} style={{ padding: 8 }}>
@@ -187,7 +178,7 @@ export default function CalendarScreen() {
           <View style={{ flexDirection: 'row', marginBottom: 8 }}>
             {WEEKDAY_LABELS.map((label) => (
               <View key={label} style={{ flex: 1, alignItems: 'center' }}>
-                <Text style={{ fontSize: 11, color: mutedForeground, fontFamily: 'Inter-SemiBold' }}>
+                <Text className="text-[11px] font-semibold text-muted-foreground">
                   {label}
                 </Text>
               </View>
@@ -200,12 +191,12 @@ export default function CalendarScreen() {
             </View>
           ) : isError ? (
             <View style={{ padding: 24, alignItems: 'center', gap: 12 }}>
-              <Text style={{ color: mutedForeground, textAlign: 'center' }}>{t('home.load_error')}</Text>
+              <Text className="text-center text-muted-foreground">{t('home.load_error')}</Text>
               <Pressable
                 onPress={() => void refetch()}
                 style={{ backgroundColor: AppColors.blue, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 8 }}
               >
-                <Text style={{ color: '#fff' }}>{t('practice.retry')}</Text>
+                <Text className="text-white">{t('practice.retry')}</Text>
               </Pressable>
             </View>
           ) : (
@@ -232,16 +223,12 @@ export default function CalendarScreen() {
                     }}
                   >
                     <Text
-                      style={{
-                        fontSize: 14,
-                        fontWeight: selected ? '700' : '500',
-                        color: selected ? AppColors.blue : foreground,
-                      }}
+                      className={`text-sm ${selected ? 'font-bold text-[#0C53C5]' : 'font-medium text-foreground'}`}
                     >
                       {date.getDate()}
                     </Text>
                     {lunarDay > 0 ? (
-                      <Text style={{ fontSize: 11, color: mutedForeground, marginTop: 2 }}>
+                      <Text className="mt-0.5 text-[11px] text-muted-foreground">
                         {lunarDay}
                       </Text>
                     ) : null}

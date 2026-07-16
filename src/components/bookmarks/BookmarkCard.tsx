@@ -4,10 +4,11 @@ import {
   type BookmarkDTO,
   type BookmarkItemType,
 } from '@/types/bookmarks';
+import { Text } from '@/components/ui/text';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 function typeLabel(type: BookmarkItemType, t: (k: string) => string): string {
   switch (type) {
@@ -68,15 +69,15 @@ export function BookmarkCard({ bookmark, onPress, onRemove }: BookmarkCardProps)
           <View style={{ flex: 1, padding: 12 }}>
             <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
               <View style={{ flex: 1, marginRight: 8 }}>
-                <Text style={{ fontSize: 15, fontWeight: '700', color: '#000' }} numberOfLines={2}>
+                <Text className="text-[15px] font-bold text-foreground" numberOfLines={2}>
                   {title}
                 </Text>
                 {excerpt ? (
-                  <Text style={{ fontSize: 13, color: '#666', marginTop: 4 }} numberOfLines={2}>
+                  <Text className="text-[13px] text-muted-foreground mt-1" numberOfLines={2}>
                     {excerpt}
                   </Text>
                 ) : null}
-                <Text style={{ fontSize: 11, color: '#8a8a8a', marginTop: 6 }}>{badge}</Text>
+                <Text className="text-[11px] text-muted-foreground mt-1.5">{badge}</Text>
               </View>
               <Pressable onPress={onRemove} style={{ padding: 4 }}>
                 <Ionicons name="bookmark" size={20} color="#000" />
@@ -121,13 +122,13 @@ export function BookmarkCard({ bookmark, onPress, onRemove }: BookmarkCardProps)
         )}
       </View>
       <View style={{ flex: 1, marginLeft: 12, marginRight: 8 }}>
-        <Text style={{ fontSize: 15, fontWeight: '700', color: '#000' }} numberOfLines={2}>
+        <Text className="text-[15px] font-bold text-foreground" numberOfLines={2}>
           {title}
         </Text>
         {dateLabel ? (
-          <Text style={{ fontSize: 13, color: '#666', marginTop: 4 }}>{dateLabel}</Text>
+          <Text className="text-[13px] text-muted-foreground mt-1">{dateLabel}</Text>
         ) : null}
-        <Text style={{ fontSize: 11, color: '#8a8a8a', marginTop: 4 }}>{badge}</Text>
+        <Text className="text-[11px] text-muted-foreground mt-1">{badge}</Text>
       </View>
       <Pressable onPress={onRemove} style={{ padding: 4 }}>
         <Ionicons name="bookmark" size={20} color="#000" />

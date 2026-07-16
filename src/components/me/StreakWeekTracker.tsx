@@ -1,7 +1,8 @@
+import { Text } from '@/components/ui/text';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { Check, Fire } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { useUniwind } from 'uniwind';
 
 export enum StreakWeekDayCellState {
@@ -44,7 +45,7 @@ interface WeekDayCellProps {
 function WeekDayCell({ state, forShare = false }: WeekDayCellProps) {
   const { theme } = useUniwind();
   const isDark = !forShare && theme === 'dark';
-  const { foreground, mutedForeground } = useThemeColors();
+  const { foreground } = useThemeColors();
 
   const surfaceColor = isDark ? '#1c1c1c' : '#ffffff';
   const missedColor = isDark ? '#2a2a2a' : '#d4d4d4';
@@ -103,7 +104,7 @@ function WeekDayCell({ state, forShare = false }: WeekDayCellProps) {
         justifyContent: 'center',
       }}
     >
-      <Text style={{ color: mutedForeground, fontWeight: '500', fontSize: 16 }}>—</Text>
+      <Text className="text-base font-medium text-muted-foreground">—</Text>
     </View>
   );
 }
@@ -115,7 +116,6 @@ interface StreakWeekTrackerProps {
 
 export function StreakWeekTracker({ practicedDays, forShare = false }: StreakWeekTrackerProps) {
   const { i18n } = useTranslation();
-  const { mutedForeground } = useThemeColors();
   const todayWeekday = getTodayWeekdayIndex();
   const practicedSet = new Set(practicedDays);
 
@@ -127,10 +127,7 @@ export function StreakWeekTracker({ practicedDays, forShare = false }: StreakWee
 
         return (
           <View key={dayIndex} className="flex-1 items-center" style={{ marginLeft: index > 0 ? 4 : 0 }}>
-            <Text
-              className="text-[10px] font-medium tracking-wide"
-              style={{ color: forShare ? '#8a8a8a' : mutedForeground }}
-            >
+            <Text className="text-[10px] font-medium tracking-wide text-muted-foreground">
               {weekdayLabel(dayIndex, i18n.language)}
             </Text>
             <View className="mt-2">

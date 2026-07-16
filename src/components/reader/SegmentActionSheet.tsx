@@ -1,5 +1,6 @@
 import { LoginDrawer } from '@/components/auth/LoginDrawer';
 import { AppBottomSheet } from '@/components/settings/AppBottomSheet';
+import { Text } from '@/components/ui/text';
 import { SegmentCommentaryPanel } from '@/components/reader/SegmentCommentaryPanel';
 import { SegmentTranslationPanel } from '@/components/reader/SegmentTranslationPanel';
 import { useIsBookmarked } from '@/hooks/api/useBookmarkExists';
@@ -25,7 +26,6 @@ import {
   Pressable,
   ScrollView,
   Share,
-  Text,
   View,
 } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
@@ -68,12 +68,7 @@ function ActionButton({
         </View>
       )}
       <Text
-        style={{
-          fontSize: 12,
-          fontWeight: '600',
-          color: active ? '#0066cc' : '#000',
-          marginTop: 4,
-        }}
+        className={`text-xs font-semibold mt-1 ${active ? 'text-[#0066cc]' : 'text-foreground'}`}
       >
         {label}
       </Text>
@@ -106,7 +101,7 @@ function ResourceTile({
       }}
     >
       <Ionicons name={icon} size={20} color="#000" style={{ marginRight: 12 }} />
-      <Text style={{ flex: 1, fontSize: 15, color: '#000' }}>{label}</Text>
+      <Text className="flex-1 text-[15px] text-foreground">{label}</Text>
       <View
         style={{
           minWidth: 28,
@@ -118,7 +113,7 @@ function ResourceTile({
           marginRight: 8,
         }}
       >
-        <Text style={{ fontSize: 13, fontWeight: '600', color: '#000' }}>
+        <Text className="text-[13px] font-semibold text-foreground">
           {count === undefined ? '—' : count}
         </Text>
       </View>
@@ -148,7 +143,7 @@ function SheetHeader({
           <Ionicons name="chevron-back" size={22} color="#000" />
         </Pressable>
       ) : null}
-      <Text style={{ fontSize: 16, fontWeight: '700', color: '#000' }}>{title}</Text>
+      <Text className="text-base font-bold text-foreground">{title}</Text>
     </View>
   );
 }
@@ -195,7 +190,7 @@ function ActionsBody({
         />
       </View>
 
-      <Text style={{ fontSize: 13, fontWeight: '600', marginTop: 24, marginBottom: 8, color: '#000' }}>
+      <Text className="text-[13px] font-semibold mt-6 mb-2 text-foreground">
         {t('reader.related_resources')}
       </Text>
       <View style={{ height: 1, backgroundColor: '#e8e8e4', marginBottom: 12 }} />
@@ -215,7 +210,7 @@ function ActionsBody({
 
       {videos.length > 0 ? (
         <>
-          <Text style={{ fontSize: 13, fontWeight: '600', marginTop: 20, marginBottom: 12, color: '#000' }}>
+          <Text className="text-[13px] font-semibold mt-5 mb-3 text-foreground">
             {t('reader.videos')}
           </Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -238,7 +233,7 @@ function ActionsBody({
                 ) : (
                   <View style={{ width: 160, height: 90, borderRadius: 8, backgroundColor: '#000' }} />
                 )}
-                <Text numberOfLines={2} style={{ fontSize: 12, marginTop: 6, color: '#333' }}>
+                <Text numberOfLines={2} className="text-xs mt-1.5 text-[#333]">
                   {video.title}
                 </Text>
               </Pressable>

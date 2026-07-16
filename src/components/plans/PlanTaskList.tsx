@@ -1,5 +1,6 @@
+import { Text } from '@/components/ui/text';
 import { Ionicons } from '@expo/vector-icons';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { isTaskNavigable, taskHasAudio } from '@/utils/plan-subtask-navigation';
 
@@ -96,9 +97,7 @@ export function PlanTaskList({
 
   if (tasks.length === 0) {
     return (
-      <Text style={{ color: '#8a8a8a', textAlign: 'center', marginTop: 24, paddingHorizontal: 20 }}>
-        {t('planTrack.no_tasks')}
-      </Text>
+      <Text className="text-muted-foreground text-center mt-6 px-5">{t('planTrack.no_tasks')}</Text>
     );
   }
 
@@ -131,15 +130,7 @@ export function PlanTaskList({
               disabled={!navigable}
               onPress={() => onPressTask?.(task.id)}
             >
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontWeight: '500',
-                  fontFamily: 'Inter-Medium',
-                  color: '#000',
-                }}
-                numberOfLines={2}
-              >
+              <Text className="text-base font-medium text-foreground" numberOfLines={2}>
                 {task.title ?? t('plans.preview.untitled_task')}
               </Text>
             </Pressable>

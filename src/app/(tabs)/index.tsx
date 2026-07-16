@@ -19,29 +19,23 @@ import { useGuest } from '@/providers/guest';
 import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Text } from '@/components/ui/text';
 import {
   Platform,
   Pressable,
   RefreshControl,
   ScrollView,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function HomeErrorState({ onRetry }: { onRetry: () => void }) {
   const { t } = useTranslation();
-  const { destructive, foreground } = useThemeColors();
+  const { foreground } = useThemeColors();
 
   return (
     <View style={{ alignItems: 'center', gap: 12, paddingHorizontal: 24 }}>
-      <Text
-        style={{
-          color: destructive,
-          textAlign: 'center',
-          fontFamily: 'Inter-Regular',
-        }}
-      >
+      <Text className="text-center text-destructive">
         {t('home.load_error')}
       </Text>
       <Pressable
@@ -53,7 +47,7 @@ function HomeErrorState({ onRetry }: { onRetry: () => void }) {
           paddingVertical: 8,
         }}
       >
-        <Text style={{ color: '#fff', fontSize: 13, fontWeight: '500' }}>
+        <Text className="text-[13px] font-medium text-white">
           {t('practice.retry')}
         </Text>
       </Pressable>
@@ -66,7 +60,7 @@ export default function Index() {
   const { t } = useTranslation();
   const router = useRouter();
   const { isGuest } = useGuest();
-  const { foreground, scaffoldBackground } = useThemeColors();
+  const { scaffoldBackground } = useThemeColors();
   const [refreshing, setRefreshing] = useState(false);
 
   const { data: seriesData, isLoading: seriesLoading, isError: seriesError } = useSeries();
@@ -127,15 +121,7 @@ export default function Index() {
           </View>
         ) : seriesList.length === 0 ? (
           <View style={{ flex: 1, justifyContent: 'center', minHeight: 320 }}>
-            <Text
-              style={{
-                textAlign: 'center',
-                paddingHorizontal: 24,
-                fontSize: 18,
-                color: foreground,
-                fontFamily: 'Inter-Regular',
-              }}
-            >
+            <Text className="px-6 text-center text-lg text-foreground">
               {t('home.no_feature_content')}
             </Text>
           </View>

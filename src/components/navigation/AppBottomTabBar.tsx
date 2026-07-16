@@ -1,3 +1,5 @@
+import { Text } from '@/components/ui/text';
+import { cn } from '@/utils/cn';
 import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs';
 import { avatarCacheKey } from '@/lib/username-validation';
 import { resolveProfileAvatarUrl } from '@/lib/profile-display';
@@ -7,7 +9,7 @@ import { Bell, House, UserCircle, UsersThree, type IconProps } from 'phosphor-re
 import { Image } from 'expo-image';
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useCSSVariable, useUniwind } from 'uniwind';
 
@@ -104,12 +106,8 @@ export function AppBottomTabBar({ state, navigation, insets }: BottomTabBarProps
               )}
               <View style={{ height: 2 }} />
               <Text
-                style={{
-                  fontSize: 12,
-                  fontWeight: isFocused ? '700' : '400',
-                  color,
-                  fontFamily: 'Inter-Regular',
-                }}
+                className={cn('text-xs', isFocused ? 'font-bold' : 'font-normal')}
+                style={{ color }}
               >
                 {labels[name]}
               </Text>

@@ -1,3 +1,4 @@
+import { Text } from '@/components/ui/text';
 import '@/lib/i18n';
 import { TimerProgressRing } from '@/components/timer/TimerProgressRing';
 import { useActiveTimer } from '@/hooks/useActiveTimer';
@@ -7,7 +8,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Pause, Play } from 'phosphor-react-native';
 import { useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { BackHandler, Pressable, Text, View } from 'react-native';
+import { BackHandler, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const RING_SIZE = 280;
@@ -113,13 +114,10 @@ export default function ActiveTimerScreen() {
         <TimerProgressRing progress={elapsedProgress} size={RING_SIZE}>
           <View style={{ height: CENTER_TEXT_HEIGHT, justifyContent: 'center' }}>
             <Text
+              className="text-center font-semibold text-foreground"
               style={{
                 fontSize: DURATION_FONT_SIZE,
-                fontWeight: '600',
                 letterSpacing: 1,
-                color: foreground,
-                fontFamily: 'Inter-SemiBold',
-                textAlign: 'center',
               }}
             >
               {centerText}
@@ -175,16 +173,7 @@ export default function ActiveTimerScreen() {
               opacity: pressed ? 0.85 : 1,
             })}
           >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: '500',
-                color: foreground,
-                fontFamily: 'Inter-Regular',
-              }}
-            >
-              {t('timers.finish')}
-            </Text>
+            <Text className="text-base font-medium text-foreground">{t('timers.finish')}</Text>
           </Pressable>
         </View>
 
@@ -192,16 +181,7 @@ export default function ActiveTimerScreen() {
 
         <View style={{ opacity: showDiscard ? 1 : 0 }} pointerEvents={showDiscard ? 'auto' : 'none'}>
           <Pressable onPress={handleDiscard} style={{ alignSelf: 'center', paddingHorizontal: 16, paddingVertical: 8 }}>
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: '500',
-                color: foreground,
-                fontFamily: 'Inter-Regular',
-              }}
-            >
-              {t('timers.discard_session')}
-            </Text>
+            <Text className="text-base font-medium text-foreground">{t('timers.discard_session')}</Text>
           </Pressable>
         </View>
       </View>

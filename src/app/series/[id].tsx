@@ -14,13 +14,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
   Alert,
   Pressable,
   RefreshControl,
   ScrollView,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -91,7 +91,7 @@ export default function SeriesDetailScreen() {
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 }}>
-          <Text style={{ color: '#dc341e' }}>{t('practice.routine_load_error')}</Text>
+          <Text className="text-destructive">{t('practice.routine_load_error')}</Text>
           <Pressable onPress={() => refetch()} style={{ padding: 12 }}>
             <Text>{t('practice.retry')}</Text>
           </Pressable>
@@ -114,14 +114,7 @@ export default function SeriesDetailScreen() {
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <Text
-          style={{
-            flex: 1,
-            fontSize: 20,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            textAlign: 'center',
-            marginRight: 40,
-          }}
+          className="mr-10 flex-1 text-center text-xl font-bold text-foreground"
           numberOfLines={1}
         >
           {headerTitle}

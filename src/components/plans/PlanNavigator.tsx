@@ -1,5 +1,6 @@
+import { Text } from '@/components/ui/text';
 import { Ionicons } from '@expo/vector-icons';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 interface PlanNavigatorProps {
   title: string;
@@ -54,17 +55,7 @@ export function PlanNavigator({
         )}
       </View>
 
-      <Text
-        style={{
-          flex: 1,
-          fontSize: 16,
-          fontWeight: '700',
-          fontFamily: 'Inter-Bold',
-          color: '#000',
-          textAlign: 'center',
-        }}
-        numberOfLines={1}
-      >
+      <Text className="flex-1 text-center text-base font-bold text-foreground" numberOfLines={1}>
         {title}
       </Text>
 

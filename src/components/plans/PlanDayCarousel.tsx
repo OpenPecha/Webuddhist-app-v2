@@ -1,7 +1,9 @@
+import { Text } from '@/components/ui/text';
+import { cn } from '@/utils/cn';
 import { formatCarouselDayLabel } from '@/utils/plan-utils';
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 
 export interface PlanDayCarouselItem {
   day_number: number;
@@ -76,12 +78,10 @@ export function PlanDayCarousel({
               </View>
             ) : null}
             <Text
-              style={{
-                fontSize: 16,
-                fontWeight: '700',
-                fontFamily: 'Inter-Bold',
-                color: isDisabled ? '#8a8a8a' : '#000',
-              }}
+              className={cn(
+                'text-base font-bold',
+                isDisabled ? 'text-muted-foreground' : 'text-foreground',
+              )}
             >
               {day.day_number}
             </Text>
@@ -99,12 +99,14 @@ export function PlanDayCarousel({
               }
             >
               <Text
-                style={{
-                  fontSize: 11,
-                  fontWeight: '500',
-                  fontFamily: 'Inter-Medium',
-                  color: isSelectedActive ? '#fff' : isDisabled ? '#8a8a8a' : '#000',
-                }}
+                className={cn(
+                  'text-[11px] font-medium',
+                  isSelectedActive
+                    ? 'text-white'
+                    : isDisabled
+                      ? 'text-muted-foreground'
+                      : 'text-foreground',
+                )}
               >
                 {label}
               </Text>

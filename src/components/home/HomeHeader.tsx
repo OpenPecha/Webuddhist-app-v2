@@ -1,3 +1,4 @@
+import { Text } from '@/components/ui/text';
 import { CalendarDotsIcon } from '@/components/home/HomeIcon';
 import { StreakShareSheet } from '@/components/me/StreakShareSheet';
 import { AppColors } from '@/constants/app-colors';
@@ -10,7 +11,7 @@ import { useRouter, type Href } from 'expo-router';
 import { Fire } from 'phosphor-react-native';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 
 export function HomeHeader() {
@@ -41,12 +42,9 @@ export function HomeHeader() {
         }}
       >
         <Text
+          className="flex-1 font-bold text-foreground"
           style={{
-            flex: 1,
             fontSize: greetingSize,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            color: foreground,
             lineHeight: isTibetan ? greetingSize * 1.2 : undefined,
           }}
           numberOfLines={2}
@@ -78,17 +76,7 @@ export function HomeHeader() {
               accessibilityRole="button"
             >
               <Fire size={24} color={AppColors.flame} weight="fill" />
-              <Text
-                style={{
-                  marginLeft: 4,
-                  fontSize: 20,
-                  fontWeight: '700',
-                  fontFamily: 'Inter-Bold',
-                  color: foreground,
-                }}
-              >
-                {streakCount}
-              </Text>
+              <Text className="ml-1 text-xl font-bold text-foreground">{streakCount}</Text>
             </Pressable>
           )}
         </View>

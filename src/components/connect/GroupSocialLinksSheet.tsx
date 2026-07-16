@@ -6,7 +6,8 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import React, { forwardRef, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Linking, Pressable, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { Linking, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface SocialLink {
@@ -45,16 +46,7 @@ export const GroupSocialLinksSheet = forwardRef<BottomSheetModal, GroupSocialLin
     return (
       <BottomSheetModal ref={ref} snapPoints={snapPoints} backdropComponent={renderBackdrop}>
         <BottomSheetView style={{ paddingHorizontal: 20, paddingBottom: insets.bottom + 16 }}>
-          <Text
-            style={{
-              fontSize: 17,
-              fontWeight: '700',
-              fontFamily: 'Inter-Bold',
-              marginBottom: 16,
-            }}
-          >
-            {t('connect.social_links_title')}
-          </Text>
+          <Text className="mb-4 text-[17px] font-bold">{t('connect.social_links_title')}</Text>
           {links.map((link) => (
             <Pressable
               key={link.id}
@@ -69,9 +61,7 @@ export const GroupSocialLinksSheet = forwardRef<BottomSheetModal, GroupSocialLin
               })}
             >
               <Ionicons name={platformIcon(link.platform)} size={22} color="#000" />
-              <Text style={{ flex: 1, marginLeft: 12, fontSize: 15, fontWeight: '500' }}>
-                {link.platform}
-              </Text>
+              <Text className="ml-3 flex-1 text-[15px] font-medium text-foreground">{link.platform}</Text>
               <Ionicons name="open-outline" size={18} color="#8a8a8a" />
             </Pressable>
           ))}

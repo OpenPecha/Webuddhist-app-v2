@@ -1,8 +1,9 @@
 import { FloatingTextInput } from '@/components/ui/floating-text-input';
+import { Text } from '@/components/ui/text';
+import { ActivityIndicator, Pressable, View } from 'react-native';
+import type { UsernameValidationKey } from '@/lib/username-validation';
 import { Check, X } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
-import type { UsernameValidationKey } from '@/lib/username-validation';
 
 export type UsernameFieldState = 'idle' | 'checking' | 'available' | 'taken' | 'error';
 
@@ -54,9 +55,7 @@ export function UsernameFormField({
         <Text className="text-muted-foreground mt-1 text-sm">{t('profile.username_checking')}</Text>
       ) : null}
       {state === 'available' ? (
-        <Text className="mt-1 text-sm" style={{ color: '#0d530e' }}>
-          {t('profile.username_available')}
-        </Text>
+        <Text className="mt-1 text-sm text-[#0d530e]">{t('profile.username_available')}</Text>
       ) : null}
       {state === 'taken' ? (
         <View className="mt-1">

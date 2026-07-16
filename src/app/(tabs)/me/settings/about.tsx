@@ -70,7 +70,7 @@ export default function AboutScreen() {
         </View>
 
         <View className="px-5">
-          <Text className="text-base font-medium" style={{ color: mutedForeground }}>
+          <Text className="text-base font-medium text-muted-foreground">
             {t('about.connect_with_us')}
           </Text>
           <View className="mt-4">
@@ -86,9 +86,7 @@ export default function AboutScreen() {
                     <Icon size={36} color={mutedForeground} />
                     <View className="ml-3.5 flex-1">
                       <Text className="text-base font-medium">{title}</Text>
-                      <Text className="text-sm" style={{ color: mutedForeground }}>
-                        {link.subtitle}
-                      </Text>
+                      <Text className="text-sm text-muted-foreground">{link.subtitle}</Text>
                     </View>
                     <ArrowSquareOut size={20} color={mutedForeground} />
                   </Pressable>

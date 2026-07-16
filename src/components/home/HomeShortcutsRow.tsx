@@ -1,3 +1,4 @@
+import { Text } from '@/components/ui/text';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { LoginDrawer } from '@/components/auth/LoginDrawer';
@@ -10,7 +11,7 @@ import { showAppToast } from '@/utils/show-app-toast';
 import { useRouter, type Href } from 'expo-router';
 import { CirclesThree } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
-import { Image, Pressable, Text, View } from 'react-native';
+import { Image, Pressable, View } from 'react-native';
 
 const BORDER_RADIUS = 16;
 const ICON_SIZE = 28;
@@ -20,10 +21,9 @@ interface ShortcutTileProps {
   label: string;
   onPress?: () => void;
   cardColor: string;
-  labelColor: string;
 }
 
-function ShortcutTile({ icon, label, onPress, cardColor, labelColor }: ShortcutTileProps) {
+function ShortcutTile({ icon, label, onPress, cardColor }: ShortcutTileProps) {
   return (
     <Pressable
       onPress={onPress}
@@ -46,16 +46,7 @@ function ShortcutTile({ icon, label, onPress, cardColor, labelColor }: ShortcutT
       >
         {icon}
         <View style={{ flex: 1, justifyContent: 'center' }}>
-          <Text
-            style={{
-              textAlign: 'center',
-              fontSize: 14,
-              fontWeight: '600',
-              fontFamily: 'Inter-SemiBold',
-              color: labelColor,
-            }}
-            numberOfLines={2}
-          >
+          <Text className="text-center text-sm font-semibold text-foreground" numberOfLines={2}>
             {label}
           </Text>
         </View>
@@ -112,28 +103,24 @@ export function HomeShortcutsRow() {
           label={t('home.home_shortcut_plans')}
           onPress={showComingSoon}
           cardColor={shortcutCard}
-          labelColor={foreground}
         />
         <ShortcutTile
           icon={<BookOpenTextIcon size={ICON_SIZE} color={foreground} />}
           label={t('home.home_chants')}
           onPress={showComingSoon}
           cardColor={shortcutCard}
-          labelColor={foreground}
         />
         <ShortcutTile
           icon={<MalaShortcutIcon color={foreground} />}
           label={t('home.home_mala')}
           onPress={() => openGated('/mala')}
           cardColor={shortcutCard}
-          labelColor={foreground}
         />
         <ShortcutTile
           icon={<TimerIcon size={ICON_SIZE} color={foreground} />}
           label={t('home.timer')}
           onPress={() => openGated('/timers')}
           cardColor={shortcutCard}
-          labelColor={foreground}
         />
       </View>
       <LoginDrawer key={session} visible={visible} onClose={hideLoginDrawer} />

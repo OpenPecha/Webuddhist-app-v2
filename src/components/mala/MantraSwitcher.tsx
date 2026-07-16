@@ -1,3 +1,5 @@
+import { Text } from '@/components/ui/text';
+import { cn } from '@/utils/cn';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import {
   mantraScript,
@@ -7,7 +9,7 @@ import {
 import { CaretLeft, CaretRight } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
 import { useCallback } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
 
@@ -19,7 +21,7 @@ interface MantraSwitcherProps {
 
 export function MantraSwitcher({ mantras, index, onIndexChange }: MantraSwitcherProps) {
   const { i18n } = useTranslation();
-  const { foreground, mutedForeground } = useThemeColors();
+  const { foreground } = useThemeColors();
   const language = i18n.language.split('-')[0] ?? 'en';
   const canLoop = mantras.length > 1;
   const mantra = mantras[index];
@@ -64,11 +66,9 @@ export function MantraSwitcher({ mantras, index, onIndexChange }: MantraSwitcher
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8, minHeight: 70 }}>
           {script ? (
             <Text
+              className="text-center font-semibold text-foreground"
               style={{
                 fontSize: language === 'bo' ? 26 : 22,
-                textAlign: 'center',
-                color: foreground,
-                fontFamily: 'Inter-SemiBold',
                 lineHeight: language === 'bo' ? 34 : 30,
               }}
               numberOfLines={4}
@@ -77,15 +77,7 @@ export function MantraSwitcher({ mantras, index, onIndexChange }: MantraSwitcher
             </Text>
           ) : null}
           {transliteration ? (
-            <Text
-              style={{
-                fontSize: 15,
-                textAlign: 'center',
-                color: mutedForeground,
-                fontFamily: 'Inter-Regular',
-              }}
-              numberOfLines={2}
-            >
+            <Text className="text-center text-[15px] text-muted-foreground" numberOfLines={2}>
               {transliteration}
             </Text>
           ) : null}

@@ -1,9 +1,9 @@
 import {
-  GP_CAPTION_SIZE,
   GP_PADDING,
   GP_SERIES_THUMB,
   GP_SERIES_THUMB_RADIUS,
 } from '@/components/group-profile/group-profile-styles';
+import { Text } from '@/components/ui/text';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { formatSeriesDateRange } from '@/lib/group-profile-format';
@@ -15,7 +15,7 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 interface GroupProfilePracticesTabProps {
   seriesList: Series[];
@@ -26,13 +26,11 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
   const router = useRouter();
   const language = useContentLanguage();
   const { t, i18n } = useTranslation();
-  const { foreground, mutedForeground, skeleton, cardBorder } = useThemeColors();
+  const { mutedForeground, skeleton, cardBorder } = useThemeColors();
 
   if (seriesList.length === 0 && plansList.length === 0) {
     return (
-      <Text style={{ color: mutedForeground, textAlign: 'center', marginTop: 24, paddingHorizontal: GP_PADDING }}>
-        {t('connect.no_practices')}
-      </Text>
+      <Text className="mt-6 px-4 text-center text-muted-foreground">{t('connect.no_practices')}</Text>
     );
   }
 
@@ -83,22 +81,11 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
           )}
         </View>
         <View style={{ flex: 1, marginLeft: 12 }}>
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: '600',
-              fontFamily: 'Inter-SemiBold',
-              color: foreground,
-            }}
-            numberOfLines={1}
-          >
+          <Text className="text-[15px] font-semibold text-foreground" numberOfLines={1}>
             {seriesMeta?.title ?? series.id}
           </Text>
           {subtitle ? (
-            <Text
-              style={{ fontSize: GP_CAPTION_SIZE, color: mutedForeground, marginTop: 2 }}
-              numberOfLines={1}
-            >
+            <Text className="mt-0.5 text-[13px] text-muted-foreground" numberOfLines={1}>
               {subtitle}
             </Text>
           ) : null}
@@ -146,22 +133,11 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
           )}
         </View>
         <View style={{ flex: 1, marginLeft: 12 }}>
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: '600',
-              fontFamily: 'Inter-SemiBold',
-              color: foreground,
-            }}
-            numberOfLines={1}
-          >
+          <Text className="text-[15px] font-semibold text-foreground" numberOfLines={1}>
             {plan.title}
           </Text>
           {subtitle ? (
-            <Text
-              style={{ fontSize: GP_CAPTION_SIZE, color: mutedForeground, marginTop: 2 }}
-              numberOfLines={1}
-            >
+            <Text className="mt-0.5 text-[13px] text-muted-foreground" numberOfLines={1}>
               {subtitle}
             </Text>
           ) : null}
