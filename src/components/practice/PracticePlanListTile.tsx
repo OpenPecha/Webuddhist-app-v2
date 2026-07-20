@@ -1,5 +1,4 @@
 import { APP_ASSETS } from '@/constants/app-assets';
-import { AppColors } from '@/constants/app-colors';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import type { Series, SeriesListProgress } from '@/types/series';
 import { formatPlanDateRangeOrNull } from '@/utils/plan-date-format';
@@ -9,7 +8,6 @@ import { UsersThree } from 'phosphor-react-native';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-const TITLE_SIZE = 15;
 const META_SIZE = 13;
 
 function seriesProgressFraction(progress: SeriesListProgress): number {
@@ -28,7 +26,7 @@ function SeriesCoverThumb({ series }: { series: Series }) {
   return (
     <Image
       source={!uri || failed ? APP_ASSETS.seriesCoverFallback : { uri }}
-      style={{ width: 56, height: 56, borderRadius: 12 }}
+      className="h-14 w-14 rounded-xl"
       contentFit="cover"
       recyclingKey={series.id}
       onError={() => setFailed(true)}
@@ -36,45 +34,24 @@ function SeriesCoverThumb({ series }: { series: Series }) {
   );
 }
 
-function EnrolledCount({ count, color }: { count: number; color: string }) {
+function EnrolledCount({ count }: { count: number }) {
+  const { mutedForeground } = useThemeColors();
+
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-      <UsersThree size={META_SIZE + 2} color={color} weight="regular" />
-      <Text
-        style={{
-          fontSize: META_SIZE,
-          fontWeight: '500',
-          fontFamily: 'Inter-Regular',
-          color,
-        }}
-      >
-        {count}
-      </Text>
+    <View className="flex-row items-center gap-1">
+      <UsersThree size={META_SIZE + 2} color={mutedForeground} weight="regular" />
+      <Text className="text-[13px] font-medium text-muted-foreground">{count}</Text>
     </View>
   );
 }
 
-function ProgressBar({ progress, brand, isDark }: { progress: SeriesListProgress; brand: string; isDark: boolean }) {
+function ProgressBar({ progress }: { progress: SeriesListProgress }) {
   const fraction = seriesProgressFraction(progress);
-  const track = isDark ? 'rgba(66,66,66,0.6)' : AppColors.grey100;
 
   return (
-    <View style={{ width: '50%' }}>
-      <View
-        style={{
-          height: 6,
-          borderRadius: 4,
-          backgroundColor: track,
-          overflow: 'hidden',
-        }}
-      >
-        <View
-          style={{
-            width: `${fraction * 100}%`,
-            height: '100%',
-            backgroundColor: brand,
-          }}
-        />
+    <View className="w-1/2">
+      <View className="h-1.5 overflow-hidden rounded bg-muted/30 dark:bg-muted/60">
+        <View className="h-full bg-brand" style={{ width: `${fraction * 100}%` }} />
       </View>
     </View>
   );
@@ -86,7 +63,6 @@ interface PracticePlanListTileProps {
 }
 
 export function PracticePlanListTile({ series, onPress }: PracticePlanListTileProps) {
-  const { foreground, mutedForeground, cardSurface, brand, isDark } = useThemeColors();
   const dateRange = formatPlanDateRangeOrNull(series.start_date, series.end_date);
   const enrolled = series.enrolled_count ?? 0;
   const progress = series.progress;
@@ -94,25 +70,12 @@ export function PracticePlanListTile({ series, onPress }: PracticePlanListTilePr
   const hasPartner = !!series.partner?.group_name;
 
   return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => ({
-        borderRadius: 16,
-        backgroundColor: cardSurface,
-        opacity: pressed ? 0.9 : 1,
-      })}
-    >
-      <View style={{ flexDirection: 'row', alignItems: 'center', padding: 12 }}>
+    <Pressable onPress={onPress} className="rounded-2xl bg-card active:opacity-90">
+      <View className="flex-row items-center p-3">
         <SeriesCoverThumb series={series} />
-        <View style={{ flex: 1, marginLeft: 12, justifyContent: 'center' }}>
+        <View className="ml-3 flex-1 justify-center">
           <Text
-            style={{
-              fontSize: TITLE_SIZE,
-              fontWeight: '700',
-              fontFamily: 'Inter-Bold',
-              color: foreground,
-              lineHeight: TITLE_SIZE * 1.3,
-            }}
+            className="text-[15px] font-bold leading-[19.5px] text-foreground"
             numberOfLines={1}
           >
             {series.metadata?.title ?? ''}
@@ -120,58 +83,37 @@ export function PracticePlanListTile({ series, onPress }: PracticePlanListTilePr
 
           {hasPartner ? (
             hasProgress ? (
-              <View
-                style={{
-                  marginTop: 8,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: 8,
-                }}
-              >
-                <View style={{ flex: 1 }}>
-                  <ProgressBar progress={progress!} brand={brand} isDark={isDark} />
+              <View className="mt-2 flex-row items-center justify-between gap-2">
+                <View className="flex-1">
+                  <ProgressBar progress={progress!} />
                 </View>
-                {enrolled > 0 ? <EnrolledCount count={enrolled} color={mutedForeground} /> : null}
+                {enrolled > 0 ? <EnrolledCount count={enrolled} /> : null}
               </View>
             ) : enrolled > 0 ? (
-              <View style={{ marginTop: 4, alignItems: 'flex-end' }}>
-                <EnrolledCount count={enrolled} color={mutedForeground} />
+              <View className="mt-1 items-end">
+                <EnrolledCount count={enrolled} />
               </View>
             ) : null
           ) : (
             <>
               {dateRange || enrolled > 0 ? (
-                <View
-                  style={{
-                    marginTop: 4,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    gap: 8,
-                  }}
-                >
+                <View className="mt-1 flex-row items-center gap-2">
                   {dateRange ? (
                     <Text
-                      style={{
-                        flex: 1,
-                        fontSize: META_SIZE,
-                        fontWeight: '500',
-                        fontFamily: 'Inter-Regular',
-                        color: mutedForeground,
-                      }}
+                      className="flex-1 text-[13px] font-medium text-muted-foreground"
                       numberOfLines={1}
                     >
                       {dateRange}
                     </Text>
                   ) : (
-                    <View style={{ flex: 1 }} />
+                    <View className="flex-1" />
                   )}
-                  {enrolled > 0 ? <EnrolledCount count={enrolled} color={mutedForeground} /> : null}
+                  {enrolled > 0 ? <EnrolledCount count={enrolled} /> : null}
                 </View>
               ) : null}
               {hasProgress ? (
-                <View style={{ marginTop: 8 }}>
-                  <ProgressBar progress={progress!} brand={brand} isDark={isDark} />
+                <View className="mt-2">
+                  <ProgressBar progress={progress!} />
                 </View>
               ) : null}
             </>

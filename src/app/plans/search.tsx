@@ -20,14 +20,7 @@ export default function PlansSearchScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
-  const {
-    foreground,
-    mutedForeground,
-    destructive,
-    scaffoldBackground,
-    surfaceInput,
-    borderInput,
-  } = useThemeColors();
+  const { foreground, mutedForeground } = useThemeColors();
 
   const [query, setQuery] = useState('');
   const [debounced, setDebounced] = useState('');
@@ -48,36 +41,16 @@ export default function PlansSearchScreen() {
   const hasQuery = debounced.length > 0;
 
   return (
-    <View style={{ flex: 1, backgroundColor: scaffoldBackground, paddingTop: insets.top }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingLeft: 4,
-          paddingRight: 16,
-          paddingBottom: 12,
-          gap: 4,
-        }}
-      >
+    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+      <View className="flex-row items-center gap-1 pb-3 pl-1 pr-4">
         <Pressable
           onPress={() => router.back()}
-          style={{ padding: 12 }}
+          className="p-3 active:opacity-70"
           accessibilityRole="button"
         >
           <Ionicons name="chevron-back" size={22} color={foreground} />
         </Pressable>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingHorizontal: 12,
-            backgroundColor: surfaceInput,
-            borderRadius: 999,
-            borderWidth: 1,
-            borderColor: borderInput,
-          }}
-        >
+        <View className="flex-1 flex-row items-center rounded-full border border-border-input bg-surface-input px-3">
           <MagnifyingGlass size={20} color={mutedForeground} style={{ marginRight: 8 }} />
           <TextInput
             ref={inputRef}
@@ -86,12 +59,7 @@ export default function PlansSearchScreen() {
             placeholder={t('plans.search_placeholder')}
             placeholderTextColor={mutedForeground}
             returnKeyType="search"
-            style={{
-              flex: 1,
-              fontSize: 15,
-              color: foreground,
-              paddingVertical: 10,
-            }}
+            className="flex-1 py-2.5 text-[15px] text-foreground"
           />
           {query.length > 0 ? (
             <Pressable
@@ -101,6 +69,7 @@ export default function PlansSearchScreen() {
                 inputRef.current?.focus();
               }}
               hitSlop={8}
+              className="active:opacity-70"
             >
               <Ionicons name="close-circle" size={20} color={mutedForeground} />
             </Pressable>
@@ -111,38 +80,21 @@ export default function PlansSearchScreen() {
       {!hasQuery ? null : isLoading || (isFetching && !data) ? (
         <AllPlansListSkeleton rows={4} />
       ) : isError ? (
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 24,
-            gap: 12,
-          }}
-        >
-          <Text style={{ color: destructive, textAlign: 'center' }}>
-            {t('plans.load_error')}
-          </Text>
-          <Pressable onPress={() => void refetch()} style={{ padding: 12 }}>
-            <Text style={{ fontWeight: '600', fontFamily: 'Inter-SemiBold', color: foreground }}>
-              {t('plans.retry')}
-            </Text>
+        <View className="flex-1 items-center justify-center gap-3 p-6">
+          <Text className="text-center text-destructive">{t('plans.load_error')}</Text>
+          <Pressable onPress={() => void refetch()} className="p-3 active:opacity-70">
+            <Text className="font-semibold text-foreground">{t('plans.retry')}</Text>
           </Pressable>
         </View>
       ) : (
         <FlatList
           data={results}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{
-            paddingHorizontal: 16,
-            paddingTop: 8,
-            paddingBottom: insets.bottom + 24,
-            flexGrow: 1,
-            gap: 12,
-          }}
+          contentContainerClassName="grow gap-3 px-4 pt-2 pb-6"
+          contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
           ListEmptyComponent={
-            <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
-              <Text style={{ color: mutedForeground, textAlign: 'center', fontSize: 15 }}>
+            <View className="px-6 pt-12">
+              <Text className="text-center text-[15px] text-muted-foreground">
                 {t('home.no_series_found')}
               </Text>
             </View>

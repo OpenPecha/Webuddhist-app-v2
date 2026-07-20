@@ -20,7 +20,7 @@ export default function AllPlansScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
-  const { foreground, destructive, scaffoldBackground } = useThemeColors();
+  const { foreground } = useThemeColors();
 
   const {
     data,
@@ -39,39 +39,25 @@ export default function AllPlansScreen() {
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: scaffoldBackground, paddingTop: insets.top }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 4,
-          paddingBottom: 8,
-        }}
-      >
+    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+      <View className="flex-row items-center px-1 pb-2">
         <Pressable
           onPress={() => router.back()}
-          style={{ padding: 12 }}
+          className="p-3 active:opacity-70"
           accessibilityRole="button"
           accessibilityLabel={t('common.back', { defaultValue: 'Back' })}
         >
           <Ionicons name="chevron-back" size={24} color={foreground} />
         </Pressable>
         <Text
-          style={{
-            flex: 1,
-            fontSize: 17,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            textAlign: 'center',
-            color: foreground,
-          }}
+          className="flex-1 text-center text-[17px] font-bold text-foreground"
           numberOfLines={1}
         >
           {t('home.home_shortcut_plans')}
         </Text>
         <Pressable
           onPress={() => router.push('/plans/search')}
-          style={{ padding: 12 }}
+          className="p-3 active:opacity-70"
           accessibilityRole="button"
           accessibilityLabel={t('plans.search_placeholder')}
         >
@@ -82,35 +68,18 @@ export default function AllPlansScreen() {
       {isLoading ? (
         <AllPlansListSkeleton />
       ) : isError ? (
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 24,
-            gap: 12,
-          }}
-        >
-          <Text style={{ color: destructive, textAlign: 'center' }}>
-            {t('plans.load_error')}
-          </Text>
-          <Pressable onPress={() => void refetch()} style={{ padding: 12 }}>
-            <Text style={{ fontWeight: '600', fontFamily: 'Inter-SemiBold', color: foreground }}>
-              {t('plans.retry')}
-            </Text>
+        <View className="flex-1 items-center justify-center gap-3 p-6">
+          <Text className="text-center text-destructive">{t('plans.load_error')}</Text>
+          <Pressable onPress={() => void refetch()} className="p-3 active:opacity-70">
+            <Text className="font-semibold text-foreground">{t('plans.retry')}</Text>
           </Pressable>
         </View>
       ) : (
         <FlatList
           data={series}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{
-            paddingHorizontal: 16,
-            paddingTop: 8,
-            paddingBottom: insets.bottom + 24,
-            flexGrow: 1,
-            gap: 12,
-          }}
+          contentContainerClassName="grow gap-3 px-4 pt-2 pb-6"
+          contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
           refreshControl={
             <RefreshControl
               refreshing={isRefetching && !isFetchingNextPage}
@@ -118,8 +87,8 @@ export default function AllPlansScreen() {
             />
           }
           ListEmptyComponent={
-            <View style={{ paddingTop: 48, paddingHorizontal: 24 }}>
-              <Text style={{ color: '#8a8a8a', textAlign: 'center', fontSize: 15 }}>
+            <View className="px-6 pt-12">
+              <Text className="text-center text-[15px] text-muted-foreground">
                 {t('home.no_series_found')}
               </Text>
             </View>
@@ -135,7 +104,7 @@ export default function AllPlansScreen() {
           }}
           onEndReachedThreshold={0.3}
           ListFooterComponent={
-            isFetchingNextPage ? <ActivityIndicator style={{ marginVertical: 16 }} /> : null
+            isFetchingNextPage ? <ActivityIndicator className="my-4" /> : null
           }
         />
       )}
