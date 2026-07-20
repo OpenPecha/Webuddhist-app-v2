@@ -26,7 +26,7 @@ function SeriesCoverThumb({ series }: { series: Series }) {
   return (
     <Image
       source={!uri || failed ? APP_ASSETS.seriesCoverFallback : { uri }}
-      className="h-14 w-14 rounded-xl"
+      style={{ width: 56, height: 56, borderRadius: 12 }}
       contentFit="cover"
       recyclingKey={series.id}
       onError={() => setFailed(true)}
