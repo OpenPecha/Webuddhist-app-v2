@@ -60,3 +60,38 @@ export interface PublicPlanDetail {
   display_order?: number | null;
   group_id?: string | null;
 }
+
+export interface PlanAuthor {
+  id: string;
+  firstname: string;
+  lastname?: string | null;
+  image?: ImageSizes | null;
+}
+
+export interface PlanTag {
+  id: string;
+  name: string;
+}
+
+/** Catalog list item from GET /plans (PublicPlanDTO). */
+export interface PublicPlanListItem {
+  id: string;
+  title: string;
+  description?: string | null;
+  language: string;
+  difficulty_level?: string | null;
+  image?: ImageSizes | null;
+  total_days: number;
+  tags?: PlanTag[];
+  author?: PlanAuthor | null;
+  start_date?: string | null;
+  display_order?: number | null;
+  group_id?: string | null;
+}
+
+export interface PublicPlansResponse {
+  plans: PublicPlanListItem[];
+  skip: number;
+  limit: number;
+  total: number;
+}

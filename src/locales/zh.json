@@ -115,6 +115,22 @@
     "day_of": "第 {{day}} 天，共 {{total}} 天",
     "no_tasks": "這一天沒有任務"
   },
+  "plans": {
+    "browse_title": "計畫",
+    "search_placeholder": "搜尋計畫",
+    "empty": "尚無可用計畫",
+    "search_empty": "找不到符合的計畫",
+    "load_error": "無法載入計畫",
+    "retry": "重試",
+    "preview": {
+      "enroll": "加入計畫",
+      "add_to_routine": "加入日常練習",
+      "untitled_task": "任務"
+    },
+    "videos": {
+      "title": "短片"
+    }
+  },
   "reader": {
     "title": "閱讀器",
     "placeholder": "完整閱讀體驗將在後續更新中提供。",
