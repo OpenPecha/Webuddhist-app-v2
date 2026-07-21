@@ -1,6 +1,6 @@
 import { ArrowRightIcon, BookOpenTextIcon, ListChecksIcon } from '@/components/home/HomeIcon';
-import { AppColors } from '@/constants/app-colors';
 import { Text } from '@/components/ui/text';
+import { AppColors } from '@/constants/app-colors';
 import type { RoutineInfo } from '@/types/routine-info';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -29,12 +29,12 @@ function StatItem({
       <Text className="flex-1 text-white">
         {countIndex >= 0 ? (
           <>
-            <Text className="text-sm">{label.slice(0, countIndex)}</Text>
-            <Text className="text-[22px] font-bold">{countText}</Text>
-            <Text className="text-sm">{label.slice(countIndex + countText.length)}</Text>
+            <Text className="text-sm text-white">{label.slice(0, countIndex)}</Text>
+            <Text className="text-[22px] font-bold text-white">{countText}</Text>
+            <Text className="text-sm text-white">{label.slice(countIndex + countText.length)}</Text>
           </>
         ) : (
-          <Text className="text-sm">{label}</Text>
+          <Text className="text-sm text-white">{label}</Text>
         )}
       </Text>
     </View>
