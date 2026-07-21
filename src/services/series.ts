@@ -7,13 +7,20 @@ import type {
   UserSeriesProgressResponse,
 } from '@/types/series';
 
+export const ALL_PLANS_SERIES_PAGE_SIZE = 20;
+export const SERIES_SEARCH_PAGE_SIZE = 10;
+
 export async function fetchSeriesList(
   language = 'en',
   skip = 0,
   limit = 10,
+  search?: string,
 ): Promise<SeriesListResponse> {
+  const params: Record<string, string | number> = { language, skip, limit };
+  if (search?.trim()) params.search = search.trim();
+
   const { data } = await http.get<SeriesListResponse>(ENDPOINTS.series.list, {
-    params: { language, skip, limit },
+    params,
   });
   return data;
 }

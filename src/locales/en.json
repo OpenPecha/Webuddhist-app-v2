@@ -122,6 +122,12 @@
     "complete_error": "Couldn't save your progress. Please try again."
   },
   "plans": {
+    "browse_title": "Plans",
+    "search_placeholder": "Search plans",
+    "empty": "No plans available",
+    "search_empty": "No matching plans found",
+    "load_error": "Could not load plans",
+    "retry": "Retry",
     "preview": {
       "enroll": "Enroll in plan",
       "add_to_routine": "Add to Routine",

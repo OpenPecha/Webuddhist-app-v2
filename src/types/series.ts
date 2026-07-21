@@ -9,6 +9,18 @@ export interface SeriesMetadata {
   sub_title?: string | null;
 }
 
+/** List-item progress from GET /series (Flutter SeriesProgress). */
+export interface SeriesListProgress {
+  total_day_count: number;
+  current_day_number: number;
+}
+
+/** Partner group chip on series list rows (Flutter SeriesPartner). */
+export interface SeriesPartner {
+  group_name: string;
+  group_image?: string | null;
+}
+
 export interface Series {
   id: string;
   metadata: SeriesMetadata;
@@ -24,6 +36,8 @@ export interface Series {
   start_date?: string | null;
   end_date?: string | null;
   group?: AuthorGroupSummary | null;
+  progress?: SeriesListProgress | null;
+  partner?: SeriesPartner | null;
 }
 
 export interface Plan {

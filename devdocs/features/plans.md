@@ -5,9 +5,9 @@
 | **Status** | PRD draft (mockup research complete) |
 | **Priority** | P0 |
 | **Flutter baseline** | `lib/features/plans` |
-| **v2 target** | `src/app/plans/[id].tsx`, `src/app/practice/details.tsx`, `src/components/plans/*` |
+| **v2 target** | `src/app/plans/index.tsx` (series All Plans), `src/app/plans/[id].tsx`, `src/app/practice/details.tsx`, `src/components/plans/*` |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-22 (mockup research + implementation alignment) |
+| **Last updated** | 2026-07-17 (Home Plans = Flutter AllPlans series list) |
 
 ---
 
@@ -21,10 +21,11 @@ completion.
 
 | Screen | v2 file | Status |
 |--------|---------|--------|
+| All Plans (series) | `src/app/plans/index.tsx` + `plans/search.tsx` | **Live** — Flutter `AllPlansScreen` parity: `GET /series` list + search; Home Plans shortcut; tap → `/series/[id]` |
 | Plan preview | `src/app/plans/[id].tsx` | **Parity** — square day cards, activity task rows, tap → reader/plan-text (`preview=1`, no completion) |
 | Plan track | `src/app/practice/details.tsx` | **Parity** — day cards, checkboxes, Practice Now, completion APIs |
-| Plan components | `src/components/plans/*` | `PlanDayCarousel` (card only), `PlanTaskList` (activity rows), `PlanNavigator` |
-| Services | `src/services/plans.ts` | Catalog + enrolled reads; preview uses `GET /plans/{id}/days/{n}` |
+| Plan components | `src/components/plans/*` | `PlanCard` (unused catalog), `PlanDayCarousel`, `PlanTaskList`, `PlanNavigator`; list tile: `PracticePlanListTile` |
+| Services | `src/services/plans.ts` + `series.ts` | Series list for All Plans; catalog + enrolled reads; preview uses `GET /plans/{id}/days/{n}` |
 
 ## 2b. Mockup redesign (`plan_design_revamp`, `Missed_days_flow`)
 
@@ -350,13 +351,14 @@ Special "ITCC-like" plans use `special_plan_*` keys (see notifications PRD).
 
 | Flutter route | v2 route | When |
 |---------------|----------|------|
+| Home Plans / All Plans | `src/app/plans/index.tsx` | Series list (`GET /series`); search at `plans/search`; tap → `/series/[id]` |
 | `/practice/plans/preview` | `src/app/plans/[id].tsx` | Guest or not enrolled — read-only preview |
 | `/practice/details` | `src/app/practice/details.tsx` | Enrolled — track mode (`planId`, `selectedDay?`, `title?`) |
 | Series plan row (not enrolled) | `src/app/plans/[id].tsx` | From `series/[id].tsx` |
 | Series plan row (enrolled) | `src/app/practice/details.tsx` | Same params as track |
 | `/practice/plans/info` | TBD or merged into `/plans/[id]` | catalog plan |
-| `/home/plans/:tag` | `src/app/plans/[tag].tsx` (TBD) | tag |
-| `/plan-text/:subtaskId` | `src/app/plan-text/[subtaskId].tsx` (TBD) | NavigationContext |
+| `/home/plans/:tag` | `src/app/plans/[tag].tsx` (TBD) | tag-filtered list |
+| `/plan-text/:subtaskId` | `src/app/plan-text/[subtaskId].tsx` | NavigationContext |
 
 **Enrollment gate:** On `plans/[id]` mount, if authed and plan id is in `GET /users/me/plans`,
 `router.replace` to `/practice/details` with `planId`, `title`, and `selectedDay` from calendar start.
@@ -409,9 +411,9 @@ Route resolution is content-type-first (Flutter parity). Do **not** use `GET /te
 
 | Requirement | Flutter | v2 | Notes |
 |-------------|---------|-----|-------|
-| Plan list by tag | yes | no | |
-| Plan preview `/plans/[id]` | yes | no | mockup P0 |
-| Day carousel | yes | no | |
+| Plan list by tag | yes | partial | Home Plans = series All Plans; tag-filtered plan list TBD |
+| Plan preview `/plans/[id]` | yes | yes | |
+| Day carousel | yes | yes | |
 | Plan track | yes | partial | minimal details screen |
 | Enroll | yes | no | |
 | Unenroll | yes | no | |

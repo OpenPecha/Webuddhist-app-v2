@@ -81,7 +81,7 @@ export function HomeShortcutsRow() {
         <ShortcutTile
           icon={<ListChecksIcon size={ICON_SIZE} color={foreground} />}
           label={t('home.home_shortcut_plans')}
-          onPress={showComingSoon}
+          onPress={() => router.push('/plans' as Href)}
           cardColor={shortcutCard}
         />
         <ShortcutTile

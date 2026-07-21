@@ -97,6 +97,8 @@ function AuthGate() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="series/[id]" />
         <Stack.Screen name="series/[id]/info" />
+        <Stack.Screen name="plans/index" />
+        <Stack.Screen name="plans/search" />
         <Stack.Screen name="plans/[id]" />
         <Stack.Screen name="group/[id]" />
         <Stack.Screen name="connect/search" />

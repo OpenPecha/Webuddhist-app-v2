@@ -3,6 +3,9 @@ export const QUERY_KEYS = {
     all: ['series'] as const,
     list: (language: string, skip: number, limit: number) =>
       ['series', 'list', language, skip, limit] as const,
+    allPlans: (language: string) => ['series', 'allPlans', language] as const,
+    search: (language: string, search: string) =>
+      ['series', 'search', language, search] as const,
     featured: (language: string, limit: number) =>
       ['series', 'featured', language, limit] as const,
     detail: (id: string, language: string) => ['series', 'detail', id, language] as const,
@@ -25,7 +28,8 @@ export const QUERY_KEYS = {
   },
   plans: {
     all: ['plans'] as const,
-    list: () => ['plans', 'list'] as const,
+    list: (language: string, search: string) =>
+      ['plans', 'list', language, search] as const,
     detail: (id: string) => ['plans', 'detail', id] as const,
     publicDetail: (id: string, language: string) =>
       ['plans', 'public', id, language] as const,

@@ -5,9 +5,29 @@ import type {
   PlanDaysResponse,
   PublicPlanDayDetail,
   PublicPlanDetail,
+  PublicPlansResponse,
 } from '@/types/plan-catalog';
 import type { UserPlanDayDetails, UserPlanProgress } from '@/types/plan-track';
 import type { UserPlansResponse } from '@/types/plans';
+
+export const PLANS_CATALOG_PAGE_SIZE = 20;
+
+export async function fetchPlans(
+  language = 'en',
+  skip = 0,
+  limit = PLANS_CATALOG_PAGE_SIZE,
+  search?: string,
+): Promise<PublicPlansResponse> {
+  const params: Record<string, string | number> = {
+    language,
+    skip,
+    limit,
+  };
+  if (search?.trim()) params.search = search.trim();
+
+  const { data } = await http.get<PublicPlansResponse>(ENDPOINTS.plans.list, { params });
+  return data;
+}
 
 export async function fetchPlanById(
   id: string,
