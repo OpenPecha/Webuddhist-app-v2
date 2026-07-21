@@ -1,79 +1,75 @@
-import React from 'react';
-import { Linking, Text, View } from 'react-native';
+import { useThemeColors } from '@/hooks/useThemeColors';
+import { useMemo } from 'react';
+import { StyleSheet, type TextStyle } from 'react-native';
+import Markdown from 'react-native-markdown-display';
 
 interface MarkdownTextProps {
   content: string;
-  style?: object;
-}
-
-function parseInline(text: string, baseStyle: object): React.ReactNode[] {
-  const nodes: React.ReactNode[] = [];
-  const pattern = /(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g;
-  let lastIndex = 0;
-  let match: RegExpExecArray | null;
-  let key = 0;
-
-  while ((match = pattern.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      nodes.push(
-        <Text key={key++} style={baseStyle}>
-          {text.slice(lastIndex, match.index)}
-        </Text>,
-      );
-    }
-    const token = match[0];
-    if (token.startsWith('**')) {
-      nodes.push(
-        <Text key={key++} style={[baseStyle, { fontWeight: '700' }]}>
-          {token.slice(2, -2)}
-        </Text>,
-      );
-    } else {
-      const linkMatch = /\[([^\]]+)\]\(([^)]+)\)/.exec(token);
-      if (linkMatch) {
-        const [, label, url] = linkMatch;
-        nodes.push(
-          <Text
-            key={key++}
-            style={[baseStyle, { color: '#0066cc', textDecorationLine: 'underline' }]}
-            onPress={() => void Linking.openURL(url)}
-          >
-            {label}
-          </Text>,
-        );
-      }
-    }
-    lastIndex = match.index + token.length;
-  }
-
-  if (lastIndex < text.length) {
-    nodes.push(
-      <Text key={key++} style={baseStyle}>
-        {text.slice(lastIndex)}
-      </Text>,
-    );
-  }
-
-  return nodes.length ? nodes : [<Text key={0} style={baseStyle}>{text}</Text>];
+  style?: TextStyle;
 }
 
 export function MarkdownText({ content, style }: MarkdownTextProps) {
-  const baseStyle = {
-    fontSize: 14,
-    color: '#333',
-    lineHeight: 22,
-    ...style,
-  };
+  const { foreground, isDark } = useThemeColors();
 
-  const paragraphs = content.split(/\n{2,}/).filter(Boolean);
+  const markdownStyles = useMemo(() => {
+    const base = StyleSheet.flatten({
+      fontSize: 14,
+      lineHeight: 22,
+      color: foreground,
+      ...style,
+    }) as TextStyle;
+
+    const headingBase: TextStyle = {
+      fontWeight: '700' as const,
+      color: base.color,
+      fontFamily: base.fontFamily,
+    };
+
+    return {
+      body: base,
+      text: base,
+      paragraph: {
+        marginTop: 0,
+        marginBottom: 12,
+        fontSize: base.fontSize,
+        lineHeight: base.lineHeight,
+        color: base.color,
+        fontFamily: base.fontFamily,
+      },
+      heading1: { ...headingBase, fontSize: 24, marginTop: 16, marginBottom: 8 },
+      heading2: { ...headingBase, fontSize: 20, marginTop: 14, marginBottom: 6 },
+      heading3: { ...headingBase, fontSize: 17, marginTop: 12, marginBottom: 4 },
+      heading4: { ...headingBase, fontSize: 15, marginTop: 10, marginBottom: 4 },
+      heading5: { ...headingBase, fontSize: base.fontSize, marginTop: 8, marginBottom: 4 },
+      heading6: { ...headingBase, fontSize: base.fontSize, marginTop: 8, marginBottom: 4 },
+      strong: { fontWeight: '700' as const },
+      em: { fontStyle: 'italic' as const },
+      link: {
+        color: '#0066cc',
+        textDecorationLine: 'underline' as const,
+      },
+      bullet_list: {
+        marginBottom: 8,
+      },
+      ordered_list: {
+        marginBottom: 8,
+      },
+      list_item: {
+        marginBottom: 4,
+      },
+      blockquote: {
+        backgroundColor: isDark ? '#1a1a1a' : '#F5F5F5',
+        borderColor: isDark ? '#444444' : '#CCCCCC',
+      },
+      hr: {
+        backgroundColor: isDark ? '#444444' : '#000000',
+      },
+    };
+  }, [foreground, isDark, style]);
 
   return (
-    <View>
-      {paragraphs.map((paragraph, index) => (
-        <Text key={index} style={[baseStyle, index > 0 ? { marginTop: 12 } : null]}>
-          {parseInline(paragraph.replace(/\n/g, ' '), baseStyle)}
-        </Text>
-      ))}
-    </View>
+    <Markdown style={markdownStyles} mergeStyle={false}>
+      {content}
+    </Markdown>
   );
 }
