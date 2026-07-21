@@ -36,7 +36,7 @@ export default function SelectPlanScreen() {
   const plans = data?.plans ?? [];
 
   return (
-    <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
       <View className="flex-row items-center p-2">
         <Pressable onPress={() => router.back()} className="p-2 active:opacity-70">
           <Ionicons name="chevron-back" size={24} color="#000" />

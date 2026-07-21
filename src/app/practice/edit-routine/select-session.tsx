@@ -43,7 +43,7 @@ export default function SelectSessionScreen() {
   const seriesList = seriesData?.series ?? [];
 
   return (
-    <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
       <View className="flex-row items-center px-2 py-1">
         <Pressable onPress={() => router.back()} className="p-2 active:opacity-70">
           <Ionicons name="arrow-back" size={22} color="#000" />

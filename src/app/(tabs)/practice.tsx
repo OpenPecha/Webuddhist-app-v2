@@ -348,9 +348,9 @@ export default function PracticeScreen() {
   }
 
   return (
-    <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
       {resolvingItemId ? (
-        <View className="absolute inset-0 z-10 items-center justify-center bg-[#FDFDFC]/60">
+        <View className="absolute inset-0 z-10 items-center justify-center bg-background/60">
           <ActivityIndicator size="large" />
         </View>
       ) : null}

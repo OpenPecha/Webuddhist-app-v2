@@ -241,7 +241,7 @@ export default function PlanTrackScreen() {
   const notEnrolled = !userPlansLoading && !userPlan;
 
   return (
-    <View className="flex-1 bg-[#FDFBF7]">
+    <View className="flex-1 bg-background">
       <View
         className="flex-row items-center px-2 py-2"
         style={{ paddingTop: insets.top + 4 }}
@@ -330,7 +330,7 @@ export default function PlanTrackScreen() {
 
       {showPracticeNow && !notEnrolled && !isLoading ? (
         <View
-          className="absolute bottom-0 left-0 right-0 bg-[#FDFBF7] px-4 pt-3"
+          className="absolute bottom-0 left-0 right-0 bg-background px-4 pt-3"
           style={{ paddingBottom: insets.bottom + 16 }}
         >
           <Pressable

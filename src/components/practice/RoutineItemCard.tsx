@@ -41,7 +41,7 @@ export function RoutineItemCard({
       className={cn(
         'flex-row items-center py-3 rounded-[10px]',
         onPress && 'active:opacity-85',
-        isDragging ? 'bg-[#FDFDFC]' : 'bg-transparent',
+        isDragging ? 'bg-background' : 'bg-transparent',
       )}
       style={
         isDragging

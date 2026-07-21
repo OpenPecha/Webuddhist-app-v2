@@ -487,7 +487,7 @@ export default function EditRoutineScreen() {
 
   if (isLoading && !hydrated) {
     return (
-      <View className="flex-1 items-center justify-center bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+      <View className="flex-1 items-center justify-center bg-background" style={{ paddingTop: insets.top }}>
         <ActivityIndicator size="large" />
         <Text className="mt-4 font-semibold">
           {t('editRoutine.title')}
@@ -497,7 +497,7 @@ export default function EditRoutineScreen() {
   }
 
   return (
-    <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
       <View className="flex-1 px-5">
         <View className="h-4" />
         <Pressable
