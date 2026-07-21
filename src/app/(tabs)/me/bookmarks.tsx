@@ -105,28 +105,39 @@ export default function BookmarksScreen() {
     <View className="flex-1 bg-[#F9F8F4]" style={{ paddingTop: insets.top }}>
       <Header onBack={() => router.back()} title={t('bookmarks.title')} />
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 16, gap: 20, paddingBottom: 8 }}
-      >
-        {BOOKMARK_TABS.map((key) => (
-          <Pressable key={key} onPress={() => setTab(key)}>
-            <Text
-              className={`pb-2 text-base ${
-                tab === key
-                  ? 'border-b-2 border-foreground font-bold text-foreground'
-                  : 'font-medium text-muted-foreground'
-              }`}
-            >
-              {tabLabel(key, t)}
-            </Text>
-          </Pressable>
-        ))}
-      </ScrollView>
+      <View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ flexGrow: 0 }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: 'space-between',
+            gap: 24,
+            paddingHorizontal: 16,
+            paddingBottom: 8,
+          }}
+        >
+          {BOOKMARK_TABS.map((key) => (
+            <Pressable key={key} onPress={() => setTab(key)}>
+              <Text
+                className={`pb-2 text-base ${
+                  tab === key
+                    ? 'border-b-2 border-foreground font-bold text-foreground'
+                    : 'font-medium text-muted-foreground'
+                }`}
+              >
+                {tabLabel(key, t)}
+              </Text>
+            </Pressable>
+          ))}
+        </ScrollView>
+      </View>
 
       {isLoading ? (
-        <BookmarkListSkeleton />
+        <View className="flex-1">
+          <BookmarkListSkeleton />
+        </View>
       ) : isError ? (
         <View className="flex-1 items-center justify-center p-6">
           <Text className="mb-3 text-muted-foreground">{t('bookmarks.load_error')}</Text>
@@ -136,12 +147,17 @@ export default function BookmarksScreen() {
         </View>
       ) : (
         <FlatList
+          className="flex-1"
           data={filtered}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{ padding: 16, flexGrow: 1 }}
+          contentContainerStyle={
+            filtered.length === 0
+              ? { flexGrow: 1, justifyContent: 'center', paddingHorizontal: 16 }
+              : { paddingHorizontal: 16, paddingTop: 8, paddingBottom: 16 }
+          }
           refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => void refetch()} />}
           ListEmptyComponent={
-            <View className="flex-1 items-center justify-center pt-12">
+            <View className="items-center justify-center px-4">
               <Text className="text-center text-base font-semibold text-foreground">
                 {empty.title}
               </Text>
