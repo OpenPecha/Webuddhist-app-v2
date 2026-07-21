@@ -1,3 +1,4 @@
+import { cn } from '@/utils/cn';
 import { AppScreenHeader } from '@/components/settings/AppScreenHeader';
 import { Text } from '@/components/ui/text';
 import {
@@ -70,7 +71,7 @@ export default function AboutScreen() {
         </View>
 
         <View className="px-5">
-          <Text className="text-base font-medium" style={{ color: mutedForeground }}>
+          <Text className="text-base font-medium text-muted-foreground">
             {t('about.connect_with_us')}
           </Text>
           <View className="mt-4">
@@ -86,16 +87,13 @@ export default function AboutScreen() {
                     <Icon size={36} color={mutedForeground} />
                     <View className="ml-3.5 flex-1">
                       <Text className="text-base font-medium">{title}</Text>
-                      <Text className="text-sm" style={{ color: mutedForeground }}>
-                        {link.subtitle}
-                      </Text>
+                      <Text className="text-sm text-muted-foreground">{link.subtitle}</Text>
                     </View>
                     <ArrowSquareOut size={20} color={mutedForeground} />
                   </Pressable>
                   {index < SOCIAL_LINKS.length - 1 ? (
                     <View
-                      className="h-px"
-                      style={{ backgroundColor: isDark ? '#555' : '#f0f0f0' }}
+                      className={cn('h-px', isDark ? 'bg-[#555]' : 'bg-[#f0f0f0]')}
                     />
                   ) : null}
                 </View>

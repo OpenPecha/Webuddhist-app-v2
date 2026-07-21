@@ -199,25 +199,14 @@ function MalaBeadsShell({ total, enabled, onIncrement, beadImage }: MalaBeadsShe
   return (
     <GestureDetector gesture={gesture}>
       <View
-        style={{
-          width: '100%',
-          height: MALA_BEADS_LAYOUT_HEIGHT,
-          alignItems: 'center',
-          justifyContent: 'center',
-          opacity: enabled ? 1 : 0.5,
-        }}
+        className="h-[220px] w-full items-center justify-center"
+        style={{ opacity: enabled ? 1 : 0.5 }}
         accessibilityRole="button"
         accessibilityState={{ disabled: !enabled }}
       >
         <Animated.View
-          style={[
-            {
-              width: MALA_BEADS_LAYOUT_WIDTH,
-              height: MALA_BEADS_LAYOUT_HEIGHT,
-              overflow: 'hidden',
-            },
-            strandStyle,
-          ]}
+          className="h-[220px] w-[360px] overflow-hidden"
+          style={strandStyle}
         >
           <Svg
             width={MALA_BEADS_LAYOUT_WIDTH}

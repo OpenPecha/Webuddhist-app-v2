@@ -3,6 +3,7 @@ import { AppScreenHeader } from '@/components/settings/AppScreenHeader';
 import { ProfileAvatarSection } from '@/components/settings/ProfileAvatarSection';
 import { UsernameFormField } from '@/components/settings/UsernameFormField';
 import type { UsernameFieldState } from '@/components/settings/UsernameFormField';
+import { cn } from '@/utils/cn';
 import { FloatingTextInput } from '@/components/ui/floating-text-input';
 import { Text } from '@/components/ui/text';
 import { QUERY_KEYS } from '@/constants/query-keys';
@@ -238,14 +239,22 @@ export default function EditProfileScreen() {
     <Pressable
       onPress={handleSave}
       disabled={!canSave}
-      className="rounded-full px-5 py-2 active:opacity-80"
-      style={{
-        backgroundColor: canSave ? (isDark ? '#fdfdfc' : '#000') : isDark ? '#555' : '#d4d4d4',
-      }}
+      className={cn(
+        'rounded-full px-5 py-2 active:opacity-80',
+        canSave
+          ? isDark
+            ? 'bg-[#fdfdfc]'
+            : 'bg-black'
+          : isDark
+            ? 'bg-[#555]'
+            : 'bg-neutral-300',
+      )}
     >
       <Text
-        className="text-sm font-semibold"
-        style={{ color: canSave ? (isDark ? '#000' : '#fff') : mutedForeground }}
+        className={cn(
+          'text-sm font-semibold',
+          canSave ? (isDark ? 'text-black' : 'text-white') : 'text-muted-foreground',
+        )}
       >
         {saving ? t('editRoutine.saving') : t('profile.save')}
       </Text>
@@ -257,15 +266,17 @@ export default function EditProfileScreen() {
       <View className="flex-1 bg-background">
         <AppScreenHeader title={t('profile.edit_title')} />
         <View className="flex-1 items-center justify-center px-8">
-          <Text className="text-center text-base" style={{ color: mutedForeground }}>
+          <Text className="text-center text-base text-muted-foreground">
             {t('practice.routine_load_error')}
           </Text>
           <Pressable
             onPress={() => refetch()}
-            className="mt-4 rounded-full px-6 py-3 active:opacity-80"
-            style={{ backgroundColor: isDark ? '#fdfdfc' : '#000' }}
+            className={cn(
+              'mt-4 rounded-full px-6 py-3 active:opacity-80',
+              isDark ? 'bg-[#fdfdfc]' : 'bg-black',
+            )}
           >
-            <Text className="text-sm font-semibold" style={{ color: isDark ? '#000' : '#fff' }}>
+            <Text className={cn('text-sm font-semibold', isDark ? 'text-black' : 'text-white')}>
               {t('practice.retry')}
             </Text>
           </Pressable>
@@ -354,9 +365,7 @@ export default function EditProfileScreen() {
           className="mt-8 flex-row items-center py-3 active:opacity-70"
         >
           <Trash size={22} color={destructive} />
-          <Text className="ml-3 flex-1 text-base" style={{ color: destructive }}>
-            {t('profile.delete_account')}
-          </Text>
+          <Text className="ml-3 flex-1 text-base text-destructive">{t('profile.delete_account')}</Text>
           <CaretRight size={20} color={mutedForeground} />
         </Pressable>
       </ScrollView>

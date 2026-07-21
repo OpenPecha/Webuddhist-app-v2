@@ -59,7 +59,7 @@ export function MeStreakCard({ streak, onPress }: MeStreakCardProps) {
             {t('me.day_streak', { count: streak.current })}
           </Text>
         </View>
-        <Text className="mt-1 text-center text-xs" style={{ color: mutedForeground }}>
+        <Text className="mt-1 text-center text-xs text-muted-foreground">
           {t('me.best_streak', { count: streak.highest })}
         </Text>
         <View className="mt-5">

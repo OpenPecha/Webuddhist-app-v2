@@ -1,4 +1,4 @@
-import { CONNECT_HERO, CONNECT_PADDING } from '@/components/connect/connect-styles';
+import { CONNECT_HERO } from '@/components/connect/connect-styles';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { UsersThree } from 'phosphor-react-native';
@@ -9,13 +9,7 @@ export function ConnectHeroBanner() {
   const { brand, foreground, isDark, shortcutCard } = useThemeColors();
 
   return (
-    <View
-      style={{
-        marginHorizontal: CONNECT_PADDING,
-        borderRadius: CONNECT_HERO.borderRadius,
-        overflow: 'hidden',
-      }}
-    >
+    <View className="mx-5 overflow-hidden rounded-[20px]">
       <LinearGradient
         colors={isDark ? [shortcutCard, '#1a1a1a'] : [brand + '33', brand + '14']}
         start={{ x: 0, y: 0 }}

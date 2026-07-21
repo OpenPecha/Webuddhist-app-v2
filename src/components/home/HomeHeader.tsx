@@ -1,3 +1,4 @@
+import { Text } from '@/components/ui/text';
 import { CalendarDotsIcon } from '@/components/home/HomeIcon';
 import { StreakShareSheet } from '@/components/me/StreakShareSheet';
 import { AppColors } from '@/constants/app-colors';
@@ -10,7 +11,7 @@ import { useRouter, type Href } from 'expo-router';
 import { Fire } from 'phosphor-react-native';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 
 export function HomeHeader() {
@@ -31,22 +32,11 @@ export function HomeHeader() {
 
   return (
     <>
-      <View
-        style={{
-          paddingHorizontal: 20,
-          paddingVertical: 12,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
+      <View className="flex-row items-center justify-between px-5 py-3">
         <Text
+          className="flex-1 font-bold text-foreground"
           style={{
-            flex: 1,
             fontSize: greetingSize,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            color: foreground,
             lineHeight: isTibetan ? greetingSize * 1.2 : undefined,
           }}
           numberOfLines={2}
@@ -55,10 +45,10 @@ export function HomeHeader() {
           {firstName ? firstName : ''}
         </Text>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginLeft: 12 }}>
+        <View className="ml-3 flex-row items-center gap-3">
           <Pressable
             onPress={() => router.push('/calendar' as Href)}
-            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+            className="active:opacity-70"
             accessibilityRole="button"
             accessibilityLabel={t('home.calendar_accessibility')}
           >
@@ -70,25 +60,11 @@ export function HomeHeader() {
               onPress={() => {
                 if (userStats?.streak) setShareVisible(true);
               }}
-              style={({ pressed }) => ({
-                flexDirection: 'row',
-                alignItems: 'center',
-                opacity: pressed ? 0.7 : 1,
-              })}
+              className="flex-row items-center active:opacity-70"
               accessibilityRole="button"
             >
               <Fire size={24} color={AppColors.flame} weight="fill" />
-              <Text
-                style={{
-                  marginLeft: 4,
-                  fontSize: 20,
-                  fontWeight: '700',
-                  fontFamily: 'Inter-Bold',
-                  color: foreground,
-                }}
-              >
-                {streakCount}
-              </Text>
+              <Text className="ml-1 text-xl font-bold text-foreground">{streakCount}</Text>
             </Pressable>
           )}
         </View>

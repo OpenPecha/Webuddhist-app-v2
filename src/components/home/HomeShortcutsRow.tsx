@@ -1,3 +1,4 @@
+import { Text } from '@/components/ui/text';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { LoginDrawer } from '@/components/auth/LoginDrawer';
@@ -10,9 +11,8 @@ import { showAppToast } from '@/utils/show-app-toast';
 import { useRouter, type Href } from 'expo-router';
 import { CirclesThree } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
-import { Image, Pressable, Text, View } from 'react-native';
+import { Image, Pressable, View } from 'react-native';
 
-const BORDER_RADIUS = 16;
 const ICON_SIZE = 28;
 
 interface ShortcutTileProps {
@@ -20,42 +20,19 @@ interface ShortcutTileProps {
   label: string;
   onPress?: () => void;
   cardColor: string;
-  labelColor: string;
 }
 
-function ShortcutTile({ icon, label, onPress, cardColor, labelColor }: ShortcutTileProps) {
+function ShortcutTile({ icon, label, onPress, cardColor }: ShortcutTileProps) {
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => ({
-        flex: 1,
-        aspectRatio: 1,
-        borderRadius: BORDER_RADIUS,
-        backgroundColor: cardColor,
-        opacity: pressed ? 0.85 : 1,
-      })}
+      className="aspect-square flex-1 rounded-2xl active:opacity-85"
+      style={{ backgroundColor: cardColor }}
     >
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          paddingHorizontal: 8,
-          paddingVertical: 16,
-        }}
-      >
+      <View className="flex-1 items-center justify-center px-2 py-4">
         {icon}
-        <View style={{ flex: 1, justifyContent: 'center' }}>
-          <Text
-            style={{
-              textAlign: 'center',
-              fontSize: 14,
-              fontWeight: '600',
-              fontFamily: 'Inter-SemiBold',
-              color: labelColor,
-            }}
-            numberOfLines={2}
-          >
+        <View className="flex-1 justify-center">
+          <Text className="text-center text-sm font-semibold text-foreground" numberOfLines={2}>
             {label}
           </Text>
         </View>
@@ -100,40 +77,30 @@ export function HomeShortcutsRow() {
 
   return (
     <>
-      <View
-        style={{
-          flexDirection: 'row',
-          paddingHorizontal: 16,
-          gap: 8,
-        }}
-      >
+      <View className="flex-row gap-2 px-4">
         <ShortcutTile
           icon={<ListChecksIcon size={ICON_SIZE} color={foreground} />}
           label={t('home.home_shortcut_plans')}
           onPress={showComingSoon}
           cardColor={shortcutCard}
-          labelColor={foreground}
         />
         <ShortcutTile
           icon={<BookOpenTextIcon size={ICON_SIZE} color={foreground} />}
           label={t('home.home_chants')}
           onPress={showComingSoon}
           cardColor={shortcutCard}
-          labelColor={foreground}
         />
         <ShortcutTile
           icon={<MalaShortcutIcon color={foreground} />}
           label={t('home.home_mala')}
           onPress={() => openGated('/mala')}
           cardColor={shortcutCard}
-          labelColor={foreground}
         />
         <ShortcutTile
           icon={<TimerIcon size={ICON_SIZE} color={foreground} />}
           label={t('home.timer')}
           onPress={() => openGated('/timers')}
           cardColor={shortcutCard}
-          labelColor={foreground}
         />
       </View>
       <LoginDrawer key={session} visible={visible} onClose={hideLoginDrawer} />

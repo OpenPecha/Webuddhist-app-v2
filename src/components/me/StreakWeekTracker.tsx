@@ -1,7 +1,9 @@
+import { Text } from '@/components/ui/text';
+import { cn } from '@/utils/cn';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { Check, Fire } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { useUniwind } from 'uniwind';
 
 export enum StreakWeekDayCellState {
@@ -12,7 +14,6 @@ export enum StreakWeekDayCellState {
 }
 
 const FLAME_COLOR = '#E8630A';
-const CELL_SIZE = 36;
 
 /** Dart DateTime.weekday: 1 = Monday … 7 = Sunday. */
 export function getTodayWeekdayIndex(): number {
@@ -44,7 +45,7 @@ interface WeekDayCellProps {
 function WeekDayCell({ state, forShare = false }: WeekDayCellProps) {
   const { theme } = useUniwind();
   const isDark = !forShare && theme === 'dark';
-  const { foreground, mutedForeground } = useThemeColors();
+  const { foreground } = useThemeColors();
 
   const surfaceColor = isDark ? '#1c1c1c' : '#ffffff';
   const missedColor = isDark ? '#2a2a2a' : '#d4d4d4';
@@ -53,22 +54,14 @@ function WeekDayCell({ state, forShare = false }: WeekDayCellProps) {
   const practicedIcon = isDark ? foreground : '#ffffff';
 
   if (state === StreakWeekDayCellState.Future) {
-    return <View style={{ width: CELL_SIZE, height: CELL_SIZE }} />;
+    return <View className="h-9 w-9" />;
   }
 
   if (state === StreakWeekDayCellState.Today) {
     return (
       <View
-        style={{
-          width: CELL_SIZE,
-          height: CELL_SIZE,
-          borderRadius: 8,
-          borderWidth: 1.5,
-          borderColor: todayBorderColor,
-          backgroundColor: surfaceColor,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        className="h-9 w-9 items-center justify-center rounded-lg border-[1.5px]"
+        style={{ borderColor: todayBorderColor, backgroundColor: surfaceColor }}
       >
         <Fire size={16} color={FLAME_COLOR} weight="fill" />
       </View>
@@ -78,14 +71,8 @@ function WeekDayCell({ state, forShare = false }: WeekDayCellProps) {
   if (state === StreakWeekDayCellState.Practiced) {
     return (
       <View
-        style={{
-          width: CELL_SIZE,
-          height: CELL_SIZE,
-          borderRadius: 8,
-          backgroundColor: practicedBg,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        className="h-9 w-9 items-center justify-center rounded-lg"
+        style={{ backgroundColor: practicedBg }}
       >
         <Check size={16} color={practicedIcon} weight="bold" />
       </View>
@@ -94,16 +81,10 @@ function WeekDayCell({ state, forShare = false }: WeekDayCellProps) {
 
   return (
     <View
-      style={{
-        width: CELL_SIZE,
-        height: CELL_SIZE,
-        borderRadius: 8,
-        backgroundColor: missedColor,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+      className="h-9 w-9 items-center justify-center rounded-lg"
+      style={{ backgroundColor: missedColor }}
     >
-      <Text style={{ color: mutedForeground, fontWeight: '500', fontSize: 16 }}>—</Text>
+      <Text className="text-base font-medium text-muted-foreground">—</Text>
     </View>
   );
 }
@@ -115,7 +96,6 @@ interface StreakWeekTrackerProps {
 
 export function StreakWeekTracker({ practicedDays, forShare = false }: StreakWeekTrackerProps) {
   const { i18n } = useTranslation();
-  const { mutedForeground } = useThemeColors();
   const todayWeekday = getTodayWeekdayIndex();
   const practicedSet = new Set(practicedDays);
 
@@ -126,11 +106,8 @@ export function StreakWeekTracker({ practicedDays, forShare = false }: StreakWee
         const state = resolveCellState(dayIndex, todayWeekday, practicedSet);
 
         return (
-          <View key={dayIndex} className="flex-1 items-center" style={{ marginLeft: index > 0 ? 4 : 0 }}>
-            <Text
-              className="text-[10px] font-medium tracking-wide"
-              style={{ color: forShare ? '#8a8a8a' : mutedForeground }}
-            >
+          <View key={dayIndex} className={cn('flex-1 items-center', index > 0 && 'ml-1')}>
+            <Text className="text-[10px] font-medium tracking-wide text-muted-foreground">
               {weekdayLabel(dayIndex, i18n.language)}
             </Text>
             <View className="mt-2">

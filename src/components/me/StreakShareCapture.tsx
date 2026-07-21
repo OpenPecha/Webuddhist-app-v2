@@ -50,7 +50,7 @@ export const StreakShareCapture = forwardRef<ViewShotRef, StreakShareCaptureProp
 
     return (
       <ViewShot ref={ref} options={{ format: 'png', quality: 1 }}>
-        <View style={{ backgroundColor: STREAK_SHARE_GOLD, paddingHorizontal: 14, paddingVertical: 20 }}>
+        <View className="px-3.5 py-5" style={{ backgroundColor: STREAK_SHARE_GOLD }}>
           <View className="rounded-xl bg-white px-6 pb-7 pt-8">
             <StreakShareContent streak={streak} />
           </View>

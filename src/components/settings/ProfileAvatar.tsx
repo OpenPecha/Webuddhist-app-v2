@@ -23,8 +23,8 @@ export function ProfileAvatar({ url, size = 104, loading = false }: ProfileAvata
   if (loading) {
     return (
       <View
-        className="items-center justify-center"
-        style={{ width: size, height: size, borderRadius: radius, backgroundColor: '#d4d4d4' }}
+        className="items-center justify-center bg-border-input"
+        style={{ width: size, height: size, borderRadius: radius }}
       >
         <ActivityIndicator color={mutedForeground} />
       </View>
@@ -45,8 +45,8 @@ export function ProfileAvatar({ url, size = 104, loading = false }: ProfileAvata
 
   return (
     <View
-      className="items-center justify-center"
-      style={{ width: size, height: size, borderRadius: radius, backgroundColor: '#d4d4d4' }}
+      className="items-center justify-center bg-border-input"
+      style={{ width: size, height: size, borderRadius: radius }}
     >
       <User size={size * 0.42} color={mutedForeground} />
     </View>

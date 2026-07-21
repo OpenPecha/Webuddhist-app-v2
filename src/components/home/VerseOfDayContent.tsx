@@ -1,10 +1,12 @@
+import { Text } from '@/components/ui/text';
+import { cn } from '@/utils/cn';
 import type { VerseOfDay } from '@/types/verse-of-day';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { Image } from 'expo-image';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import { Text, View, type TextStyle } from 'react-native';
+import { View, type TextStyle } from 'react-native';
 
 export interface VerseOfDayTypography {
   verseFontSize: number;
@@ -71,7 +73,7 @@ export function VerseOfDayContent({ verse, typography, footerAction }: VerseOfDa
 
   return (
     <View>
-      <View style={{ width: '100%', aspectRatio: typography.imageAspectRatio }}>
+      <View className="w-full" style={{ aspectRatio: typography.imageAspectRatio }}>
         {showImage ? (
           <Image
             source={{ uri: verse.imageUrl }}
@@ -89,12 +91,12 @@ export function VerseOfDayContent({ verse, typography, footerAction }: VerseOfDa
           paddingBottom: typography.textPaddingBottom,
         }}
       >
-        <View style={{ paddingBottom: footerAction ? 32 : 0 }}>
+        <View className={cn(footerAction && 'pb-8')}>
           <Text
+            className={cn(!isTibetan && 'font-garamond')}
             style={{
               fontSize: typography.verseFontSize,
               lineHeight: typography.verseFontSize * 1.5,
-              fontFamily: isTibetan ? 'Inter-Regular' : 'EBGaramond-Regular',
               color: verseColor,
             }}
           >
@@ -103,12 +105,10 @@ export function VerseOfDayContent({ verse, typography, footerAction }: VerseOfDa
 
           {attribution ? (
             <Text
+              className={cn('mt-3 text-center', !isTibetan && 'font-garamond')}
               style={{
-                marginTop: 12,
                 fontSize: typography.attributionFontSize,
-                fontFamily: isTibetan ? 'Inter-Regular' : 'EBGaramond-Regular',
                 color: attributionColor,
-                textAlign: 'center',
                 fontWeight: typography.fontWeight,
               }}
             >
@@ -118,7 +118,7 @@ export function VerseOfDayContent({ verse, typography, footerAction }: VerseOfDa
         </View>
 
         {footerAction ? (
-          <View style={{ position: 'absolute', right: 16, bottom: 16 }}>{footerAction}</View>
+          <View className="absolute bottom-4 right-4">{footerAction}</View>
         ) : null}
       </View>
     </View>

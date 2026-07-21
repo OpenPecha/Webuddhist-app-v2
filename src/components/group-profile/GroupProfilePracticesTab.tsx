@@ -1,9 +1,8 @@
 import {
-  GP_CAPTION_SIZE,
-  GP_PADDING,
   GP_SERIES_THUMB,
   GP_SERIES_THUMB_RADIUS,
 } from '@/components/group-profile/group-profile-styles';
+import { Text } from '@/components/ui/text';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { formatSeriesDateRange } from '@/lib/group-profile-format';
@@ -15,7 +14,7 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 interface GroupProfilePracticesTabProps {
   seriesList: Series[];
@@ -26,13 +25,11 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
   const router = useRouter();
   const language = useContentLanguage();
   const { t, i18n } = useTranslation();
-  const { foreground, mutedForeground, skeleton, cardBorder } = useThemeColors();
+  const { mutedForeground, skeleton, cardBorder } = useThemeColors();
 
   if (seriesList.length === 0 && plansList.length === 0) {
     return (
-      <Text style={{ color: mutedForeground, textAlign: 'center', marginTop: 24, paddingHorizontal: GP_PADDING }}>
-        {t('connect.no_practices')}
-      </Text>
+      <Text className="mt-6 px-4 text-center text-muted-foreground">{t('connect.no_practices')}</Text>
     );
   }
 
@@ -51,22 +48,18 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
       <Pressable
         key={`series-${series.id}`}
         onPress={() => router.push(`/series/${series.id}`)}
-        style={({ pressed }) => ({
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: GP_PADDING,
-          paddingVertical: 6,
-          opacity: pressed ? 0.75 : 1,
+        className="flex-row items-center px-4 py-1.5 active:opacity-75"
+        style={{
           borderBottomWidth: index < seriesList.length - 1 || plansList.length > 0 ? 1 : 0,
           borderBottomColor: cardBorder,
-        })}
+        }}
       >
         <View
+          className="overflow-hidden"
           style={{
             width: GP_SERIES_THUMB,
             height: GP_SERIES_THUMB,
             borderRadius: GP_SERIES_THUMB_RADIUS,
-            overflow: 'hidden',
             backgroundColor: skeleton,
           }}
         >
@@ -77,28 +70,17 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
               contentFit="cover"
             />
           ) : (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View className="flex-1 items-center justify-center">
               <BookOpenText size={22} color={mutedForeground} />
             </View>
           )}
         </View>
-        <View style={{ flex: 1, marginLeft: 12 }}>
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: '600',
-              fontFamily: 'Inter-SemiBold',
-              color: foreground,
-            }}
-            numberOfLines={1}
-          >
+        <View className="ml-3 flex-1">
+          <Text className="text-[15px] font-semibold text-foreground" numberOfLines={1}>
             {seriesMeta?.title ?? series.id}
           </Text>
           {subtitle ? (
-            <Text
-              style={{ fontSize: GP_CAPTION_SIZE, color: mutedForeground, marginTop: 2 }}
-              numberOfLines={1}
-            >
+            <Text className="mt-0.5 text-[13px] text-muted-foreground" numberOfLines={1}>
               {subtitle}
             </Text>
           ) : null}
@@ -114,22 +96,18 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
       <Pressable
         key={`plan-${plan.id}`}
         onPress={() => router.push(`/plans/${plan.id}`)}
-        style={({ pressed }) => ({
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: GP_PADDING,
-          paddingVertical: 6,
-          opacity: pressed ? 0.75 : 1,
+        className="flex-row items-center px-4 py-1.5 active:opacity-75"
+        style={{
           borderBottomWidth: index < plansList.length - 1 ? 1 : 0,
           borderBottomColor: cardBorder,
-        })}
+        }}
       >
         <View
+          className="overflow-hidden"
           style={{
             width: GP_SERIES_THUMB,
             height: GP_SERIES_THUMB,
             borderRadius: GP_SERIES_THUMB_RADIUS,
-            overflow: 'hidden',
             backgroundColor: skeleton,
           }}
         >
@@ -140,28 +118,17 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
               contentFit="cover"
             />
           ) : (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View className="flex-1 items-center justify-center">
               <BookOpenText size={22} color={mutedForeground} />
             </View>
           )}
         </View>
-        <View style={{ flex: 1, marginLeft: 12 }}>
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: '600',
-              fontFamily: 'Inter-SemiBold',
-              color: foreground,
-            }}
-            numberOfLines={1}
-          >
+        <View className="ml-3 flex-1">
+          <Text className="text-[15px] font-semibold text-foreground" numberOfLines={1}>
             {plan.title}
           </Text>
           {subtitle ? (
-            <Text
-              style={{ fontSize: GP_CAPTION_SIZE, color: mutedForeground, marginTop: 2 }}
-              numberOfLines={1}
-            >
+            <Text className="mt-0.5 text-[13px] text-muted-foreground" numberOfLines={1}>
               {subtitle}
             </Text>
           ) : null}
@@ -170,5 +137,5 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
     );
   });
 
-  return <View style={{ paddingTop: 16 }}>{rows}</View>;
+  return <View className="pt-4">{rows}</View>;
 }

@@ -2,17 +2,11 @@ import { View } from 'react-native';
 
 export function BookmarkListSkeleton() {
   return (
-    <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
+    <View className="px-4 pt-4">
       {[0, 1, 2, 3].map((i) => (
         <View
           key={i}
-          style={{
-            height: 72,
-            borderRadius: 12,
-            backgroundColor: '#ecece8',
-            marginBottom: 12,
-            opacity: 0.7,
-          }}
+          className="h-[72px] rounded-xl bg-[#ecece8] mb-3 opacity-70"
         />
       ))}
     </View>

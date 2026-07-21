@@ -1,6 +1,8 @@
 import { AppBottomSheet } from '@/components/settings/AppBottomSheet';
+import { Text } from '@/components/ui/text';
+import { cn } from '@/utils/cn';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 interface ReaderFontSizeSheetProps {
   visible: boolean;
@@ -26,19 +28,14 @@ function FontSizeButton({
   return (
     <Pressable
       onPress={enabled ? onPress : undefined}
-      style={{
-        flex: 1,
-        height: 56,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: 'rgba(0,0,0,0.12)',
-        backgroundColor: enabled ? '#f0f0ec' : 'rgba(240,240,236,0.5)',
-        alignItems: 'center',
-        justifyContent: 'center',
-        opacity: enabled ? 1 : 0.5,
-      }}
+      className={cn(
+        'flex-1 h-14 rounded-lg border border-black/12 items-center justify-center',
+        enabled ? 'bg-[#f0f0ec] opacity-100' : 'bg-[#f0f0ec]/50 opacity-50',
+      )}
     >
-      <Text style={{ fontSize: labelFontSize, fontWeight: '500', color: '#000' }}>{label}</Text>
+      <Text className="font-medium text-foreground" style={{ fontSize: labelFontSize }}>
+        {label}
+      </Text>
     </Pressable>
   );
 }
@@ -56,18 +53,11 @@ export function ReaderFontSizeSheet({
 
   return (
     <AppBottomSheet visible={visible} onClose={onClose} maxHeight="30%" placement="fullscreen">
-      <View style={{ paddingHorizontal: 24, paddingBottom: 16 }}>
-        <Text
-          style={{
-            textAlign: 'center',
-            fontSize: 13,
-            color: '#8a8a8a',
-            marginBottom: 16,
-          }}
-        >
+      <View className="px-6 pb-4">
+        <Text className="text-center text-[13px] text-muted-foreground mb-4">
           {t('reader.font_size')} · {fontSize}px
         </Text>
-        <View style={{ flexDirection: 'row', gap: 12 }}>
+        <View className="flex-row gap-3">
           <FontSizeButton
             label="A"
             labelFontSize={18}

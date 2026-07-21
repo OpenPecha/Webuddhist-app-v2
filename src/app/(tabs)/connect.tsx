@@ -8,6 +8,7 @@ import { MyGroupsSectionSkeleton } from '@/components/connect/MyGroupsSectionSke
 import { CONNECT_PADDING } from '@/components/connect/connect-styles';
 import { useDiscoverGroups, useJoinedGroups } from '@/hooks/api/useDiscoverGroups';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { cn } from '@/utils/cn';
 import {
   filterDiscoverGroups,
   mergeMyGroupsWithPending,
@@ -22,41 +23,29 @@ import {
 } from '@/stores/pending-groups';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
   FlatList,
   Pressable,
   RefreshControl,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function ConnectErrorState({ onRetry }: { onRetry: () => void }) {
   const { t } = useTranslation();
-  const { destructive, foreground } = useThemeColors();
 
   return (
-    <View style={{ alignItems: 'center', gap: 12, paddingHorizontal: 24, marginTop: 48 }}>
-      <Text
-        style={{
-          color: destructive,
-          textAlign: 'center',
-          fontFamily: 'Inter-Regular',
-        }}
-      >
+    <View className="mt-12 items-center gap-3 px-6">
+      <Text className="text-center text-destructive">
         {t('connect.load_error')}
       </Text>
       <Pressable
         onPress={onRetry}
-        style={{
-          borderRadius: 8,
-          paddingHorizontal: 16,
-          paddingVertical: 10,
-          backgroundColor: foreground,
-        }}
+        className="rounded-lg bg-foreground px-4 py-2.5 active:opacity-70"
       >
-        <Text style={{ color: '#fff', fontWeight: '600', fontFamily: 'Inter-SemiBold' }}>
+        <Text className="font-semibold text-white">
           {t('practice.retry')}
         </Text>
       </Pressable>
@@ -67,7 +56,7 @@ function ConnectErrorState({ onRetry }: { onRetry: () => void }) {
 export default function ConnectScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const { scaffoldBackground, mutedForeground } = useThemeColors();
+  const { isDark } = useThemeColors();
   const queryClient = useQueryClient();
   const pending = usePendingGroups();
 
@@ -127,21 +116,14 @@ export default function ConnectScreen() {
     if (isLoading) return <ActivityIndicator style={{ marginTop: 48 }} />;
     if (hasMyGroups) return <DiscoverEmptyState />;
     return (
-      <Text
-        style={{
-          textAlign: 'center',
-          color: mutedForeground,
-          marginTop: 48,
-          paddingHorizontal: 24,
-        }}
-      >
+      <Text className="mt-12 px-6 text-center text-muted-foreground">
         {t('connect.empty_title')}
       </Text>
     );
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: scaffoldBackground, paddingTop: insets.top }}>
+    <View className={cn('flex-1', isDark ? 'bg-black' : 'bg-[#FBF9F4]')} style={{ paddingTop: insets.top }}>
       <FlatList
         data={isError ? [] : groups}
         keyExtractor={(item) => item.id}
@@ -160,7 +142,7 @@ export default function ConnectScreen() {
         }
         ListEmptyComponent={renderEmptyDiscover()}
         renderItem={({ item }) => (
-          <View style={{ paddingHorizontal: CONNECT_PADDING }}>
+          <View className="px-5">
             <DiscoverGroupCard group={item} isJoined={joinedIds.has(item.id)} />
           </View>
         )}

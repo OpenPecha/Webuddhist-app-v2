@@ -1,5 +1,6 @@
 import { LoginDrawer } from '@/components/auth/LoginDrawer';
 import { AppBottomSheet } from '@/components/settings/AppBottomSheet';
+import { Text } from '@/components/ui/text';
 import { SegmentCommentaryPanel } from '@/components/reader/SegmentCommentaryPanel';
 import { SegmentTranslationPanel } from '@/components/reader/SegmentTranslationPanel';
 import { useIsBookmarked } from '@/hooks/api/useBookmarkExists';
@@ -25,7 +26,6 @@ import {
   Pressable,
   ScrollView,
   Share,
-  Text,
   View,
 } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
@@ -58,22 +58,18 @@ function ActionButton({
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityState={{ disabled: !!loading, selected: !!active }}
-      style={{ width: 78, alignItems: 'center', opacity: loading ? 0.6 : 1 }}
+      className="w-[78px] items-center"
+      style={{ opacity: loading ? 0.6 : 1 }}
     >
       {loading ? (
         <ActivityIndicator size="small" color="#000" style={{ height: 28 }} />
       ) : (
-        <View style={{ height: 28, justifyContent: 'center' }}>
+        <View className="h-7 justify-center">
           <Ionicons name={icon} size={24} color={active ? '#0066cc' : '#000'} />
         </View>
       )}
       <Text
-        style={{
-          fontSize: 12,
-          fontWeight: '600',
-          color: active ? '#0066cc' : '#000',
-          marginTop: 4,
-        }}
+        className={`text-xs font-semibold mt-1 ${active ? 'text-[#0066cc]' : 'text-foreground'}`}
       >
         {label}
       </Text>
@@ -97,28 +93,12 @@ function ResourceTile({
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={count === undefined ? label : `${label}, ${count}`}
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 12,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f0f0ec',
-      }}
+      className="flex-row items-center py-3 border-b border-[#f0f0ec]"
     >
       <Ionicons name={icon} size={20} color="#000" style={{ marginRight: 12 }} />
-      <Text style={{ flex: 1, fontSize: 15, color: '#000' }}>{label}</Text>
-      <View
-        style={{
-          minWidth: 28,
-          paddingHorizontal: 8,
-          paddingVertical: 2,
-          borderRadius: 12,
-          backgroundColor: '#f0f0ec',
-          alignItems: 'center',
-          marginRight: 8,
-        }}
-      >
-        <Text style={{ fontSize: 13, fontWeight: '600', color: '#000' }}>
+      <Text className="flex-1 text-[15px] text-foreground">{label}</Text>
+      <View className="min-w-7 px-2 py-0.5 rounded-xl bg-[#f0f0ec] items-center mr-2">
+        <Text className="text-[13px] font-semibold text-foreground">
           {count === undefined ? '—' : count}
         </Text>
       </View>
@@ -135,20 +115,13 @@ function SheetHeader({
   onBack?: () => void;
 }) {
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 12,
-        minHeight: 32,
-      }}
-    >
+    <View className="flex-row items-center mb-3 min-h-8">
       {onBack ? (
-        <Pressable onPress={onBack} style={{ padding: 4, marginRight: 8 }}>
+        <Pressable onPress={onBack} className="p-1 mr-2">
           <Ionicons name="chevron-back" size={22} color="#000" />
         </Pressable>
       ) : null}
-      <Text style={{ fontSize: 16, fontWeight: '700', color: '#000' }}>{title}</Text>
+      <Text className="text-base font-bold text-foreground">{title}</Text>
     </View>
   );
 }
@@ -183,7 +156,7 @@ function ActionsBody({
 
   return (
     <>
-      <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 16, marginTop: 8 }}>
+      <View className="flex-row justify-center gap-4 mt-2">
         <ActionButton label={t('reader.copy')} icon="copy-outline" onPress={onCopy} />
         <ActionButton label={t('reader.share')} icon="share-outline" onPress={onShare} />
         <ActionButton
@@ -195,10 +168,10 @@ function ActionsBody({
         />
       </View>
 
-      <Text style={{ fontSize: 13, fontWeight: '600', marginTop: 24, marginBottom: 8, color: '#000' }}>
+      <Text className="text-[13px] font-semibold mt-6 mb-2 text-foreground">
         {t('reader.related_resources')}
       </Text>
-      <View style={{ height: 1, backgroundColor: '#e8e8e4', marginBottom: 12 }} />
+      <View className="h-px bg-[#e8e8e4] mb-3" />
 
       <ResourceTile
         label={t('reader.commentaries')}
@@ -215,7 +188,7 @@ function ActionsBody({
 
       {videos.length > 0 ? (
         <>
-          <Text style={{ fontSize: 13, fontWeight: '600', marginTop: 20, marginBottom: 12, color: '#000' }}>
+          <Text className="text-[13px] font-semibold mt-5 mb-3 text-foreground">
             {t('reader.videos')}
           </Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -227,7 +200,7 @@ function ActionsBody({
                     presentationStyle: WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
                   });
                 }}
-                style={{ width: 160, marginRight: 12 }}
+                className="w-40 mr-3"
               >
                 {video.thumbnailUrl ? (
                   <Image
@@ -236,9 +209,9 @@ function ActionsBody({
                     contentFit="cover"
                   />
                 ) : (
-                  <View style={{ width: 160, height: 90, borderRadius: 8, backgroundColor: '#000' }} />
+                  <View className="w-40 h-[90px] rounded-lg bg-black" />
                 )}
-                <Text numberOfLines={2} style={{ fontSize: 12, marginTop: 6, color: '#333' }}>
+                <Text numberOfLines={2} className="text-xs mt-1.5 text-[#333]">
                   {video.title}
                 </Text>
               </Pressable>
@@ -383,7 +356,7 @@ export function SegmentActionSheet({ selected, onClose }: SegmentActionSheetProp
             {body}
           </BottomSheetScrollView>
         ) : (
-          <View style={{ paddingHorizontal: 20, paddingBottom: 24 }}>{body}</View>
+          <View className="px-5 pb-6">{body}</View>
         )}
       </AppBottomSheet>
       <LoginDrawer key={session} visible={visible} onClose={hideLoginDrawer} />

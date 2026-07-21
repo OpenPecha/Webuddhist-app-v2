@@ -1,8 +1,7 @@
 import { MarkdownText } from '@/components/common/MarkdownText';
-import { GP_PADDING } from '@/components/group-profile/group-profile-styles';
-import { useThemeColors } from '@/hooks/useThemeColors';
+import { Text } from '@/components/ui/text';
 import { useTranslation } from 'react-i18next';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 
 interface GroupProfileAboutTabProps {
   content: string;
@@ -10,18 +9,15 @@ interface GroupProfileAboutTabProps {
 
 export function GroupProfileAboutTab({ content }: GroupProfileAboutTabProps) {
   const { t } = useTranslation();
-  const { mutedForeground } = useThemeColors();
 
   if (!content.trim()) {
     return (
-      <Text style={{ color: mutedForeground, textAlign: 'center', marginTop: 24, paddingHorizontal: GP_PADDING }}>
-        {t('connect.no_about')}
-      </Text>
+      <Text className="mt-6 px-4 text-center text-muted-foreground">{t('connect.no_about')}</Text>
     );
   }
 
   return (
-    <View style={{ paddingHorizontal: GP_PADDING, paddingTop: 16 }}>
+    <View className="px-4 pt-4">
       <MarkdownText content={content} />
     </View>
   );

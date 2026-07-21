@@ -41,7 +41,7 @@ export function AccumulationSheet({ visible, formattedTotal, onClose }: Accumula
   const { t, i18n } = useTranslation();
   const { theme } = useUniwind();
   const isDark = theme === 'dark';
-  const { foreground, mutedForeground, cardBorder } = useThemeColors();
+  const { foreground, cardBorder } = useThemeColors();
   const { data, isLoading, isError } = useMantraCounts(visible);
   const counts = data?.counts ?? [];
 
@@ -76,10 +76,7 @@ export function AccumulationSheet({ visible, formattedTotal, onClose }: Accumula
           <ActivityIndicator color={foreground} />
         </View>
       ) : counts.length === 0 ? (
-        <Text
-          className="px-5 py-6 text-center text-sm"
-          style={{ color: mutedForeground }}
-        >
+        <Text className="px-5 py-6 text-center text-sm text-muted-foreground">
           {isError ? t('connect.action_error') : t('practice.no_plans')}
         </Text>
       ) : (

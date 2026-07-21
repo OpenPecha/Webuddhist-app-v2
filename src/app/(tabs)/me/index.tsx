@@ -25,7 +25,7 @@ export default function MeScreen() {
   const { t } = useTranslation();
   const { user, isLoading: authLoading } = useAuth0();
   const { isGuest } = useGuest();
-  const { foreground, mutedForeground } = useThemeColors();
+  const { foreground } = useThemeColors();
   const insets = useSafeAreaInsets();
   const navigateOnce = useNavigateOnce();
   const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
@@ -87,7 +87,7 @@ export default function MeScreen() {
             <Text className="mt-5 text-center text-[34px] font-bold leading-tight">
               {t('me.guest_headline')}
             </Text>
-            <Text className="mt-3 text-center text-base" style={{ color: mutedForeground }}>
+            <Text className="mt-3 text-center text-base text-muted-foreground">
               {t('me.guest_subtitle')}
             </Text>
             <View className="mt-10 w-full">

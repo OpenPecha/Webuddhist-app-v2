@@ -1,9 +1,10 @@
 import { ArrowRightIcon, BookOpenTextIcon, ListChecksIcon } from '@/components/home/HomeIcon';
+import { Text } from '@/components/ui/text';
 import { AppColors } from '@/constants/app-colors';
 import type { RoutineInfo } from '@/types/routine-info';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 interface MyPracticesStatsCardProps {
   routineInfo: RoutineInfo;
@@ -23,23 +24,17 @@ function StatItem({
   const countIndex = label.indexOf(countText);
 
   return (
-    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+    <View className="flex-1 flex-row items-center gap-2.5">
       {icon}
-      <Text style={{ color: '#fff', flex: 1 }}>
+      <Text className="flex-1 text-white">
         {countIndex >= 0 ? (
           <>
-            <Text style={{ fontSize: 14, fontWeight: '400' }}>
-              {label.slice(0, countIndex)}
-            </Text>
-            <Text style={{ fontSize: 22, fontWeight: '700', fontFamily: 'Inter-Bold' }}>
-              {countText}
-            </Text>
-            <Text style={{ fontSize: 14, fontWeight: '400' }}>
-              {label.slice(countIndex + countText.length)}
-            </Text>
+            <Text className="text-sm text-white">{label.slice(0, countIndex)}</Text>
+            <Text className="text-[22px] font-bold text-white">{countText}</Text>
+            <Text className="text-sm text-white">{label.slice(countIndex + countText.length)}</Text>
           </>
         ) : (
-          <Text style={{ fontSize: 14 }}>{label}</Text>
+          <Text className="text-sm text-white">{label}</Text>
         )}
       </Text>
     </View>
@@ -52,52 +47,21 @@ export function MyPracticesStatsCard({ routineInfo, onPress }: MyPracticesStatsC
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => ({
-        marginHorizontal: 16,
-        borderRadius: 24,
-        backgroundColor: AppColors.blue,
-        opacity: pressed ? 0.92 : 1,
-        overflow: 'hidden',
-      })}
+      className="mx-4 overflow-hidden rounded-3xl active:opacity-92"
+      style={{ backgroundColor: AppColors.blue }}
     >
-      <View style={{ padding: 20 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-          <Text
-            style={{
-              flex: 1,
-              color: '#fff',
-              fontSize: 18,
-              fontWeight: '700',
-              fontFamily: 'Inter-Bold',
-            }}
-          >
-            {t('home.my_practices_title')}
-          </Text>
+      <View className="p-5">
+        <View className="flex-row items-start">
+          <Text className="flex-1 text-lg font-bold text-white">{t('home.my_practices_title')}</Text>
           <Pressable
             onPress={onPress}
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 16,
-              backgroundColor: '#fff',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            className="h-8 w-8 items-center justify-center rounded-full bg-white"
           >
             <ArrowRightIcon size={18} color={AppColors.blue} weight="bold" />
           </Pressable>
         </View>
-        <Text
-          style={{
-            marginTop: 4,
-            color: 'rgba(255,255,255,0.85)',
-            fontSize: 14,
-            fontFamily: 'Inter-Regular',
-          }}
-        >
-          {t('home.home_overall_stats')}
-        </Text>
-        <View style={{ marginTop: 16, flexDirection: 'row', gap: 8 }}>
+        <Text className="mt-1 text-sm text-white/85">{t('home.home_overall_stats')}</Text>
+        <View className="mt-4 flex-row gap-2">
           <StatItem
             icon={<ListChecksIcon size={22} color="#fff" />}
             count={routineInfo.seriesCount}

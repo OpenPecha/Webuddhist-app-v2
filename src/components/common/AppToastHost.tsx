@@ -1,6 +1,7 @@
+import { Text } from '@/components/ui/text';
 import { registerAppToastHandler } from '@/utils/show-app-toast';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Text, View } from 'react-native';
+import { Animated, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const TOAST_DURATION_MS = 2000;
@@ -45,36 +46,14 @@ export function AppToastHost() {
   return (
     <View
       pointerEvents="none"
-      style={{
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: insets.bottom + 24,
-        alignItems: 'center',
-        zIndex: 9999,
-      }}
+      className="absolute inset-x-0 z-9999 items-center"
+      style={{ bottom: insets.bottom + 24 }}
     >
       <Animated.View
-        style={{
-          opacity,
-          backgroundColor: 'rgba(0,0,0,0.85)',
-          borderRadius: 24,
-          paddingHorizontal: 20,
-          paddingVertical: 12,
-          maxWidth: '85%',
-        }}
+        className="max-w-[85%] rounded-3xl bg-black/85 px-5 py-3"
+        style={{ opacity }}
       >
-        <Text
-          style={{
-            color: '#fff',
-            fontSize: 14,
-            fontWeight: '600',
-            fontFamily: 'Inter-SemiBold',
-            textAlign: 'center',
-          }}
-        >
-          {message}
-        </Text>
+        <Text className="text-center text-sm font-semibold text-white">{message}</Text>
       </Animated.View>
     </View>
   );

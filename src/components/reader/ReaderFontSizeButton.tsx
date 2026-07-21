@@ -1,5 +1,6 @@
+import { Text } from '@/components/ui/text';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text } from 'react-native';
+import { Pressable } from 'react-native';
 
 interface ReaderFontSizeButtonProps {
   onPress: () => void;
@@ -11,11 +12,11 @@ export function ReaderFontSizeButton({ onPress }: ReaderFontSizeButtonProps) {
   return (
     <Pressable
       onPress={onPress}
-      style={{ padding: 8, opacity: 0.85 }}
+      className="p-2 opacity-[0.85] active:opacity-70"
       accessibilityRole="button"
       accessibilityLabel={t('reader.font_size')}
     >
-      <Text style={{ fontSize: 16, fontWeight: '600', color: '#000' }}>Aa</Text>
+      <Text className="text-base font-semibold text-foreground">Aa</Text>
     </Pressable>
   );
 }

@@ -1,7 +1,8 @@
-import { GP_PADDING } from '@/components/group-profile/group-profile-styles';
-import { useThemeColors } from '@/hooks/useThemeColors';
+import { Text } from '@/components/ui/text';
+import { cn } from '@/utils/cn';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
+import { useThemeColors } from '@/hooks/useThemeColors';
 
 export type GroupProfileTab = 'practices' | 'about';
 
@@ -13,7 +14,7 @@ interface GroupProfileTabBarProps {
 
 export function GroupProfileTabBar({ tab, onTabChange, showAbout }: GroupProfileTabBarProps) {
   const { t } = useTranslation();
-  const { foreground, mutedForeground, cardBorder } = useThemeColors();
+  const { cardBorder } = useThemeColors();
 
   const tabs: { key: GroupProfileTab; label: string }[] = [
     { key: 'practices', label: t('connect.tab_practices') },
@@ -23,23 +24,21 @@ export function GroupProfileTabBar({ tab, onTabChange, showAbout }: GroupProfile
   }
 
   return (
-    <View style={{ marginTop: 24 }}>
-      <View style={{ flexDirection: 'row', paddingHorizontal: GP_PADDING }}>
+    <View className="mt-6">
+      <View className="flex-row px-4">
         {tabs.map(({ key, label }) => {
           const active = tab === key;
           return (
             <Pressable
               key={key}
               onPress={() => onTabChange(key)}
-              style={{ marginRight: 24, paddingVertical: 12 }}
+              className="mr-6 py-3"
             >
               <Text
-                style={{
-                  fontSize: 15,
-                  fontWeight: active ? '700' : '500',
-                  fontFamily: active ? 'Inter-Bold' : 'Inter-Medium',
-                  color: active ? foreground : mutedForeground,
-                }}
+                className={cn(
+                  'text-[15px]',
+                  active ? 'font-bold text-foreground' : 'font-medium text-muted-foreground',
+                )}
               >
                 {label}
               </Text>
@@ -47,7 +46,7 @@ export function GroupProfileTabBar({ tab, onTabChange, showAbout }: GroupProfile
           );
         })}
       </View>
-      <View style={{ height: 1, backgroundColor: cardBorder }} />
+      <View className="h-px" style={{ backgroundColor: cardBorder }} />
     </View>
   );
 }

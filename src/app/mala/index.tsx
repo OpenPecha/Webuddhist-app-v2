@@ -19,13 +19,15 @@ import { useMalaPresets } from '@/hooks/api/useMalaPresets';
 import { useMalaCounter } from '@/hooks/useMalaCounter';
 import { useMalaPreferences } from '@/hooks/useMalaPreferences';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { cn } from '@/utils/cn';
 import { localizedMantraName, type Mantra } from '@/types/mala';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 import { DotsThreeVerticalIcon } from 'phosphor-react-native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -35,7 +37,7 @@ export default function MalaScreen() {
   const { t, i18n } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { foreground, scaffoldBackground } = useThemeColors();
+  const { foreground, isDark } = useThemeColors();
   const { user } = useAuth0();
   const { isGuest } = useGuest();
   const toggleBookmark = useToggleBookmark();
@@ -115,44 +117,30 @@ export default function MalaScreen() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: scaffoldBackground, paddingTop: insets.top }}>
+    <View className={cn('flex-1', isDark ? 'bg-black' : 'bg-[#FBF9F4]')} style={{ paddingTop: insets.top }}>
       {isLoading ? (
-        <View style={{ padding: 4 }}>
+        <View className="p-1">
           <Pressable
             onPress={() => router.back()}
-            style={{ padding: 8, width: 48, height: 48, justifyContent: 'center' }}
+            className="h-12 w-12 justify-center p-2 active:opacity-70"
           >
             <ArrowLeftIcon size={24} color={foreground} />
           </Pressable>
         </View>
       ) : (
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingHorizontal: 4,
-            paddingVertical: 2,
-          }}
-        >
-          <Pressable onPress={() => router.back()} style={{ padding: 8, width: 48, height: 48, justifyContent: 'center' }}>
+        <View className="flex-row items-center px-1 py-0.5">
+          <Pressable onPress={() => router.back()} className="h-12 w-12 justify-center p-2 active:opacity-70">
             <ArrowLeftIcon size={24} color={foreground} />
           </Pressable>
           <Text
-            style={{
-              flex: 1,
-              fontSize: 18,
-              fontWeight: '600',
-              fontFamily: 'Inter-SemiBold',
-              color: foreground,
-              textAlign: 'center',
-            }}
+            className="flex-1 text-center text-lg font-semibold text-foreground"
             numberOfLines={1}
           >
             {headerTitle}
           </Text>
           <Pressable
             onPress={() => setSettingsVisible(true)}
-            style={{ padding: 8, width: 48, height: 48, justifyContent: 'center', alignItems: 'center' }}
+            className="h-12 w-12 items-center justify-center p-2 active:opacity-70"
             accessibilityRole="button"
             accessibilityLabel={t('mala.settings_title')}
           >
@@ -166,18 +154,18 @@ export default function MalaScreen() {
       ) : isError ? (
         <MalaSeedError onRetry={() => void refetch()} />
       ) : mantras.length === 0 ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-          <Text style={{ color: foreground, fontFamily: 'Inter-Regular', textAlign: 'center' }}>
+        <View className="flex-1 items-center justify-center p-6">
+          <Text className="text-center text-foreground">
             {t('mala.no_mantras')}
           </Text>
         </View>
       ) : (
-        <View style={{ flex: 1, paddingHorizontal: 24 }}>
-          <View style={{ flex: 0.4, minHeight: 40 }}>
+        <View className="flex-1 px-6">
+          <View className="min-h-10 flex-[0.4]">
             <MantraSwitcher mantras={mantras} index={index} onIndexChange={setIndex} />
           </View>
 
-          <View style={{ flex: 0.6 }}>
+          <View className="flex-[0.6]">
             <MalaCounterDisplay
               beadInRound={state.beadInRound}
               rounds={state.rounds}
@@ -192,12 +180,8 @@ export default function MalaScreen() {
               />
             ) : (
               <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'flex-end',
-                  paddingBottom: MALA_BEADS_BOTTOM_INSET,
-                  minHeight: MALA_BEADS_LAYOUT_HEIGHT,
-                }}
+                className="flex-1 justify-end"
+                style={{ paddingBottom: MALA_BEADS_BOTTOM_INSET, minHeight: MALA_BEADS_LAYOUT_HEIGHT }}
               >
                 {(state.isSeeding || waitingForBeadTexture) && <MalaBeadArcPlaceholder />}
                 {!state.isSeeding && (

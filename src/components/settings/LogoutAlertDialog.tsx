@@ -1,5 +1,5 @@
-import { useThemeColors } from '@/hooks/useThemeColors';
-import { Modal, Pressable, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { Modal, Pressable, View } from 'react-native';
 
 interface LogoutAlertDialogProps {
   visible: boolean;
@@ -21,8 +21,6 @@ export function LogoutAlertDialog({
   onCancel,
   onConfirm,
 }: LogoutAlertDialogProps) {
-  const { foreground, destructive } = useThemeColors();
-
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
       <Pressable
@@ -34,14 +32,10 @@ export function LogoutAlertDialog({
           <Text className="text-foreground mt-3 text-base font-medium">{message}</Text>
           <View className="mt-6 flex-row justify-end gap-4">
             <Pressable onPress={onCancel} className="px-2 py-2 active:opacity-70">
-              <Text className="text-base" style={{ color: foreground }}>
-                {cancelLabel}
-              </Text>
+              <Text className="text-base text-foreground">{cancelLabel}</Text>
             </Pressable>
             <Pressable onPress={onConfirm} className="px-2 py-2 active:opacity-70">
-              <Text className="text-base font-medium" style={{ color: destructive }}>
-                {confirmLabel}
-              </Text>
+              <Text className="text-base font-medium text-destructive">{confirmLabel}</Text>
             </Pressable>
           </View>
         </Pressable>

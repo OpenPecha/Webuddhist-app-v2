@@ -2,11 +2,13 @@ import '@/lib/i18n';
 import { GoogleIcon } from '@/components/auth/GoogleIcon';
 import { AUTH0_CUSTOM_SCHEME } from '@/providers/auth0';
 import { useGuest } from '@/providers/guest';
+import { cn } from '@/utils/cn';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { StatusBar } from 'expo-status-bar';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, Platform, Pressable, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { ActivityIndicator, Platform, Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -24,23 +26,14 @@ function LoginButton({ icon, label, onPress, dark = false, bordered = false }: L
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '70%',
-        paddingVertical: 14,
-        paddingHorizontal: 16,
-        borderRadius: 8,
-        backgroundColor: dark ? '#000' : '#fff',
-        borderWidth: bordered ? 0.5 : 0,
-        borderColor: '#aaa',
-        gap: 12,
-        opacity: pressed ? 0.75 : 1,
-        marginBottom: 16,
-      })}
+      className={cn(
+        'mb-4 w-[70%] flex-row items-center gap-3 rounded-lg px-4 py-3.5 active:opacity-75',
+        dark ? 'bg-black' : 'bg-white',
+        bordered && 'border border-[#aaa]',
+      )}
     >
       {icon}
-      <Text style={{ fontSize: 16, color: dark ? '#fff' : '#000', fontFamily: 'Inter-Regular' }}>
+      <Text className={`text-base ${dark ? 'text-white' : 'text-foreground'}`}>
         {label}
       </Text>
     </Pressable>
@@ -76,30 +69,26 @@ export default function Login() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+    <View className="flex-1 bg-white">
       <StatusBar style="dark" />
 
-      {/* Logo + title — positioned at 20% from top, matching Flutter */}
-      <View style={{
-        position: 'absolute',
-        top: (insets.top || 44) + 40,
-        left: 0, right: 0,
-        alignItems: 'center', gap: 8,
-      }}>
+      <View
+        className="absolute left-0 right-0 items-center gap-2"
+        style={{ top: (insets.top || 44) + 40 }}
+      >
         <Image source={logo} style={{ width: 150, height: 150 }} contentFit="contain" />
-        <Text style={{ fontSize: 32, fontWeight: 'bold', fontFamily: 'Inter-Bold' }}>
+        <Text className="text-[32px] font-bold">
           {t('appTitle')}
         </Text>
       </View>
 
-      {/* Auth buttons — centered lower half */}
-      <View style={{
-        flex: 1,
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom + 48,
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-      }}>
+      <View
+        className="flex-1 items-center justify-end"
+        style={{
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom + 48,
+        }}
+      >
         {isLoading ? (
           <ActivityIndicator size="large" color="#000" />
         ) : (

@@ -6,7 +6,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { ActivityIndicator, FlatList, Pressable, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { ActivityIndicator, FlatList, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function SelectRecitationScreen() {
@@ -30,19 +31,19 @@ export default function SelectRecitationScreen() {
   const recitations = data?.recitations ?? [];
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', padding: 8 }}>
-        <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
+    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+      <View className="flex-row items-center p-2">
+        <Pressable onPress={() => router.back()} className="p-2 active:opacity-70">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
-        <Text style={{ flex: 1, fontSize: 17, fontWeight: '600', textAlign: 'center' }}>
+        <Text className="flex-1 text-center text-[17px] font-semibold text-foreground">
           {t('editRoutine.select_recitation_title')}
         </Text>
-        <View style={{ width: 40 }} />
+        <View className="w-10" />
       </View>
 
       {isLoading ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" />
         </View>
       ) : (
@@ -51,25 +52,20 @@ export default function SelectRecitationScreen() {
           keyExtractor={(item) => item.text_id}
           contentContainerStyle={{ padding: 20 }}
           ListEmptyComponent={
-            <Text style={{ textAlign: 'center', color: '#8a8a8a', marginTop: 24 }}>
+            <Text className="mt-6 text-center text-muted-foreground">
               {t('editRoutine.no_recitations')}
             </Text>
           }
           renderItem={({ item }) => (
             <Pressable
               onPress={() => onSelect(item)}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingVertical: 12,
-                gap: 12,
-              }}
+              className="flex-row items-center gap-3 py-3 active:opacity-70"
             >
               <Image
                 source={item.image_url ? { uri: item.image_url } : APP_ASSETS.recitationCoverDefault}
                 style={{ width: 56, height: 56, borderRadius: 8 }}
               />
-              <Text style={{ flex: 1, fontSize: 16, fontWeight: '500' }}>{item.title}</Text>
+              <Text className="flex-1 text-base font-medium text-foreground">{item.title}</Text>
             </Pressable>
           )}
         />

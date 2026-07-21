@@ -33,7 +33,7 @@ export function MeStatsSectionSkeleton() {
           </View>
           <View className="-mt-2 flex-row items-center justify-center">
             <Bone width={28} height={28} borderRadius={14} />
-            <View style={{ width: 8 }} />
+            <View className="w-2" />
             <Bone width={100} height={18} />
           </View>
           <View className="mt-2 items-center">
@@ -53,7 +53,7 @@ export function MeStatsSectionSkeleton() {
         <SkeletonCard padding={20}>
           <View className="flex-row items-center">
             <Bone width={24} height={24} />
-            <View style={{ width: 12 }} />
+            <View className="w-3" />
             <Bone width="70%" height={16} />
           </View>
         </SkeletonCard>

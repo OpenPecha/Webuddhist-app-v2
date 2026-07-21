@@ -24,12 +24,10 @@ interface StatCardProps {
 }
 
 function StatCard({ label, icon, value, unit, onPress }: StatCardProps) {
-  const { mutedForeground } = useThemeColors();
-
   const content = (
     <>
       <View className="flex-row items-center justify-between">
-        <Text className="text-xs" style={{ color: mutedForeground }} numberOfLines={2}>
+        <Text className="text-xs text-muted-foreground" numberOfLines={2}>
           {label}
         </Text>
         {icon}
@@ -37,7 +35,7 @@ function StatCard({ label, icon, value, unit, onPress }: StatCardProps) {
       <Text className="mt-3 text-xl font-bold">
         {value}
         {unit ? (
-          <Text className="text-xs font-normal" style={{ color: mutedForeground }}>
+          <Text className="text-xs font-normal text-muted-foreground">
             {' '}
             {unit}
           </Text>

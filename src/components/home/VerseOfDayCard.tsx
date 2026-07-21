@@ -24,13 +24,8 @@ export function VerseOfDayCard({ verse }: VerseOfDayCardProps) {
     <>
       <Pressable
         onPress={() => setShareVisible(true)}
-        style={({ pressed }) => ({
-          marginHorizontal: 16,
-          borderRadius: 24,
-          overflow: 'hidden',
-          backgroundColor: cardSurface,
-          opacity: pressed ? 0.92 : 1,
-        })}
+        className="mx-4 overflow-hidden rounded-3xl active:opacity-[0.92]"
+        style={{ backgroundColor: cardSurface }}
       >
         <VerseOfDayContent
           verse={verse}

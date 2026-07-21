@@ -21,22 +21,13 @@ export function ConnectSearchBar({
   const { foreground, mutedForeground, cardSurface, cardBorder } = useThemeColors();
 
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 8 }}>
-      <Pressable onPress={onBack} style={{ padding: 8 }}>
+    <View className="flex-row items-center px-2 py-2">
+      <Pressable onPress={onBack} className="p-2">
         <Ionicons name="chevron-back" size={24} color={foreground} />
       </Pressable>
       <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginRight: 12,
-          paddingHorizontal: 12,
-          backgroundColor: cardSurface,
-          borderRadius: 999,
-          borderWidth: 1,
-          borderColor: cardBorder,
-        }}
+        className="mr-3 flex-1 flex-row items-center rounded-full border px-3"
+        style={{ backgroundColor: cardSurface, borderColor: cardBorder }}
       >
         <MagnifyingGlass size={20} color={mutedForeground} style={{ marginRight: 8 }} />
         <TextInput

@@ -5,19 +5,15 @@ export function FeaturedPlanSectionSkeleton() {
   const { skeleton, cardSurface } = useThemeColors();
 
   return (
-    <View style={{ paddingHorizontal: 16, gap: 12 }}>
-      <View style={{ height: 20, width: 140, borderRadius: 4, backgroundColor: skeleton }} />
+    <View className="gap-3 px-4">
+      <View className="h-5 w-[140px] rounded" style={{ backgroundColor: skeleton }} />
       <View
-        style={{
-          width: '100%',
-          borderRadius: 16,
-          backgroundColor: cardSurface,
-          overflow: 'hidden',
-        }}
+        className="w-full overflow-hidden rounded-2xl"
+        style={{ backgroundColor: cardSurface }}
       >
-        <View style={{ width: '100%', aspectRatio: 16 / 9, backgroundColor: skeleton }} />
-        <View style={{ padding: 12, gap: 8 }}>
-          <View style={{ height: 16, width: '70%', borderRadius: 4, backgroundColor: skeleton }} />
+        <View className="aspect-video w-full" style={{ backgroundColor: skeleton }} />
+        <View className="gap-2 p-3">
+          <View className="h-4 w-[70%] rounded" style={{ backgroundColor: skeleton }} />
         </View>
       </View>
     </View>

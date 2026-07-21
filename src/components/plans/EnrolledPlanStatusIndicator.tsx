@@ -1,3 +1,5 @@
+import { Text } from '@/components/ui/text';
+import { cn } from '@/utils/cn';
 import { usePlanCompletionStatus } from '@/hooks/api/usePlanCompletionStatus';
 import {
   calculateMissedDays,
@@ -6,32 +8,14 @@ import {
 } from '@/utils/plan-utils';
 import type { PlanDateRange } from '@/utils/plan-utils';
 import { Ionicons } from '@expo/vector-icons';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 function OnTrackBadge() {
   const { t } = useTranslation();
   return (
-    <View
-      style={{
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor: 'rgba(138, 138, 138, 0.5)',
-        backgroundColor: '#fff',
-        paddingHorizontal: 8,
-        paddingVertical: 3,
-      }}
-    >
-      <Text
-        style={{
-          fontSize: 12,
-          color: '#8a8a8a',
-          fontFamily: 'Inter-Regular',
-          textTransform: 'uppercase',
-        }}
-      >
-        {t('practice.plan_status_on_track')}
-      </Text>
+    <View className="rounded-2xl border border-[rgba(138,138,138,0.5)] bg-white px-2 py-[3px]">
+      <Text className="text-xs text-muted-foreground uppercase">{t('practice.plan_status_on_track')}</Text>
     </View>
   );
 }
@@ -51,23 +35,15 @@ function MissedDaysBadge({
 
   const content = (
     <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor: 'rgba(138, 138, 138, 0.5)',
-        backgroundColor: '#fff',
-        paddingHorizontal: onPress ? 10 : 12,
-        paddingVertical: 4,
-      }}
+      className={cn(
+        'flex-row items-center rounded-2xl border border-[rgba(138,138,138,0.5)] bg-white py-1',
+        onPress ? 'px-2.5' : 'px-3',
+      )}
     >
       {onPress ? (
         <Ionicons name="arrow-back" size={10} color="#8a8a8a" style={{ marginRight: 4 }} />
       ) : null}
-      <Text style={{ fontSize: 10, color: '#8a8a8a', fontFamily: 'Inter-Regular' }}>
-        {label}
-      </Text>
+      <Text className="text-[10px] text-muted-foreground">{label}</Text>
     </View>
   );
 

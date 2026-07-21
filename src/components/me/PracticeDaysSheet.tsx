@@ -20,7 +20,7 @@ export function PracticeDaysSheet({ visible, totalDays, onClose }: PracticeDaysS
   const { t } = useTranslation();
   const { theme } = useUniwind();
   const isDark = theme === 'dark';
-  const { foreground, mutedForeground, cardBorder } = useThemeColors();
+  const { foreground, cardBorder } = useThemeColors();
   const { data, isLoading, isError } = useSeriesDayCompleted(visible);
   const ListIcon = PHOSPHOR_ICONS.homeList;
   const series = data?.series ?? [];
@@ -56,10 +56,7 @@ export function PracticeDaysSheet({ visible, totalDays, onClose }: PracticeDaysS
           <ActivityIndicator color={foreground} />
         </View>
       ) : series.length === 0 ? (
-        <Text
-          className="px-5 py-6 text-center text-sm"
-          style={{ color: mutedForeground }}
-        >
+        <Text className="px-5 py-6 text-center text-sm text-muted-foreground">
           {isError ? t('connect.action_error') : t('practice.no_plans')}
         </Text>
       ) : (

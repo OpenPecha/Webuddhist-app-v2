@@ -7,7 +7,8 @@ import { resolveInitialSegmentId } from '@/utils/plan-subtask-navigation';
 import { extractSegmentContent, flattenReaderSegments } from '@/utils/text-reader-content';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useRef } from 'react';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { ActivityIndicator, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 export default function ReaderScreen() {
@@ -86,7 +87,7 @@ export default function ReaderScreen() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F9F8F4' }}>
+      <View className="flex-1 items-center justify-center bg-[#F9F8F4]">
         <ActivityIndicator size="large" />
       </View>
     );
@@ -132,7 +133,7 @@ export default function ReaderScreen() {
       activeSegmentIds={currentItem?.segmentIds}
       footerMeta={
         readerDetails?.text_detail?.title ? (
-          <Text style={{ fontSize: 11, color: '#8a8a8a', textAlign: 'center', marginTop: 16 }}>
+          <Text className="mt-4 text-center text-[11px] text-muted-foreground">
             {readerDetails.text_detail.title}
           </Text>
         ) : null

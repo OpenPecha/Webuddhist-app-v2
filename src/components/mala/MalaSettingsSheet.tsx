@@ -1,3 +1,5 @@
+import { Text } from '@/components/ui/text';
+import { cn } from '@/utils/cn';
 import { AppBottomSheet } from '@/components/settings/AppBottomSheet';
 import { AppToggleSwitch } from '@/components/settings/AppToggleSwitch';
 import { useThemeColors } from '@/hooks/useThemeColors';
@@ -11,7 +13,7 @@ import {
 } from 'phosphor-react-native';
 import type { IconProps } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface MalaSettingsSheetProps {
@@ -26,7 +28,7 @@ interface MalaSettingsSheetProps {
 }
 
 function SheetDivider({ color }: { color: string }) {
-  return <View style={{ height: 1, backgroundColor: color }} />;
+  return <View className="h-px" style={{ backgroundColor: color }} />;
 }
 
 function SettingsActionRow({
@@ -44,16 +46,10 @@ function SettingsActionRow({
   const color = destructive ? destructiveColor : foreground;
 
   const row = (
-    <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 16 }}>
+    <View className="flex-row items-center py-4">
       <Icon size={24} color={color} />
       <Text
-        style={{
-          flex: 1,
-          marginLeft: 12,
-          fontSize: 16,
-          color,
-          fontFamily: 'Inter-Regular',
-        }}
+        className={cn('ml-3 flex-1 text-base', destructive ? 'text-destructive' : 'text-foreground')}
       >
         {label}
       </Text>
@@ -63,7 +59,7 @@ function SettingsActionRow({
   if (!onPress) return row;
 
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}>
+    <Pressable onPress={onPress} className="active:opacity-70">
       {row}
     </Pressable>
   );
@@ -83,19 +79,9 @@ function SettingsToggleRow({
   const { foreground } = useThemeColors();
 
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 16 }}>
+    <View className="flex-row items-center py-4">
       <Icon size={24} color={foreground} />
-      <Text
-        style={{
-          flex: 1,
-          marginLeft: 12,
-          fontSize: 16,
-          color: foreground,
-          fontFamily: 'Inter-Regular',
-        }}
-      >
-        {label}
-      </Text>
+      <Text className="ml-3 flex-1 text-base text-foreground">{label}</Text>
       <AppToggleSwitch value={value} onValueChange={onValueChange} />
     </View>
   );
@@ -132,7 +118,7 @@ export function MalaSettingsSheet({
 
   return (
     <AppBottomSheet visible={visible} onClose={onClose} placement="fullscreen" showHandle>
-      <View style={{ paddingBottom: Math.max(16, insets.bottom), paddingHorizontal: 20 }}>
+      <View className="px-5" style={{ paddingBottom: Math.max(16, insets.bottom) }}>
         <SettingsActionRow
           icon={Plus}
           label={t('mala.settings_add_to_practice')}

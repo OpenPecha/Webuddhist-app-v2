@@ -1,3 +1,4 @@
+import { Text } from '@/components/ui/text';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import {
   mantraScript,
@@ -7,7 +8,7 @@ import {
 import { CaretLeft, CaretRight } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
 import { useCallback } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
 
@@ -19,7 +20,7 @@ interface MantraSwitcherProps {
 
 export function MantraSwitcher({ mantras, index, onIndexChange }: MantraSwitcherProps) {
   const { i18n } = useTranslation();
-  const { foreground, mutedForeground } = useThemeColors();
+  const { foreground } = useThemeColors();
   const language = i18n.language.split('-')[0] ?? 'en';
   const canLoop = mantras.length > 1;
   const mantra = mantras[index];
@@ -49,11 +50,12 @@ export function MantraSwitcher({ mantras, index, onIndexChange }: MantraSwitcher
     });
 
   return (
-    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+    <View className="flex-1 flex-row items-center">
       <Pressable
         onPress={goPrev}
         disabled={!canLoop}
-        style={{ padding: 8, opacity: canLoop ? 1 : 0.3 }}
+        className="p-2"
+        style={{ opacity: canLoop ? 1 : 0.3 }}
         accessibilityRole="button"
         accessibilityLabel="Previous mantra"
       >
@@ -61,14 +63,12 @@ export function MantraSwitcher({ mantras, index, onIndexChange }: MantraSwitcher
       </Pressable>
 
       <GestureDetector gesture={swipe}>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8, minHeight: 70 }}>
+        <View className="flex-1 items-center justify-center gap-2 min-h-[70px]">
           {script ? (
             <Text
+              className="text-center font-semibold text-foreground"
               style={{
                 fontSize: language === 'bo' ? 26 : 22,
-                textAlign: 'center',
-                color: foreground,
-                fontFamily: 'Inter-SemiBold',
                 lineHeight: language === 'bo' ? 34 : 30,
               }}
               numberOfLines={4}
@@ -77,15 +77,7 @@ export function MantraSwitcher({ mantras, index, onIndexChange }: MantraSwitcher
             </Text>
           ) : null}
           {transliteration ? (
-            <Text
-              style={{
-                fontSize: 15,
-                textAlign: 'center',
-                color: mutedForeground,
-                fontFamily: 'Inter-Regular',
-              }}
-              numberOfLines={2}
-            >
+            <Text className="text-center text-[15px] text-muted-foreground" numberOfLines={2}>
               {transliteration}
             </Text>
           ) : null}
@@ -95,7 +87,8 @@ export function MantraSwitcher({ mantras, index, onIndexChange }: MantraSwitcher
       <Pressable
         onPress={goNext}
         disabled={!canLoop}
-        style={{ padding: 8, opacity: canLoop ? 1 : 0.3 }}
+        className="p-2"
+        style={{ opacity: canLoop ? 1 : 0.3 }}
         accessibilityRole="button"
         accessibilityLabel="Next mantra"
       >
