@@ -1,3 +1,5 @@
+import { parseCalendarDate } from '@/utils/plan-utils';
+
 /** Fixed English calendar labels (Flutter PlanDateFormat parity). */
 const MONTHS = [
   'Jan',
@@ -41,10 +43,9 @@ export function formatPlanDateRangeOrNull(
   includeYear = true,
 ): string | null {
   if (start == null || end == null) return null;
-  const startDate = typeof start === 'string' ? new Date(start) : start;
-  const endDate = typeof end === 'string' ? new Date(end) : end;
-  if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
-    return null;
-  }
+  const startDate = typeof start === 'string' ? parseCalendarDate(start) : start;
+  const endDate = typeof end === 'string' ? parseCalendarDate(end) : end;
+  if (!startDate || !endDate) return null;
   return formatPlanDateRange(startDate, endDate, includeYear);
 }
+

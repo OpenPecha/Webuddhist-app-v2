@@ -5,9 +5,10 @@ import { useThemeColors } from '@/hooks/useThemeColors';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { MagnifyingGlass } from 'phosphor-react-native';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  ActivityIndicator,
   FlatList,
   Pressable,
   Text,
@@ -36,8 +37,21 @@ export default function PlansSearchScreen() {
     return () => clearTimeout(focusTimer);
   }, []);
 
-  const { data, isLoading, isError, isFetching, refetch } = useSeriesSearch(debounced);
-  const results = data?.series ?? [];
+  const {
+    data,
+    isLoading,
+    isError,
+    isFetching,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+  } = useSeriesSearch(debounced);
+
+  const results = useMemo(
+    () => data?.pages.flatMap((page) => page.series) ?? [],
+    [data],
+  );
   const hasQuery = debounced.length > 0;
 
   return (
@@ -105,6 +119,13 @@ export default function PlansSearchScreen() {
               onPress={() => router.push(`/series/${item.id}`)}
             />
           )}
+          onEndReached={() => {
+            if (hasNextPage && !isFetchingNextPage) void fetchNextPage();
+          }}
+          onEndReachedThreshold={0.3}
+          ListFooterComponent={
+            isFetchingNextPage ? <ActivityIndicator className="my-4" /> : null
+          }
         />
       )}
     </View>
