@@ -1,9 +1,9 @@
-import '@/lib/i18n';
 import { Text } from '@/components/ui/text';
-import { cn } from '@/utils/cn';
+import '@/lib/i18n';
 import { useOnboarding } from '@/providers/onboarding';
 import { usePendingOnboardingPlan } from '@/providers/pending-onboarding-plan';
 import type { UserPlan } from '@/types/plans';
+import { cn } from '@/utils/cn';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -73,10 +73,10 @@ function WelcomeScreen({ onNext }: { onNext: () => void }) {
       </View>
 
       <View className="mb-10 gap-3">
-        <Text className="text-center text-base font-medium leading-[26px] text-white font-garamond">
+        <Text className="text-center text-base font-medium leading-[26px] text-white">
           "{t('onboarding.quote')}"
         </Text>
-        <Text className="text-center text-[15px] text-white/60 font-garamond">
+        <Text className="text-center text-[15px] text-white/60">
           {t('onboarding.quote_citation')}
         </Text>
       </View>
@@ -189,7 +189,7 @@ function AllSetScreen({ onComplete }: { onComplete: () => void }) {
         <Text className="text-center text-[32px] font-semibold text-white">
           {t('appTitle')}
         </Text>
-        <Text className="text-center text-[28px] italic leading-[38px] text-white font-garamond">
+        <Text className="text-center text-[28px] italic leading-[38px] text-white">
           {t('onboarding.all_set')}
         </Text>
         <Text className="mt-1 text-center text-base leading-[26px] text-white/65">
