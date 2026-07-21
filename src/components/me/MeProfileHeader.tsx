@@ -1,6 +1,5 @@
 import { ProfileAvatar } from '@/components/settings/ProfileAvatar';
 import { Text } from '@/components/ui/text';
-import { useThemeColors } from '@/hooks/useThemeColors';
 import {
   resolveProfileAvatarUrl,
   resolveProfileDisplayName,
@@ -17,7 +16,6 @@ interface MeProfileHeaderProps {
 }
 
 export function MeProfileHeader({ profile, authUser, loading = false }: MeProfileHeaderProps) {
-  const { mutedForeground } = useThemeColors();
   const avatarUrl = resolveProfileAvatarUrl(profile, authUser);
   const displayName = resolveProfileDisplayName(profile, authUser);
   const email = resolveProfileEmail(profile, authUser);
@@ -34,9 +32,7 @@ export function MeProfileHeader({ profile, authUser, loading = false }: MeProfil
             <View className="h-6 w-32 rounded bg-muted" />
           ) : null}
           {email ? (
-            <Text className="mt-1 text-sm" style={{ color: mutedForeground }}>
-              {email}
-            </Text>
+            <Text className="mt-1 text-sm text-muted-foreground">{email}</Text>
           ) : null}
         </View>
       </View>

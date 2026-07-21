@@ -1,9 +1,9 @@
-import { GP_PADDING, GP_SECONDARY_SIZE } from '@/components/group-profile/group-profile-styles';
+import { Text } from '@/components/ui/text';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { displayHostUrl, orderGroupSocialLinks, type GroupSocialLink } from '@/lib/group-profile-format';
 import { LinkSimple } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
-import { Pressable, Text } from 'react-native';
+import { Pressable } from 'react-native';
 
 interface GroupProfileLinksRowProps {
   links: GroupSocialLink[];
@@ -12,7 +12,7 @@ interface GroupProfileLinksRowProps {
 
 export function GroupProfileLinksRow({ links, onPress }: GroupProfileLinksRowProps) {
   const { t } = useTranslation();
-  const { foreground, mutedForeground } = useThemeColors();
+  const { mutedForeground } = useThemeColors();
 
   if (links.length === 0) return null;
 
@@ -24,22 +24,13 @@ export function GroupProfileLinksRow({ links, onPress }: GroupProfileLinksRowPro
   return (
     <Pressable
       onPress={() => onPress(ordered)}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: GP_PADDING,
-        paddingTop: 12,
-        opacity: pressed ? 0.75 : 1,
-      })}
+      className="flex-row items-center px-4 pt-3 active:opacity-75"
     >
       <LinkSimple size={18} color={mutedForeground} />
-      <Text
-        style={{ flex: 1, marginLeft: 6, fontSize: GP_SECONDARY_SIZE, lineHeight: 20 }}
-        numberOfLines={1}
-      >
-        <Text style={{ color: foreground }}>{displayUrl}</Text>
+      <Text className="ml-1.5 flex-1 text-sm leading-5" numberOfLines={1}>
+        <Text className="text-foreground">{displayUrl}</Text>
         {moreCount > 0 ? (
-          <Text style={{ color: mutedForeground }}>
+          <Text className="text-muted-foreground">
             {` ${t('connect.and_more_links', { count: moreCount })}`}
           </Text>
         ) : null}

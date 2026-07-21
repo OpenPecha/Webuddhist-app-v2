@@ -1,3 +1,4 @@
+import { cn } from '@/utils/cn';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { CaretRight, ArrowSquareOut } from '@/constants/settings-icons';
 import { Text } from '@/components/ui/text';
@@ -33,8 +34,7 @@ export function SettingsRow({
     <View className="flex-row items-center py-3">
       <Icon size={24} color={iconColor} />
       <Text
-        className="ml-3 flex-1 text-base"
-        style={{ color: destructive ? destructiveColor : foreground }}
+        className={cn('ml-3 flex-1 text-base', destructive ? 'text-destructive' : 'text-foreground')}
       >
         {title}
       </Text>

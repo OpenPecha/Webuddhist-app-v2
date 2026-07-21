@@ -29,7 +29,10 @@ export function TimerProgressRing({
   const strokeDashoffset = circumference * (1 - clamped);
 
   return (
-    <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
+    <View
+      className="items-center justify-center"
+      style={{ width: size, height: size }}
+    >
       <Svg width={size} height={size} style={{ position: 'absolute' }}>
         <Circle
           cx={cx}

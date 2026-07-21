@@ -1,7 +1,8 @@
+import { Text } from '@/components/ui/text';
 import { APP_ASSETS } from '@/constants/app-assets';
 import { useTranslation } from 'react-i18next';
 import { Image } from 'expo-image';
-import { Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 
 interface RoutineEmptyStateProps {
   onBuildRoutine: () => void;
@@ -21,7 +22,7 @@ export function RoutineEmptyState({ onBuildRoutine }: RoutineEmptyStateProps) {
         paddingVertical: 24,
       }}
     >
-      <View style={{ alignItems: 'center', gap: 32 }}>
+      <View className="items-center gap-8">
         <Image
           source={APP_ASSETS.routineCalendar}
           style={{
@@ -31,38 +32,14 @@ export function RoutineEmptyState({ onBuildRoutine }: RoutineEmptyStateProps) {
           }}
           contentFit="cover"
         />
-        <Text
-          style={{
-            fontSize: 15,
-            lineHeight: 22,
-            textAlign: 'center',
-            color: '#8a8a8a',
-            fontFamily: 'Inter-Regular',
-            paddingHorizontal: 20,
-          }}
-        >
+        <Text className="px-5 text-center text-[15px] leading-[22px] text-muted-foreground">
           {t('practice.routine_empty_description')}
         </Text>
         <Pressable
           onPress={onBuildRoutine}
-          style={{
-            width: '100%',
-            backgroundColor: '#000',
-            borderRadius: 30,
-            paddingVertical: 16,
-            alignItems: 'center',
-          }}
+          className="w-full bg-black rounded-[30px] py-4 items-center"
         >
-          <Text
-            style={{
-              color: '#fff',
-              fontSize: 16,
-              fontWeight: '600',
-              fontFamily: 'Inter-SemiBold',
-            }}
-          >
-            {t('practice.routine_build')}
-          </Text>
+          <Text className="text-base font-semibold text-white">{t('practice.routine_build')}</Text>
         </Pressable>
       </View>
     </ScrollView>

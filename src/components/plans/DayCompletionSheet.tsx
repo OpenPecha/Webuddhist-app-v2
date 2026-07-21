@@ -1,8 +1,9 @@
+import { Text } from '@/components/ui/text';
 import { imageUrl } from '@/utils/image-url';
 import type { ImageSizes } from '@/types/api';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
-import { Modal, Pressable, Text, View } from 'react-native';
+import { Modal, Pressable, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -27,21 +28,11 @@ export function DayCompletionSheet({
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable
-        style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'flex-end' }}
-        onPress={onClose}
-      >
+      <Pressable className="flex-1 justify-end bg-black/40" onPress={onClose}>
         <Pressable
           onPress={(e) => e.stopPropagation()}
-          style={{
-            backgroundColor: '#FDFDFC',
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            paddingHorizontal: 24,
-            paddingTop: 32,
-            paddingBottom: insets.bottom + 24,
-            alignItems: 'center',
-          }}
+          className="items-center rounded-t-[20px] bg-[#FDFDFC] px-6 pt-8"
+          style={{ paddingBottom: insets.bottom + 24 }}
         >
           {planImage ? (
             <Image
@@ -50,64 +41,25 @@ export function DayCompletionSheet({
               contentFit="cover"
             />
           ) : (
-            <View
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: 28,
-                backgroundColor: '#000',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: 16,
-              }}
-            >
+            <View className="mb-4 h-14 w-14 items-center justify-center rounded-full bg-black">
               <Ionicons name="checkmark" size={28} color="#fff" />
             </View>
           )}
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: '700',
-              fontFamily: 'Inter-Bold',
-              color: '#000',
-              marginBottom: 8,
-            }}
-          >
-            {t('planTrack.day_complete_title')}
-          </Text>
-          <Text style={{ fontSize: 14, color: '#666', marginBottom: 12 }}>
+          <Text className="text-xl font-bold text-foreground mb-2">{t('planTrack.day_complete_title')}</Text>
+          <Text className="text-sm text-muted-foreground mb-3">
             {t('planTrack.day_of', { day: dayNumber, total: totalDays })}
           </Text>
-          <View
-            style={{
-              width: '100%',
-              height: 4,
-              backgroundColor: '#e8e8e4',
-              borderRadius: 2,
-              marginBottom: 24,
-              overflow: 'hidden',
-            }}
-          >
+          <View className="mb-6 h-1 w-full overflow-hidden rounded-sm bg-[#e8e8e4]">
             <View
-              style={{
-                width: `${Math.min(100, progress * 100)}%`,
-                height: 4,
-                backgroundColor: '#000',
-              }}
+              className="h-1 bg-black"
+              style={{ width: `${Math.min(100, progress * 100)}%` }}
             />
           </View>
           <Pressable
             onPress={onClose}
-            style={{
-              backgroundColor: '#000',
-              borderRadius: 12,
-              paddingVertical: 14,
-              paddingHorizontal: 48,
-            }}
+            className="rounded-xl bg-black px-12 py-3.5 active:opacity-80"
           >
-            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600', fontFamily: 'Inter-SemiBold' }}>
-              {t('planTrack.continue')}
-            </Text>
+            <Text className="text-white text-base font-semibold">{t('planTrack.continue')}</Text>
           </Pressable>
         </Pressable>
       </Pressable>

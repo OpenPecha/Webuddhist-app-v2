@@ -5,20 +5,16 @@ export function MyPracticesStatsSkeleton() {
   const { skeleton, skeletonMid } = useThemeColors();
 
   return (
-    <View style={{ marginHorizontal: 16 }}>
+    <View className="mx-4">
       <View
-        style={{
-          borderRadius: 20,
-          backgroundColor: skeleton,
-          padding: 20,
-          gap: 16,
-        }}
+        className="gap-4 rounded-[20px] p-5"
+        style={{ backgroundColor: skeleton }}
       >
-        <View style={{ height: 20, width: '60%', borderRadius: 4, backgroundColor: skeletonMid }} />
-        <View style={{ height: 14, width: '40%', borderRadius: 4, backgroundColor: skeletonMid }} />
-        <View style={{ flexDirection: 'row', gap: 16 }}>
-          <View style={{ flex: 1, height: 40, borderRadius: 4, backgroundColor: skeletonMid }} />
-          <View style={{ flex: 1, height: 40, borderRadius: 4, backgroundColor: skeletonMid }} />
+        <View className="h-5 w-[60%] rounded" style={{ backgroundColor: skeletonMid }} />
+        <View className="h-3.5 w-[40%] rounded" style={{ backgroundColor: skeletonMid }} />
+        <View className="flex-row gap-4">
+          <View className="h-10 flex-1 rounded" style={{ backgroundColor: skeletonMid }} />
+          <View className="h-10 flex-1 rounded" style={{ backgroundColor: skeletonMid }} />
         </View>
       </View>
     </View>

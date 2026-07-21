@@ -21,6 +21,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { type Href, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
   Alert,
@@ -28,7 +29,6 @@ import {
   Pressable,
   RefreshControl,
   ScrollView,
-  Text,
   View,
 } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
@@ -61,22 +61,15 @@ function EmptyScaffold({
   refreshing: boolean;
 }) {
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 8 }}>
-        <Text
-          style={{
-            fontSize: 28,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            color: '#000',
-          }}
-        >
+    <View className="flex-1">
+      <View className="px-4 pb-2 pt-2">
+        <Text className="text-[28px] font-bold text-foreground">
           {title}
         </Text>
       </View>
-      <View style={{ height: 12 }} />
-      <View style={{ paddingHorizontal: 20 }}>
-        <View style={{ height: 1, backgroundColor: '#e8e8e4' }} />
+      <View className="h-3" />
+      <View className="px-5">
+        <View className="h-px bg-[#e8e8e4]" />
       </View>
       <ScrollView
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -99,52 +92,21 @@ function RoutineFilledHeader({
 }) {
   return (
     <View>
-      <View
-        style={{
-          paddingHorizontal: 16,
-          paddingTop: 8,
-          paddingBottom: 8,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-        }}
-      >
-        <Text
-          style={{
-            flex: 1,
-            fontSize: 28,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            color: '#000',
-          }}
-        >
+      <View className="flex-row items-start justify-between px-4 pb-2 pt-2">
+        <Text className="flex-1 text-[28px] font-bold text-foreground">
           {title}
         </Text>
-        <Pressable onPress={onEdit} style={{ paddingTop: 8 }}>
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: '500',
-              fontFamily: 'Inter-SemiBold',
-              color: '#000',
-            }}
-          >
+        <Pressable onPress={onEdit} className="pt-2 active:opacity-70">
+          <Text className="text-base font-semibold text-foreground">
             {editLabel}
           </Text>
         </Pressable>
       </View>
-      <Text
-        style={{
-          paddingHorizontal: 20,
-          fontSize: 15,
-          color: '#8a8a8a',
-          fontFamily: 'Inter-Regular',
-        }}
-      >
+      <Text className="px-5 text-[15px] text-muted-foreground">
         {formatTodayDate()}
       </Text>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
-        <View style={{ height: 1, backgroundColor: '#e8e8e4' }} />
+      <View className="px-5 pt-2">
+        <View className="h-px bg-[#e8e8e4]" />
       </View>
     </View>
   );
@@ -172,41 +134,20 @@ function PracticeErrorState({
       }}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
-      <View style={{ alignItems: 'center', gap: 12 }}>
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: '600',
-            textAlign: 'center',
-            fontFamily: 'Inter-SemiBold',
-            color: '#000',
-          }}
-        >
+      <View className="items-center gap-3">
+        <Text className="text-center text-xl font-semibold text-foreground">
           {t('practice.routine_load_error')}
         </Text>
         {message ? (
-          <Text
-            style={{
-              fontSize: 15,
-              textAlign: 'center',
-              color: '#8a8a8a',
-              fontFamily: 'Inter-Regular',
-            }}
-          >
+          <Text className="text-center text-[15px] text-muted-foreground">
             {message}
           </Text>
         ) : null}
         <Pressable
           onPress={onRetry}
-          style={{
-            marginTop: 12,
-            backgroundColor: '#000',
-            borderRadius: 24,
-            paddingHorizontal: 24,
-            paddingVertical: 12,
-          }}
+          className="mt-3 rounded-3xl bg-black px-6 py-3 active:opacity-75"
         >
-          <Text style={{ color: '#fff', fontSize: 16, fontWeight: '600' }}>
+          <Text className="text-base font-semibold text-white">
             {t('practice.retry')}
           </Text>
         </Pressable>
@@ -354,7 +295,7 @@ export default function PracticeScreen() {
     );
   } else if (authLoading || (routineLoading && routine === undefined)) {
     content = (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View className="flex-1 items-center justify-center">
         <ActivityIndicator size="large" />
       </View>
     );
@@ -384,7 +325,7 @@ export default function PracticeScreen() {
           />
         }
         renderItem={({ item }) => (
-          <View style={{ paddingHorizontal: 20, paddingTop: 12 }}>
+          <View className="px-5 pt-3">
             <RoutineBlockSection
               block={item}
               userPlans={userPlans}
@@ -407,21 +348,9 @@ export default function PracticeScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
+    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
       {resolvingItemId ? (
-        <View
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 10,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(253,253,252,0.6)',
-          }}
-        >
+        <View className="absolute inset-0 z-10 items-center justify-center bg-background/60">
           <ActivityIndicator size="large" />
         </View>
       ) : null}

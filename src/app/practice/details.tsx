@@ -30,11 +30,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
   Pressable,
   ScrollView,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -241,49 +241,37 @@ export default function PlanTrackScreen() {
   const notEnrolled = !userPlansLoading && !userPlan;
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FDFBF7' }}>
+    <View className="flex-1 bg-background">
       <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingTop: insets.top + 4,
-          paddingHorizontal: 8,
-          paddingVertical: 8,
-        }}
+        className="flex-row items-center px-2 py-2"
+        style={{ paddingTop: insets.top + 4 }}
       >
-        <Pressable onPress={() => router.back()} style={{ padding: 8, width: 40 }}>
+        <Pressable onPress={() => router.back()} className="w-10 p-2 active:opacity-70">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <Text
-          style={{
-            flex: 1,
-            fontSize: 20,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            color: '#000',
-            textAlign: 'center',
-          }}
+          className="flex-1 text-center text-xl font-bold text-foreground"
           numberOfLines={1}
         >
           {title}
         </Text>
-        <View style={{ width: 40 }} />
+        <View className="w-10" />
       </View>
 
       {isLoading ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" />
         </View>
       ) : notEnrolled ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 12 }}>
-          <Text style={{ color: '#dc341e', textAlign: 'center' }}>
+        <View className="flex-1 items-center justify-center gap-3 p-6">
+          <Text className="text-center text-destructive">
             {t('practice.not_found')}
           </Text>
           <Pressable
             onPress={() => router.replace({ pathname: '/plans/[id]', params: { id: planId } })}
-            style={{ padding: 12 }}
+            className="p-3 active:opacity-70"
           >
-            <Text style={{ fontWeight: '600' }}>{t('practice.retry')}</Text>
+            <Text className="font-semibold">{t('practice.retry')}</Text>
           </Pressable>
         </View>
       ) : (
@@ -342,16 +330,8 @@ export default function PlanTrackScreen() {
 
       {showPracticeNow && !notEnrolled && !isLoading ? (
         <View
-          style={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: '#FDFBF7',
-            paddingHorizontal: 16,
-            paddingTop: 12,
-            paddingBottom: insets.bottom + 16,
-          }}
+          className="absolute bottom-0 left-0 right-0 bg-background px-4 pt-3"
+          style={{ paddingBottom: insets.bottom + 16 }}
         >
           <Pressable
             onPress={() => openPlanReading('first-incomplete', false)}
@@ -364,7 +344,7 @@ export default function PlanTrackScreen() {
               opacity: allTasksComplete ? 0.5 : pressed ? 0.75 : 1,
             })}
           >
-            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700', fontFamily: 'Inter-Bold' }}>
+            <Text className="text-base font-bold text-white">
               {t('planTrack.practice_now')}
             </Text>
           </Pressable>

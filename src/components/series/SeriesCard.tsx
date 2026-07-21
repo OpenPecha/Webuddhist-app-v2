@@ -2,7 +2,8 @@ import type { Series } from '@/types/series';
 import { imageUrl } from '@/utils/image-url';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { Pressable, Text, View } from 'react-native';
+import { Text } from '@/components/ui/text';
+import { Pressable, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 interface SeriesCardProps {
@@ -21,8 +22,7 @@ export function SeriesCard({ series, onPress }: SeriesCardProps) {
   return (
     <Pressable
       onPress={handlePress}
-      className="rounded-2xl overflow-hidden active:opacity-80"
-      style={{ aspectRatio: 1.3 }}
+      className="aspect-[1.3] overflow-hidden rounded-2xl active:opacity-80"
     >
       <Image
         source={{ uri: imageUrl(series.image) }}

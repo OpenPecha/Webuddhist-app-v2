@@ -1,3 +1,4 @@
+import { cn } from '@/utils/cn';
 import { AppScreenHeader } from '@/components/settings/AppScreenHeader';
 import { Text } from '@/components/ui/text';
 import { useUserProfileMutations } from '@/hooks/api/useUserProfileMutations';
@@ -59,13 +60,15 @@ export default function DeleteAccountScreen() {
         <Pressable
           onPress={handleDelete}
           disabled={deleting}
-          className="mt-10 h-[52px] items-center justify-center rounded-full active:opacity-80"
-          style={{ backgroundColor: isDark ? '#fff' : '#000' }}
+          className={cn(
+            'mt-10 h-[52px] items-center justify-center rounded-full active:opacity-80',
+            isDark ? 'bg-white' : 'bg-black',
+          )}
         >
           {deleting ? (
             <ActivityIndicator color={isDark ? '#000' : '#fff'} />
           ) : (
-            <Text className="text-base" style={{ color: isDark ? '#000' : '#fff' }}>
+            <Text className={cn('text-base', isDark ? 'text-black' : 'text-white')}>
               {t('profile.delete_account_button')}
             </Text>
           )}

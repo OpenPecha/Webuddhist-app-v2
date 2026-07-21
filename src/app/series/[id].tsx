@@ -14,13 +14,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
   Alert,
   Pressable,
   RefreshControl,
   ScrollView,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -75,8 +75,8 @@ export default function SeriesDetailScreen() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
-        <Pressable onPress={() => router.back()} style={{ padding: 16 }}>
+      <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+        <Pressable onPress={() => router.back()} className="p-4 active:opacity-70">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <ActivityIndicator style={{ marginTop: 48 }} />
@@ -86,13 +86,13 @@ export default function SeriesDetailScreen() {
 
   if (error || !series || !featuredPlan) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
-        <Pressable onPress={() => router.back()} style={{ padding: 16 }}>
+      <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+        <Pressable onPress={() => router.back()} className="p-4 active:opacity-70">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 }}>
-          <Text style={{ color: '#dc341e' }}>{t('practice.routine_load_error')}</Text>
-          <Pressable onPress={() => refetch()} style={{ padding: 12 }}>
+        <View className="flex-1 items-center justify-center gap-3">
+          <Text className="text-destructive">{t('practice.routine_load_error')}</Text>
+          <Pressable onPress={() => refetch()} className="p-3 active:opacity-70">
             <Text>{t('practice.retry')}</Text>
           </Pressable>
         </View>
@@ -101,27 +101,13 @@ export default function SeriesDetailScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 8,
-          paddingVertical: 4,
-        }}
-      >
-        <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
+    <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+      <View className="flex-row items-center px-2 py-1">
+        <Pressable onPress={() => router.back()} className="p-2 active:opacity-70">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <Text
-          style={{
-            flex: 1,
-            fontSize: 20,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            textAlign: 'center',
-            marginRight: 40,
-          }}
+          className="mr-10 flex-1 text-center text-xl font-bold text-foreground"
           numberOfLines={1}
         >
           {headerTitle}
@@ -145,7 +131,7 @@ export default function SeriesDetailScreen() {
         />
 
         {sorted.length > 0 ? (
-          <View style={{ marginTop: 16 }}>
+          <View className="mt-4">
             {sorted.map((plan) => {
               const userPlan = resolveUserPlanForItem(
                 plan.id,

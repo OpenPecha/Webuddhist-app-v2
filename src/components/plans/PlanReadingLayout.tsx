@@ -1,4 +1,5 @@
 import { MarkdownText } from '@/components/common/MarkdownText';
+import { Text } from '@/components/ui/text';
 import { PlanNavigator } from '@/components/plans/PlanNavigator';
 import { ReaderFontSizeButton } from '@/components/reader/ReaderFontSizeButton';
 import { ReaderFontSizeSheet } from '@/components/reader/ReaderFontSizeSheet';
@@ -20,7 +21,6 @@ import {
   PanResponder,
   Pressable,
   ScrollView,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -207,22 +207,15 @@ export function PlanReadingLayout({
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#F9F8F4' }}>
+    <View className="flex-1 bg-[#F9F8F4]">
       <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingTop: insets.top + 4,
-          paddingHorizontal: 8,
-          paddingBottom: 8,
-          borderBottomWidth: 1,
-          borderBottomColor: '#e8e8e4',
-        }}
+        className="flex-row items-center px-2 pb-2 border-b border-[#e8e8e4]"
+        style={{ paddingTop: insets.top + 4 }}
       >
-        <Pressable onPress={handleBack} style={{ padding: 8 }}>
+        <Pressable onPress={handleBack} className="p-2">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
-        <View style={{ flex: 1 }} />
+        <View className="flex-1" />
         {isReader ? headerExtra : null}
         {isReader ? (
           <Pressable
@@ -230,7 +223,7 @@ export function PlanReadingLayout({
               clear();
               router.push('/reader/search');
             }}
-            style={{ padding: 8 }}
+            className="p-2"
             accessibilityRole="button"
             accessibilityLabel={t('home.search')}
           >
@@ -244,7 +237,7 @@ export function PlanReadingLayout({
               clear();
               router.push('/reader/versions');
             }}
-            style={{ padding: 8 }}
+            className="p-2"
             accessibilityRole="button"
             accessibilityLabel={t('reader.version')}
           >
@@ -254,7 +247,8 @@ export function PlanReadingLayout({
       </View>
 
       <View
-        style={{ flex: 1, transform: [{ translateX: dragOffset * 0.25 }] }}
+        className="flex-1"
+        style={{ transform: [{ translateX: dragOffset * 0.25 }] }}
         {...(gesturesActive ? panResponder.panHandlers : {})}
       >
         <ScrollView
@@ -274,7 +268,7 @@ export function PlanReadingLayout({
               maxSegments={previewSegmentLimit}
             />
           ) : imageMode ? (
-            <View style={{ width: '100%', minHeight: 280 }}>
+            <View className="w-full min-h-[280px]">
               <Image
                 source={{ uri: content }}
                 style={{ width: '100%', minHeight: 280, height: 420, borderRadius: 12 }}
@@ -297,38 +291,21 @@ export function PlanReadingLayout({
           {showReadFull || showSegmentReadFull ? (
             <Pressable
               onPress={() => setExpanded(true)}
-              style={{
-                marginTop: 20,
-                backgroundColor: '#e8e8e4',
-                borderRadius: 12,
-                paddingVertical: 14,
-                alignItems: 'center',
-              }}
+              className="mt-5 bg-[#e8e8e4] rounded-xl py-3.5 items-center"
             >
-              <Text style={{ fontSize: 15, fontWeight: '700', fontFamily: 'Inter-Bold', color: '#000' }}>
-                {t('reader.read_full_text')}
-              </Text>
+              <Text className="text-[15px] font-bold text-foreground">{t('reader.read_full_text')}</Text>
             </Pressable>
           ) : null}
 
           {footerMeta}
 
           {audioReady ? (
-            <View style={{ alignItems: 'center', marginTop: 32 }}>
+            <View className="items-center mt-8">
               <Pressable
                 onPress={onAudioToggle}
                 disabled={isAudioLoading}
-                style={{
-                  width: 56,
-                  height: 56,
-                  borderRadius: 28,
-                  borderWidth: 1,
-                  borderColor: '#000',
-                  backgroundColor: '#fff',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  opacity: isAudioLoading ? 0.6 : 1,
-                }}
+                className="w-14 h-14 rounded-full border border-black bg-white items-center justify-center"
+                style={{ opacity: isAudioLoading ? 0.6 : 1 }}
               >
                 {isAudioLoading ? (
                   <ActivityIndicator size="small" color="#000" />

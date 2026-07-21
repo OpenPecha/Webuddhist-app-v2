@@ -2,8 +2,8 @@ import type { ReactNode } from 'react';
 import Constants from 'expo-constants';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Linking, Modal, Platform, Pressable, Text, View } from 'react-native';
-import { AppColors } from '@/constants/app-colors';
+import { Text } from '@/components/ui/text';
+import { Linking, Modal, Platform, Pressable, View } from 'react-native';
 
 const IOS_STORE_URL =
   process.env.EXPO_PUBLIC_IOS_STORE_URL ??
@@ -65,66 +65,19 @@ export function ForceUpdateGate({ children }: ForceUpdateGateProps) {
     <>
       {children}
       <Modal visible={visible} transparent animationType="fade" onRequestClose={() => {}}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'rgba(0,0,0,0.55)',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 24,
-          }}
-        >
-          <View
-            style={{
-              width: '100%',
-              maxWidth: 340,
-              borderRadius: 16,
-              backgroundColor: '#fff',
-              padding: 24,
-              gap: 12,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: '700',
-                fontFamily: 'Inter-Bold',
-                color: '#000',
-                textAlign: 'center',
-              }}
-            >
+        <View className="flex-1 items-center justify-center bg-black/55 p-6">
+          <View className="w-full max-w-[340px] gap-3 rounded-2xl bg-white p-6">
+            <Text className="text-center text-xl font-bold text-foreground">
               {t('force_update.title')}
             </Text>
-            <Text
-              style={{
-                fontSize: 15,
-                color: '#454545',
-                fontFamily: 'Inter-Regular',
-                textAlign: 'center',
-                lineHeight: 22,
-              }}
-            >
+            <Text className="text-center text-[15px] leading-[22px] text-[#454545]">
               {t('force_update.message')}
             </Text>
             <Pressable
               onPress={openStore}
-              style={({ pressed }) => ({
-                marginTop: 8,
-                borderRadius: 12,
-                backgroundColor: AppColors.blue,
-                paddingVertical: 14,
-                opacity: pressed ? 0.9 : 1,
-              })}
+              className="mt-2 rounded-xl bg-[#0C53C5] py-3.5 active:opacity-90"
             >
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: '#fff',
-                  fontSize: 16,
-                  fontWeight: '700',
-                  fontFamily: 'Inter-Bold',
-                }}
-              >
+              <Text className="text-center text-base font-bold text-white">
                 {t('force_update.button')}
               </Text>
             </Pressable>

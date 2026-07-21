@@ -1,46 +1,29 @@
-import { useThemeColors } from '@/hooks/useThemeColors';
-import { View } from 'react-native';
-
-export function HomeCalendarCardSkeleton() {
-  const { skeleton, skeletonMid, cardBorder, cardSurface } = useThemeColors();
-
-  return (
-    <View style={{ marginHorizontal: 16 }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 16,
-          paddingVertical: 8,
-          borderRadius: 24,
-          borderWidth: 1,
-          borderColor: cardBorder,
-          backgroundColor: cardSurface,
-        }}
-      >
-        <View
-          style={{
-            width: 44,
-            height: 44,
-            borderRadius: 22,
-            backgroundColor: skeletonMid,
-          }}
-        />
-        <View style={{ width: 16 }} />
-        <View style={{ flex: 1, gap: 6 }}>
-          <View style={{ height: 16, width: '55%', borderRadius: 4, backgroundColor: skeleton }} />
-          <View style={{ height: 14, width: '40%', borderRadius: 4, backgroundColor: skeletonMid }} />
-        </View>
-        <View
-          style={{
-            width: 24,
-            height: 24,
-            borderRadius: 4,
-            backgroundColor: skeletonMid,
-          }}
-        />
-      </View>
-    </View>
-  );
-}
-
+import { useThemeColors } from '@/hooks/useThemeColors';
+import { View } from 'react-native';
+
+export function HomeCalendarCardSkeleton() {
+  const { skeleton, skeletonMid, cardBorder, cardSurface } = useThemeColors();
+
+  return (
+    <View className="mx-4">
+      <View
+        className="flex-row items-center rounded-3xl border px-4 py-2"
+        style={{ borderColor: cardBorder, backgroundColor: cardSurface }}
+      >
+        <View
+          className="h-11 w-11 rounded-full"
+          style={{ backgroundColor: skeletonMid }}
+        />
+        <View className="w-4" />
+        <View className="flex-1 gap-1.5">
+          <View className="h-4 w-[55%] rounded" style={{ backgroundColor: skeleton }} />
+          <View className="h-3.5 w-[40%] rounded" style={{ backgroundColor: skeletonMid }} />
+        </View>
+        <View
+          className="h-6 w-6 rounded"
+          style={{ backgroundColor: skeletonMid }}
+        />
+      </View>
+    </View>
+  );
+}

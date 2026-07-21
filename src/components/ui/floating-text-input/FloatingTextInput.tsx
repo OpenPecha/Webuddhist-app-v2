@@ -11,7 +11,6 @@ import {
 
 const ANIM_DURATION = 180;
 const HORIZONTAL_PADDING = 16;
-const CORNER_RADIUS = 12;
 
 export function FloatingTextInput({
   label,
@@ -77,27 +76,20 @@ export function FloatingTextInput({
   return (
     <View className={containerClassName}>
       <View
+        className="relative rounded-xl bg-transparent"
         style={{
-          borderRadius: CORNER_RADIUS,
           borderWidth,
           borderColor,
-          backgroundColor: 'transparent',
           minHeight: containerMinHeight,
-          position: 'relative',
         }}
       >
         <Animated.View
           pointerEvents="none"
+          className="absolute z-2 max-w-[90%] self-start px-1 py-px"
           style={{
-            position: 'absolute',
             left: HORIZONTAL_PADDING - 4,
             top: labelTop,
-            zIndex: 2,
-            paddingHorizontal: 4,
-            paddingVertical: 1,
             backgroundColor: background,
-            alignSelf: 'flex-start',
-            maxWidth: '90%',
           }}
         >
           <Animated.Text
@@ -111,7 +103,7 @@ export function FloatingTextInput({
           </Animated.Text>
         </Animated.View>
 
-        <Animated.View style={{ flex: 1 }}>
+        <Animated.View className="flex-1">
           <TextInput
             value={value}
             onChangeText={onChangeText}
@@ -143,13 +135,7 @@ export function FloatingTextInput({
         {trailingIcon ? (
           <View
             pointerEvents="none"
-            style={{
-              position: 'absolute',
-              right: HORIZONTAL_PADDING,
-              top: 0,
-              bottom: 0,
-              justifyContent: 'center',
-            }}
+            className="absolute bottom-0 right-4 top-0 justify-center"
           >
             {trailingIcon}
           </View>

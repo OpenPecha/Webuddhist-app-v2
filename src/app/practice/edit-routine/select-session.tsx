@@ -8,11 +8,11 @@ import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
   FlatList,
   Pressable,
-  Text,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -43,28 +43,19 @@ export default function SelectSessionScreen() {
   const seriesList = seriesData?.series ?? [];
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 4 }}>
-        <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
+    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+      <View className="flex-row items-center px-2 py-1">
+        <Pressable onPress={() => router.back()} className="p-2 active:opacity-70">
           <Ionicons name="arrow-back" size={22} color="#000" />
         </Pressable>
-        <Text
-          style={{
-            flex: 1,
-            fontSize: 18,
-            fontWeight: '700',
-            fontFamily: 'Inter-Bold',
-            textAlign: 'center',
-            color: '#000',
-          }}
-        >
+        <Text className="flex-1 text-center text-lg font-bold text-foreground">
           {t('editRoutine.add_session')}
         </Text>
-        <View style={{ width: 38 }} />
+        <View className="w-[38px]" />
       </View>
 
       {seriesLoading ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" />
         </View>
       ) : (
@@ -72,9 +63,9 @@ export default function SelectSessionScreen() {
           data={seriesList}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 16 }}
-          ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#e8e8e4' }} />}
+          ItemSeparatorComponent={() => <View className="h-px bg-[#e8e8e4]" />}
           ListEmptyComponent={
-            <Text style={{ textAlign: 'center', color: '#8a8a8a', marginTop: 24 }}>
+            <Text className="mt-6 text-center text-muted-foreground">
               {t('editRoutine.no_series')}
             </Text>
           }
