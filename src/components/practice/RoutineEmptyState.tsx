@@ -22,7 +22,7 @@ export function RoutineEmptyState({ onBuildRoutine }: RoutineEmptyStateProps) {
         paddingVertical: 24,
       }}
     >
-      <View style={{ alignItems: 'center', gap: 32 }}>
+      <View className="items-center gap-8">
         <Image
           source={APP_ASSETS.routineCalendar}
           style={{
@@ -37,13 +37,7 @@ export function RoutineEmptyState({ onBuildRoutine }: RoutineEmptyStateProps) {
         </Text>
         <Pressable
           onPress={onBuildRoutine}
-          style={{
-            width: '100%',
-            backgroundColor: '#000',
-            borderRadius: 30,
-            paddingVertical: 16,
-            alignItems: 'center',
-          }}
+          className="w-full bg-black rounded-[30px] py-4 items-center"
         >
           <Text className="text-base font-semibold text-white">{t('practice.routine_build')}</Text>
         </Pressable>

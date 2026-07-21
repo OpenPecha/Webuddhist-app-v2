@@ -61,15 +61,15 @@ function EmptyScaffold({
   refreshing: boolean;
 }) {
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 8 }}>
+    <View className="flex-1">
+      <View className="px-4 pb-2 pt-2">
         <Text className="text-[28px] font-bold text-foreground">
           {title}
         </Text>
       </View>
-      <View style={{ height: 12 }} />
-      <View style={{ paddingHorizontal: 20 }}>
-        <View style={{ height: 1, backgroundColor: '#e8e8e4' }} />
+      <View className="h-3" />
+      <View className="px-5">
+        <View className="h-px bg-[#e8e8e4]" />
       </View>
       <ScrollView
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -92,20 +92,11 @@ function RoutineFilledHeader({
 }) {
   return (
     <View>
-      <View
-        style={{
-          paddingHorizontal: 16,
-          paddingTop: 8,
-          paddingBottom: 8,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
-        }}
-      >
+      <View className="flex-row items-start justify-between px-4 pb-2 pt-2">
         <Text className="flex-1 text-[28px] font-bold text-foreground">
           {title}
         </Text>
-        <Pressable onPress={onEdit} style={{ paddingTop: 8 }}>
+        <Pressable onPress={onEdit} className="pt-2 active:opacity-70">
           <Text className="text-base font-semibold text-foreground">
             {editLabel}
           </Text>
@@ -114,8 +105,8 @@ function RoutineFilledHeader({
       <Text className="px-5 text-[15px] text-muted-foreground">
         {formatTodayDate()}
       </Text>
-      <View style={{ paddingHorizontal: 20, paddingTop: 8 }}>
-        <View style={{ height: 1, backgroundColor: '#e8e8e4' }} />
+      <View className="px-5 pt-2">
+        <View className="h-px bg-[#e8e8e4]" />
       </View>
     </View>
   );
@@ -143,7 +134,7 @@ function PracticeErrorState({
       }}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
-      <View style={{ alignItems: 'center', gap: 12 }}>
+      <View className="items-center gap-3">
         <Text className="text-center text-xl font-semibold text-foreground">
           {t('practice.routine_load_error')}
         </Text>
@@ -154,13 +145,7 @@ function PracticeErrorState({
         ) : null}
         <Pressable
           onPress={onRetry}
-          style={{
-            marginTop: 12,
-            backgroundColor: '#000',
-            borderRadius: 24,
-            paddingHorizontal: 24,
-            paddingVertical: 12,
-          }}
+          className="mt-3 rounded-3xl bg-black px-6 py-3 active:opacity-75"
         >
           <Text className="text-base font-semibold text-white">
             {t('practice.retry')}
@@ -310,7 +295,7 @@ export default function PracticeScreen() {
     );
   } else if (authLoading || (routineLoading && routine === undefined)) {
     content = (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View className="flex-1 items-center justify-center">
         <ActivityIndicator size="large" />
       </View>
     );
@@ -340,7 +325,7 @@ export default function PracticeScreen() {
           />
         }
         renderItem={({ item }) => (
-          <View style={{ paddingHorizontal: 20, paddingTop: 12 }}>
+          <View className="px-5 pt-3">
             <RoutineBlockSection
               block={item}
               userPlans={userPlans}
@@ -363,21 +348,9 @@ export default function PracticeScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
+    <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
       {resolvingItemId ? (
-        <View
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 10,
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'rgba(253,253,252,0.6)',
-          }}
-        >
+        <View className="absolute inset-0 z-10 items-center justify-center bg-[#FDFDFC]/60">
           <ActivityIndicator size="large" />
         </View>
       ) : null}

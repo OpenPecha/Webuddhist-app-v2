@@ -1,3 +1,4 @@
+import { cn } from '@/utils/cn';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import {
   computeBeadPositions,
@@ -40,11 +41,7 @@ function BeadArcSkeleton({ skeletonColor }: { skeletonColor: string }) {
 
   return (
     <View
-      style={{
-        width: MALA_BEADS_LAYOUT_WIDTH,
-        height: MALA_BEADS_LAYOUT_HEIGHT,
-        position: 'relative',
-      }}
+      className="relative h-[220px] w-[360px]"
     >
       {beads.map((bead) => {
         const size = bead.radius * 2;
@@ -85,12 +82,8 @@ export function MalaBeadArcPlaceholder({
 
   return (
     <View
-      style={{
-        width,
-        ...(flex ? { flex: 1 } : { height }),
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+      className={cn('w-full items-center justify-center', flex && 'flex-1')}
+      style={flex ? (width !== '100%' ? { width } : undefined) : { height, ...(width !== '100%' ? { width } : {}) }}
     >
       <BeadArcSkeleton skeletonColor={skeleton} />
     </View>

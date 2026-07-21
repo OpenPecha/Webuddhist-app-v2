@@ -73,26 +73,19 @@ function FeaturedPlanListItem({
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => ({
-        borderRadius: 16,
-        overflow: 'hidden',
-        backgroundColor: cardSurface,
-        opacity: pressed ? 0.9 : 1,
-      })}
+      className="overflow-hidden rounded-2xl active:opacity-90"
+      style={{ backgroundColor: cardSurface }}
     >
       <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          padding: contentPadding,
-        }}
+        className="flex-row items-center"
+        style={{ padding: contentPadding }}
       >
         <SeriesCoverImage
           series={series}
           size="thumbnail"
           style={{ width: 72, height: 72, borderRadius: 12 }}
         />
-        <View style={{ flex: 1, marginLeft: 12 }}>
+        <View className="ml-3 flex-1">
           <Text
             className="font-semibold text-foreground"
             style={{ fontSize: titleFontSize }}
@@ -136,14 +129,10 @@ function FeaturedPlanHeroCard({
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => ({
-        borderRadius: 16,
-        overflow: 'hidden',
-        backgroundColor: cardSurface,
-        opacity: pressed ? 0.9 : 1,
-      })}
+      className="overflow-hidden rounded-2xl active:opacity-90"
+      style={{ backgroundColor: cardSurface }}
     >
-      <View style={{ width: '100%', aspectRatio: 16 / 9 }}>
+      <View className="aspect-video w-full">
         <SeriesCoverImage
           series={series}
           style={{ width: '100%', height: '100%' }}
@@ -208,7 +197,7 @@ function FeaturedPlanContent({
   };
 
   return (
-    <View style={{ paddingHorizontal: 16, paddingBottom: 16 }}>
+    <View className="px-4 pb-4">
       <Text className="font-bold text-foreground" style={{ fontSize: sectionTitleSize }}>
         {t('home.creator_featured_plan')}
       </Text>
@@ -231,7 +220,10 @@ function FeaturedPlanContent({
               {...listItemProps}
             />
             {layout.others.map((series) => (
-              <View key={series.id} style={{ marginTop: heroOthersGap, marginBottom: itemBottomGap }}>
+              <View
+                key={series.id}
+                style={{ marginTop: heroOthersGap, marginBottom: itemBottomGap }}
+              >
                 <FeaturedPlanListItem
                   series={series}
                   onPress={() => onSeriesTap(series)}

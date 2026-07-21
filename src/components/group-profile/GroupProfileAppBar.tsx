@@ -8,8 +8,8 @@ export function GroupProfileAppBar() {
   const { foreground } = useThemeColors();
 
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 4 }}>
-      <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
+    <View className="flex-row items-center px-2 py-1">
+      <Pressable onPress={() => router.back()} className="p-2">
         <Ionicons name="chevron-back" size={24} color={foreground} />
       </Pressable>
     </View>

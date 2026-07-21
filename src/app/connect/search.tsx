@@ -5,6 +5,7 @@ import { SearchEmptyState } from '@/components/connect/SearchEmptyState';
 import { CONNECT_PADDING } from '@/components/connect/connect-styles';
 import { useDiscoverGroups, useJoinedGroups } from '@/hooks/api/useDiscoverGroups';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { cn } from '@/utils/cn';
 import { usePendingGroups } from '@/hooks/usePendingGroups';
 import { filterDiscoverGroups, mergeMyGroupsWithPending } from '@/lib/connect-groups';
 import { useRouter } from 'expo-router';
@@ -17,7 +18,7 @@ export default function GroupSearchScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { t } = useTranslation();
-  const { scaffoldBackground } = useThemeColors();
+  const { isDark } = useThemeColors();
   const [query, setQuery] = useState('');
   const [debounced, setDebounced] = useState('');
   const pending = usePendingGroups();
@@ -49,7 +50,7 @@ export default function GroupSearchScreen() {
   const showHint = trimmedQuery.length === 0;
 
   return (
-    <View style={{ flex: 1, backgroundColor: scaffoldBackground, paddingTop: insets.top }}>
+    <View className={cn('flex-1', isDark ? 'bg-black' : 'bg-[#FBF9F4]')} style={{ paddingTop: insets.top }}>
       <ConnectSearchBar
         value={query}
         onChangeText={setQuery}

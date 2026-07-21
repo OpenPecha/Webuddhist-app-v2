@@ -1,4 +1,4 @@
-import { CONNECT_AVATAR, CONNECT_CARD } from '@/components/connect/connect-styles';
+import { CONNECT_AVATAR } from '@/components/connect/connect-styles';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { groupCardSubtitle } from '@/lib/connect-groups';
@@ -34,26 +34,12 @@ export function GroupListCard({ group, showChevron = false }: GroupListCardProps
   return (
     <Pressable
       onPress={() => router.push({ pathname: '/group/[id]', params: { id: group.id } })}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: CONNECT_CARD.padding,
-        marginBottom: CONNECT_CARD.gap,
-        borderRadius: CONNECT_CARD.borderRadius,
-        backgroundColor: cardSurface,
-        borderWidth: 1,
-        borderColor: cardBorder,
-        opacity: pressed ? 0.85 : 1,
-      })}
+      className="mb-3 flex-row items-center rounded-2xl border p-3 active:opacity-85"
+      style={{ backgroundColor: cardSurface, borderColor: cardBorder }}
     >
       <View
-        style={{
-          width: CONNECT_AVATAR.discover,
-          height: CONNECT_AVATAR.discover,
-          borderRadius: CONNECT_AVATAR.discover / 2,
-          overflow: 'hidden',
-          backgroundColor: skeleton,
-        }}
+        className="h-12 w-12 overflow-hidden rounded-full"
+        style={{ backgroundColor: skeleton }}
       >
         {group.avatar_url ? (
           <Image
@@ -63,7 +49,7 @@ export function GroupListCard({ group, showChevron = false }: GroupListCardProps
           />
         ) : null}
       </View>
-      <View style={{ flex: 1, marginLeft: 12, marginRight: 8 }}>
+      <View className="ml-3 mr-2 flex-1">
         <Text className="text-[15px] font-bold leading-5 text-foreground" numberOfLines={2}>
           {meta?.title ?? group.slug}
         </Text>

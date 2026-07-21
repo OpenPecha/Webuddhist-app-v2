@@ -43,19 +43,19 @@ export default function SelectSessionScreen() {
   const seriesList = seriesData?.series ?? [];
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 4 }}>
-        <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
+    <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+      <View className="flex-row items-center px-2 py-1">
+        <Pressable onPress={() => router.back()} className="p-2 active:opacity-70">
           <Ionicons name="arrow-back" size={22} color="#000" />
         </Pressable>
         <Text className="flex-1 text-center text-lg font-bold text-foreground">
           {t('editRoutine.add_session')}
         </Text>
-        <View style={{ width: 38 }} />
+        <View className="w-[38px]" />
       </View>
 
       {seriesLoading ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" />
         </View>
       ) : (
@@ -63,7 +63,7 @@ export default function SelectSessionScreen() {
           data={seriesList}
           keyExtractor={(item) => item.id}
           contentContainerStyle={{ paddingHorizontal: 20, paddingVertical: 16 }}
-          ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: '#e8e8e4' }} />}
+          ItemSeparatorComponent={() => <View className="h-px bg-[#e8e8e4]" />}
           ListEmptyComponent={
             <Text className="mt-6 text-center text-muted-foreground">
               {t('editRoutine.no_series')}

@@ -82,7 +82,7 @@ export default function PlanTextScreen() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F9F8F4' }}>
+      <View className="flex-1 items-center justify-center bg-[#F9F8F4]">
         <ActivityIndicator size="large" />
       </View>
     );
@@ -90,7 +90,7 @@ export default function PlanTextScreen() {
 
   if (!content) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F9F8F4', padding: 24 }}>
+      <View className="flex-1 items-center justify-center bg-[#F9F8F4] p-6">
         <Text className="text-center text-muted-foreground">{t('planTrack.no_tasks')}</Text>
       </View>
     );

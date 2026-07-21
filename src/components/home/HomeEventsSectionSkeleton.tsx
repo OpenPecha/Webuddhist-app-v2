@@ -5,25 +5,21 @@ export function HomeEventsSectionSkeleton() {
   const { skeleton, skeletonMid } = useThemeColors();
 
   return (
-    <View style={{ paddingHorizontal: 16, gap: 12 }}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <View style={{ height: 20, width: 80, borderRadius: 4, backgroundColor: skeleton }} />
-        <View style={{ height: 16, width: 56, borderRadius: 4, backgroundColor: skeleton }} />
+    <View className="gap-3 px-4">
+      <View className="flex-row justify-between">
+        <View className="h-5 w-20 rounded" style={{ backgroundColor: skeleton }} />
+        <View className="h-4 w-14 rounded" style={{ backgroundColor: skeleton }} />
       </View>
       {[0, 1].map((key) => (
         <View
           key={key}
-          style={{
-            flexDirection: 'row',
-            borderRadius: 16,
-            overflow: 'hidden',
-            backgroundColor: skeletonMid,
-          }}
+          className="flex-row overflow-hidden rounded-2xl"
+          style={{ backgroundColor: skeletonMid }}
         >
-          <View style={{ width: 88, height: 88, backgroundColor: skeleton }} />
-          <View style={{ flex: 1, padding: 12, gap: 8, justifyContent: 'center' }}>
-            <View style={{ height: 14, width: '70%', borderRadius: 4, backgroundColor: skeleton }} />
-            <View style={{ height: 12, width: '40%', borderRadius: 4, backgroundColor: skeleton }} />
+          <View className="h-[88px] w-[88px]" style={{ backgroundColor: skeleton }} />
+          <View className="flex-1 justify-center gap-2 p-3">
+            <View className="h-3.5 w-[70%] rounded" style={{ backgroundColor: skeleton }} />
+            <View className="h-3 w-[40%] rounded" style={{ backgroundColor: skeleton }} />
           </View>
         </View>
       ))}

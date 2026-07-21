@@ -1,4 +1,4 @@
-import { GP_BANNER_ASPECT, GP_BANNER_RADIUS, GP_PADDING } from '@/components/group-profile/group-profile-styles';
+import { GP_BANNER_ASPECT } from '@/components/group-profile/group-profile-styles';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { Image } from 'expo-image';
 import { View } from 'react-native';
@@ -13,14 +13,7 @@ export function GroupProfileBanner({ bannerUrl }: GroupProfileBannerProps) {
   if (!bannerUrl) return null;
 
   return (
-    <View
-      style={{
-        marginHorizontal: GP_PADDING,
-        marginTop: 8,
-        borderRadius: GP_BANNER_RADIUS,
-        overflow: 'hidden',
-      }}
-    >
+    <View className="mx-4 mt-2 overflow-hidden rounded-2xl">
       <Image
         source={{ uri: bannerUrl }}
         style={{ width: '100%', aspectRatio: GP_BANNER_ASPECT, backgroundColor: skeleton }}

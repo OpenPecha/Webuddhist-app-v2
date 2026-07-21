@@ -1,5 +1,6 @@
 import { SeriesStatsRow } from '@/components/series/SeriesPlanRow';
 import type { Plan, SeriesDetail, SeriesMetadata } from '@/types/series';
+import { cn } from '@/utils/cn';
 import { imageUrl } from '@/utils/image-url';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -37,13 +38,7 @@ export function FeaturedSeriesPlanCard({
   const openInfo = () => router.push(`/series/${seriesId}/info`);
 
   return (
-    <View
-      style={{
-        borderRadius: 16,
-        overflow: 'hidden',
-        backgroundColor: '#fff',
-      }}
-    >
+    <View className="rounded-2xl overflow-hidden bg-white">
       <Pressable onPress={openInfo}>
         <Image
           source={{ uri: imageUrl(series.image) }}
@@ -52,7 +47,7 @@ export function FeaturedSeriesPlanCard({
         />
       </Pressable>
 
-      <View style={{ paddingHorizontal: 16, paddingTop: 12, paddingBottom: 16 }}>
+      <View className="px-4 pt-3 pb-4">
         <Pressable onPress={openInfo}>
           <SeriesStatsRow
             planCount={series.plans.length}
@@ -73,15 +68,10 @@ export function FeaturedSeriesPlanCard({
           <Pressable
             onPress={onEnroll}
             disabled={isEnrolling}
-            style={({ pressed }) => ({
-              marginTop: 14,
-              backgroundColor: '#000',
-              borderRadius: 999,
-              paddingVertical: 14,
-              paddingHorizontal: 24,
-              alignItems: 'center',
-              opacity: pressed || isEnrolling ? 0.75 : 1,
-            })}
+            className={cn(
+              'mt-3.5 bg-black rounded-full py-3.5 px-6 items-center active:opacity-75',
+              isEnrolling && 'opacity-75',
+            )}
           >
             {isEnrolling ? (
               <ActivityIndicator color="#fff" />

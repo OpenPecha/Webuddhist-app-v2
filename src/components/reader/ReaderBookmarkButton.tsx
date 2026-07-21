@@ -34,7 +34,8 @@ export function ReaderBookmarkButton({ textId, textTitle }: ReaderBookmarkButton
       <Pressable
         onPress={handlePress}
         disabled={toggle.isPending}
-        style={{ padding: 8, opacity: toggle.isPending ? 0.5 : 0.85 }}
+        className="p-2 active:opacity-80"
+        style={{ opacity: toggle.isPending ? 0.5 : 0.85 }}
         accessibilityRole="button"
         accessibilityLabel={isBookmarked ? t('reader.bookmarked') : t('reader.bookmark')}
       >

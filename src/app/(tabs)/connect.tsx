@@ -8,6 +8,7 @@ import { MyGroupsSectionSkeleton } from '@/components/connect/MyGroupsSectionSke
 import { CONNECT_PADDING } from '@/components/connect/connect-styles';
 import { useDiscoverGroups, useJoinedGroups } from '@/hooks/api/useDiscoverGroups';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { cn } from '@/utils/cn';
 import {
   filterDiscoverGroups,
   mergeMyGroupsWithPending,
@@ -34,21 +35,15 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function ConnectErrorState({ onRetry }: { onRetry: () => void }) {
   const { t } = useTranslation();
-  const { foreground } = useThemeColors();
 
   return (
-    <View style={{ alignItems: 'center', gap: 12, paddingHorizontal: 24, marginTop: 48 }}>
+    <View className="mt-12 items-center gap-3 px-6">
       <Text className="text-center text-destructive">
         {t('connect.load_error')}
       </Text>
       <Pressable
         onPress={onRetry}
-        style={{
-          borderRadius: 8,
-          paddingHorizontal: 16,
-          paddingVertical: 10,
-          backgroundColor: foreground,
-        }}
+        className="rounded-lg bg-foreground px-4 py-2.5 active:opacity-70"
       >
         <Text className="font-semibold text-white">
           {t('practice.retry')}
@@ -61,7 +56,7 @@ function ConnectErrorState({ onRetry }: { onRetry: () => void }) {
 export default function ConnectScreen() {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const { scaffoldBackground } = useThemeColors();
+  const { isDark } = useThemeColors();
   const queryClient = useQueryClient();
   const pending = usePendingGroups();
 
@@ -128,7 +123,7 @@ export default function ConnectScreen() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: scaffoldBackground, paddingTop: insets.top }}>
+    <View className={cn('flex-1', isDark ? 'bg-black' : 'bg-[#FBF9F4]')} style={{ paddingTop: insets.top }}>
       <FlatList
         data={isError ? [] : groups}
         keyExtractor={(item) => item.id}
@@ -147,7 +142,7 @@ export default function ConnectScreen() {
         }
         ListEmptyComponent={renderEmptyDiscover()}
         renderItem={({ item }) => (
-          <View style={{ paddingHorizontal: CONNECT_PADDING }}>
+          <View className="px-5">
             <DiscoverGroupCard group={item} isJoined={joinedIds.has(item.id)} />
           </View>
         )}

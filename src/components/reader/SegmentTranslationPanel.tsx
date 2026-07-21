@@ -20,7 +20,7 @@ function TranslationItem({
   fontSize: number;
 }) {
   return (
-    <View style={{ marginBottom: 24 }}>
+    <View className="mb-6">
       <Text className="text-[15px] font-bold text-foreground mb-2">{translation.title}</Text>
       {translation.content ? (
         <ExpandableSegmentHtml html={translation.content} fontSize={fontSize} />
@@ -42,7 +42,7 @@ export function SegmentTranslationPanel({ segmentId, fontSize = 16 }: SegmentTra
 
   if (isLoading) {
     return (
-      <View style={{ paddingVertical: 32, alignItems: 'center' }}>
+      <View className="py-8 items-center">
         <ActivityIndicator size="small" color="#000" />
       </View>
     );
@@ -50,7 +50,7 @@ export function SegmentTranslationPanel({ segmentId, fontSize = 16 }: SegmentTra
 
   if (isError) {
     return (
-      <View style={{ paddingVertical: 24, alignItems: 'center' }}>
+      <View className="py-6 items-center">
         <Text className="text-sm text-muted-foreground mb-3">{t('reader.load_error')}</Text>
         <Pressable onPress={() => void refetch()}>
           <Text className="text-sm font-semibold text-foreground">{t('practice.retry')}</Text>
@@ -62,7 +62,7 @@ export function SegmentTranslationPanel({ segmentId, fontSize = 16 }: SegmentTra
   const translations = data?.translations ?? [];
   if (translations.length === 0) {
     return (
-      <View style={{ paddingVertical: 24, alignItems: 'center' }}>
+      <View className="py-6 items-center">
         <Text className="text-sm text-muted-foreground">{t('reader.no_translations')}</Text>
       </View>
     );
@@ -73,7 +73,7 @@ export function SegmentTranslationPanel({ segmentId, fontSize = 16 }: SegmentTra
   return (
     <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled>
       {groups.map((group) => (
-        <View key={group.language || 'unknown'} style={{ marginBottom: 8 }}>
+        <View key={group.language || 'unknown'} className="mb-2">
           <Text className="text-[13px] font-bold text-muted-foreground uppercase tracking-wide mb-3">
             {`${languageDisplayName(group.language)} (${group.items.length})`}
           </Text>

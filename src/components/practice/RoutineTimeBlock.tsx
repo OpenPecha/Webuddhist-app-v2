@@ -22,7 +22,6 @@ interface RoutineTimeBlockProps {
   onReorderItems: (items: RoutineItem[]) => void;
 }
 
-const pillBg = '#f0f0ec';
 
 function TimeSelector({
   formattedTime,
@@ -34,15 +33,7 @@ function TimeSelector({
   return (
     <Pressable
       onPress={onPress}
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        backgroundColor: pillBg,
-        borderTopLeftRadius: 20,
-        borderBottomLeftRadius: 20,
-      }}
+      className="flex-row items-center px-3 py-2 bg-[#f0f0ec] rounded-tl-[20px] rounded-bl-[20px]"
     >
       <Text className="text-sm font-semibold text-foreground">{formattedTime}</Text>
       <Ionicons name="chevron-down" size={18} color="#8a8a8a" style={{ marginLeft: 12 }} />
@@ -60,13 +51,7 @@ function NotificationToggle({
   return (
     <Pressable
       onPress={onPress}
-      style={{
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        backgroundColor: pillBg,
-        borderTopRightRadius: 20,
-        borderBottomRightRadius: 20,
-      }}
+      className="px-3 py-2 bg-[#f0f0ec] rounded-tr-[20px] rounded-br-[20px]"
     >
       <Ionicons
         name={enabled ? 'notifications-outline' : 'notifications-off-outline'}
@@ -115,11 +100,11 @@ export function RoutineTimeBlock({
 
   return (
     <View>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <View className="flex-row items-center">
         <TimeSelector formattedTime={formattedTime} onPress={onTimePress} />
-        <View style={{ width: 4 }} />
+        <View className="w-1" />
         <NotificationToggle enabled={notificationEnabled} onPress={onNotificationToggle} />
-        <View style={{ flex: 1 }} />
+        <View className="flex-1" />
         <Pressable onPress={confirmDeleteBlock} hitSlop={8}>
           <Text className="text-sm font-semibold text-[#f87171]">
             {t('editRoutine.delete_time_block')}
@@ -128,7 +113,7 @@ export function RoutineTimeBlock({
       </View>
 
       {items.length > 0 ? (
-        <View style={{ marginTop: 8 }}>
+        <View className="mt-2">
           <DraggableFlatList
             data={items}
             keyExtractor={(item) => `${item.type}-${item.id}`}
@@ -154,7 +139,7 @@ export function RoutineTimeBlock({
                       onReorderDragStart={drag}
                       isDragging={isActive}
                     />
-                    <View style={{ height: 1, backgroundColor: '#e8e8e4', marginLeft: 140 }} />
+                    <View className="h-px bg-[#e8e8e4] ml-[140px]" />
                   </View>
                 </ScaleDecorator>
               );
@@ -165,18 +150,9 @@ export function RoutineTimeBlock({
 
       <Pressable
         onPress={onAddSession}
-        style={{ marginTop: 12, paddingLeft: 54, flexDirection: 'row', alignItems: 'center' }}
+        className="mt-3 pl-[54px] flex-row items-center"
       >
-        <View
-          style={{
-            width: 72,
-            height: 72,
-            borderRadius: 12,
-            backgroundColor: pillBg,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <View className="w-[72px] h-[72px] rounded-xl bg-[#f0f0ec] items-center justify-center">
           <Ionicons name="add" size={24} color="#000" />
         </View>
         <Text className="flex-1 ml-4 text-base font-semibold text-foreground">
@@ -191,17 +167,8 @@ export function RoutineTimeBlock({
 function AddBlockButton({ onPress }: { onPress: () => void }) {
   const { t } = useTranslation();
   return (
-    <Pressable onPress={onPress} style={{ alignSelf: 'flex-start' }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 12,
-          paddingVertical: 8,
-          backgroundColor: pillBg,
-          borderRadius: 20,
-        }}
-      >
+    <Pressable onPress={onPress} className="self-start">
+      <View className="flex-row items-center px-3 py-2 bg-[#f0f0ec] rounded-[20px]">
         <Ionicons name="add" size={16} color="#000" />
         <Text className="ml-1.5 text-sm font-semibold text-foreground">
           {t('editRoutine.add_block_label')}

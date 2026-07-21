@@ -71,11 +71,11 @@ export default function BookmarksScreen() {
 
   if (isGuest || !user) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#F9F8F4', paddingTop: insets.top }}>
+      <View className="flex-1 bg-[#F9F8F4]" style={{ paddingTop: insets.top }}>
         <Header onBack={() => router.back()} title={t('bookmarks.title')} />
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+        <View className="flex-1 items-center justify-center p-6">
           <Text className="text-center text-muted-foreground">{t('bookmarks.login_required')}</Text>
-          <Pressable onPress={showLoginDrawer} style={{ marginTop: 16 }}>
+          <Pressable onPress={showLoginDrawer} className="mt-4 active:opacity-70">
             <Text className="font-semibold text-foreground">{t('settings.sign_in')}</Text>
           </Pressable>
         </View>
@@ -102,7 +102,7 @@ export default function BookmarksScreen() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#F9F8F4', paddingTop: insets.top }}>
+    <View className="flex-1 bg-[#F9F8F4]" style={{ paddingTop: insets.top }}>
       <Header onBack={() => router.back()} title={t('bookmarks.title')} />
 
       <ScrollView
@@ -128,9 +128,9 @@ export default function BookmarksScreen() {
       {isLoading ? (
         <BookmarkListSkeleton />
       ) : isError ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+        <View className="flex-1 items-center justify-center p-6">
           <Text className="mb-3 text-muted-foreground">{t('bookmarks.load_error')}</Text>
-          <Pressable onPress={() => void refetch()}>
+          <Pressable onPress={() => void refetch()} className="active:opacity-70">
             <Text className="font-semibold">{t('practice.retry')}</Text>
           </Pressable>
         </View>
@@ -141,7 +141,7 @@ export default function BookmarksScreen() {
           contentContainerStyle={{ padding: 16, flexGrow: 1 }}
           refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => void refetch()} />}
           ListEmptyComponent={
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingTop: 48 }}>
+            <View className="flex-1 items-center justify-center pt-12">
               <Text className="text-center text-base font-semibold text-foreground">
                 {empty.title}
               </Text>
@@ -155,13 +155,7 @@ export default function BookmarksScreen() {
               renderRightActions={() => (
                 <Pressable
                   onPress={() => confirmRemove(item)}
-                  style={{
-                    backgroundColor: '#c0392b',
-                    justifyContent: 'center',
-                    paddingHorizontal: 20,
-                    marginBottom: 12,
-                    borderRadius: 12,
-                  }}
+                  className="mb-3 justify-center rounded-xl bg-[#c0392b] px-5 active:opacity-70"
                 >
                   <Text className="font-semibold text-white">{t('bookmarks.remove')}</Text>
                 </Pressable>
@@ -192,16 +186,8 @@ export default function BookmarksScreen() {
 
 function Header({ onBack, title }: { onBack: () => void; title: string }) {
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 8,
-        paddingVertical: 8,
-        marginBottom: 4,
-      }}
-    >
-      <Pressable onPress={onBack} style={{ padding: 8 }}>
+    <View className="mb-1 flex-row items-center px-2 py-2">
+      <Pressable onPress={onBack} className="p-2 active:opacity-70">
         <Ionicons name="chevron-back" size={24} color="#000" />
       </Pressable>
       <Text className="mr-10 flex-1 text-center text-[17px] font-semibold text-foreground">

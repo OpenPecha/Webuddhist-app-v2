@@ -11,16 +11,16 @@ export default function ReaderVersionsPlaceholderScreen() {
   const { t } = useTranslation();
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#F9F8F4', paddingTop: insets.top }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, paddingBottom: 8 }}>
-        <Pressable onPress={() => router.back()} style={{ padding: 8 }} accessibilityRole="button">
+    <View className="flex-1 bg-[#F9F8F4]" style={{ paddingTop: insets.top }}>
+      <View className="flex-row items-center px-2 pb-2">
+        <Pressable onPress={() => router.back()} className="p-2 active:opacity-70" accessibilityRole="button">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <Text className="mr-10 flex-1 text-[17px] font-semibold text-foreground">
           {t('reader.version')}
         </Text>
       </View>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24 }}>
+      <View className="flex-1 items-center justify-center px-6">
         <Text className="text-center text-[15px] text-muted-foreground">
           {t('reader.coming_soon')}
         </Text>

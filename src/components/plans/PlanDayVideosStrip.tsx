@@ -24,7 +24,7 @@ export function PlanDayVideosStrip({ videos }: PlanDayVideosStripProps) {
   };
 
   return (
-    <View style={{ marginTop: 8, marginBottom: 8 }}>
+    <View className="my-2">
       <Text className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase px-5 mb-3">
         {t('plans.videos.title')}
       </Text>
@@ -37,21 +37,9 @@ export function PlanDayVideosStrip({ videos }: PlanDayVideosStripProps) {
           <Pressable
             key={video.id}
             onPress={() => openVideo(video.url)}
-            style={({ pressed }) => ({
-              width: 120,
-              opacity: pressed ? 0.75 : 1,
-            })}
+            className="w-[120px] active:opacity-75"
           >
-            <View
-              style={{
-                width: 120,
-                height: 180,
-                borderRadius: 12,
-                backgroundColor: '#000',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
+            <View className="w-[120px] h-[180px] rounded-xl bg-black items-center justify-center">
               <Ionicons name="play-circle" size={36} color="#fff" />
             </View>
             {video.title ? (

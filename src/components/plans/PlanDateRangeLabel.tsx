@@ -5,15 +5,7 @@ import { View } from 'react-native';
 export function PlanDateRangeLabel({ dateRange }: { dateRange: PlanDateRange }) {
   if (dateRange.isCurrent) {
     return (
-      <View
-        style={{
-          alignSelf: 'flex-start',
-          backgroundColor: '#000',
-          borderRadius: 20,
-          paddingHorizontal: 8,
-          paddingVertical: 4,
-        }}
-      >
+      <View className="self-start rounded-[20px] bg-black px-2 py-1">
         <Text className="text-xs font-semibold text-white">{dateRange.formatted}</Text>
       </View>
     );

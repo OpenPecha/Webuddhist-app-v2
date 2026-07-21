@@ -43,7 +43,7 @@ export function ExpandableSegmentHtml({ html, fontSize }: ExpandableSegmentHtmlP
   return (
     <>
       <SegmentHtml html={html} fontSize={fontSize} color="#333" fontFamily="Georgia" />
-      <Pressable onPress={() => setExpanded(false)} style={{ alignSelf: 'flex-end', marginTop: 4 }}>
+      <Pressable onPress={() => setExpanded(false)} className="mt-1 self-end active:opacity-80">
         <Text className="font-bold text-[#0066cc]" style={{ fontSize }}>
           {t('reader.less')}
         </Text>

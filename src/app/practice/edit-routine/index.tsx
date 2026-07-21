@@ -487,15 +487,7 @@ export default function EditRoutineScreen() {
 
   if (isLoading && !hydrated) {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: '#FDFDFC',
-          alignItems: 'center',
-          justifyContent: 'center',
-          paddingTop: insets.top,
-        }}
-      >
+      <View className="flex-1 items-center justify-center bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
         <ActivityIndicator size="large" />
         <Text className="mt-4 font-semibold">
           {t('editRoutine.title')}
@@ -505,9 +497,9 @@ export default function EditRoutineScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
-      <View style={{ flex: 1, paddingHorizontal: 20 }}>
-        <View style={{ height: 16 }} />
+    <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+      <View className="flex-1 px-5">
+        <View className="h-4" />
         <Pressable
           onPress={handleSave}
           disabled={saving}
@@ -517,13 +509,13 @@ export default function EditRoutineScreen() {
             {saving ? t('editRoutine.saving') : t('editRoutine.done')}
           </Text>
         </Pressable>
-        <View style={{ height: 8 }} />
+        <View className="h-2" />
         <Text className="text-[28px] font-bold text-foreground">
           {t('editRoutine.title')}
         </Text>
-        <View style={{ height: 12 }} />
-        <View style={{ height: 1, backgroundColor: '#e8e8e4' }} />
-        <View style={{ height: 14 }} />
+        <View className="h-3" />
+        <View className="h-px bg-[#e8e8e4]" />
+        <View className="h-3.5" />
 
         <ScrollView
           contentContainerStyle={{ paddingBottom: 40 }}
@@ -558,8 +550,8 @@ export default function EditRoutineScreen() {
                 onReorderItems={(items) => reorderItemsInBlock(block.localId, items)}
               />
               {index < blocks.length - 1 || shouldShowAddButton ? (
-                <View style={{ paddingVertical: 16 }}>
-                  <View style={{ height: 1, backgroundColor: '#e8e8e4' }} />
+                <View className="py-4">
+                  <View className="h-px bg-[#e8e8e4]" />
                 </View>
               ) : null}
             </View>

@@ -1,4 +1,3 @@
-import { GP_PADDING } from '@/components/group-profile/group-profile-styles';
 import { Text } from '@/components/ui/text';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { displayHostUrl, orderGroupSocialLinks, type GroupSocialLink } from '@/lib/group-profile-format';
@@ -25,13 +24,7 @@ export function GroupProfileLinksRow({ links, onPress }: GroupProfileLinksRowPro
   return (
     <Pressable
       onPress={() => onPress(ordered)}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: GP_PADDING,
-        paddingTop: 12,
-        opacity: pressed ? 0.75 : 1,
-      })}
+      className="flex-row items-center px-4 pt-3 active:opacity-75"
     >
       <LinkSimple size={18} color={mutedForeground} />
       <Text className="ml-1.5 flex-1 text-sm leading-5" numberOfLines={1}>

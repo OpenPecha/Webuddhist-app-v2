@@ -28,21 +28,11 @@ export function DayCompletionSheet({
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable
-        style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'flex-end' }}
-        onPress={onClose}
-      >
+      <Pressable className="flex-1 justify-end bg-black/40" onPress={onClose}>
         <Pressable
           onPress={(e) => e.stopPropagation()}
-          style={{
-            backgroundColor: '#FDFDFC',
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            paddingHorizontal: 24,
-            paddingTop: 32,
-            paddingBottom: insets.bottom + 24,
-            alignItems: 'center',
-          }}
+          className="items-center rounded-t-[20px] bg-[#FDFDFC] px-6 pt-8"
+          style={{ paddingBottom: insets.bottom + 24 }}
         >
           {planImage ? (
             <Image
@@ -51,17 +41,7 @@ export function DayCompletionSheet({
               contentFit="cover"
             />
           ) : (
-            <View
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: 28,
-                backgroundColor: '#000',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: 16,
-              }}
-            >
+            <View className="mb-4 h-14 w-14 items-center justify-center rounded-full bg-black">
               <Ionicons name="checkmark" size={28} color="#fff" />
             </View>
           )}
@@ -69,32 +49,15 @@ export function DayCompletionSheet({
           <Text className="text-sm text-muted-foreground mb-3">
             {t('planTrack.day_of', { day: dayNumber, total: totalDays })}
           </Text>
-          <View
-            style={{
-              width: '100%',
-              height: 4,
-              backgroundColor: '#e8e8e4',
-              borderRadius: 2,
-              marginBottom: 24,
-              overflow: 'hidden',
-            }}
-          >
+          <View className="mb-6 h-1 w-full overflow-hidden rounded-sm bg-[#e8e8e4]">
             <View
-              style={{
-                width: `${Math.min(100, progress * 100)}%`,
-                height: 4,
-                backgroundColor: '#000',
-              }}
+              className="h-1 bg-black"
+              style={{ width: `${Math.min(100, progress * 100)}%` }}
             />
           </View>
           <Pressable
             onPress={onClose}
-            style={{
-              backgroundColor: '#000',
-              borderRadius: 12,
-              paddingVertical: 14,
-              paddingHorizontal: 48,
-            }}
+            className="rounded-xl bg-black px-12 py-3.5 active:opacity-80"
           >
             <Text className="text-white text-base font-semibold">{t('planTrack.continue')}</Text>
           </Pressable>

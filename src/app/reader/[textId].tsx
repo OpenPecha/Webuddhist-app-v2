@@ -87,7 +87,7 @@ export default function ReaderScreen() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F9F8F4' }}>
+      <View className="flex-1 items-center justify-center bg-[#F9F8F4]">
         <ActivityIndicator size="large" />
       </View>
     );

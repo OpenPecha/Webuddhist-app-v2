@@ -239,10 +239,16 @@ export default function EditProfileScreen() {
     <Pressable
       onPress={handleSave}
       disabled={!canSave}
-      className="rounded-full px-5 py-2 active:opacity-80"
-      style={{
-        backgroundColor: canSave ? (isDark ? '#fdfdfc' : '#000') : isDark ? '#555' : '#d4d4d4',
-      }}
+      className={cn(
+        'rounded-full px-5 py-2 active:opacity-80',
+        canSave
+          ? isDark
+            ? 'bg-[#fdfdfc]'
+            : 'bg-black'
+          : isDark
+            ? 'bg-[#555]'
+            : 'bg-neutral-300',
+      )}
     >
       <Text
         className={cn(
@@ -265,8 +271,10 @@ export default function EditProfileScreen() {
           </Text>
           <Pressable
             onPress={() => refetch()}
-            className="mt-4 rounded-full px-6 py-3 active:opacity-80"
-            style={{ backgroundColor: isDark ? '#fdfdfc' : '#000' }}
+            className={cn(
+              'mt-4 rounded-full px-6 py-3 active:opacity-80',
+              isDark ? 'bg-[#fdfdfc]' : 'bg-black',
+            )}
           >
             <Text className={cn('text-sm font-semibold', isDark ? 'text-black' : 'text-white')}>
               {t('practice.retry')}

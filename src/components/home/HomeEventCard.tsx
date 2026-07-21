@@ -44,21 +44,14 @@ export function HomeEventCard({ event, onPress }: HomeEventCardProps) {
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor: cardBorder,
-        backgroundColor: cardSurface,
-        overflow: 'hidden',
-        opacity: pressed ? 0.92 : 1,
-      })}
+      className="flex-row overflow-hidden rounded-2xl border active:opacity-92"
+      style={{ borderColor: cardBorder, backgroundColor: cardSurface }}
     >
       <EventCoverImage
         imageUrl={event.imageUrl}
         style={{ width: 88, height: 88 }}
       />
-      <View style={{ flex: 1, padding: 12, justifyContent: 'center', gap: 4 }}>
+      <View className="flex-1 justify-center gap-1 p-3">
         <Text className="text-[15px] font-semibold text-foreground" numberOfLines={2}>
           {event.name}
         </Text>

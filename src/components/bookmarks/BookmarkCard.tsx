@@ -5,6 +5,7 @@ import {
   type BookmarkItemType,
 } from '@/types/bookmarks';
 import { Text } from '@/components/ui/text';
+import { cn } from '@/utils/cn';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useTranslation } from 'react-i18next';
@@ -55,20 +56,13 @@ export function BookmarkCard({ bookmark, onPress, onRemove }: BookmarkCardProps)
       <Pressable
         onPress={onPress}
         disabled={!onPress}
-        style={{
-          marginBottom: 12,
-          borderRadius: 12,
-          borderWidth: 1,
-          borderColor: '#e8e8e4',
-          backgroundColor: '#fff',
-          overflow: 'hidden',
-        }}
+        className="mb-3 rounded-xl border border-[#e8e8e4] bg-white overflow-hidden"
       >
-        <View style={{ flexDirection: 'row' }}>
-          <View style={{ width: 4, backgroundColor: '#c4a574' }} />
-          <View style={{ flex: 1, padding: 12 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-              <View style={{ flex: 1, marginRight: 8 }}>
+        <View className="flex-row">
+          <View className="w-1 bg-[#c4a574]" />
+          <View className="flex-1 p-3">
+            <View className="flex-row items-start">
+              <View className="flex-1 mr-2">
                 <Text className="text-[15px] font-bold text-foreground" numberOfLines={2}>
                   {title}
                 </Text>
@@ -79,7 +73,7 @@ export function BookmarkCard({ bookmark, onPress, onRemove }: BookmarkCardProps)
                 ) : null}
                 <Text className="text-[11px] text-muted-foreground mt-1.5">{badge}</Text>
               </View>
-              <Pressable onPress={onRemove} style={{ padding: 4 }}>
+              <Pressable onPress={onRemove} className="p-1">
                 <Ionicons name="bookmark" size={20} color="#000" />
               </Pressable>
             </View>
@@ -93,35 +87,23 @@ export function BookmarkCard({ bookmark, onPress, onRemove }: BookmarkCardProps)
     <Pressable
       onPress={onPress}
       disabled={!onPress}
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 12,
-        padding: 12,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: '#e8e8e4',
-        backgroundColor: '#fff',
-      }}
+      className="flex-row items-center mb-3 p-3 rounded-xl border border-[#e8e8e4] bg-white"
     >
       <View
-        style={{
-          width: 48,
-          height: 48,
-          borderRadius: bookmark.type === 'ACCUMULATOR' ? 24 : 8,
-          overflow: 'hidden',
-          backgroundColor: '#f0f0ec',
-        }}
+        className={cn(
+          'w-12 h-12 overflow-hidden bg-[#f0f0ec]',
+          bookmark.type === 'ACCUMULATOR' ? 'rounded-full' : 'rounded-lg',
+        )}
       >
         {bookmark.imageUrl ? (
           <Image source={{ uri: bookmark.imageUrl }} style={{ width: 48, height: 48 }} contentFit="cover" />
         ) : (
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <View className="flex-1 items-center justify-center">
             <Ionicons name="bookmark-outline" size={20} color="#666" />
           </View>
         )}
       </View>
-      <View style={{ flex: 1, marginLeft: 12, marginRight: 8 }}>
+      <View className="flex-1 ml-3 mr-2">
         <Text className="text-[15px] font-bold text-foreground" numberOfLines={2}>
           {title}
         </Text>
@@ -130,7 +112,7 @@ export function BookmarkCard({ bookmark, onPress, onRemove }: BookmarkCardProps)
         ) : null}
         <Text className="text-[11px] text-muted-foreground mt-1">{badge}</Text>
       </View>
-      <Pressable onPress={onRemove} style={{ padding: 4 }}>
+      <Pressable onPress={onRemove} className="p-1">
         <Ionicons name="bookmark" size={20} color="#000" />
       </Pressable>
     </Pressable>

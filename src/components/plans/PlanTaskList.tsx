@@ -1,4 +1,5 @@
 import { Text } from '@/components/ui/text';
+import { cn } from '@/utils/cn';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -39,15 +40,10 @@ function TaskCheckbox({
     <Pressable
       onPress={onToggle}
       hitSlop={8}
-      style={{
-        width: 24,
-        height: 24,
-        borderRadius: 12,
-        borderWidth: completed ? 0 : 1,
-        borderColor: '#000',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+      className={cn(
+        'w-6 h-6 rounded-full items-center justify-center',
+        completed ? 'border-0' : 'border border-black',
+      )}
     >
       {completed ? <Ionicons name="checkmark" size={20} color="#000" /> : null}
     </Pressable>
@@ -64,15 +60,7 @@ function CircleActionButton({
   return (
     <Pressable
       onPress={onPress}
-      style={{
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        borderWidth: 1,
-        borderColor: 'rgba(0,0,0,0.3)',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+      className="w-10 h-10 rounded-full border border-black/30 items-center justify-center"
     >
       <Ionicons
         name={icon === 'play' ? 'play' : 'chevron-forward'}
@@ -102,7 +90,7 @@ export function PlanTaskList({
   }
 
   return (
-    <View style={{ paddingHorizontal: 16, paddingBottom: 32 }}>
+    <View className="px-4 pb-8">
       {tasks.map((task) => {
         const completed = optimisticCompleted[task.id] ?? task.is_completed === true;
         const navigable = isTaskNavigable(task);
@@ -111,12 +99,7 @@ export function PlanTaskList({
         return (
           <View
             key={task.id}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginVertical: 10,
-              gap: 10,
-            }}
+            className="flex-row items-center my-2.5 gap-2.5"
           >
             {!readOnly && onToggleTask ? (
               <TaskCheckbox
@@ -126,7 +109,7 @@ export function PlanTaskList({
             ) : null}
 
             <Pressable
-              style={{ flex: 1 }}
+              className="flex-1"
               disabled={!navigable}
               onPress={() => onPressTask?.(task.id)}
             >

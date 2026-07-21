@@ -22,10 +22,10 @@ export function ReaderSegmentBlock({
   if (!content) return null;
 
   return (
-    <Pressable onPress={onPress} style={{ marginBottom: 16 }}>
-      <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+    <Pressable onPress={onPress} className="mb-4">
+      <View className="flex-row items-start">
         <SegmentNumber number={displayNumber} fontSize={fontSize} />
-        <View style={{ flex: 1 }}>
+        <View className="flex-1">
           <SegmentHtml
             html={content}
             fontSize={fontSize}

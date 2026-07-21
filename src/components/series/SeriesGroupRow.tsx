@@ -19,36 +19,18 @@ export function SeriesGroupRow({ group }: SeriesGroupRowProps) {
   return (
     <Pressable
       onPress={() => router.push({ pathname: '/group/[id]', params: { id: group.id } })}
-      style={({ pressed }) => ({
-        marginHorizontal: 16,
-        marginTop: 16,
-        borderTopWidth: 1,
-        borderBottomWidth: 1,
-        borderColor: '#e8e8e4',
-        paddingVertical: 14,
-        flexDirection: 'row',
-        alignItems: 'center',
-        opacity: pressed ? 0.75 : 1,
-      })}
+      className="mx-4 mt-4 border-t border-b border-[#e8e8e4] py-3.5 flex-row items-center active:opacity-75"
     >
-      <View
-        style={{
-          width: 40,
-          height: 40,
-          borderRadius: 20,
-          overflow: 'hidden',
-          backgroundColor: '#e8e8e4',
-        }}
-      >
+      <View className="w-10 h-10 rounded-full overflow-hidden bg-[#e8e8e4]">
         {group.avatar_url ? (
           <Image source={{ uri: group.avatar_url }} style={{ width: 40, height: 40 }} contentFit="cover" />
         ) : (
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <View className="flex-1 items-center justify-center">
             <Ionicons name="people-outline" size={20} color="#8a8a8a" />
           </View>
         )}
       </View>
-      <View style={{ flex: 1, marginLeft: 12 }}>
+      <View className="flex-1 ml-3">
         {meta?.title ? (
           <Text className="text-base font-semibold text-foreground" numberOfLines={1}>
             {meta.title}

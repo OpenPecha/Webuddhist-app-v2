@@ -23,6 +23,7 @@ import {
 import { useLoginDrawer } from '@/hooks/useLoginDrawer';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { cn } from '@/utils/cn';
 import type { GroupSocialLink } from '@/lib/group-profile-format';
 import { pickGroupMetadata } from '@/types/groups';
 import type { Plan, Series } from '@/types/series';
@@ -53,7 +54,7 @@ export default function GroupProfileScreen() {
   const { isGuest } = useGuest();
   const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
   const socialSheetRef = useRef<BottomSheetModal>(null);
-  const { scaffoldBackground } = useThemeColors();
+  const { isDark } = useThemeColors();
 
   const { data: group, isLoading, error, refetch } = useGroupProfile(groupId);
   const joinMutation = useJoinGroup(groupId);
@@ -125,9 +126,11 @@ export default function GroupProfileScreen() {
     followMutation.isPending ||
     unfollowMutation.isPending;
 
+  const scaffoldClassName = cn('flex-1', isDark ? 'bg-black' : 'bg-[#FBF9F4]');
+
   if (isLoading) {
     return (
-      <View style={{ flex: 1, backgroundColor: scaffoldBackground, paddingTop: insets.top }}>
+      <View className={scaffoldClassName} style={{ paddingTop: insets.top }}>
         <GroupProfileAppBar />
         <ActivityIndicator style={{ marginTop: 48 }} />
       </View>
@@ -136,17 +139,9 @@ export default function GroupProfileScreen() {
 
   if (error || !group) {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: scaffoldBackground,
-          paddingTop: insets.top,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
+      <View className={cn(scaffoldClassName, 'items-center justify-center')} style={{ paddingTop: insets.top }}>
         <Text className="text-destructive">{t('connect.not_found')}</Text>
-        <Pressable onPress={() => refetch()} style={{ marginTop: 12 }}>
+        <Pressable onPress={() => refetch()} className="mt-3 active:opacity-70">
           <Text className="text-foreground">{t('practice.retry')}</Text>
         </Pressable>
       </View>
@@ -154,7 +149,7 @@ export default function GroupProfileScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: scaffoldBackground, paddingTop: insets.top }}>
+    <View className={scaffoldClassName} style={{ paddingTop: insets.top }}>
       <GroupProfileAppBar />
       <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + 32 }}>
         <GroupProfileBanner bannerUrl={group.banner_url} />

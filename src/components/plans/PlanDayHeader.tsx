@@ -26,15 +26,7 @@ export function PlanDayHeader({
   const { t } = useTranslation();
 
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 16,
-        marginBottom: 4,
-      }}
-    >
+    <View className="flex-row items-center justify-between px-4 mb-1">
       <Text className="text-lg font-bold text-foreground">
         {t('planTrack.day_of', { day: selectedDay, total: totalDays })}
       </Text>

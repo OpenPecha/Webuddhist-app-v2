@@ -22,8 +22,7 @@ export function SeriesCard({ series, onPress }: SeriesCardProps) {
   return (
     <Pressable
       onPress={handlePress}
-      className="rounded-2xl overflow-hidden active:opacity-80"
-      style={{ aspectRatio: 1.3 }}
+      className="aspect-[1.3] overflow-hidden rounded-2xl active:opacity-80"
     >
       <Image
         source={{ uri: imageUrl(series.image) }}

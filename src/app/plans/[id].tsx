@@ -191,8 +191,8 @@ export default function PlanPreviewScreen() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
-        <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
+      <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+        <Pressable onPress={() => router.back()} className="p-2 active:opacity-70">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <ActivityIndicator style={{ marginTop: 48 }} />
@@ -202,13 +202,13 @@ export default function PlanPreviewScreen() {
 
   if (planError || !plan) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
-        <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
+      <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+        <Pressable onPress={() => router.back()} className="p-2 active:opacity-70">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+        <View className="flex-1 items-center justify-center gap-3">
           <Text className="text-destructive">{t('practice.not_found')}</Text>
-          <Pressable onPress={() => refetch()}>
+          <Pressable onPress={() => refetch()} className="active:opacity-70">
             <Text>{t('practice.retry')}</Text>
           </Pressable>
         </View>
@@ -217,16 +217,12 @@ export default function PlanPreviewScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FDFDFC' }}>
+    <View className="flex-1 bg-[#FDFDFC]">
       <View
-        style={{
-          paddingTop: insets.top + 4,
-          paddingHorizontal: 8,
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}
+        className="flex-row items-center px-2"
+        style={{ paddingTop: insets.top + 4 }}
       >
-        <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
+        <Pressable onPress={() => router.back()} className="p-2 active:opacity-70">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <Text
@@ -276,28 +272,12 @@ export default function PlanPreviewScreen() {
 
       {showStickyCta ? (
         <View
-          style={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: '#FDFDFC',
-            paddingHorizontal: 16,
-            paddingTop: 12,
-            paddingBottom: insets.bottom + 16,
-            borderTopWidth: 1,
-            borderTopColor: '#e8e8e4',
-          }}
+          className="absolute bottom-0 left-0 right-0 border-t border-[#e8e8e4] bg-[#FDFDFC] px-4 pt-3"
+          style={{ paddingBottom: insets.bottom + 16 }}
         >
           <Pressable
             onPress={handleAddToRoutine}
-            style={({ pressed }) => ({
-              backgroundColor: '#000',
-              borderRadius: 12,
-              paddingVertical: 16,
-              alignItems: 'center',
-              opacity: pressed ? 0.75 : 1,
-            })}
+            className="items-center rounded-xl bg-black py-4 active:opacity-75"
           >
             <Text className="text-base font-semibold text-white">
               {t('plans.preview.add_to_routine')}

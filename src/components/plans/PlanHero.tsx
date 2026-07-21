@@ -30,7 +30,7 @@ export function PlanHero({
   if (variant === 'track') {
     const heroHeight = Math.round(windowHeight * 0.3);
     return (
-      <View style={{ paddingHorizontal: 16, paddingTop: 12 }}>
+      <View className="px-4 pt-3">
         {image ? (
           <Image
             source={{ uri: imageUrl(image) }}
@@ -44,12 +44,8 @@ export function PlanHero({
           />
         ) : (
           <View
-            style={{
-              width: '100%',
-              height: heroHeight,
-              borderRadius: 12,
-              backgroundColor: '#e8e8e4',
-            }}
+            className="w-full rounded-xl bg-[#e8e8e4]"
+            style={{ height: heroHeight }}
           />
         )}
         {description ? (
@@ -69,9 +65,9 @@ export function PlanHero({
           transition={300}
         />
       ) : (
-        <View style={{ width: '100%', aspectRatio: 16 / 9, backgroundColor: '#e8e8e4' }} />
+        <View className="w-full aspect-video bg-[#e8e8e4]" />
       )}
-      <View style={{ paddingHorizontal: 16, paddingTop: 20 }}>
+      <View className="px-4 pt-5">
         <Text className="text-2xl font-bold text-foreground mb-1.5">{title}</Text>
         <Text className={`text-[13px] text-muted-foreground${description ? ' mb-3' : ''}`}>
           {daysLabel}

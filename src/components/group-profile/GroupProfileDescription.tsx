@@ -1,7 +1,4 @@
-import {
-  GP_DESCRIPTION_CLAMP,
-  GP_PADDING,
-} from '@/components/group-profile/group-profile-styles';
+import { GP_DESCRIPTION_CLAMP } from '@/components/group-profile/group-profile-styles';
 import { Text } from '@/components/ui/text';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +17,7 @@ export function GroupProfileDescription({ description }: GroupProfileDescription
   return (
     <Pressable
       onPress={() => setExpanded((v) => !v)}
-      style={{ paddingHorizontal: GP_PADDING, paddingTop: 12 }}
+      className="px-4 pt-3 active:opacity-80"
     >
       <Text
         className="text-[15px] leading-[22px] text-foreground"

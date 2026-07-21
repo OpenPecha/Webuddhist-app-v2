@@ -1,3 +1,4 @@
+import { cn } from '@/utils/cn';
 import { AppScreenHeader } from '@/components/settings/AppScreenHeader';
 import { Text } from '@/components/ui/text';
 import {
@@ -92,8 +93,7 @@ export default function AboutScreen() {
                   </Pressable>
                   {index < SOCIAL_LINKS.length - 1 ? (
                     <View
-                      className="h-px"
-                      style={{ backgroundColor: isDark ? '#555' : '#f0f0f0' }}
+                      className={cn('h-px', isDark ? 'bg-[#555]' : 'bg-[#f0f0f0]')}
                     />
                   ) : null}
                 </View>

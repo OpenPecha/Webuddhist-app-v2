@@ -1,5 +1,4 @@
 import { Text } from '@/components/ui/text';
-import { GP_JOIN_HEIGHT, GP_JOIN_RADIUS, GP_PADDING } from '@/components/group-profile/group-profile-styles';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable } from 'react-native';
@@ -35,16 +34,11 @@ export function GroupProfileJoinButton({
     <Pressable
       onPress={onPress}
       disabled={pending}
-      style={({ pressed }) => ({
-        marginHorizontal: GP_PADDING,
-        marginTop: 20,
-        height: GP_JOIN_HEIGHT,
-        borderRadius: GP_JOIN_RADIUS,
+      className="mx-4 mt-5 h-12 items-center justify-center rounded-3xl active:opacity-75"
+      style={{
         backgroundColor: activeBg,
-        alignItems: 'center',
-        justifyContent: 'center',
-        opacity: pressed || pending ? 0.75 : 1,
-      })}
+        opacity: pending ? 0.75 : 1,
+      }}
     >
       {pending ? (
         <ActivityIndicator size="small" color={activeFg} />

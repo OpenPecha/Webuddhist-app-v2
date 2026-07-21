@@ -60,8 +60,10 @@ export default function DeleteAccountScreen() {
         <Pressable
           onPress={handleDelete}
           disabled={deleting}
-          className="mt-10 h-[52px] items-center justify-center rounded-full active:opacity-80"
-          style={{ backgroundColor: isDark ? '#fff' : '#000' }}
+          className={cn(
+            'mt-10 h-[52px] items-center justify-center rounded-full active:opacity-80',
+            isDark ? 'bg-white' : 'bg-black',
+          )}
         >
           {deleting ? (
             <ActivityIndicator color={isDark ? '#000' : '#fff'} />

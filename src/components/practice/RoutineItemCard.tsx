@@ -1,4 +1,5 @@
 import { Text } from '@/components/ui/text';
+import { cn } from '@/utils/cn';
 import { APP_ASSETS } from '@/constants/app-assets';
 import type { RoutineItemType } from '@/types/routine';
 import { imageUrl } from '@/utils/image-url';
@@ -37,38 +38,33 @@ export function RoutineItemCard({
     <Pressable
       onPress={onPress}
       disabled={!onPress}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 12,
-        opacity: pressed && onPress ? 0.85 : 1,
-        borderRadius: 10,
-        backgroundColor: isDragging ? '#FDFDFC' : 'transparent',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: isDragging ? 2 : 0 },
-        shadowOpacity: isDragging ? 0.12 : 0,
-        shadowRadius: isDragging ? 4 : 0,
-        elevation: isDragging ? 2 : 0,
-      })}
+      className={cn(
+        'flex-row items-center py-3 rounded-[10px]',
+        onPress && 'active:opacity-85',
+        isDragging ? 'bg-[#FDFDFC]' : 'bg-transparent',
+      )}
+      style={
+        isDragging
+          ? {
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.12,
+              shadowRadius: 4,
+              elevation: 2,
+            }
+          : undefined
+      }
     >
       {onDelete ? (
         <>
           <Pressable
             onPress={onDelete}
             hitSlop={8}
-            style={{
-              width: 24,
-              height: 24,
-              marginLeft: 8,
-              borderRadius: 12,
-              backgroundColor: '#f0f0ec',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            className="w-6 h-6 ml-2 rounded-full bg-[#f0f0ec] items-center justify-center"
           >
             <Ionicons name="remove" size={16} color="#000" />
           </Pressable>
-          <View style={{ width: 20 }} />
+          <View className="w-5" />
         </>
       ) : null}
 
@@ -92,31 +88,17 @@ export function RoutineItemCard({
           transition={200}
         />
       ) : (
-        <View
-          style={{
-            width: 74,
-            height: 74,
-            borderRadius: 10,
-            backgroundColor: '#f0f0ec',
-          }}
-        />
+        <View className="w-[74px] h-[74px] rounded-[10px] bg-[#f0f0ec]" />
       )}
 
-      <View style={{ flex: 1, marginLeft: 16, justifyContent: 'center' }}>
+      <View className="flex-1 ml-4 justify-center">
         <Text className="text-base font-semibold text-foreground" numberOfLines={2}>
           {title}
         </Text>
 
         {showSubtitleRow ? (
-          <View
-            style={{
-              marginTop: 8,
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 8,
-            }}
-          >
-            <View style={{ flex: 1 }}>{subtitle}</View>
+          <View className="mt-2 flex-row items-center gap-2">
+            <View className="flex-1">{subtitle}</View>
             {trailing}
           </View>
         ) : null}
@@ -127,7 +109,7 @@ export function RoutineItemCard({
           onLongPress={onReorderDragStart}
           delayLongPress={120}
           hitSlop={8}
-          style={{ marginLeft: 8, padding: 4 }}
+          className="ml-2 p-1"
         >
           <Ionicons name="reorder-three" size={22} color="#8a8a8a" />
         </Pressable>

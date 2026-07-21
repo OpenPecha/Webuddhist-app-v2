@@ -10,25 +10,17 @@ export function HomeSharePrompt() {
   const { foreground, sharePromptBg } = useThemeColors();
 
   return (
-    <View style={{ paddingHorizontal: 20, paddingVertical: 24 }}>
+    <View className="px-5 py-6">
       <Text className="text-center text-base text-muted-foreground">
         {t('home.home_share_prompt', { appName: t('appTitle') })}
       </Text>
-      <View style={{ height: 12 }} />
+      <View className="h-3" />
       <Pressable
         onPress={() => {
           void shareApp();
         }}
-        style={({ pressed }) => ({
-          height: 52,
-          borderRadius: 12,
-          backgroundColor: sharePromptBg,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 8,
-          opacity: pressed ? 0.85 : 1,
-        })}
+        className="h-[52px] flex-row items-center justify-center gap-2 rounded-xl active:opacity-85"
+        style={{ backgroundColor: sharePromptBg }}
       >
         <ShareNetworkIcon size={22} color={foreground} />
         <Text className="text-base font-bold text-foreground">{t('home.share')}</Text>

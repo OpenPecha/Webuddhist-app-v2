@@ -4,6 +4,7 @@ import { ArrowLeftIcon } from '@/components/home/HomeIcon';
 import { HomeEventCard } from '@/components/home/HomeEventCard';
 import { useEventsToday } from '@/hooks/api/useEventsToday';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { cn } from '@/utils/cn';
 import type { AppEvent } from '@/types/event';
 import { useRouter, type Href } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -30,23 +31,15 @@ export default function EventsScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { foreground, scaffoldBackground } = useThemeColors();
+  const { foreground, isDark } = useThemeColors();
   const { data, isLoading, isError } = useEventsToday(EVENTS_LIST_LIMIT);
 
   return (
-    <View style={{ flex: 1, backgroundColor: scaffoldBackground, paddingTop: insets.top }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 16,
-          paddingVertical: 12,
-          gap: 12,
-        }}
-      >
+    <View className={cn('flex-1', isDark ? 'bg-black' : 'bg-[#FBF9F4]')} style={{ paddingTop: insets.top }}>
+      <View className="flex-row items-center gap-3 px-4 py-3">
         <Pressable
           onPress={() => router.back()}
-          style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+          className="active:opacity-70"
           accessibilityRole="button"
         >
           <ArrowLeftIcon size={24} color={foreground} />
@@ -55,11 +48,11 @@ export default function EventsScreen() {
       </View>
 
       {isLoading ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" />
         </View>
       ) : isError || !data || data.events.length === 0 ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24 }}>
+        <View className="flex-1 items-center justify-center px-6">
           <Text className="text-center text-base text-muted-foreground">{t('home.events_empty')}</Text>
         </View>
       ) : (

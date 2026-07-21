@@ -3,6 +3,7 @@ import '@/lib/i18n';
 import { TimerProgressRing } from '@/components/timer/TimerProgressRing';
 import { useActiveTimer } from '@/hooks/useActiveTimer';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { cn } from '@/utils/cn';
 import { stopUserTimer } from '@/services/timers';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Pause, Play } from 'phosphor-react-native';
@@ -12,9 +13,7 @@ import { BackHandler, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const RING_SIZE = 280;
-const CONTROLS_SPACING = 48;
 const CONTROLS_HEIGHT = 56;
-const CENTER_TEXT_HEIGHT = 48;
 const DURATION_FONT_SIZE = 40;
 const FOOTER_MIN_HEIGHT = 120;
 
@@ -22,7 +21,7 @@ export default function ActiveTimerScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { foreground, scaffoldBackground, isDark } = useThemeColors();
+  const { foreground, isDark } = useThemeColors();
 
   const params = useLocalSearchParams<{ id: string; durationMs: string; name?: string }>();
   const timerId = params.id ?? '';
@@ -103,16 +102,12 @@ export default function ActiveTimerScreen() {
 
   return (
     <View
-      style={{
-        flex: 1,
-        backgroundColor: scaffoldBackground,
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-      }}
+      className={cn('flex-1', isDark ? 'bg-black' : 'bg-[#FBF9F4]')}
+      style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
     >
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View className="flex-1 items-center justify-center">
         <TimerProgressRing progress={elapsedProgress} size={RING_SIZE}>
-          <View style={{ height: CENTER_TEXT_HEIGHT, justifyContent: 'center' }}>
+          <View className="h-12 justify-center">
             <Text
               className="text-center font-semibold text-foreground"
               style={{
@@ -125,18 +120,17 @@ export default function ActiveTimerScreen() {
           </View>
         </TimerProgressRing>
 
-        <View style={{ height: CONTROLS_SPACING }} />
+        <View className="h-12" />
 
-        <View style={{ height: CONTROLS_HEIGHT, justifyContent: 'center' }}>
+        <View className="h-14 justify-center">
           {showPlayPause ? (
             <Pressable
               onPress={handleTogglePause}
               disabled={phase === 'finished'}
+              className="items-center justify-center"
               style={{
                 width: CONTROLS_HEIGHT,
                 height: CONTROLS_HEIGHT,
-                alignItems: 'center',
-                justifyContent: 'center',
                 opacity: phase === 'finished' ? 0.4 : 1,
               }}
             >
@@ -151,12 +145,8 @@ export default function ActiveTimerScreen() {
       </View>
 
       <View
-        style={{
-          paddingHorizontal: 24,
-          paddingBottom: 32,
-          minHeight: FOOTER_MIN_HEIGHT,
-          opacity: showFooter ? 1 : 0,
-        }}
+        className="px-6 pb-8"
+        style={{ minHeight: FOOTER_MIN_HEIGHT, opacity: showFooter ? 1 : 0 }}
         pointerEvents={showFooter ? 'auto' : 'none'}
       >
         <View style={{ opacity: showFinish ? 1 : 0 }} pointerEvents={showFinish ? 'auto' : 'none'}>
@@ -177,10 +167,10 @@ export default function ActiveTimerScreen() {
           </Pressable>
         </View>
 
-        <View style={{ height: 16 }} />
+        <View className="h-4" />
 
         <View style={{ opacity: showDiscard ? 1 : 0 }} pointerEvents={showDiscard ? 'auto' : 'none'}>
-          <Pressable onPress={handleDiscard} style={{ alignSelf: 'center', paddingHorizontal: 16, paddingVertical: 8 }}>
+          <Pressable onPress={handleDiscard} className="self-center px-4 py-2 active:opacity-70">
             <Text className="text-base font-medium text-foreground">{t('timers.discard_session')}</Text>
           </Pressable>
         </View>

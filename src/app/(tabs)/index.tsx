@@ -1,5 +1,4 @@
 import '@/lib/i18n';
-import { CARD_SPACING } from '@/components/home/constants';
 import { FeaturedPlanSection } from '@/components/home/FeaturedPlanSection';
 import { HomeEventsSection } from '@/components/home/HomeEventsSection';
 import { HomeHeader } from '@/components/home/HomeHeader';
@@ -15,6 +14,7 @@ import { useSeries } from '@/hooks/api/useSeries';
 import { useVerseOfDay } from '@/hooks/api/useVerseOfDay';
 import { useHomeBootstrap } from '@/hooks/useHomeBootstrap';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { cn } from '@/utils/cn';
 import { useGuest } from '@/providers/guest';
 import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
@@ -31,21 +31,15 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function HomeErrorState({ onRetry }: { onRetry: () => void }) {
   const { t } = useTranslation();
-  const { foreground } = useThemeColors();
 
   return (
-    <View style={{ alignItems: 'center', gap: 12, paddingHorizontal: 24 }}>
+    <View className="items-center gap-3 px-6">
       <Text className="text-center text-destructive">
         {t('home.load_error')}
       </Text>
       <Pressable
         onPress={onRetry}
-        style={{
-          borderRadius: 8,
-          backgroundColor: foreground,
-          paddingHorizontal: 16,
-          paddingVertical: 8,
-        }}
+        className="rounded-lg bg-foreground px-4 py-2 active:opacity-70"
       >
         <Text className="text-[13px] font-medium text-white">
           {t('practice.retry')}
@@ -60,7 +54,7 @@ export default function Index() {
   const { t } = useTranslation();
   const router = useRouter();
   const { isGuest } = useGuest();
-  const { scaffoldBackground } = useThemeColors();
+  const { isDark } = useThemeColors();
   const [refreshing, setRefreshing] = useState(false);
 
   const { data: seriesData, isLoading: seriesLoading, isError: seriesError } = useSeries();
@@ -99,7 +93,7 @@ export default function Index() {
   const topInset = Platform.OS === 'android' ? insets.top : 0;
 
   return (
-    <View style={{ flex: 1, backgroundColor: scaffoldBackground, paddingTop: topInset }}>
+    <View className={cn('flex-1', isDark ? 'bg-black' : 'bg-[#FBF9F4]')} style={{ paddingTop: topInset }}>
       <HomeHeader />
 
       <ScrollView
@@ -114,13 +108,13 @@ export default function Index() {
         }
       >
         {seriesLoading && !seriesData ? (
-          <View style={{ flex: 1 }} />
+          <View className="flex-1" />
         ) : seriesError ? (
-          <View style={{ flex: 1, justifyContent: 'center', minHeight: 320 }}>
+          <View className="min-h-[320px] flex-1 justify-center">
             <HomeErrorState onRetry={onRefresh} />
           </View>
         ) : seriesList.length === 0 ? (
-          <View style={{ flex: 1, justifyContent: 'center', minHeight: 320 }}>
+          <View className="min-h-[320px] flex-1 justify-center">
             <Text className="px-6 text-center text-lg text-foreground">
               {t('home.no_feature_content')}
             </Text>
@@ -133,9 +127,9 @@ export default function Index() {
               <VerseOfDayCard verse={verse} />
             ) : null}
 
-            <View style={{ height: CARD_SPACING }} />
+            <View className="h-4" />
             <HomeShortcutsRow />
-            <View style={{ height: CARD_SPACING }} />
+            <View className="h-4" />
 
             {routineInfoLoading && !isGuest ? (
               <MyPracticesStatsSkeleton />
@@ -147,11 +141,11 @@ export default function Index() {
             ) : null}
 
             {(showRoutineStats || (routineInfoLoading && !isGuest)) && (
-              <View style={{ height: CARD_SPACING }} />
+              <View className="h-4" />
             )}
 
             <HomeEventsSection />
-            <View style={{ height: CARD_SPACING }} />
+            <View className="h-4" />
 
             <FeaturedPlanSection />
             <HomeSharePrompt />

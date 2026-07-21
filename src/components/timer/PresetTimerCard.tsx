@@ -22,25 +22,17 @@ export function PresetTimerCard({ timer, minLabel, onPress }: PresetTimerCardPro
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => ({
-        flex: 1,
-        aspectRatio: 1,
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor,
-        backgroundColor: cardSurface,
-        opacity: pressed ? 0.9 : 1,
-        overflow: 'hidden',
-      })}
+      className="flex-1 aspect-square rounded-2xl border overflow-hidden active:opacity-90"
+      style={{ borderColor, backgroundColor: cardSurface }}
     >
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View className="flex-1 items-center justify-center">
         <Text
           className="text-foreground font-semibold"
           style={{ fontSize: 48, lineHeight: 48 }}
         >
           {displayMinutes(timer.durationMs)}
         </Text>
-        <View style={{ height: 4 }} />
+        <View className="h-1" />
         <Text className="text-base text-foreground">{minLabel}</Text>
       </View>
     </Pressable>

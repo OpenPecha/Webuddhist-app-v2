@@ -1,5 +1,4 @@
 import { Text } from '@/components/ui/text';
-import { useThemeColors } from '@/hooks/useThemeColors';
 import { BEADS_PER_ROUND } from '@/types/mala';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -21,7 +20,7 @@ export function MalaCounterDisplay({
   const opacity = loaded ? 1 : 0.35;
 
   return (
-    <View style={{ alignSelf: 'stretch', marginBottom: 16, minHeight: 88 }}>
+    <View className="self-stretch mb-4 min-h-[88px]">
       <Text
         className="min-w-40 font-bold tabular-nums text-foreground"
         style={{ fontSize: 48, opacity }}

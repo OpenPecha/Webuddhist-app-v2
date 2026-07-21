@@ -1,10 +1,10 @@
 import '@/lib/i18n';
 import { ArrowLeftIcon } from '@/components/home/HomeIcon';
 import { MoonPhaseIcon } from '@/components/home/MoonPhaseIcon';
-import { AppColors } from '@/constants/app-colors';
 import { useCalendarMonth } from '@/hooks/api/useCalendarMonth';
 import { useCalendarToday } from '@/hooks/api/useCalendarToday';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { cn } from '@/utils/cn';
 import type { CalendarDay } from '@/types/calendar';
 import { moonPhaseForLunarDay } from '@/utils/moon-phase';
 import { useRouter } from 'expo-router';
@@ -60,7 +60,7 @@ export default function CalendarScreen() {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth() + 1);
-  const { foreground, scaffoldBackground, cardSurface, cardBorder } =
+  const { foreground, isDark, cardSurface, cardBorder } =
     useThemeColors();
 
   const { data: monthData, isLoading, isError, refetch } = useCalendarMonth(year, month);
@@ -100,40 +100,25 @@ export default function CalendarScreen() {
     date.getDate() === today.getDate();
 
   return (
-    <View style={{ flex: 1, backgroundColor: scaffoldBackground, paddingTop: insets.top }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 8,
-          paddingVertical: 8,
-        }}
-      >
-        <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
+    <View className={cn('flex-1', isDark ? 'bg-black' : 'bg-[#FBF9F4]')} style={{ paddingTop: insets.top }}>
+      <View className="flex-row items-center px-2 py-2">
+        <Pressable onPress={() => router.back()} className="p-2 active:opacity-70">
           <ArrowLeftIcon size={24} color={foreground} />
         </Pressable>
         <Text className="flex-1 text-center text-[17px] font-semibold text-foreground">
           {t('calendar.title')}
         </Text>
-        <View style={{ width: 40 }} />
+        <View className="w-10" />
       </View>
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 32 }}>
         {todayData ? (
           <View
-            style={{
-              borderRadius: 16,
-              borderWidth: 1,
-              borderColor: cardBorder,
-              backgroundColor: cardSurface,
-              padding: 16,
-              flexDirection: 'row',
-              alignItems: 'center',
-              gap: 16,
-            }}
+            className="flex-row items-center gap-4 rounded-2xl border p-4"
+            style={{ borderColor: cardBorder, backgroundColor: cardSurface }}
           >
             <MoonPhaseIcon phase={moonPhaseForLunarDay(todayData.lunarDay)} size={48} />
-            <View style={{ flex: 1 }}>
+            <View className="flex-1">
               <Text className="text-lg font-bold text-foreground">
                 {t('home.calendar_day_month', {
                   day: todayData.lunarDay,
@@ -149,35 +134,29 @@ export default function CalendarScreen() {
           </View>
         ) : null}
 
-        <View style={{ height: 16 }} />
+        <View className="h-4" />
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Pressable onPress={goPrevMonth} style={{ padding: 8 }}>
+        <View className="flex-row items-center justify-between">
+          <Pressable onPress={goPrevMonth} className="p-2 active:opacity-70">
             <CaretLeft size={22} color={foreground} />
           </Pressable>
           <Text className="text-base font-semibold text-foreground">
             {monthLabel}
           </Text>
-          <Pressable onPress={goNextMonth} style={{ padding: 8 }}>
+          <Pressable onPress={goNextMonth} className="p-2 active:opacity-70">
             <CaretRight size={22} color={foreground} />
           </Pressable>
         </View>
 
-        <View style={{ height: 8 }} />
+        <View className="h-2" />
 
         <View
-          style={{
-            borderRadius: 16,
-            borderWidth: 1,
-            borderColor: cardBorder,
-            backgroundColor: cardSurface,
-            paddingVertical: 12,
-            paddingHorizontal: 8,
-          }}
+          className="rounded-2xl border px-2 py-3"
+          style={{ borderColor: cardBorder, backgroundColor: cardSurface }}
         >
-          <View style={{ flexDirection: 'row', marginBottom: 8 }}>
+          <View className="mb-2 flex-row">
             {WEEKDAY_LABELS.map((label) => (
-              <View key={label} style={{ flex: 1, alignItems: 'center' }}>
+              <View key={label} className="flex-1 items-center">
                 <Text className="text-[11px] font-semibold text-muted-foreground">
                   {label}
                 </Text>
@@ -186,24 +165,24 @@ export default function CalendarScreen() {
           </View>
 
           {isLoading ? (
-            <View style={{ paddingVertical: 48, alignItems: 'center' }}>
+            <View className="items-center py-12">
               <ActivityIndicator />
             </View>
           ) : isError ? (
-            <View style={{ padding: 24, alignItems: 'center', gap: 12 }}>
+            <View className="items-center gap-3 p-6">
               <Text className="text-center text-muted-foreground">{t('home.load_error')}</Text>
               <Pressable
                 onPress={() => void refetch()}
-                style={{ backgroundColor: AppColors.blue, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 8 }}
+                className="rounded-lg bg-[#0C53C5] px-4 py-2 active:opacity-70"
               >
                 <Text className="text-white">{t('practice.retry')}</Text>
               </Pressable>
             </View>
           ) : (
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+            <View className="flex-row flex-wrap">
               {cells.map((cell, index) => {
                 if (!cell) {
-                  return <View key={`empty-${index}`} style={{ width: `${100 / 7}%`, height: 58 }} />;
+                  return <View key={`empty-${index}`} className="h-[58px] w-[14.285714%]" />;
                 }
 
                 const { date, day } = cell;
@@ -213,14 +192,10 @@ export default function CalendarScreen() {
                 return (
                   <View
                     key={`${date.toISOString()}-${index}`}
-                    style={{
-                      width: `${100 / 7}%`,
-                      height: 58,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: 8,
-                      backgroundColor: selected ? `${AppColors.blue}18` : 'transparent',
-                    }}
+                    className={cn(
+                      'h-[58px] w-[14.285714%] items-center justify-center rounded-lg',
+                      selected ? 'bg-[#0C53C5]/10' : '',
+                    )}
                   >
                     <Text
                       className={`text-sm ${selected ? 'font-bold text-[#0C53C5]' : 'font-medium text-foreground'}`}

@@ -1,4 +1,5 @@
 import { Text } from '@/components/ui/text';
+import { cn } from '@/utils/cn';
 import { Image } from 'expo-image';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 
@@ -26,28 +27,20 @@ export function SessionListTile({
     <Pressable
       onPress={onPress}
       disabled={disabled || isLoading}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 12,
-        opacity: disabled && !isLoading ? 0.5 : pressed ? 0.85 : 1,
-      })}
+      className={cn(
+        'flex-row items-center py-3',
+        disabled && !isLoading && 'opacity-50',
+        !disabled && 'active:opacity-85',
+      )}
     >
       {coverUri ? (
         <Image source={{ uri: coverUri }} style={{ width: 56, height: 56, borderRadius: 8 }} />
       ) : placeholderSource ? (
         <Image source={placeholderSource} style={{ width: 56, height: 56, borderRadius: 8 }} />
       ) : (
-        <View
-          style={{
-            width: 56,
-            height: 56,
-            borderRadius: 8,
-            backgroundColor: '#f0f0ec',
-          }}
-        />
+        <View className="w-14 h-14 rounded-lg bg-[#f0f0ec]" />
       )}
-      <View style={{ flex: 1, marginLeft: 16 }}>
+      <View className="flex-1 ml-4">
         <Text className="text-base font-semibold text-foreground" numberOfLines={1}>
           {title}
         </Text>

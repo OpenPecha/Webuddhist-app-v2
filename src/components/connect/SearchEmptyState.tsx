@@ -13,15 +13,7 @@ export function SearchEmptyState({ variant, message }: SearchEmptyStateProps) {
   const { mutedForeground } = useThemeColors();
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: 32,
-        paddingVertical: 48,
-      }}
-    >
+    <View className="flex-1 items-center justify-center px-8 py-12">
       {variant === 'hint' ? (
         <MagnifyingGlass size={64} color={mutedForeground} />
       ) : (

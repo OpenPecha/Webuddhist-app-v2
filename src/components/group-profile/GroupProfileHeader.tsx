@@ -1,6 +1,5 @@
 import {
   GP_AVATAR_SIZE,
-  GP_PADDING,
 } from '@/components/group-profile/group-profile-styles';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import {
@@ -33,16 +32,11 @@ export function GroupProfileHeader({ group, meta, language }: GroupProfileHeader
   const title = meta?.title ?? group.slug;
 
   return (
-    <View style={{ paddingHorizontal: GP_PADDING, paddingTop: 16 }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    <View className="px-4 pt-4">
+      <View className="flex-row items-center">
         <View
-          style={{
-            width: GP_AVATAR_SIZE,
-            height: GP_AVATAR_SIZE,
-            borderRadius: GP_AVATAR_SIZE / 2,
-            overflow: 'hidden',
-            backgroundColor: skeleton,
-          }}
+          className="h-11 w-11 overflow-hidden rounded-full"
+          style={{ backgroundColor: skeleton }}
         >
           {group.avatar_url ? (
             <Image
@@ -51,7 +45,7 @@ export function GroupProfileHeader({ group, meta, language }: GroupProfileHeader
               contentFit="cover"
             />
           ) : (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View className="flex-1 items-center justify-center">
               <UsersThree size={22} color={mutedForeground} />
             </View>
           )}
@@ -66,7 +60,7 @@ export function GroupProfileHeader({ group, meta, language }: GroupProfileHeader
       {meta?.sub_title ? (
         <Text className="mt-2 text-sm leading-5 text-muted-foreground">{meta.sub_title}</Text>
       ) : (
-        <View style={{ height: 8 }} />
+        <View className="h-2" />
       )}
 
       <Text className="mt-1 text-sm leading-5 text-foreground">

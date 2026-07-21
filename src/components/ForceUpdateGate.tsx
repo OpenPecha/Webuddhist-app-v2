@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/ui/text';
 import { Linking, Modal, Platform, Pressable, View } from 'react-native';
-import { AppColors } from '@/constants/app-colors';
 
 const IOS_STORE_URL =
   process.env.EXPO_PUBLIC_IOS_STORE_URL ??
@@ -66,25 +65,8 @@ export function ForceUpdateGate({ children }: ForceUpdateGateProps) {
     <>
       {children}
       <Modal visible={visible} transparent animationType="fade" onRequestClose={() => {}}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'rgba(0,0,0,0.55)',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 24,
-          }}
-        >
-          <View
-            style={{
-              width: '100%',
-              maxWidth: 340,
-              borderRadius: 16,
-              backgroundColor: '#fff',
-              padding: 24,
-              gap: 12,
-            }}
-          >
+        <View className="flex-1 items-center justify-center bg-black/55 p-6">
+          <View className="w-full max-w-[340px] gap-3 rounded-2xl bg-white p-6">
             <Text className="text-center text-xl font-bold text-foreground">
               {t('force_update.title')}
             </Text>
@@ -93,13 +75,7 @@ export function ForceUpdateGate({ children }: ForceUpdateGateProps) {
             </Text>
             <Pressable
               onPress={openStore}
-              style={({ pressed }) => ({
-                marginTop: 8,
-                borderRadius: 12,
-                backgroundColor: AppColors.blue,
-                paddingVertical: 14,
-                opacity: pressed ? 0.9 : 1,
-              })}
+              className="mt-2 rounded-xl bg-[#0C53C5] py-3.5 active:opacity-90"
             >
               <Text className="text-center text-base font-bold text-white">
                 {t('force_update.button')}

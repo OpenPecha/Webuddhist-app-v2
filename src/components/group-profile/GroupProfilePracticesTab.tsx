@@ -1,5 +1,4 @@
 import {
-  GP_PADDING,
   GP_SERIES_THUMB,
   GP_SERIES_THUMB_RADIUS,
 } from '@/components/group-profile/group-profile-styles';
@@ -49,22 +48,18 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
       <Pressable
         key={`series-${series.id}`}
         onPress={() => router.push(`/series/${series.id}`)}
-        style={({ pressed }) => ({
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: GP_PADDING,
-          paddingVertical: 6,
-          opacity: pressed ? 0.75 : 1,
+        className="flex-row items-center px-4 py-1.5 active:opacity-75"
+        style={{
           borderBottomWidth: index < seriesList.length - 1 || plansList.length > 0 ? 1 : 0,
           borderBottomColor: cardBorder,
-        })}
+        }}
       >
         <View
+          className="overflow-hidden"
           style={{
             width: GP_SERIES_THUMB,
             height: GP_SERIES_THUMB,
             borderRadius: GP_SERIES_THUMB_RADIUS,
-            overflow: 'hidden',
             backgroundColor: skeleton,
           }}
         >
@@ -75,12 +70,12 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
               contentFit="cover"
             />
           ) : (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View className="flex-1 items-center justify-center">
               <BookOpenText size={22} color={mutedForeground} />
             </View>
           )}
         </View>
-        <View style={{ flex: 1, marginLeft: 12 }}>
+        <View className="ml-3 flex-1">
           <Text className="text-[15px] font-semibold text-foreground" numberOfLines={1}>
             {seriesMeta?.title ?? series.id}
           </Text>
@@ -101,22 +96,18 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
       <Pressable
         key={`plan-${plan.id}`}
         onPress={() => router.push(`/plans/${plan.id}`)}
-        style={({ pressed }) => ({
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: GP_PADDING,
-          paddingVertical: 6,
-          opacity: pressed ? 0.75 : 1,
+        className="flex-row items-center px-4 py-1.5 active:opacity-75"
+        style={{
           borderBottomWidth: index < plansList.length - 1 ? 1 : 0,
           borderBottomColor: cardBorder,
-        })}
+        }}
       >
         <View
+          className="overflow-hidden"
           style={{
             width: GP_SERIES_THUMB,
             height: GP_SERIES_THUMB,
             borderRadius: GP_SERIES_THUMB_RADIUS,
-            overflow: 'hidden',
             backgroundColor: skeleton,
           }}
         >
@@ -127,12 +118,12 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
               contentFit="cover"
             />
           ) : (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View className="flex-1 items-center justify-center">
               <BookOpenText size={22} color={mutedForeground} />
             </View>
           )}
         </View>
-        <View style={{ flex: 1, marginLeft: 12 }}>
+        <View className="ml-3 flex-1">
           <Text className="text-[15px] font-semibold text-foreground" numberOfLines={1}>
             {plan.title}
           </Text>
@@ -146,5 +137,5 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
     );
   });
 
-  return <View style={{ paddingTop: 16 }}>{rows}</View>;
+  return <View className="pt-4">{rows}</View>;
 }

@@ -25,17 +25,8 @@ export function MyGroupsSection({ groups, total }: MyGroupsSectionProps) {
   const showSeeAll = (total ?? groups.length) > 0;
 
   return (
-    <View style={{ marginBottom: 8 }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          paddingHorizontal: CONNECT_PADDING,
-          paddingTop: 20,
-          paddingBottom: 12,
-        }}
-      >
+    <View className="mb-2">
+      <View className="flex-row items-center justify-between px-5 pb-3 pt-5">
         <Text className="flex-1 text-lg font-bold text-foreground">{t('connect.my_groups')}</Text>
         {showSeeAll ? (
           <Pressable onPress={() => router.push('/connect/my-groups')}>
@@ -55,20 +46,14 @@ export function MyGroupsSection({ groups, total }: MyGroupsSectionProps) {
           return (
             <Pressable
               onPress={() => router.push({ pathname: '/group/[id]', params: { id: item.id } })}
-              style={({ pressed }) => ({
-                width: 80,
-                alignItems: 'center',
-                opacity: pressed ? 0.75 : 1,
-              })}
+              className="w-20 items-center active:opacity-75"
             >
               <View
+                className="mb-2 overflow-hidden rounded-2xl"
                 style={{
                   width: CONNECT_AVATAR.tile,
                   height: CONNECT_AVATAR.tile,
-                  borderRadius: CONNECT_AVATAR.tileRadius,
-                  overflow: 'hidden',
                   backgroundColor: cardSurface,
-                  marginBottom: 8,
                 }}
               >
                 {item.avatar_url ? (
@@ -78,7 +63,7 @@ export function MyGroupsSection({ groups, total }: MyGroupsSectionProps) {
                     contentFit="cover"
                   />
                 ) : (
-                  <View style={{ flex: 1, backgroundColor: skeleton }} />
+                  <View className="flex-1" style={{ backgroundColor: skeleton }} />
                 )}
               </View>
               <Text className="text-center text-xs font-medium text-muted-foreground" numberOfLines={1}>

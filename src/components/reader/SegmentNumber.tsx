@@ -11,7 +11,7 @@ interface SegmentNumberProps {
 
 export function SegmentNumber({ number, fontSize }: SegmentNumberProps) {
   return (
-    <View style={{ width: SEGMENT_NUMBER_WIDTH, paddingTop: 6 }}>
+    <View className="w-7 pt-1.5">
       <Text
         className="text-left font-medium text-muted-foreground"
         style={{ fontSize: fontSize * SEGMENT_NUMBER_FONT_SCALE }}

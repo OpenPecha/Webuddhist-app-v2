@@ -12,7 +12,7 @@ export function ReaderFontSizeButton({ onPress }: ReaderFontSizeButtonProps) {
   return (
     <Pressable
       onPress={onPress}
-      style={{ padding: 8, opacity: 0.85 }}
+      className="p-2 opacity-[0.85] active:opacity-70"
       accessibilityRole="button"
       accessibilityLabel={t('reader.font_size')}
     >

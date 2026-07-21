@@ -73,7 +73,7 @@ export function VerseOfDayContent({ verse, typography, footerAction }: VerseOfDa
 
   return (
     <View>
-      <View style={{ width: '100%', aspectRatio: typography.imageAspectRatio }}>
+      <View className="w-full" style={{ aspectRatio: typography.imageAspectRatio }}>
         {showImage ? (
           <Image
             source={{ uri: verse.imageUrl }}
@@ -91,7 +91,7 @@ export function VerseOfDayContent({ verse, typography, footerAction }: VerseOfDa
           paddingBottom: typography.textPaddingBottom,
         }}
       >
-        <View style={{ paddingBottom: footerAction ? 32 : 0 }}>
+        <View className={cn(footerAction && 'pb-8')}>
           <Text
             className={cn(!isTibetan && 'font-garamond')}
             style={{
@@ -118,7 +118,7 @@ export function VerseOfDayContent({ verse, typography, footerAction }: VerseOfDa
         </View>
 
         {footerAction ? (
-          <View style={{ position: 'absolute', right: 16, bottom: 16 }}>{footerAction}</View>
+          <View className="absolute bottom-4 right-4">{footerAction}</View>
         ) : null}
       </View>
     </View>

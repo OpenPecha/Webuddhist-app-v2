@@ -12,21 +12,17 @@ interface ProfileAvatarSectionProps {
 export function ProfileAvatarSection({ url, isUploading, onEditTap }: ProfileAvatarSectionProps) {
   return (
     <View className="items-center">
-      <View style={{ width: 104, height: 104 }}>
+      <View className="h-[104px] w-[104px]">
         <ProfileAvatar url={url} size={104} loading={isUploading && !url} />
         {isUploading ? (
-          <View
-            className="absolute inset-0 items-center justify-center rounded-full"
-            style={{ backgroundColor: 'rgba(0,0,0,0.38)' }}
-          >
+          <View className="absolute inset-0 items-center justify-center rounded-full bg-black/38">
             <ActivityIndicator color="#fff" />
           </View>
         ) : null}
         <Pressable
           onPress={onEditTap}
           disabled={isUploading}
-          className="absolute -bottom-0 -right-0 h-7 w-7 items-center justify-center rounded-full bg-black active:opacity-80"
-          style={{ bottom: 0, right: 0 }}
+          className="absolute bottom-0 right-0 h-7 w-7 items-center justify-center rounded-full bg-black active:opacity-80"
         >
           <Plus size={18} color="#fff" weight="bold" />
         </Pressable>

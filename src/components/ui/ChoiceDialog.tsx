@@ -1,4 +1,3 @@
-import { dialogColors, dialogLayout } from '@/components/ui/dialog-styles';
 import { Text } from '@/components/ui/text';
 import { Modal, Pressable, View } from 'react-native';
 
@@ -27,39 +26,20 @@ export function ChoiceDialog({
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <Pressable
-        style={{ flex: 1, backgroundColor: dialogColors.backdrop, justifyContent: 'center', padding: 24 }}
+        className="flex-1 justify-center bg-black/40 p-6"
         onPress={onClose}
       >
         <Pressable onPress={(e) => e.stopPropagation()}>
-          <View
-            style={{
-              backgroundColor: dialogColors.surface,
-              borderRadius: dialogLayout.radiusCard,
-              ...dialogLayout.paddingCard,
-            }}
-          >
+          <View className="rounded-2xl bg-background px-6 pb-5 pt-7">
             <Text className="text-[17px] font-bold tracking-tight text-foreground">{title}</Text>
             <Text className="mt-3 text-sm leading-[21px] text-foreground">{message}</Text>
-            <View
-              style={{
-                marginTop: 24,
-                flexDirection: 'row',
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-                gap: 8,
-              }}
-            >
-              <Pressable onPress={onSecondary} style={{ paddingVertical: 10, paddingHorizontal: 12 }}>
+            <View className="mt-6 flex-row items-center justify-end gap-2">
+              <Pressable onPress={onSecondary} className="px-3 py-2.5">
                 <Text className="text-[15px] text-foreground">{secondaryLabel}</Text>
               </Pressable>
               <Pressable
                 onPress={onPrimary}
-                style={{
-                  paddingVertical: 10,
-                  paddingHorizontal: 16,
-                  borderRadius: 8,
-                  backgroundColor: dialogColors.destructive,
-                }}
+                className="rounded-lg bg-[#f87171] px-4 py-2.5"
               >
                 <Text className="text-[15px] font-semibold text-white">{primaryLabel}</Text>
               </Pressable>

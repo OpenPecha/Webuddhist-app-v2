@@ -1,5 +1,4 @@
 import { MarkdownText } from '@/components/common/MarkdownText';
-import { GP_PADDING } from '@/components/group-profile/group-profile-styles';
 import { Text } from '@/components/ui/text';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
@@ -18,7 +17,7 @@ export function GroupProfileAboutTab({ content }: GroupProfileAboutTabProps) {
   }
 
   return (
-    <View style={{ paddingHorizontal: GP_PADDING, paddingTop: 16 }}>
+    <View className="px-4 pt-4">
       <MarkdownText content={content} />
     </View>
   );

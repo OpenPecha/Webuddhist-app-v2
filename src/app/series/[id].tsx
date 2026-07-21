@@ -75,8 +75,8 @@ export default function SeriesDetailScreen() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
-        <Pressable onPress={() => router.back()} style={{ padding: 16 }}>
+      <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+        <Pressable onPress={() => router.back()} className="p-4 active:opacity-70">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <ActivityIndicator style={{ marginTop: 48 }} />
@@ -86,13 +86,13 @@ export default function SeriesDetailScreen() {
 
   if (error || !series || !featuredPlan) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
-        <Pressable onPress={() => router.back()} style={{ padding: 16 }}>
+      <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+        <Pressable onPress={() => router.back()} className="p-4 active:opacity-70">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+        <View className="flex-1 items-center justify-center gap-3">
           <Text className="text-destructive">{t('practice.routine_load_error')}</Text>
-          <Pressable onPress={() => refetch()} style={{ padding: 12 }}>
+          <Pressable onPress={() => refetch()} className="p-3 active:opacity-70">
             <Text>{t('practice.retry')}</Text>
           </Pressable>
         </View>
@@ -101,16 +101,9 @@ export default function SeriesDetailScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 8,
-          paddingVertical: 4,
-        }}
-      >
-        <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
+    <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+      <View className="flex-row items-center px-2 py-1">
+        <Pressable onPress={() => router.back()} className="p-2 active:opacity-70">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <Text
@@ -138,7 +131,7 @@ export default function SeriesDetailScreen() {
         />
 
         {sorted.length > 0 ? (
-          <View style={{ marginTop: 16 }}>
+          <View className="mt-4">
             {sorted.map((plan) => {
               const userPlan = resolveUserPlanForItem(
                 plan.id,

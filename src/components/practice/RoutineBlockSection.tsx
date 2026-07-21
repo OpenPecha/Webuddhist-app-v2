@@ -86,7 +86,7 @@ export function RoutineBlockSection({
   onItemPress,
 }: RoutineBlockSectionProps) {
   return (
-    <View style={{ marginBottom:  8 }}>
+    <View className="mb-2">
       <Text className="text-[15px] font-semibold text-foreground mb-2">{block.formattedTime}</Text>
 
       {block.items.map((item, index) => (
@@ -108,13 +108,13 @@ export function RoutineBlockSection({
             />
           )}
           {index < block.items.length - 1 ? (
-            <View style={{ height: 1, backgroundColor: '#e8e8e4', marginLeft: 90 }} />
+            <View className="h-px bg-[#e8e8e4] ml-[90px]" />
           ) : null}
         </View>
       ))}
 
       {block.items.length > 0 ? (
-        <View style={{ height: 1, backgroundColor: '#e8e8e4', marginTop: 8 }} />
+        <View className="h-px bg-[#e8e8e4] mt-2" />
       ) : null}
     </View>
   );

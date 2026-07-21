@@ -1,4 +1,3 @@
-import { dialogColors, dialogLayout } from '@/components/ui/dialog-styles';
 import { Text } from '@/components/ui/text';
 import { Modal, Pressable, View } from 'react-native';
 
@@ -25,44 +24,22 @@ export function DestructiveConfirmDialog({
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <Pressable
-        style={{ flex: 1, backgroundColor: dialogColors.backdrop, justifyContent: 'center', padding: 24 }}
+        className="flex-1 justify-center bg-black/40 p-6"
         onPress={onClose}
       >
         <Pressable onPress={(e) => e.stopPropagation()}>
-          <View
-            style={{
-              backgroundColor: dialogColors.surface,
-              borderRadius: dialogLayout.radiusCard,
-              ...dialogLayout.paddingCard,
-            }}
-          >
+          <View className="rounded-2xl bg-background px-6 pb-5 pt-7">
             <Text className="text-[17px] font-bold tracking-tight text-foreground">{title}</Text>
             <Text className="mt-3 text-sm leading-[21px] text-foreground">{message}</Text>
             <Pressable
               onPress={onConfirm}
-              style={{
-                marginTop: 24,
-                height: dialogLayout.buttonHeight,
-                borderRadius: dialogLayout.radiusButton,
-                borderWidth: 1,
-                borderColor: dialogColors.destructive,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+              className="mt-6 h-12 items-center justify-center rounded-[30px] border border-[#f87171]"
             >
               <Text className="text-[15px] text-destructive">{confirmLabel}</Text>
             </Pressable>
             <Pressable
               onPress={onClose}
-              style={{
-                marginTop: 12,
-                height: dialogLayout.buttonHeight,
-                borderRadius: dialogLayout.radiusButton,
-                borderWidth: 1,
-                borderColor: dialogColors.border,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+              className="mt-3 h-12 items-center justify-center rounded-[30px] border border-[#e8e8e4]"
             >
               <Text className="text-[15px] text-foreground">{cancelLabel}</Text>
             </Pressable>

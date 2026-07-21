@@ -1,4 +1,4 @@
-import { CONNECT_AVATAR, CONNECT_CARD, CONNECT_JOIN_BUTTON } from '@/components/connect/connect-styles';
+import { CONNECT_AVATAR, CONNECT_JOIN_BUTTON } from '@/components/connect/connect-styles';
 import { LoginDrawer } from '@/components/auth/LoginDrawer';
 import { useJoinGroup, useFollowGroup } from '@/hooks/api/useDiscoverGroups';
 import { useLoginDrawer } from '@/hooks/useLoginDrawer';
@@ -79,34 +79,16 @@ export function DiscoverGroupCard({
   return (
     <>
       <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          padding: CONNECT_CARD.padding,
-          marginBottom: CONNECT_CARD.gap,
-          borderRadius: CONNECT_CARD.borderRadius,
-          backgroundColor: cardSurface,
-          borderWidth: 1,
-          borderColor: cardBorder,
-        }}
+        className="mb-3 flex-row items-center rounded-2xl border p-3"
+        style={{ backgroundColor: cardSurface, borderColor: cardBorder }}
       >
         <Pressable
           onPress={() => router.push({ pathname: '/group/[id]', params: { id: group.id } })}
-          style={({ pressed }) => ({
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            opacity: pressed ? 0.85 : 1,
-          })}
+          className="flex-1 flex-row items-center active:opacity-85"
         >
           <View
-            style={{
-              width: CONNECT_AVATAR.discover,
-              height: CONNECT_AVATAR.discover,
-              borderRadius: CONNECT_AVATAR.discover / 2,
-              overflow: 'hidden',
-              backgroundColor: skeleton,
-            }}
+            className="h-12 w-12 overflow-hidden rounded-full"
+            style={{ backgroundColor: skeleton }}
           >
             {group.avatar_url ? (
               <Image
@@ -119,7 +101,7 @@ export function DiscoverGroupCard({
               />
             ) : null}
           </View>
-          <View style={{ flex: 1, marginLeft: 12, marginRight: 8 }}>
+          <View className="ml-3 mr-2 flex-1">
             <Text className="text-[15px] font-bold leading-5 text-foreground" numberOfLines={2}>
               {meta?.title ?? group.slug}
             </Text>
@@ -131,16 +113,12 @@ export function DiscoverGroupCard({
         <Pressable
           onPress={active ? undefined : handleCta}
           disabled={active || actionPending}
-          style={({ pressed }) => ({
+          className="min-w-[72px] items-center justify-center rounded-2xl active:opacity-75"
+          style={{
             height: CONNECT_JOIN_BUTTON.height,
             paddingHorizontal: CONNECT_JOIN_BUTTON.paddingHorizontal,
-            borderRadius: CONNECT_JOIN_BUTTON.borderRadius,
             backgroundColor: active ? skeleton : shortcutCard,
-            justifyContent: 'center',
-            alignItems: 'center',
-            opacity: pressed ? 0.75 : 1,
-            minWidth: 72,
-          })}
+          }}
         >
           {actionPending ? (
             <ActivityIndicator size="small" color={foreground} />

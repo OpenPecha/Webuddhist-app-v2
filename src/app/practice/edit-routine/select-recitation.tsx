@@ -31,19 +31,19 @@ export default function SelectRecitationScreen() {
   const recitations = data?.recitations ?? [];
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', padding: 8 }}>
-        <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
+    <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+      <View className="flex-row items-center p-2">
+        <Pressable onPress={() => router.back()} className="p-2 active:opacity-70">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <Text className="flex-1 text-center text-[17px] font-semibold text-foreground">
           {t('editRoutine.select_recitation_title')}
         </Text>
-        <View style={{ width: 40 }} />
+        <View className="w-10" />
       </View>
 
       {isLoading ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" />
         </View>
       ) : (
@@ -59,12 +59,7 @@ export default function SelectRecitationScreen() {
           renderItem={({ item }) => (
             <Pressable
               onPress={() => onSelect(item)}
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingVertical: 12,
-                gap: 12,
-              }}
+              className="flex-row items-center gap-3 py-3 active:opacity-70"
             >
               <Image
                 source={item.image_url ? { uri: item.image_url } : APP_ASSETS.recitationCoverDefault}

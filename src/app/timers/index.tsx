@@ -2,9 +2,9 @@ import '@/lib/i18n';
 import { ArrowLeftIcon } from '@/components/home/HomeIcon';
 import { PresetTimerCard } from '@/components/timer/PresetTimerCard';
 import { PresetTimersGridSkeleton } from '@/components/timer/PresetTimersGridSkeleton';
-import { AppColors } from '@/constants/app-colors';
 import { usePresetTimers } from '@/hooks/api/usePresetTimers';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { cn } from '@/utils/cn';
 import type { PresetTimer } from '@/types/timers';
 import { useRouter, type Href } from 'expo-router';
 import { useMemo } from 'react';
@@ -29,7 +29,7 @@ export default function TimersScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { foreground, scaffoldBackground } = useThemeColors();
+  const { foreground, isDark } = useThemeColors();
   const { data: timers = [], isLoading, isError, refetch, isRefetching } = usePresetTimers();
 
   const sortedTimers = useMemo(() => sortPresetTimers(timers), [timers]);
@@ -46,16 +46,9 @@ export default function TimersScreen() {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: scaffoldBackground, paddingTop: insets.top }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 8,
-          paddingVertical: 4,
-        }}
-      >
-        <Pressable onPress={() => router.back()} style={{ padding: 8, width: 48, height: 48, justifyContent: 'center' }}>
+    <View className={cn('flex-1', isDark ? 'bg-black' : 'bg-[#FBF9F4]')} style={{ paddingTop: insets.top }}>
+      <View className="flex-row items-center px-2 py-1">
+        <Pressable onPress={() => router.back()} className="h-12 w-12 justify-center p-2 active:opacity-70">
           <ArrowLeftIcon size={24} color={foreground} />
         </Pressable>
         <Text
@@ -64,25 +57,25 @@ export default function TimersScreen() {
         >
           {t('timers.meditation_timer')}
         </Text>
-        <View style={{ width: 48, height: 48 }} />
+        <View className="h-12 w-12" />
       </View>
 
       {isLoading ? (
         <PresetTimersGridSkeleton />
       ) : isError ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24, gap: 12 }}>
+        <View className="flex-1 items-center justify-center gap-3 p-6">
           <Text className="text-center text-muted-foreground">
             {t('timers.load_error')}
           </Text>
           <Pressable
             onPress={() => void refetch()}
-            style={{ backgroundColor: AppColors.blue, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 8 }}
+            className="rounded-lg bg-[#0C53C5] px-4 py-2 active:opacity-70"
           >
             <Text className="text-white">{t('practice.retry')}</Text>
           </Pressable>
         </View>
       ) : sortedTimers.length === 0 ? (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 32 }}>
+        <View className="flex-1 items-center justify-center p-8">
           <Text className="text-center text-muted-foreground">
             {t('timers.no_timers')}
           </Text>
@@ -101,7 +94,7 @@ export default function TimersScreen() {
             <RefreshControl refreshing={isRefetching} onRefresh={() => void refetch()} />
           }
           renderItem={({ item }) => (
-            <View style={{ flex: 1 }}>
+            <View className="flex-1">
               <PresetTimerCard
                 timer={item}
                 minLabel={t('timers.min')}

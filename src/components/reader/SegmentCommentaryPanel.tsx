@@ -19,7 +19,7 @@ function CommentaryItem({ commentary, fontSize }: { commentary: SegmentCommentar
     .join('\n\n');
 
   return (
-    <View style={{ marginBottom: 24 }}>
+    <View className="mb-6">
       <Text className="text-[15px] font-bold text-foreground mb-2">{commentary.title}</Text>
       {content ? <ExpandableSegmentHtml html={content} fontSize={fontSize} /> : null}
       {commentary.source ? (
@@ -39,7 +39,7 @@ export function SegmentCommentaryPanel({ segmentId, fontSize = 16 }: SegmentComm
 
   if (isLoading) {
     return (
-      <View style={{ paddingVertical: 32, alignItems: 'center' }}>
+      <View className="py-8 items-center">
         <ActivityIndicator size="small" color="#000" />
       </View>
     );
@@ -47,7 +47,7 @@ export function SegmentCommentaryPanel({ segmentId, fontSize = 16 }: SegmentComm
 
   if (isError) {
     return (
-      <View style={{ paddingVertical: 24, alignItems: 'center' }}>
+      <View className="py-6 items-center">
         <Text className="text-sm text-muted-foreground mb-3">{t('reader.load_error')}</Text>
         <Pressable onPress={() => void refetch()}>
           <Text className="text-sm font-semibold text-foreground">{t('practice.retry')}</Text>
@@ -59,7 +59,7 @@ export function SegmentCommentaryPanel({ segmentId, fontSize = 16 }: SegmentComm
   const commentaries = data?.commentaries ?? [];
   if (commentaries.length === 0) {
     return (
-      <View style={{ paddingVertical: 24, alignItems: 'center' }}>
+      <View className="py-6 items-center">
         <Text className="text-sm text-muted-foreground">{t('reader.no_commentary')}</Text>
       </View>
     );
@@ -70,7 +70,7 @@ export function SegmentCommentaryPanel({ segmentId, fontSize = 16 }: SegmentComm
   return (
     <ScrollView showsVerticalScrollIndicator={false} nestedScrollEnabled>
       {groups.map((group) => (
-        <View key={group.language || 'unknown'} style={{ marginBottom: 8 }}>
+        <View key={group.language || 'unknown'} className="mb-2">
           <Text className="text-[13px] font-bold text-muted-foreground uppercase tracking-wide mb-3">
             {`${languageDisplayName(group.language)} (${group.items.length})`}
           </Text>

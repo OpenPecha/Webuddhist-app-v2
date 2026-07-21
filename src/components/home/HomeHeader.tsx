@@ -32,15 +32,7 @@ export function HomeHeader() {
 
   return (
     <>
-      <View
-        style={{
-          paddingHorizontal: 20,
-          paddingVertical: 12,
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
+      <View className="flex-row items-center justify-between px-5 py-3">
         <Text
           className="flex-1 font-bold text-foreground"
           style={{
@@ -53,10 +45,10 @@ export function HomeHeader() {
           {firstName ? firstName : ''}
         </Text>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginLeft: 12 }}>
+        <View className="ml-3 flex-row items-center gap-3">
           <Pressable
             onPress={() => router.push('/calendar' as Href)}
-            style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+            className="active:opacity-70"
             accessibilityRole="button"
             accessibilityLabel={t('home.calendar_accessibility')}
           >
@@ -68,11 +60,7 @@ export function HomeHeader() {
               onPress={() => {
                 if (userStats?.streak) setShareVisible(true);
               }}
-              style={({ pressed }) => ({
-                flexDirection: 'row',
-                alignItems: 'center',
-                opacity: pressed ? 0.7 : 1,
-              })}
+              className="flex-row items-center active:opacity-70"
               accessibilityRole="button"
             >
               <Fire size={24} color={AppColors.flame} weight="fill" />

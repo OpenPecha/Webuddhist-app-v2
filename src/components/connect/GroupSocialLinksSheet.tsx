@@ -45,20 +45,13 @@ export const GroupSocialLinksSheet = forwardRef<BottomSheetModal, GroupSocialLin
 
     return (
       <BottomSheetModal ref={ref} snapPoints={snapPoints} backdropComponent={renderBackdrop}>
-        <BottomSheetView style={{ paddingHorizontal: 20, paddingBottom: insets.bottom + 16 }}>
+        <BottomSheetView className="px-5" style={{ paddingBottom: insets.bottom + 16 }}>
           <Text className="mb-4 text-[17px] font-bold">{t('connect.social_links_title')}</Text>
           {links.map((link) => (
             <Pressable
               key={link.id}
               onPress={() => void Linking.openURL(link.url)}
-              style={({ pressed }) => ({
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingVertical: 14,
-                borderBottomWidth: 1,
-                borderBottomColor: '#e8e8e4',
-                opacity: pressed ? 0.75 : 1,
-              })}
+              className="flex-row items-center border-b border-border py-3.5 active:opacity-75"
             >
               <Ionicons name={platformIcon(link.platform)} size={22} color="#000" />
               <Text className="ml-3 flex-1 text-[15px] font-medium text-foreground">{link.platform}</Text>

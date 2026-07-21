@@ -46,24 +46,12 @@ export function AppToastHost() {
   return (
     <View
       pointerEvents="none"
-      style={{
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: insets.bottom + 24,
-        alignItems: 'center',
-        zIndex: 9999,
-      }}
+      className="absolute inset-x-0 z-9999 items-center"
+      style={{ bottom: insets.bottom + 24 }}
     >
       <Animated.View
-        style={{
-          opacity,
-          backgroundColor: 'rgba(0,0,0,0.85)',
-          borderRadius: 24,
-          paddingHorizontal: 20,
-          paddingVertical: 12,
-          maxWidth: '85%',
-        }}
+        className="max-w-[85%] rounded-3xl bg-black/85 px-5 py-3"
+        style={{ opacity }}
       >
         <Text className="text-center text-sm font-semibold text-white">{message}</Text>
       </Animated.View>

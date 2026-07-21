@@ -26,8 +26,8 @@ export default function SeriesInfoScreen() {
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
-        <Pressable onPress={() => router.back()} style={{ padding: 16 }}>
+      <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+        <Pressable onPress={() => router.back()} className="p-4 active:opacity-70">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <ActivityIndicator style={{ marginTop: 48 }} />
@@ -37,17 +37,9 @@ export default function SeriesInfoScreen() {
 
   if (error || !series) {
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: '#FDFDFC',
-          paddingTop: insets.top,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
+      <View className="flex-1 items-center justify-center bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
         <Text className="text-destructive">{t('series.load_error')}</Text>
-        <Pressable onPress={() => refetch()} style={{ marginTop: 12 }}>
+        <Pressable onPress={() => refetch()} className="mt-3 active:opacity-70">
           <Text>{t('practice.retry')}</Text>
         </Pressable>
       </View>
@@ -55,23 +47,16 @@ export default function SeriesInfoScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FDFDFC', paddingTop: insets.top }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingHorizontal: 8,
-          paddingVertical: 4,
-        }}
-      >
-        <Pressable onPress={() => router.back()} style={{ padding: 8 }}>
+    <View className="flex-1 bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
+      <View className="flex-row items-center px-2 py-1">
+        <Pressable onPress={() => router.back()} className="p-2 active:opacity-70">
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
-        <View style={{ width: 40 }} />
+        <View className="w-10" />
       </View>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 32 }} showsVerticalScrollIndicator={false}>
-        <View style={{ paddingHorizontal: 16, paddingTop: 8 }}>
+        <View className="px-4 pt-2">
           <Image
             source={{ uri: imageUrl(series.image) }}
             style={{ width: '100%', aspectRatio: 16 / 9, borderRadius: 16 }}
@@ -79,7 +64,7 @@ export default function SeriesInfoScreen() {
           />
         </View>
 
-        <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
+        <View className="px-4 pt-4">
           <Text className="text-xl font-bold text-foreground">
             {metadata?.title}
           </Text>
@@ -87,7 +72,7 @@ export default function SeriesInfoScreen() {
 
         {series.group ? <SeriesGroupRow group={series.group} /> : null}
 
-        <View style={{ paddingHorizontal: 16, paddingTop: 24 }}>
+        <View className="px-4 pt-6">
           {body ? (
             <MarkdownText content={body} />
           ) : (

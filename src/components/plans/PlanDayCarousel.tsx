@@ -52,28 +52,20 @@ export function PlanDayCarousel({
         const isDisabled = disabledDays?.has(day.day_number) ?? false;
         const label = formatCarouselDayLabel(startDate ?? null, day.day_number);
         const isSelectedActive = isSelected && !isDisabled;
-        const unselectedBg = '#f0f0ec';
 
         return (
           <Pressable
             key={day.id ?? day.day_number}
             disabled={isDisabled}
             onPress={() => onSelectDay(day.day_number)}
-            style={({ pressed }) => ({
-              width: 80,
-              height: 80,
-              marginHorizontal: 4,
-              borderRadius: 8,
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: isSelectedActive ? '#fff' : unselectedBg,
-              borderWidth: 2,
-              borderColor: isSelectedActive ? '#000' : unselectedBg,
-              opacity: isDisabled ? 0.45 : pressed ? 0.75 : 1,
-            })}
+            className={cn(
+              'w-20 h-20 mx-1 rounded-lg items-center justify-center border-2',
+              isSelectedActive ? 'bg-white border-black' : 'bg-[#f0f0ec] border-[#f0f0ec]',
+              isDisabled ? 'opacity-45' : 'active:opacity-75',
+            )}
           >
             {isCompleted ? (
-              <View style={{ position: 'absolute', top: 4, right: 4 }}>
+              <View className="absolute top-1 right-1">
                 <Ionicons name="checkmark" size={14} color="#16a34a" />
               </View>
             ) : null}
@@ -86,17 +78,10 @@ export function PlanDayCarousel({
               {day.day_number}
             </Text>
             <View
-              style={
-                isSelectedActive
-                  ? {
-                      marginTop: 4,
-                      paddingHorizontal: 8,
-                      paddingVertical: 2,
-                      borderRadius: 12,
-                      backgroundColor: '#000',
-                    }
-                  : { marginTop: 4 }
-              }
+              className={cn(
+                'mt-1',
+                isSelectedActive && 'px-2 py-0.5 rounded-xl bg-black',
+              )}
             >
               <Text
                 className={cn(

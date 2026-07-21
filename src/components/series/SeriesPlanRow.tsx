@@ -9,6 +9,7 @@ import {
   getEffectiveStartDate,
   parseCalendarDate,
 } from '@/utils/plan-utils';
+import { cn } from '@/utils/cn';
 import { imageUrl } from '@/utils/image-url';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
@@ -69,22 +70,12 @@ export function SeriesPlanRow({
     <Pressable
       onPress={onPress}
       disabled={locked}
-      style={({ pressed }) => ({
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingBottom: 12,
-        opacity: locked ? 0.45 : pressed ? 0.75 : 1,
-      })}
+      className={cn(
+        'flex-row items-center pb-3',
+        locked ? 'opacity-45' : 'active:opacity-75',
+      )}
     >
-      <View
-        style={{
-          width: 86,
-          height: 86,
-          borderRadius: 12,
-          overflow: 'hidden',
-          backgroundColor: '#e8e8e4',
-        }}
-      >
+      <View className="w-[86px] h-[86px] rounded-xl overflow-hidden bg-[#e8e8e4]">
         {plan.image ? (
           <Image
             source={{ uri: imageUrl(plan.image, 'thumbnail') }}
@@ -92,30 +83,17 @@ export function SeriesPlanRow({
             contentFit="cover"
           />
         ) : (
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: '#DEAD2D22',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
+          <View className="flex-1 bg-[#DEAD2D22] items-center justify-center">
             <Ionicons name="image-outline" size={24} color="rgba(255,255,255,0.5)" />
           </View>
         )}
       </View>
-      <View style={{ flex: 1, marginLeft: 12 }}>
+      <View className="flex-1 ml-3">
         <Text className="text-base font-semibold leading-[22px] text-foreground" numberOfLines={2}>
           {plan.title}
         </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: 6,
-          }}
-        >
-          <View style={{ flex: 1 }}>
+        <View className="flex-row items-center mt-1.5">
+          <View className="flex-1">
             {dateRange ? <PlanDateRangeLabel dateRange={dateRange} /> : null}
           </View>
           {locked ? (

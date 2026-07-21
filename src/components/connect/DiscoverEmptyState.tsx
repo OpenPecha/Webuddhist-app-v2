@@ -9,7 +9,7 @@ export function DiscoverEmptyState() {
   const { mutedForeground } = useThemeColors();
 
   return (
-    <View style={{ alignItems: 'center', paddingHorizontal: 32, paddingVertical: 32 }}>
+    <View className="items-center px-8 py-8">
       <UsersThree size={48} color={mutedForeground} weight="duotone" />
       <Text className="mt-4 text-center text-base font-bold text-foreground">
         {t('connect.empty_title')}

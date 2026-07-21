@@ -58,12 +58,13 @@ function ActionButton({
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityState={{ disabled: !!loading, selected: !!active }}
-      style={{ width: 78, alignItems: 'center', opacity: loading ? 0.6 : 1 }}
+      className="w-[78px] items-center"
+      style={{ opacity: loading ? 0.6 : 1 }}
     >
       {loading ? (
         <ActivityIndicator size="small" color="#000" style={{ height: 28 }} />
       ) : (
-        <View style={{ height: 28, justifyContent: 'center' }}>
+        <View className="h-7 justify-center">
           <Ionicons name={icon} size={24} color={active ? '#0066cc' : '#000'} />
         </View>
       )}
@@ -92,27 +93,11 @@ function ResourceTile({
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={count === undefined ? label : `${label}, ${count}`}
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 12,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f0f0ec',
-      }}
+      className="flex-row items-center py-3 border-b border-[#f0f0ec]"
     >
       <Ionicons name={icon} size={20} color="#000" style={{ marginRight: 12 }} />
       <Text className="flex-1 text-[15px] text-foreground">{label}</Text>
-      <View
-        style={{
-          minWidth: 28,
-          paddingHorizontal: 8,
-          paddingVertical: 2,
-          borderRadius: 12,
-          backgroundColor: '#f0f0ec',
-          alignItems: 'center',
-          marginRight: 8,
-        }}
-      >
+      <View className="min-w-7 px-2 py-0.5 rounded-xl bg-[#f0f0ec] items-center mr-2">
         <Text className="text-[13px] font-semibold text-foreground">
           {count === undefined ? '—' : count}
         </Text>
@@ -130,16 +115,9 @@ function SheetHeader({
   onBack?: () => void;
 }) {
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 12,
-        minHeight: 32,
-      }}
-    >
+    <View className="flex-row items-center mb-3 min-h-8">
       {onBack ? (
-        <Pressable onPress={onBack} style={{ padding: 4, marginRight: 8 }}>
+        <Pressable onPress={onBack} className="p-1 mr-2">
           <Ionicons name="chevron-back" size={22} color="#000" />
         </Pressable>
       ) : null}
@@ -178,7 +156,7 @@ function ActionsBody({
 
   return (
     <>
-      <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 16, marginTop: 8 }}>
+      <View className="flex-row justify-center gap-4 mt-2">
         <ActionButton label={t('reader.copy')} icon="copy-outline" onPress={onCopy} />
         <ActionButton label={t('reader.share')} icon="share-outline" onPress={onShare} />
         <ActionButton
@@ -193,7 +171,7 @@ function ActionsBody({
       <Text className="text-[13px] font-semibold mt-6 mb-2 text-foreground">
         {t('reader.related_resources')}
       </Text>
-      <View style={{ height: 1, backgroundColor: '#e8e8e4', marginBottom: 12 }} />
+      <View className="h-px bg-[#e8e8e4] mb-3" />
 
       <ResourceTile
         label={t('reader.commentaries')}
@@ -222,7 +200,7 @@ function ActionsBody({
                     presentationStyle: WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
                   });
                 }}
-                style={{ width: 160, marginRight: 12 }}
+                className="w-40 mr-3"
               >
                 {video.thumbnailUrl ? (
                   <Image
@@ -231,7 +209,7 @@ function ActionsBody({
                     contentFit="cover"
                   />
                 ) : (
-                  <View style={{ width: 160, height: 90, borderRadius: 8, backgroundColor: '#000' }} />
+                  <View className="w-40 h-[90px] rounded-lg bg-black" />
                 )}
                 <Text numberOfLines={2} className="text-xs mt-1.5 text-[#333]">
                   {video.title}
@@ -378,7 +356,7 @@ export function SegmentActionSheet({ selected, onClose }: SegmentActionSheetProp
             {body}
           </BottomSheetScrollView>
         ) : (
-          <View style={{ paddingHorizontal: 20, paddingBottom: 24 }}>{body}</View>
+          <View className="px-5 pb-6">{body}</View>
         )}
       </AppBottomSheet>
       <LoginDrawer key={session} visible={visible} onClose={hideLoginDrawer} />

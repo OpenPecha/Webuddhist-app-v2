@@ -1,5 +1,4 @@
 import { Text } from '@/components/ui/text';
-import { cn } from '@/utils/cn';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import {
   mantraScript,
@@ -51,11 +50,12 @@ export function MantraSwitcher({ mantras, index, onIndexChange }: MantraSwitcher
     });
 
   return (
-    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+    <View className="flex-1 flex-row items-center">
       <Pressable
         onPress={goPrev}
         disabled={!canLoop}
-        style={{ padding: 8, opacity: canLoop ? 1 : 0.3 }}
+        className="p-2"
+        style={{ opacity: canLoop ? 1 : 0.3 }}
         accessibilityRole="button"
         accessibilityLabel="Previous mantra"
       >
@@ -63,7 +63,7 @@ export function MantraSwitcher({ mantras, index, onIndexChange }: MantraSwitcher
       </Pressable>
 
       <GestureDetector gesture={swipe}>
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8, minHeight: 70 }}>
+        <View className="flex-1 items-center justify-center gap-2 min-h-[70px]">
           {script ? (
             <Text
               className="text-center font-semibold text-foreground"
@@ -87,7 +87,8 @@ export function MantraSwitcher({ mantras, index, onIndexChange }: MantraSwitcher
       <Pressable
         onPress={goNext}
         disabled={!canLoop}
-        style={{ padding: 8, opacity: canLoop ? 1 : 0.3 }}
+        className="p-2"
+        style={{ opacity: canLoop ? 1 : 0.3 }}
         accessibilityRole="button"
         accessibilityLabel="Next mantra"
       >
