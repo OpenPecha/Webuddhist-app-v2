@@ -19,7 +19,7 @@ export function LanguagePickerSheet({ visible, onClose }: LanguagePickerSheetPro
   const { i18n, t } = useTranslation();
   const { foreground, brand } = useThemeColors();
   const insets = useSafeAreaInsets();
-  const contentPaddingBottom = bottomSheetContentPaddingBottom(insets);
+  const contentPaddingBottom = bottomSheetContentPaddingBottom('tab', insets);
   const currentCode = i18n.language.split('-')[0];
 
   const selectLanguage = async (code: string) => {

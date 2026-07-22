@@ -1,3 +1,4 @@
+import { TAB_BAR_CONTENT_HEIGHT } from '@/components/navigation/AppBottomTabBar';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { cn } from '@/utils/cn';
 import {
@@ -21,25 +22,35 @@ function parseMaxHeight(maxHeight: number | `${number}%`, heightBasis: number): 
   return Math.round(heightBasis * (pct / 100));
 }
 
-/** Padding for sheet content — keeps items above the home indicator / gesture bar on both platforms. */
-export function bottomSheetContentPaddingBottom(insets: { bottom: number }): number {
+/** Padding inside sheet content — tab screens already offset via bottomInset. */
+export function bottomSheetContentPaddingBottom(
+  placement: AppBottomSheetPlacement,
+  insets: { bottom: number },
+): number {
+  if (placement === 'tab') {
+    return MIN_CONTENT_BOTTOM_PADDING;
+  }
   return Math.max(MIN_CONTENT_BOTTOM_PADDING, insets.bottom);
 }
 
 export function appBottomSheetInsets(
-  _placement: AppBottomSheetPlacement,
+  placement: AppBottomSheetPlacement,
   insets: { top: number; bottom: number },
   screenHeight?: number,
   maxHeight: number | `${number}%` = '70%',
 ) {
-  const contentPaddingBottom = bottomSheetContentPaddingBottom(insets);
+  const bottomInset =
+    placement === 'tab' ? TAB_BAR_CONTENT_HEIGHT + insets.bottom : 0;
+  const contentPaddingBottom = bottomSheetContentPaddingBottom(placement, insets);
   const topInset = insets.top;
   const availableHeight =
-    screenHeight != null ? Math.max(0, screenHeight - topInset) : undefined;
+    screenHeight != null
+      ? Math.max(0, screenHeight - topInset - bottomInset)
+      : undefined;
   const maxDynamicContentSize =
     availableHeight != null ? parseMaxHeight(maxHeight, availableHeight) : undefined;
   return {
-    bottomInset: 0,
+    bottomInset,
     contentPaddingBottom,
     topInset,
     availableHeight,
@@ -47,10 +58,11 @@ export function appBottomSheetInsets(
   };
 }
 
-/** Spacer view — more reliable than paddingBottom with gorhom dynamic sizing (see gorhom#1573). */
-function BottomSheetSafeAreaFooter() {
+/** Spacer for fullscreen sheets — gorhom dynamic sizing ignores paddingBottom (see gorhom#1573). */
+function BottomSheetSafeAreaFooter({ placement }: { placement: AppBottomSheetPlacement }) {
   const insets = useSafeAreaInsets();
-  const height = bottomSheetContentPaddingBottom(insets);
+  if (placement === 'tab') return null;
+  const height = bottomSheetContentPaddingBottom(placement, insets);
   return <View style={{ height }} />;
 }
 
@@ -65,8 +77,8 @@ interface AppBottomSheetProps {
   /** When true, children are rendered directly (use BottomSheetScrollView inside). */
   scrollable?: boolean;
   /**
-   * `tab` — opened from a tab screen. `fullscreen` — root stack routes (default).
-   * Bottom anchoring is the same on iOS and Android; safe area is handled inside sheet content.
+   * `tab` — sheet stops above the visible tab bar (`TAB_BAR_CONTENT_HEIGHT` + safe area).
+   * `fullscreen` — anchors to the screen bottom; safe area is handled inside sheet content.
    */
   placement?: AppBottomSheetPlacement;
 }
@@ -116,9 +128,15 @@ export function AppBottomSheet({
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} pressBehavior="close" />
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+        pressBehavior="close"
+        style={[props.style, bottomInset > 0 ? { bottom: bottomInset } : undefined]}
+      />
     ),
-    [],
+    [bottomInset],
   );
 
   const backgroundStyle = useMemo(
@@ -163,7 +181,7 @@ export function AppBottomSheet({
       ) : (
         <BottomSheetView className={cn('bg-background', sheetClassName)} style={{ flexGrow: 0 }}>
           {children}
-          <BottomSheetSafeAreaFooter />
+          <BottomSheetSafeAreaFooter placement={placement} />
         </BottomSheetView>
       )}
     </BottomSheetModal>
