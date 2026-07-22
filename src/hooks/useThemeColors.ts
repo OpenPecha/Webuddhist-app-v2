@@ -14,6 +14,7 @@ export function useThemeColors() {
   const cardSurface = isDark ? AppColors.surfaceVariantDark : '#FFFFFF';
   const cardBorder = isDark ? '#353535' : AppColors.cardBorderLight;
   const scaffoldBackground = isDark ? '#000000' : AppColors.surfaceLight;
+  const meCardSurface = isDark ? AppColors.meCardDark : '#FFFFFF';
   const shortcutCard = isDark ? AppColors.surfaceVariantDark : AppColors.grey100;
   const sharePromptBg = isDark ? AppColors.surfaceVariantDark : AppColors.sharePromptBgLight;
   const skeleton = isDark ? '#353535' : AppColors.skeletonLight;
@@ -28,6 +29,7 @@ export function useThemeColors() {
     cardSurface,
     cardBorder,
     scaffoldBackground,
+    meCardSurface,
     shortcutCard,
     sharePromptBg,
     skeleton,

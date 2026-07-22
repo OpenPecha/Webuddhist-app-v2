@@ -15,14 +15,21 @@ function SkeletonCard({
   children: React.ReactNode;
   padding?: number;
 }) {
+  const { meCardSurface } = useThemeColors();
+
   return (
-    <View className="rounded-2xl border border-border bg-card" style={{ padding }}>
+    <View
+      className="rounded-2xl"
+      style={{ padding, backgroundColor: meCardSurface }}
+    >
       {children}
     </View>
   );
 }
 
 export function MeStatsSectionSkeleton() {
+  const { meCardSurface } = useThemeColors();
+
   return (
     <View className="px-5 pb-6 pt-6">
       <Bone width="40%" height={20} />
@@ -60,7 +67,11 @@ export function MeStatsSectionSkeleton() {
       </View>
       <View className="mt-3 flex-row gap-3">
         {[0, 1].map((key) => (
-          <View key={key} className="flex-1 rounded-2xl border border-border bg-card p-4">
+          <View
+            key={key}
+            className="flex-1 rounded-2xl p-4"
+            style={{ backgroundColor: meCardSurface }}
+          >
             <Bone width="60%" height={12} />
             <View className="mt-3 flex-row items-center gap-1">
               <Bone width={22} height={22} />
