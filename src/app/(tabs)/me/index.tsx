@@ -25,7 +25,7 @@ export default function MeScreen() {
   const { t } = useTranslation();
   const { user, isLoading: authLoading } = useAuth0();
   const { isGuest } = useGuest();
-  const { foreground } = useThemeColors();
+  const { foreground, scaffoldBackground, meCardSurface } = useThemeColors();
   const insets = useSafeAreaInsets();
   const navigateOnce = useNavigateOnce();
   const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
@@ -64,7 +64,7 @@ export default function MeScreen() {
   }, [refetchStats]);
 
   return (
-    <View className="flex-1 bg-background" style={{ paddingTop: insets.top }}>
+    <View className="flex-1" style={{ paddingTop: insets.top, backgroundColor: scaffoldBackground }}>
       <View className="min-h-12 flex-row items-center justify-between px-4 pb-2">
         <Text className="text-2xl font-bold">{t('nav.me')}</Text>
         <Pressable
@@ -122,7 +122,8 @@ export default function MeScreen() {
               }
               navigateOnce('/me/bookmarks' as Href);
             }}
-            className="mx-4 mt-6 flex-row items-center rounded-xl border border-border bg-card px-4 py-3 active:opacity-70"
+            className="mx-4 mt-6 flex-row items-center rounded-xl px-4 py-3 active:opacity-70"
+            style={{ backgroundColor: meCardSurface }}
             accessibilityRole="button"
             accessibilityLabel={t('bookmarks.title')}
           >

@@ -24,6 +24,9 @@ interface StatCardProps {
 }
 
 function StatCard({ label, icon, value, unit, onPress }: StatCardProps) {
+  const { meCardSurface } = useThemeColors();
+  const cardStyle = { backgroundColor: meCardSurface };
+
   const content = (
     <>
       <View className="flex-row items-center justify-between">
@@ -45,13 +48,14 @@ function StatCard({ label, icon, value, unit, onPress }: StatCardProps) {
   );
 
   if (!onPress) {
-    return <View className="flex-1 rounded-2xl border border-border bg-card p-4">{content}</View>;
+    return <View className='flex-1 rounded-2xl p-4' style={cardStyle}>{content}</View>;
   }
 
   return (
     <Pressable
       onPress={onPress}
-      className="flex-1 rounded-2xl border border-border bg-card p-4 active:opacity-90"
+      className={`flex-1 rounded-2xl p-4 active:opacity-90`}
+      style={cardStyle}
     >
       {content}
     </Pressable>
@@ -65,12 +69,13 @@ interface PracticeDaysCardProps {
 
 function PracticeDaysCard({ days, onPress }: PracticeDaysCardProps) {
   const { t } = useTranslation();
-  const { foreground } = useThemeColors();
+  const { foreground, meCardSurface } = useThemeColors();
 
   return (
     <Pressable
       onPress={onPress}
-      className="flex-row items-center rounded-2xl border border-border bg-card px-4 py-5 active:opacity-90"
+      className="flex-row items-center rounded-2xl px-4 py-5 active:opacity-90"
+      style={{ backgroundColor: meCardSurface }}
     >
       <ListChecks size={24} color={foreground} />
       <Text className="ml-3 flex-1 text-base">
