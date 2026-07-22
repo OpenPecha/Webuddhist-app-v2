@@ -1,4 +1,3 @@
-import { TAB_BAR_CONTENT_HEIGHT } from '@/components/navigation/AppBottomTabBar';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { cn } from '@/utils/cn';
 import {
@@ -8,10 +7,13 @@ import {
   type BottomSheetBackdropProps,
 } from '@gorhom/bottom-sheet';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { useWindowDimensions, type ViewStyle } from 'react-native';
+import { Platform, useWindowDimensions, View, type ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export type AppBottomSheetPlacement = 'tab' | 'fullscreen';
+
+/** Minimum scroll/content padding when the OS reports no bottom inset (common on Android 3-button nav). */
+const MIN_CONTENT_BOTTOM_PADDING = 16;
 
 function parseMaxHeight(maxHeight: number | `${number}%`, heightBasis: number): number {
   if (typeof maxHeight === 'number') return maxHeight;
@@ -19,20 +21,37 @@ function parseMaxHeight(maxHeight: number | `${number}%`, heightBasis: number): 
   return Math.round(heightBasis * (pct / 100));
 }
 
+/** Padding for sheet content — keeps items above the home indicator / gesture bar on both platforms. */
+export function bottomSheetContentPaddingBottom(insets: { bottom: number }): number {
+  return Math.max(MIN_CONTENT_BOTTOM_PADDING, insets.bottom);
+}
+
 export function appBottomSheetInsets(
-  placement: AppBottomSheetPlacement,
+  _placement: AppBottomSheetPlacement,
   insets: { top: number; bottom: number },
   screenHeight?: number,
   maxHeight: number | `${number}%` = '70%',
 ) {
-  const bottomInset = placement === 'tab' ? TAB_BAR_CONTENT_HEIGHT + insets.bottom : 0;
-  const contentPaddingBottom = placement === 'tab' ? 16 : Math.max(16, insets.bottom);
+  const contentPaddingBottom = bottomSheetContentPaddingBottom(insets);
   const topInset = insets.top;
   const availableHeight =
-    screenHeight != null ? Math.max(0, screenHeight - topInset - bottomInset) : undefined;
+    screenHeight != null ? Math.max(0, screenHeight - topInset) : undefined;
   const maxDynamicContentSize =
     availableHeight != null ? parseMaxHeight(maxHeight, availableHeight) : undefined;
-  return { bottomInset, contentPaddingBottom, topInset, availableHeight, maxDynamicContentSize };
+  return {
+    bottomInset: 0,
+    contentPaddingBottom,
+    topInset,
+    availableHeight,
+    maxDynamicContentSize,
+  };
+}
+
+/** Spacer view — more reliable than paddingBottom with gorhom dynamic sizing (see gorhom#1573). */
+function BottomSheetSafeAreaFooter() {
+  const insets = useSafeAreaInsets();
+  const height = bottomSheetContentPaddingBottom(insets);
+  return <View style={{ height }} />;
 }
 
 interface AppBottomSheetProps {
@@ -46,7 +65,8 @@ interface AppBottomSheetProps {
   /** When true, children are rendered directly (use BottomSheetScrollView inside). */
   scrollable?: boolean;
   /**
-   * `tab` — sheet opens over the bottom tab bar. `fullscreen` — root stack routes (default).
+   * `tab` — opened from a tab screen. `fullscreen` — root stack routes (default).
+   * Bottom anchoring is the same on iOS and Android; safe area is handled inside sheet content.
    */
   placement?: AppBottomSheetPlacement;
 }
@@ -69,10 +89,10 @@ export function AppBottomSheet({
   const ref = useRef<BottomSheetModal>(null);
   const wasVisibleRef = useRef(false);
 
-  const { bottomInset, contentPaddingBottom, topInset, maxDynamicContentSize } = useMemo(
-      () => appBottomSheetInsets(placement, insets, screenHeight, maxHeight),
-      [placement, insets, screenHeight, maxHeight],
-    );
+  const { bottomInset, topInset, maxDynamicContentSize } = useMemo(
+    () => appBottomSheetInsets(placement, insets, screenHeight, maxHeight),
+    [placement, insets, screenHeight, maxHeight],
+  );
 
   useEffect(() => {
     if (visible) {
@@ -122,16 +142,17 @@ export function AppBottomSheet({
       enablePanDownToClose
       enableDismissOnClose
       stackBehavior="push"
+      keyboardBehavior={Platform.OS === 'android' ? 'extend' : 'interactive'}
       onDismiss={handleDismiss}
       backdropComponent={renderBackdrop}
       handleIndicatorStyle={
         showHandle
           ? {
-              width: 40,
-              height: 4,
-              backgroundColor: mutedForeground,
-              opacity: 0.35,
-            }
+            width: 40,
+            height: 4,
+            backgroundColor: mutedForeground,
+            opacity: 0.35,
+          }
           : undefined
       }
       handleComponent={showHandle ? undefined : null}
@@ -140,11 +161,9 @@ export function AppBottomSheet({
       {scrollable ? (
         children
       ) : (
-        <BottomSheetView
-          className={cn('bg-background', sheetClassName)}
-          style={{ paddingBottom: contentPaddingBottom, flexGrow: 0 }}
-        >
+        <BottomSheetView className={cn('bg-background', sheetClassName)} style={{ flexGrow: 0 }}>
           {children}
+          <BottomSheetSafeAreaFooter />
         </BottomSheetView>
       )}
     </BottomSheetModal>
