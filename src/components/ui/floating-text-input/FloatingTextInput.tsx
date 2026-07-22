@@ -62,6 +62,7 @@ export function FloatingTextInput({
   });
 
   const containerMinHeight = multiline ? (minHeight ?? 96) : 56;
+  const inputMinHeight = multiline ? (minHeight ?? 96) - 22 : containerMinHeight;
 
   const handleFocus: TextInputProps['onFocus'] = (event) => {
     setFocused(true);
@@ -123,8 +124,9 @@ export function FloatingTextInput({
                 color: foreground,
                 paddingHorizontal: HORIZONTAL_PADDING,
                 paddingRight: HORIZONTAL_PADDING + (trailingIcon ? 28 : 0),
+                paddingTop: multiline ? 18 : 0,
                 paddingBottom: multiline ? 14 : 0,
-                minHeight: multiline ? (minHeight ?? 96) - 22 : 34,
+                minHeight: inputMinHeight,
               },
               style,
             ]}
