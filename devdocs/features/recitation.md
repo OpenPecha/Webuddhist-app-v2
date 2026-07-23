@@ -5,9 +5,9 @@
 | **Status** | In progress (partial) |
 | **Priority** | P0 |
 | **Flutter baseline** | `lib/features/recitation` |
-| **v2 target** | `src/app/(tabs)/screens/recitation/index.tsx`, `src/components/ui/molecules/cards/recitation-card.tsx` |
+| **v2 target** | `src/app/(tabs)/index/recitations.tsx`, `src/app/(tabs)/index/recitations-search.tsx`, `src/components/recitation/RecitationListTile.tsx` |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-22 |
+| **Last updated** | 2026-07-22 |
 
 ---
 
@@ -17,21 +17,26 @@ Recitations are chant texts. Authenticated users add them to a practice routine 
 Practice page. Once a recitation is in their routine, they can tap its card on the routine
 page to open it in the reader and recite it.
 
-There is no preview mode for anyone: even authenticated users who browse the recitation
-list can't open a recitation until they've added it to a routine.
+**Browse all (v2):** Home Chants → `/recitations` (Home-tab stack under
+`(tabs)/index`, so bottom tab bar stays visible). Chant cards: accent bar, title,
+optional `first_segment` subtitle, caret. Search icon → `/recitations-search` (same
+stack; capsule field; empty query shows blank; client-side title filter). Tap opens
+`/reader/[textId]` on the root stack (full-screen, no tabs). Loading skeleton, error +
+Retry, empty states.
 
 ## 2. Flutter reference map
 
 | Screen / element | Flutter source | Route |
 |------------------|----------------|-------|
+| All chants browse | `practice/.../all_recitations_screen.dart` | Navigator push from Home Chants |
 | Recitation detail | `features/recitation/presentation/screens/recitation_detail_screen.dart` | `/recitations/detail` |
 | Recitation model | `features/recitation/data/models/recitation_model.dart` | — |
 | Best practices doc | `features/recitation/BEST_PRACTICES_APPLIED.md` | — |
 
-There is a recitation tab in v2. On Flutter Home, recitation appears only via the
-**MyPracticesStatsCard** recitation count (`my_practices_stats_card.dart`) — not as a
-standalone home carousel. The deprecated v2 molecule
-`src/components/home/Recitation.tsx` (dummy data) is not part of Home parity.
+v2 browse: `/recitations` + `/recitations-search` under the Home tab stack
+(`(tabs)/index`). On Flutter Home, Chants opens `AllRecitationsScreen` in-shell.
+The deprecated v2 molecule `src/components/home/Recitation.tsx` (dummy data) is not
+part of Home parity.
 
 ## 3. User stories
 
@@ -181,7 +186,8 @@ Note tab placement depends on the shell decision in `foundation/00-app-shell-nav
 
 | Requirement | Flutter | v2 | Notes |
 |-------------|---------|-----|-------|
-| List | yes | partial | tab + molecule scaffolded |
-| Detail | yes | no | |
+| Browse list | yes | yes | Home-stack `/recitations` + `/recitations-search`; tab bar visible |
+| List (routine picker) | yes | partial | `select-recitation.tsx` |
+| Detail / reader | yes | yes | `/reader/[textId]` from browse + routine |
 | Audio playback | yes | no | We are planning to add |
 | Add to routine | yes | no | |

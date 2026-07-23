@@ -131,6 +131,14 @@
       "title": "短片"
     }
   },
+  "recitations": {
+    "title": "誦經",
+    "search_placeholder": "搜尋誦經…",
+    "empty": "尚無誦經",
+    "search_empty": "找不到符合的誦經",
+    "load_error": "無法載入誦經",
+    "retry": "重試"
+  },
   "reader": {
     "title": "閱讀器",
     "placeholder": "完整閱讀體驗將在後續更新中提供。",

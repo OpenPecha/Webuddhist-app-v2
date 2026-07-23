@@ -7,7 +7,6 @@ import { BookOpenTextIcon, ListChecksIcon, TimerIcon } from '@/components/home/H
 import { useLoginDrawer } from '@/hooks/useLoginDrawer';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useGuest } from '@/providers/guest';
-import { showAppToast } from '@/utils/show-app-toast';
 import { useRouter, type Href } from 'expo-router';
 import { CirclesThree } from 'phosphor-react-native';
 import { useTranslation } from 'react-i18next';
@@ -65,8 +64,6 @@ export function HomeShortcutsRow() {
   const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
   const { foreground, shortcutCard } = useThemeColors();
 
-  const showComingSoon = () => showAppToast(t('home.shortcut_coming_soon'));
-
   const openGated = (route: '/mala' | '/timers') => {
     if (isGuest) {
       showLoginDrawer();
@@ -87,7 +84,7 @@ export function HomeShortcutsRow() {
         <ShortcutTile
           icon={<BookOpenTextIcon size={ICON_SIZE} color={foreground} />}
           label={t('home.home_chants')}
-          onPress={showComingSoon}
+          onPress={() => router.push('/recitations' as Href)}
           cardColor={shortcutCard}
         />
         <ShortcutTile
