@@ -10,7 +10,7 @@ import { Image, useImage, type ImageRef } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { useWindowDimensions, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, {
   Easing,
   runOnJS,
@@ -121,11 +121,6 @@ function blend(hex: string, target: string, amount: number): string {
 }
 
 function MalaBeadsShell({ total, enabled, onIncrement, beadImage }: MalaBeadsShellProps) {
-  const { width: screenWidth } = useWindowDimensions();
-  const layoutWidth = Math.min(MALA_BEADS_LAYOUT_WIDTH, screenWidth - 48);
-  const layoutHeight = Math.round(
-    (layoutWidth / MALA_BEADS_LAYOUT_WIDTH) * MALA_BEADS_LAYOUT_HEIGHT,
-  );
   const { isDark } = useThemeColors();
   const threadColor = '#c62828';
   const beadColor = isDark ? '#8d6e63' : '#8d6e63';
@@ -170,13 +165,13 @@ function MalaBeadsShell({ total, enabled, onIncrement, beadImage }: MalaBeadsShe
   }, [total, phase, rotation]);
 
   const beads = useMemo(
-    () => computeBeadPositions(layoutWidth, layoutHeight, displayPhase),
-    [displayPhase, layoutHeight, layoutWidth],
+    () => computeBeadPositions(MALA_BEADS_LAYOUT_WIDTH, MALA_BEADS_LAYOUT_HEIGHT, displayPhase),
+    [displayPhase],
   );
 
   const threadPath = useMemo(
-    () => malaThreadPath(layoutWidth, layoutHeight),
-    [layoutHeight, layoutWidth],
+    () => malaThreadPath(MALA_BEADS_LAYOUT_WIDTH, MALA_BEADS_LAYOUT_HEIGHT),
+    [],
   );
 
   const strandStyle = useAnimatedStyle(() => ({
@@ -204,15 +199,18 @@ function MalaBeadsShell({ total, enabled, onIncrement, beadImage }: MalaBeadsShe
   return (
     <GestureDetector gesture={gesture}>
       <View
-        className="w-full items-center justify-center"
-        style={{ height: layoutHeight, opacity: enabled ? 1 : 0.5 }}
+        className="h-[220px] w-full items-center justify-center"
+        style={{ opacity: enabled ? 1 : 0.5 }}
         accessibilityRole="button"
         accessibilityState={{ disabled: !enabled }}
       >
-        <Animated.View style={[{ width: layoutWidth, height: layoutHeight }, strandStyle]}>
+        <Animated.View
+          className="h-[220px] w-[360px] overflow-hidden"
+          style={strandStyle}
+        >
           <Svg
-            width={layoutWidth}
-            height={layoutHeight}
+            width={MALA_BEADS_LAYOUT_WIDTH}
+            height={MALA_BEADS_LAYOUT_HEIGHT}
             style={{ position: 'absolute' }}
             pointerEvents="none"
           >

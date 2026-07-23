@@ -19,6 +19,7 @@ import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Text } from '@/components/ui/text';
 import {
+  Platform,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -88,8 +89,10 @@ export default function Index() {
     routineInfo &&
     (routineInfo.seriesCount > 0 || routineInfo.recitationCount > 0);
 
+  const topInset = Platform.OS === 'android' ? insets.top : 0;
+
   return (
-    <View className={cn('flex-1', isDark ? 'bg-black' : 'bg-[#FBF9F4]')} style={{ paddingTop: insets.top }}>
+    <View className={cn('flex-1', isDark ? 'bg-black' : 'bg-[#FBF9F4]')} style={{ paddingTop: topInset }}>
       <HomeHeader />
 
       <ScrollView
@@ -106,11 +109,11 @@ export default function Index() {
         {seriesLoading && !seriesData ? (
           <View className="flex-1" />
         ) : seriesError ? (
-          <View className="min-h-80 flex-1 justify-center">
+          <View className="min-h-[320px] flex-1 justify-center">
             <HomeErrorState onRetry={onRefresh} />
           </View>
         ) : seriesList.length === 0 ? (
-          <View className="min-h-80 flex-1 justify-center">
+          <View className="min-h-[320px] flex-1 justify-center">
             <Text className="px-6 text-center text-lg text-foreground">
               {t('no_feature_content')}
             </Text>
