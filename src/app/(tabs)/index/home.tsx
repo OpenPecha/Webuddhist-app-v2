@@ -110,11 +110,11 @@ export default function Index() {
         {seriesLoading && !seriesData ? (
           <View className="flex-1" />
         ) : seriesError ? (
-          <View className="min-h-[320px] flex-1 justify-center">
+          <View className="min-h-80 flex-1 justify-center">
             <HomeErrorState onRetry={onRefresh} />
           </View>
         ) : seriesList.length === 0 ? (
-          <View className="min-h-[320px] flex-1 justify-center">
+          <View className="min-h-80 flex-1 justify-center">
             <Text className="px-6 text-center text-lg text-foreground">
               {t('home.no_feature_content')}
             </Text>

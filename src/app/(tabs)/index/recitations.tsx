@@ -36,7 +36,7 @@ export default function RecitationsScreen() {
           {t('recitations.title')}
         </Text>
         <Pressable
-          onPress={() => router.push('/recitations/search')}
+          onPress={() => router.push('/recitations-search')}
           className="p-3 active:opacity-70"
           accessibilityRole="button"
           accessibilityLabel={t('recitations.search_placeholder')}

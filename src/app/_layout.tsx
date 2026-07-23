@@ -100,8 +100,6 @@ function AuthGate() {
         <Stack.Screen name="plans/index" />
         <Stack.Screen name="plans/search" />
         <Stack.Screen name="plans/[id]" />
-        <Stack.Screen name="recitations/index" />
-        <Stack.Screen name="recitations/search" />
         <Stack.Screen name="group/[id]" />
         <Stack.Screen name="connect/search" />
         <Stack.Screen name="connect/my-groups" />
