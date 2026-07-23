@@ -9,6 +9,7 @@ import { BackendFetch, Tolgee, useTolgee } from "@tolgee/react";
 import { getLocales } from "expo-localization";
 
 const CDN_URL = process.env.EXPO_PUBLIC_TOLGEE_CDN_URL;
+const NAMESPACE = "webuddhist";
 
 const availableLanguages = [
   "en",
@@ -20,7 +21,7 @@ const availableLanguages = [
 ] as const;
 type TolgeeLanguage = (typeof availableLanguages)[number];
 
-const staticData = { en };
+const staticData = { [`en:${NAMESPACE}`]: en };
 
 const APP_TO_TOLGEE: Record<SupportedLanguage, TolgeeLanguage> = {
   en: "en",
@@ -54,6 +55,8 @@ export const tolgee = tg.init({
   availableLanguages: [...availableLanguages],
   defaultLanguage: "en",
   fallbackLanguage: "en",
+  ns: [NAMESPACE],
+  defaultNs: NAMESPACE,
   staticData,
 });
 
