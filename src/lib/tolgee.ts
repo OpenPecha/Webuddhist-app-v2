@@ -83,3 +83,11 @@ export async function changeAppLanguage(code: string): Promise<void> {
 export function useAppLanguage(): SupportedLanguage {
   return toAppLanguage(useTolgee(["language"]).getLanguage());
 }
+
+/** Translate outside React components (toasts, alerts, utilities). */
+export function appT(
+  key: string,
+  params?: Record<string, string | number>,
+): string {
+  return tolgee.t(key, params ?? {});
+}

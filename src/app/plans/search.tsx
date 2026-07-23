@@ -15,8 +15,10 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 export default function PlansSearchScreen() {
+  const { t } = useTranslate();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { foreground, mutedForeground } = useThemeColors();
@@ -68,7 +70,7 @@ export default function PlansSearchScreen() {
             ref={inputRef}
             value={query}
             onChangeText={setQuery}
-            placeholder={"Search plans"}
+            placeholder={t('search_plans')}
             placeholderTextColor={mutedForeground}
             returnKeyType="search"
             className="flex-1 py-2.5 text-[15px] text-foreground"
@@ -93,9 +95,9 @@ export default function PlansSearchScreen() {
         <AllPlansListSkeleton rows={4} />
       ) : isError ? (
         <View className="flex-1 items-center justify-center gap-3 p-6">
-          <Text className="text-center text-destructive">{"Could not load plans"}</Text>
+          <Text className="text-center text-destructive">{t('find_plans_load_error')}</Text>
           <Pressable onPress={() => void refetch()} className="p-3 active:opacity-70">
-            <Text className="font-semibold text-foreground">{"Retry"}</Text>
+            <Text className="font-semibold text-foreground">{t('retry')}</Text>
           </Pressable>
         </View>
       ) : (
@@ -107,7 +109,7 @@ export default function PlansSearchScreen() {
           ListEmptyComponent={
             <View className="px-6 pt-12">
               <Text className="text-center text-[15px] text-muted-foreground">
-                {"No series found"}
+                {t('home_no_series_found')}
               </Text>
             </View>
           }

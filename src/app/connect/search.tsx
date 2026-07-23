@@ -11,8 +11,10 @@ import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, FlatList, RefreshControl, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 export default function GroupSearchScreen() {
+  const { t } = useTranslate();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { isDark } = useThemeColors();
@@ -51,12 +53,12 @@ export default function GroupSearchScreen() {
       <ConnectSearchBar
         value={query}
         onChangeText={setQuery}
-        placeholder={"Search groups"}
+        placeholder={t('search_groups')}
         onBack={() => router.back()}
       />
 
       {showHint ? (
-        <SearchEmptyState variant="hint" message={"Search for groups"} />
+        <SearchEmptyState variant="hint" message={t('search_for_groups')} />
       ) : (
         <FlatList
           data={groups}
@@ -67,7 +69,7 @@ export default function GroupSearchScreen() {
             isLoading ? (
               <ActivityIndicator style={{ marginTop: 48 }} />
             ) : (
-              <SearchEmptyState variant="no_results" message={"No matching groups found"} />
+              <SearchEmptyState variant="no_results" message={t('no_groups_found')} />
             )
           }
           renderItem={({ item }) => <GroupListCard group={item} />}

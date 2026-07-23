@@ -9,21 +9,24 @@ interface GroupProfileJoinButtonProps {
   onPress: () => void;
 }
 
+import { useTranslate } from '@tolgee/react';
+
 export function GroupProfileJoinButton({
   isActive,
   isPage,
   pending,
   onPress,
 }: GroupProfileJoinButtonProps) {
+  const { t } = useTranslate();
   const { foreground, scaffoldBackground, shortcutCard, isDark } = useThemeColors();
 
   const label = isActive
     ? isPage
-      ? "Following"
-      : "Joined"
+      ? t('following')
+      : t('joined')
     : isPage
-      ? "Follow"
-      : "Join";
+      ? t('follow')
+      : t('join');
 
   const activeBg = isActive ? shortcutCard : foreground;
   const activeFg = isActive ? foreground : isDark ? foreground : scaffoldBackground;

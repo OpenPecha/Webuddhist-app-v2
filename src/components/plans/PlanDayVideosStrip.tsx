@@ -3,13 +3,14 @@ import { Text } from '@/components/ui/text';
 import { Ionicons } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
 import { Pressable, ScrollView, View } from 'react-native';
+import { useTranslate } from '@tolgee/react';
 
 interface PlanDayVideosStripProps {
   videos: DayVideoSummary[];
 }
 
 export function PlanDayVideosStrip({ videos }: PlanDayVideosStripProps) {
-
+  const { t } = useTranslate();
   if (!videos.length) return null;
 
   const sorted = [...videos].sort((a, b) => a.display_order - b.display_order);
@@ -24,7 +25,7 @@ export function PlanDayVideosStrip({ videos }: PlanDayVideosStripProps) {
   return (
     <View className="my-2">
       <Text className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase px-5 mb-3">
-        {"Shorts"}
+        {t('plan_shorts_title')}
       </Text>
       <ScrollView
         horizontal

@@ -15,8 +15,10 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 export default function SelectSessionScreen() {
+  const { t } = useTranslate();
   const { blockLocalId } = useLocalSearchParams<{ blockLocalId: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -47,7 +49,7 @@ export default function SelectSessionScreen() {
           <Ionicons name="arrow-back" size={22} color="#000" />
         </Pressable>
         <Text className="flex-1 text-center text-lg font-bold text-foreground">
-          {"Add to session"}
+          {t('routine_add_session')}
         </Text>
         <View className="w-[38px]" />
       </View>
@@ -64,7 +66,7 @@ export default function SelectSessionScreen() {
           ItemSeparatorComponent={() => <View className="h-px bg-[#e8e8e4]" />}
           ListEmptyComponent={
             <Text className="mt-6 text-center text-muted-foreground">
-              {"No series found"}
+              {t('home_no_series_found')}
             </Text>
           }
           renderItem={({ item }) => {

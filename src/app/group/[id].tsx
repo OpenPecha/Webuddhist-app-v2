@@ -26,6 +26,7 @@ import { cn } from '@/utils/cn';
 import type { GroupSocialLink } from '@/lib/group-profile-format';
 import { pickGroupMetadata } from '@/types/groups';
 import type { Plan, Series } from '@/types/series';
+import { appT } from '@/lib/tolgee';
 import { checkGroupFollowed, checkGroupJoined } from '@/services/groups';
 import { usePendingGroups } from '@/hooks/usePendingGroups';
 import {
@@ -41,8 +42,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth0 } from 'react-native-auth0';
 import { useGuest } from '@/providers/guest';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslate } from '@tolgee/react';
 
 export default function GroupProfileScreen() {
+  const { t } = useTranslate();
   const { id } = useLocalSearchParams<{ id: string }>();
   const groupId = id!;
   const insets = useSafeAreaInsets();
@@ -105,7 +108,7 @@ export default function GroupProfileScreen() {
       }
       refetchMember();
     } catch {
-      Alert.alert("Something went wrong. Please try again.");
+      Alert.alert(appT('something_went_wrong'));
     }
   };
 
@@ -137,9 +140,9 @@ export default function GroupProfileScreen() {
   if (error || !group) {
     return (
       <View className={cn(scaffoldClassName, 'items-center justify-center')} style={{ paddingTop: insets.top }}>
-        <Text className="text-destructive">{"Group not found"}</Text>
+        <Text className="text-destructive">{t('no_groups_found')}</Text>
         <Pressable onPress={() => refetch()} className="mt-3 active:opacity-70">
-          <Text className="text-foreground">{"Retry"}</Text>
+          <Text className="text-foreground">{t('retry')}</Text>
         </Pressable>
       </View>
     );

@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { Modal, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 interface DayCompletionSheetProps {
   visible: boolean;
@@ -15,12 +16,13 @@ interface DayCompletionSheetProps {
 }
 
 export function DayCompletionSheet({
-  visible,
+    visible,
   onClose,
   dayNumber,
   totalDays,
   planImage,
 }: DayCompletionSheetProps) {
+  const { t } = useTranslate();
   const insets = useSafeAreaInsets();
   const progress = totalDays > 0 ? dayNumber / totalDays : 0;
 
@@ -43,7 +45,7 @@ export function DayCompletionSheet({
               <Ionicons name="checkmark" size={28} color="#fff" />
             </View>
           )}
-          <Text className="text-xl font-bold text-foreground mb-2">{"Day complete!"}</Text>
+          <Text className="text-xl font-bold text-foreground mb-2">{t('plan_status_on_track')}</Text>
           <Text className="text-sm text-muted-foreground mb-3">
             {`Day ${dayNumber} of ${totalDays}`}
           </Text>
@@ -57,7 +59,7 @@ export function DayCompletionSheet({
             onPress={onClose}
             className="rounded-xl bg-black px-12 py-3.5 active:opacity-80"
           >
-            <Text className="text-white text-base font-semibold">{"Continue"}</Text>
+            <Text className="text-white text-base font-semibold">{t('onboarding_continue')}</Text>
           </Pressable>
         </Pressable>
       </Pressable>

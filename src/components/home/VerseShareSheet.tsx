@@ -12,6 +12,7 @@ import { cn } from '@/utils/cn';
 import { Image } from 'expo-image';
 import * as Sharing from 'expo-sharing';
 import { ShareNetwork } from 'phosphor-react-native';
+import { useTranslate } from '@tolgee/react';
 import { useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, Text, View } from 'react-native';
 import ViewShot, { type ViewShotRef } from 'react-native-view-shot';
@@ -27,6 +28,7 @@ interface VerseShareSheetProps {
 }
 
 export function VerseShareSheet({ visible, verse, onClose }: VerseShareSheetProps) {
+  const { t } = useTranslate();
   const language = useContentLanguage();
   const { theme } = useUniwind();
   const isDark = theme === 'dark';
@@ -43,15 +45,15 @@ export function VerseShareSheet({ visible, verse, onClose }: VerseShareSheetProp
       const uri = await viewShotRef.current.capture();
       const canShare = await Sharing.isAvailableAsync();
       if (!canShare) {
-        Alert.alert("Unable to share quote. Please try again");
+        Alert.alert(t('verse_share_error'));
         return;
       }
       await Sharing.shareAsync(uri, {
         mimeType: 'image/png',
-        dialogTitle: "Share this quote",
+        dialogTitle: t('share_this_quote'),
       });
     } catch {
-      Alert.alert("Unable to share quote. Please try again");
+      Alert.alert(t('verse_share_error'));
     } finally {
       setSharing(false);
     }
@@ -96,7 +98,7 @@ export function VerseShareSheet({ visible, verse, onClose }: VerseShareSheetProp
                   fontFamily: 'Inter-Regular',
                 }}
               >
-                {"Shared from"}
+                {t('shared_from')}
               </Text>
               <Text
                 style={{
@@ -106,7 +108,7 @@ export function VerseShareSheet({ visible, verse, onClose }: VerseShareSheetProp
                   fontFamily: 'Inter-SemiBold',
                 }}
               >
-                {"WeBuddhist"}
+                {t('appTitle')}
               </Text>
             </View>
           </View>
@@ -136,7 +138,7 @@ export function VerseShareSheet({ visible, verse, onClose }: VerseShareSheetProp
                   color: foreground,
                 }}
               >
-                {"Share this quote"}
+                {t('share_this_quote')}
               </Text>
             </>
           )}

@@ -29,6 +29,7 @@ import {
 } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import type { SegmentInfo, SegmentVideo } from '@/types/segment-info';
+import { useTranslate } from '@tolgee/react';
 
 type SheetView = 'actions' | 'commentaries' | 'versions';
 
@@ -50,6 +51,7 @@ function ActionButton({
   loading?: boolean;
   active?: boolean;
 }) {
+  const { t } = useTranslate();
   return (
     <Pressable
       onPress={onPress}
@@ -150,15 +152,16 @@ function ActionsBody({
   onOpenCommentaries: () => void;
   onOpenVersions: () => void;
 }) {
+  const { t } = useTranslate();
   const countUnavailable = infoLoading || infoError;
 
   return (
     <>
       <View className="flex-row justify-center gap-4 mt-2">
-        <ActionButton label={"Copy"} icon="copy-outline" onPress={onCopy} />
-        <ActionButton label={"Share"} icon="share-outline" onPress={onShare} />
+        <ActionButton label={t('copy')} icon="copy-outline" onPress={onCopy} />
+        <ActionButton label={t('share')} icon="share-outline" onPress={onShare} />
         <ActionButton
-          label={isBookmarked ? "Bookmarked" : "Bookmark"}
+          label={isBookmarked ? t('bookmark') : t('bookmark')}
           icon={isBookmarked ? 'bookmark' : 'bookmark-outline'}
           active={isBookmarked}
           onPress={onBookmark}
@@ -167,18 +170,18 @@ function ActionsBody({
       </View>
 
       <Text className="text-[13px] font-semibold mt-6 mb-2 text-foreground">
-        {"Related resources"}
+        {t('resources')}
       </Text>
       <View className="h-px bg-[#e8e8e4] mb-3" />
 
       <ResourceTile
-        label={"Commentaries"}
+        label={t('text_commentary')}
         icon="chatbubble-ellipses-outline"
         count={countUnavailable ? undefined : (info?.relatedText.commentaries ?? 0)}
         onPress={onOpenCommentaries}
       />
       <ResourceTile
-        label={"Version"}
+        label={t('version')}
         icon="language-outline"
         count={countUnavailable ? undefined : (info?.translations ?? 0)}
         onPress={onOpenVersions}
@@ -187,7 +190,7 @@ function ActionsBody({
       {videos.length > 0 ? (
         <>
           <Text className="text-[13px] font-semibold mt-5 mb-3 text-foreground">
-            {"Videos"}
+            {t('reader_videos')}
           </Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {videos.map((video) => (
@@ -222,6 +225,7 @@ function ActionsBody({
 }
 
 export function SegmentActionSheet({ selected, onClose }: SegmentActionSheetProps) {
+  const { t } = useTranslate();
   const language = useContentLanguage();
   const { user } = useAuth0();
   const { isGuest } = useGuest();
@@ -250,12 +254,12 @@ export function SegmentActionSheet({ selected, onClose }: SegmentActionSheetProp
     const text = segmentPlainText(selected.content);
     const result = await copyToClipboard(text);
     if (result.ok) {
-      showAppToast("Copied to clipboard");
+      showAppToast(t('copied'));
       onClose();
     } else if (result.cancelled) {
       onClose();
     } else {
-      showAppToast("Could not copy");
+      showAppToast(t('copy'));
     }
   };
 
@@ -266,7 +270,7 @@ export function SegmentActionSheet({ selected, onClose }: SegmentActionSheetProp
       await Share.share({ message: url });
       onClose();
     } catch {
-      showAppToast("Could not share");
+      showAppToast(t('shareError'));
     }
   };
 

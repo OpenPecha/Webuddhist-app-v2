@@ -9,6 +9,7 @@ import { Text } from '@/components/ui/text';
 import { ActivityIndicator, Platform, Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 const logo = require('../../assets/images/webuddhist_gold.png');
 
@@ -39,6 +40,7 @@ function LoginButton({ icon, label, onPress, dark = false, bordered = false }: L
 }
 
 export default function Login() {
+  const { t } = useTranslate();
   const { authorize, isLoading } = useAuth0();
   const { continueAsGuest } = useGuest();
   const insets = useSafeAreaInsets();
@@ -75,7 +77,7 @@ export default function Login() {
       >
         <Image source={logo} style={{ width: 150, height: 150 }} contentFit="contain" />
         <Text className="text-[32px] font-bold">
-          {"WeBuddhist"}
+          {t('appTitle')}
         </Text>
       </View>
 
@@ -92,7 +94,7 @@ export default function Login() {
           <>
             <LoginButton
               icon={<GoogleIcon />}
-              label={"Continue with Google"}
+              label={t('continueWithGoogle')}
               onPress={loginWithGoogle}
               bordered
             />
@@ -100,7 +102,7 @@ export default function Login() {
             {Platform.OS === 'ios' && (
               <LoginButton
                 icon={<Ionicons name="logo-apple" size={22} color="#fff" />}
-                label={"Continue with Apple"}
+                label={t('continueWithApple')}
                 onPress={loginWithApple}
                 dark
               />
@@ -108,7 +110,7 @@ export default function Login() {
 
             <LoginButton
               icon={<Ionicons name="person-outline" size={20} color="#000" />}
-              label={"Continue as guest"}
+              label={t('continueAsGuest')}
               onPress={continueAsGuest}
               bordered
             />

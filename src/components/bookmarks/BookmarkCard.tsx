@@ -10,20 +10,22 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { Pressable, View } from 'react-native';
 
-function typeLabel(type: BookmarkItemType): string {
+import { useTranslate } from '@tolgee/react';
+
+function typeLabel(type: BookmarkItemType, t: (key: string) => string): string {
   switch (type) {
     case 'PLAN':
-      return "Plan";
+      return t('home_shortcut_plans');
     case 'SERIES':
-      return "Series";
+      return t('home_shortcut_plans');
     case 'ACCUMULATOR':
-      return "Mala";
+      return t('bookmark_mala');
     case 'TIMER':
-      return "Timer";
+      return t('bookmark_timers');
     case 'TEXT':
-      return "Text";
+      return t('bookmark_texts');
     case 'VERSE':
-      return "Verse";
+      return t('bookmark_texts');
     default:
       return type;
   }
@@ -44,9 +46,10 @@ interface BookmarkCardProps {
 }
 
 export function BookmarkCard({ bookmark, onPress, onRemove }: BookmarkCardProps) {
+  const { t } = useTranslate();
   const title = bookmarkDisplayTitle(bookmark);
   const dateLabel = formatDateRange(bookmark);
-  const badge = typeLabel(bookmark.type);
+  const badge = typeLabel(bookmark.type, t);
 
   if (bookmarkIsText(bookmark)) {
     const excerpt = (bookmark.excerpt ?? '').replace(/<[^>]+>/g, '').trim();

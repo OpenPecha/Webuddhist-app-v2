@@ -3,6 +3,7 @@ import { cn } from '@/utils/cn';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, View } from 'react-native';
 import { isTaskNavigable, taskHasAudio } from '@/utils/plan-subtask-navigation';
+import { useTranslate } from '@tolgee/react';
 
 export interface PlanTaskListItem {
   id: string;
@@ -72,7 +73,7 @@ function CircleActionButton({
 }
 
 export function PlanTaskList({
-  tasks,
+    tasks,
   readOnly = true,
   dayAudioUrl,
   onToggleTask,
@@ -81,9 +82,10 @@ export function PlanTaskList({
   optimisticCompleted = {},
 }: PlanTaskListProps) {
 
+  const { t } = useTranslate();
   if (tasks.length === 0) {
     return (
-      <Text className="text-muted-foreground text-center mt-6 px-5">{"No tasks for this day"}</Text>
+      <Text className="text-muted-foreground text-center mt-6 px-5">{t('noTasks')}</Text>
     );
   }
 

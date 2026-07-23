@@ -30,20 +30,22 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 function ConnectErrorState({ onRetry }: { onRetry: () => void }) {
+  const { t } = useTranslate();
 
   return (
     <View className="mt-12 items-center gap-3 px-6">
       <Text className="text-center text-destructive">
-        {"Could not load groups. Please try again."}
+        {t('connect_groups_load_error')}
       </Text>
       <Pressable
         onPress={onRetry}
         className="rounded-lg bg-foreground px-4 py-2.5 active:opacity-70"
       >
         <Text className="font-semibold text-white">
-          {"Retry"}
+          {t('retry')}
         </Text>
       </Pressable>
     </View>
@@ -51,6 +53,7 @@ function ConnectErrorState({ onRetry }: { onRetry: () => void }) {
 }
 
 export default function ConnectScreen() {
+  const { t } = useTranslate();
   const insets = useSafeAreaInsets();
   const { isDark } = useThemeColors();
   const queryClient = useQueryClient();
@@ -113,7 +116,7 @@ export default function ConnectScreen() {
     if (hasMyGroups) return <DiscoverEmptyState />;
     return (
       <Text className="mt-12 px-6 text-center text-muted-foreground">
-        {"No groups yet"}
+        {t('connect_groups_empty_title')}
       </Text>
     );
   };
@@ -133,7 +136,7 @@ export default function ConnectScreen() {
             ) : (
               <ConnectHeroImage />
             )}
-            <ConnectSectionTitle label={"Discover groups"} />
+            <ConnectSectionTitle label={t('discover_groups')} />
           </>
         }
         ListEmptyComponent={renderEmptyDiscover()}

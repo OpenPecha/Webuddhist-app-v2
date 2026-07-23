@@ -50,7 +50,7 @@ export function HomeHeader() {
             onPress={() => router.push('/calendar' as Href)}
             className="active:opacity-70"
             accessibilityRole="button"
-            accessibilityLabel={"Open calendar"}
+            accessibilityLabel={t('calendar_title')}
           >
             <CalendarDotsIcon size={24} color={foreground} />
           </Pressable>

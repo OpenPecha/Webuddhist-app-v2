@@ -14,8 +14,10 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 export default function AllPlansScreen() {
+  const { t } = useTranslate();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { foreground } = useThemeColors();
@@ -43,7 +45,7 @@ export default function AllPlansScreen() {
           onPress={() => router.back()}
           className="p-3 active:opacity-70"
           accessibilityRole="button"
-          accessibilityLabel={"Back"}
+          accessibilityLabel={t('back')}
         >
           <Ionicons name="chevron-back" size={24} color={foreground} />
         </Pressable>
@@ -51,13 +53,13 @@ export default function AllPlansScreen() {
           className="flex-1 text-center text-[17px] font-bold text-foreground"
           numberOfLines={1}
         >
-          {"Plans"}
+          {t('home_shortcut_plans')}
         </Text>
         <Pressable
           onPress={() => router.push('/plans/search')}
           className="p-3 active:opacity-70"
           accessibilityRole="button"
-          accessibilityLabel={"Search plans"}
+          accessibilityLabel={t('search_plans')}
         >
           <Ionicons name="search" size={22} color={foreground} />
         </Pressable>
@@ -67,9 +69,9 @@ export default function AllPlansScreen() {
         <AllPlansListSkeleton />
       ) : isError ? (
         <View className="flex-1 items-center justify-center gap-3 p-6">
-          <Text className="text-center text-destructive">{"Could not load plans"}</Text>
+          <Text className="text-center text-destructive">{t('find_plans_load_error')}</Text>
           <Pressable onPress={() => void refetch()} className="p-3 active:opacity-70">
-            <Text className="font-semibold text-foreground">{"Retry"}</Text>
+            <Text className="font-semibold text-foreground">{t('retry')}</Text>
           </Pressable>
         </View>
       ) : (
@@ -87,7 +89,7 @@ export default function AllPlansScreen() {
           ListEmptyComponent={
             <View className="px-6 pt-12">
               <Text className="text-center text-[15px] text-muted-foreground">
-                {"No series found"}
+                {t('home_no_series_found')}
               </Text>
             </View>
           }

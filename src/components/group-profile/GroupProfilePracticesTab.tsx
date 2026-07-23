@@ -15,6 +15,7 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import type { ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
+import { useTranslate } from '@tolgee/react';
 
 interface GroupProfilePracticesTabProps {
   seriesList: Series[];
@@ -22,6 +23,7 @@ interface GroupProfilePracticesTabProps {
 }
 
 export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfilePracticesTabProps) {
+  const { t } = useTranslate();
   const router = useRouter();
   const language = useContentLanguage();
   const uiLanguage = useAppLanguage();
@@ -29,7 +31,7 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
 
   if (seriesList.length === 0 && plansList.length === 0) {
     return (
-      <Text className="mt-6 px-4 text-center text-muted-foreground">{"No practices yet."}</Text>
+      <Text className="mt-6 px-4 text-center text-muted-foreground">{t('group_members_empty')}</Text>
     );
   }
 

@@ -14,6 +14,7 @@ import { showAppToast } from '@/utils/show-app-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useCallback, useRef, useEffect } from 'react';
+import { appT } from '@/lib/tolgee';
 
 function mapDayTasksFromApi(
   rawTasks: {
@@ -105,7 +106,7 @@ export function usePlanReadingSession(options?: { onBeforeNavigate?: () => void 
   invalidateRef.current = invalidatePlanDay;
 
   const onCompleteErrorRef = useRef<() => void>(() => {});
-  onCompleteErrorRef.current = () => showAppToast("Couldn't save your progress. Please try again.");
+  onCompleteErrorRef.current = () => showAppToast(appT('updateTaskError'));
 
   const completionSessionRef = useRef<ReturnType<typeof createPlanSubtaskCompletionSession> | null>(
     null,

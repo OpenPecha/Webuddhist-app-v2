@@ -14,6 +14,7 @@ import {
 import type { IconProps } from 'phosphor-react-native';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 interface MalaSettingsSheetProps {
   visible: boolean;
@@ -87,7 +88,7 @@ function SettingsToggleRow({
 }
 
 export function MalaSettingsSheet({
-  visible,
+    visible,
   prefs,
   onClose,
   onAddToPracticePress,
@@ -96,6 +97,7 @@ export function MalaSettingsSheet({
   onSoundChange,
   onVibrationChange,
 }: MalaSettingsSheetProps) {
+  const { t } = useTranslate();
   const insets = useSafeAreaInsets();
   const { borderInput } = useThemeColors();
 
@@ -119,21 +121,21 @@ export function MalaSettingsSheet({
       <View className="px-5" style={{ paddingBottom: Math.max(16, insets.bottom) }}>
         <SettingsActionRow
           icon={Plus}
-          label={"Add to practice"}
+          label={t('mala_add_to_practice')}
           onPress={handleAddToPractice}
         />
         <SheetDivider color={borderInput} />
 
         <SettingsActionRow
           icon={BookmarkSimple}
-          label={"Bookmark"}
+          label={t('bookmark')}
           onPress={handleBookmark}
         />
         <SheetDivider color={borderInput} />
 
         <SettingsToggleRow
           icon={SpeakerHigh}
-          label={"Sound"}
+          label={t('mala_sound')}
           value={prefs.soundEnabled}
           onValueChange={onSoundChange}
         />
@@ -141,7 +143,7 @@ export function MalaSettingsSheet({
 
         <SettingsToggleRow
           icon={Vibrate}
-          label={"Vibration"}
+          label={t('mala_vibration')}
           value={prefs.vibrationEnabled}
           onValueChange={onVibrationChange}
         />
@@ -149,7 +151,7 @@ export function MalaSettingsSheet({
 
         <SettingsActionRow
           icon={ArrowsClockwise}
-          label={"Reset count"}
+          label={t('mala_reset_count')}
           onPress={handleReset}
           destructive
         />

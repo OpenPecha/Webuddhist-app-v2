@@ -77,7 +77,7 @@ export function HomeShortcutsRow() {
       <View className="flex-row gap-2 px-4">
         <ShortcutTile
           icon={<ListChecksIcon size={ICON_SIZE} color={foreground} />}
-          label={"Plans"}
+          label={t('home_shortcut_plans')}
           onPress={() => router.push('/plans' as Href)}
           cardColor={shortcutCard}
         />
@@ -89,13 +89,13 @@ export function HomeShortcutsRow() {
         />
         <ShortcutTile
           icon={<MalaShortcutIcon color={foreground} />}
-          label={"Mala"}
+          label={t('home_mala')}
           onPress={() => openGated('/mala')}
           cardColor={shortcutCard}
         />
         <ShortcutTile
           icon={<TimerIcon size={ICON_SIZE} color={foreground} />}
-          label={"Timer"}
+          label={t('home_timer')}
           onPress={() => openGated('/timers')}
           cardColor={shortcutCard}
         />

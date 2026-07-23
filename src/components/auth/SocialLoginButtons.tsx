@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { Text } from '@/components/ui/text';
 import { cn } from '@/utils/cn';
 import { useUniwind } from 'uniwind';
+import { useTranslate } from '@tolgee/react';
 
 interface SocialLoginButtonProps {
   icon: React.ReactNode;
@@ -18,6 +19,7 @@ interface SocialLoginButtonProps {
 }
 
 function SocialLoginButton({ icon, label, onPress, dark = false, bordered = false }: SocialLoginButtonProps) {
+  const { t } = useTranslate();
   return (
     <Pressable
       onPress={onPress}
@@ -41,6 +43,7 @@ interface SocialLoginButtonsProps {
 }
 
 export function SocialLoginButtons({ onSuccess, className }: SocialLoginButtonsProps) {
+  const { t } = useTranslate();
   const { authorize } = useAuth0();
   const { clearGuest } = useGuest();
   const { theme } = useUniwind();
@@ -84,14 +87,14 @@ export function SocialLoginButtons({ onSuccess, className }: SocialLoginButtonsP
     <View className={cn('w-full gap-3.5', className)}>
       <SocialLoginButton
         icon={<GoogleIcon />}
-        label={"Continue with Google"}
+        label={t('continueWithGoogle')}
         onPress={() => loginWith('google-oauth2')}
         bordered={!isDark}
       />
       {Platform.OS === 'ios' ? (
         <SocialLoginButton
           icon={<Ionicons name="logo-apple" size={22} color="#fff" />}
-          label={"Continue with Apple"}
+          label={t('continueWithApple')}
           onPress={() => loginWith('apple')}
           dark
         />

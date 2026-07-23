@@ -6,6 +6,7 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, Pressable, View } from 'react-native';
+import { useTranslate } from '@tolgee/react';
 
 interface FeaturedSeriesPlanCardProps {
   series: SeriesDetail;
@@ -19,7 +20,7 @@ interface FeaturedSeriesPlanCardProps {
 }
 
 export function FeaturedSeriesPlanCard({
-  series,
+    series,
   featuredPlan,
   metadata,
   isEnrolled,
@@ -28,6 +29,7 @@ export function FeaturedSeriesPlanCard({
   onEnroll,
   seriesId,
 }: FeaturedSeriesPlanCardProps) {
+  const { t } = useTranslate();
   const router = useRouter();
 
   const subtitle = metadata?.sub_title?.trim() || featuredPlan.description;
@@ -74,7 +76,7 @@ export function FeaturedSeriesPlanCard({
             {isEnrolling ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text className="text-base font-semibold text-white">{"Enroll"}</Text>
+              <Text className="text-base font-semibold text-white">{t('plan_enroll')}</Text>
             )}
           </Pressable>
         ) : null}

@@ -24,38 +24,40 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth0 } from 'react-native-auth0';
 import { useGuest } from '@/providers/guest';
 import { Swipeable } from 'react-native-gesture-handler';
+import { useTranslate } from '@tolgee/react';
 
-function tabLabel(tab: BookmarkTab): string {
+function tabLabel(tab: BookmarkTab, t: (key: string) => string): string {
   switch (tab) {
     case 'all':
-      return "All";
+      return t('search_all');
     case 'plans':
-      return "Plans";
+      return t('home_shortcut_plans');
     case 'mala':
-      return "Mala";
+      return t('bookmark_mala');
     case 'timers':
-      return "Timers";
+      return t('bookmark_timers');
     case 'texts':
-      return "Texts";
+      return t('bookmark_texts');
   }
 }
 
-function emptyCopy(tab: BookmarkTab): { title: string; hint: string } {
+function emptyCopy(tab: BookmarkTab, t: (key: string) => string): { title: string; hint: string } {
   switch (tab) {
     case 'plans':
-      return { title: "No bookmarked plans yet.", hint: "Bookmark a plan or series to find it here." };
+      return { title: t('bookmarks_empty_plans_title'), hint: t('bookmarks_empty_plans_subtitle') };
     case 'mala':
-      return { title: "No bookmarked mala yet.", hint: "Bookmark a mala preset from the mala screen." };
+      return { title: t('bookmarks_empty_malas_title'), hint: t('bookmarks_empty_malas_subtitle') };
     case 'timers':
-      return { title: "No bookmarked timers yet.", hint: "Bookmark a timer to start it quickly from here." };
+      return { title: t('bookmarks_empty_timers_title'), hint: t('bookmarks_empty_timers_subtitle') };
     case 'texts':
-      return { title: "No bookmarked texts yet.", hint: "Bookmark a text or verse while reading." };
+      return { title: t('bookmarks_empty_texts_title'), hint: t('bookmarks_empty_texts_subtitle') };
     default:
-      return { title: "Nothing bookmarked yet.", hint: "Bookmark anything to save it here." };
+      return { title: t('bookmarks_empty_all_title'), hint: t('bookmarks_empty_all_subtitle') };
   }
 }
 
 export default function BookmarksScreen() {
+  const { t } = useTranslate();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { user } = useAuth0();
@@ -67,16 +69,16 @@ export default function BookmarksScreen() {
 
   const { scaffoldBackground } = useThemeColors();
   const filtered = useMemo(() => filterBookmarksByTab(data, tab), [data, tab]);
-  const empty = emptyCopy(tab);
+  const empty = emptyCopy(tab, t);
 
   if (isGuest || !user) {
     return (
       <View className="flex-1" style={{ paddingTop: insets.top, backgroundColor: scaffoldBackground }}>
-        <Header onBack={() => router.back()} title={"Bookmarks"} />
+        <Header onBack={() => router.back()} title={t('bookmarks')} />
         <View className="flex-1 items-center justify-center p-6">
-          <Text className="text-center text-muted-foreground">{"Sign in to view your bookmarks."}</Text>
+          <Text className="text-center text-muted-foreground">{t('bookmarks_empty_all_subtitle')}</Text>
           <Pressable onPress={showLoginDrawer} className="mt-4 active:opacity-70">
-            <Text className="font-semibold text-foreground">{"Sign in"}</Text>
+            <Text className="font-semibold text-foreground">{t('sign_in')}</Text>
           </Pressable>
         </View>
         <LoginDrawer key={session} visible={visible} onClose={hideLoginDrawer} />
@@ -85,10 +87,10 @@ export default function BookmarksScreen() {
   }
 
   const confirmRemove = (bookmark: BookmarkDTO) => {
-    Alert.alert("Remove bookmark?", "This will remove the bookmark from your list.", [
-      { text: "Cancel", style: 'cancel' },
+    Alert.alert(t('delete'), t('bookmark_removed'), [
+      { text: t('cancel'), style: 'cancel' },
       {
-        text: "Remove",
+        text: t('delete'),
         style: 'destructive',
         onPress: () => {
           remove.mutate({
@@ -103,7 +105,7 @@ export default function BookmarksScreen() {
 
   return (
     <View className="flex-1" style={{ paddingTop: insets.top, backgroundColor: scaffoldBackground }}>
-      <Header onBack={() => router.back()} title={"Bookmarks"} />
+      <Header onBack={() => router.back()} title={t('bookmarks')} />
 
       <View>
         <ScrollView
@@ -127,7 +129,7 @@ export default function BookmarksScreen() {
                     : 'font-medium text-muted-foreground'
                 }`}
               >
-                {tabLabel(key)}
+                {tabLabel(key, t)}
               </Text>
             </Pressable>
           ))}
@@ -140,9 +142,9 @@ export default function BookmarksScreen() {
         </View>
       ) : isError ? (
         <View className="flex-1 items-center justify-center p-6">
-          <Text className="mb-3 text-muted-foreground">{"Could not load bookmarks. Please try again."}</Text>
+          <Text className="mb-3 text-muted-foreground">{t('loadFailed')}</Text>
           <Pressable onPress={() => void refetch()} className="active:opacity-70">
-            <Text className="font-semibold">{"Retry"}</Text>
+            <Text className="font-semibold">{t('retry')}</Text>
           </Pressable>
         </View>
       ) : (
@@ -173,7 +175,7 @@ export default function BookmarksScreen() {
                   onPress={() => confirmRemove(item)}
                   className="mb-3 justify-center rounded-xl bg-[#c0392b] px-5 active:opacity-70"
                 >
-                  <Text className="font-semibold text-white">{"Remove"}</Text>
+                  <Text className="font-semibold text-white">{t('delete')}</Text>
                 </Pressable>
               )}
             >

@@ -22,12 +22,11 @@ import { resolveProfileAvatarUrl } from '@/lib/profile-display';
 import {
   validatePersonName,
   validateUsername,
-  validationMessage,
-  type PersonNameValidationKey,
   type UsernameValidationKey,
 } from '@/lib/username-validation';
 import type { UserProfile } from '@/types/user';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslate } from '@tolgee/react';
 import { type Href, router, useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, ScrollView, View } from 'react-native';
@@ -75,6 +74,7 @@ export default function EditProfileScreen() {
   } = useUserProfile();
   const { updateProfile, patchUsername, uploadAvatar } = useUserProfileMutations();
   const navigateOnce = useNavigateOnce();
+  const { t } = useTranslate();
 
   const [username, setUsername] = useState(initialForm.username);
   const [firstName, setFirstName] = useState(initialForm.firstName);
@@ -165,7 +165,7 @@ export default function EditProfileScreen() {
     setAvatarSheetVisible(false);
     const uri = await pickProfileImage(source);
     if (!uri) {
-      Alert.alert("Could not upload your photo. Please try again");
+      Alert.alert(t('edit_profile_photo_upload_failed'));
       return;
     }
     setLocalAvatarUri(uri);
@@ -203,7 +203,7 @@ export default function EditProfileScreen() {
           setAvatarUrl(nextAvatarUrl);
           setLocalAvatarUri(null);
         } catch {
-          Alert.alert("Could not upload your photo. Please try again");
+          Alert.alert(t('edit_profile_photo_upload_failed'));
           return;
         } finally {
           setUploadingAvatar(false);
@@ -229,7 +229,7 @@ export default function EditProfileScreen() {
       await refetch();
       router.back();
     } catch {
-      Alert.alert("Couldn't save your changes. Please try again");
+      Alert.alert(t('edit_profile_save_failed'));
     } finally {
       setSaving(false);
     }
@@ -256,7 +256,7 @@ export default function EditProfileScreen() {
           canSave ? (isDark ? 'text-black' : 'text-white') : 'text-muted-foreground',
         )}
       >
-        {saving ? "Saving…" : "Save"}
+        {saving ? t('loading') : t('edit_profile_save')}
       </Text>
     </Pressable>
   );
@@ -264,10 +264,10 @@ export default function EditProfileScreen() {
   if (isError && !profile) {
     return (
       <View className="flex-1 bg-background">
-        <AppScreenHeader title={"Edit profile"} />
+        <AppScreenHeader title={t('edit_profile_title')} />
         <View className="flex-1 items-center justify-center px-8">
           <Text className="text-center text-base text-muted-foreground">
-            {"Couldn't load. Check your connection and try again."}
+            {t('loadFailed')}
           </Text>
           <Pressable
             onPress={() => refetch()}
@@ -277,7 +277,7 @@ export default function EditProfileScreen() {
             )}
           >
             <Text className={cn('text-sm font-semibold', isDark ? 'text-black' : 'text-white')}>
-              {"Retry"}
+              {t('retry')}
             </Text>
           </Pressable>
         </View>
@@ -298,7 +298,7 @@ export default function EditProfileScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <AppScreenHeader title={"Edit profile"} rightAction={savePill} />
+      <AppScreenHeader title={t('edit_profile_title')} rightAction={savePill} />
       {(saving || uploadingAvatar || isRefreshing) && (
         <View className="bg-muted h-0.5 w-full">
           <ActivityIndicator style={{ height: 2 }} />
@@ -329,26 +329,26 @@ export default function EditProfileScreen() {
         <View className="mt-5 flex-row gap-3">
           <View className="flex-1">
             <FloatingTextInput
-              label={"First name"}
+              label={t('edit_profile_first_name')}
               value={firstName}
               onChangeText={setFirstName}
-              error={firstNameError ? validationMessage(firstNameError as PersonNameValidationKey) : null}
+              error={firstNameError ? t(firstNameError) : null}
             />
           </View>
           <View className="flex-1">
             <FloatingTextInput
-              label={"Last name"}
+              label={t('edit_profile_last_name')}
               value={lastName}
               onChangeText={setLastName}
-              error={lastNameError ? validationMessage(lastNameError as PersonNameValidationKey) : null}
+              error={lastNameError ? t(lastNameError) : null}
             />
           </View>
         </View>
 
         <View className="mt-5">
           <FloatingTextInput
-            label={"Bio"}
-            hint={"Share a little about yourself"}
+            label={t('edit_profile_bio')}
+            hint={t('edit_profile_bio_hint')}
             value={bio}
             onChangeText={setBio}
             multiline
@@ -365,7 +365,7 @@ export default function EditProfileScreen() {
           className="mt-8 flex-row items-center py-3 active:opacity-70"
         >
           <Trash size={22} color={destructive} />
-          <Text className="ml-3 flex-1 text-base text-destructive">{"Delete account"}</Text>
+          <Text className="ml-3 flex-1 text-base text-destructive">{t('delete_account_button')}</Text>
           <CaretRight size={20} color={mutedForeground} />
         </Pressable>
       </ScrollView>
@@ -380,14 +380,14 @@ export default function EditProfileScreen() {
           className="flex-row items-center px-6 py-4 active:opacity-70"
         >
           <Images size={24} color={foreground} />
-          <Text className="ml-4 text-base">{"Choose from library"}</Text>
+          <Text className="ml-4 text-base">{t('edit_profile_choose_from_library')}</Text>
         </Pressable>
         <Pressable
           onPress={() => pickAvatar('camera')}
           className="flex-row items-center px-6 py-4 active:opacity-70"
         >
           <Camera size={24} color={foreground} />
-          <Text className="ml-4 text-base">{"Take a photo"}</Text>
+          <Text className="ml-4 text-base">{t('edit_profile_take_photo')}</Text>
         </Pressable>
       </AppBottomSheet>
     </View>

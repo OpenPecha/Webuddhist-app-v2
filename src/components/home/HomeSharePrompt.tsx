@@ -3,8 +3,10 @@ import { ShareNetworkIcon } from '@/components/home/HomeIcon';
 import { shareApp } from '@/services/app-share';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { Pressable, View } from 'react-native';
+import { useTranslate } from '@tolgee/react';
 
 export function HomeSharePrompt() {
+  const { t } = useTranslate();
   const { foreground, sharePromptBg } = useThemeColors();
 
   return (
@@ -21,7 +23,7 @@ export function HomeSharePrompt() {
         style={{ backgroundColor: sharePromptBg }}
       >
         <ShareNetworkIcon size={22} color={foreground} />
-        <Text className="text-base font-bold text-foreground">{"Share"}</Text>
+        <Text className="text-base font-bold text-foreground">{t('share')}</Text>
       </Pressable>
     </View>
   );

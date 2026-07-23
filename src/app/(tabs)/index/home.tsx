@@ -25,20 +25,22 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 function HomeErrorState({ onRetry }: { onRetry: () => void }) {
+  const { t } = useTranslate();
 
   return (
     <View className="items-center gap-3 px-6">
       <Text className="text-center text-destructive">
-        {"Unable to load. Check your connection and try again."}
+        {t('loadFailed')}
       </Text>
       <Pressable
         onPress={onRetry}
         className="rounded-lg bg-foreground px-4 py-2 active:opacity-70"
       >
         <Text className="text-[13px] font-medium text-white">
-          {"Retry"}
+          {t('retry')}
         </Text>
       </Pressable>
     </View>
@@ -46,6 +48,7 @@ function HomeErrorState({ onRetry }: { onRetry: () => void }) {
 }
 
 export default function Index() {
+  const { t } = useTranslate();
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { isGuest } = useGuest();
@@ -109,7 +112,7 @@ export default function Index() {
         ) : seriesList.length === 0 ? (
           <View className="min-h-80 flex-1 justify-center">
             <Text className="px-6 text-center text-lg text-foreground">
-              {"No featured content available"}
+              {t('no_feature_content')}
             </Text>
           </View>
         ) : showBody ? (

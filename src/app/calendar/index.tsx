@@ -17,6 +17,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 const WEEKDAY_LABELS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
@@ -52,6 +53,7 @@ function buildMonthGrid(year: number, month: number, days: CalendarDay[]) {
 }
 
 export default function CalendarScreen() {
+  const { t } = useTranslate();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const today = new Date();
@@ -103,7 +105,7 @@ export default function CalendarScreen() {
           <ArrowLeftIcon size={24} color={foreground} />
         </Pressable>
         <Text className="flex-1 text-center text-[17px] font-semibold text-foreground">
-          {"Tibetan Calendar"}
+          {t('calendar_title')}
         </Text>
         <View className="w-10" />
       </View>
@@ -164,12 +166,12 @@ export default function CalendarScreen() {
             </View>
           ) : isError ? (
             <View className="items-center gap-3 p-6">
-              <Text className="text-center text-muted-foreground">{"Unable to load. Check your connection and try again."}</Text>
+              <Text className="text-center text-muted-foreground">{t('loadFailed')}</Text>
               <Pressable
                 onPress={() => void refetch()}
                 className="rounded-lg bg-[#0C53C5] px-4 py-2 active:opacity-70"
               >
-                <Text className="text-white">{"Retry"}</Text>
+                <Text className="text-white">{t('retry')}</Text>
               </Pressable>
             </View>
           ) : (

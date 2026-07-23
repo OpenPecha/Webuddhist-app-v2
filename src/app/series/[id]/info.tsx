@@ -10,8 +10,10 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 export default function SeriesInfoScreen() {
+  const { t } = useTranslate();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: series, isLoading, error, refetch } = useSeriesById(id!);
   const language = useContentLanguage();
@@ -35,9 +37,9 @@ export default function SeriesInfoScreen() {
   if (error || !series) {
     return (
       <View className="flex-1 items-center justify-center bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
-        <Text className="text-destructive">{"Unable to load series. Check your connection and try again."}</Text>
+        <Text className="text-destructive">{t('loadFailed')}</Text>
         <Pressable onPress={() => refetch()} className="mt-3 active:opacity-70">
-          <Text>{"Retry"}</Text>
+          <Text>{t('retry')}</Text>
         </Pressable>
       </View>
     );
@@ -74,7 +76,7 @@ export default function SeriesInfoScreen() {
             <MarkdownText content={body} />
           ) : (
             <Text className="text-center text-sm text-muted-foreground">
-              {"No additional information available."}
+              {t('reader_no_version_info')}
             </Text>
           )}
         </View>

@@ -31,7 +31,10 @@ const TAB_ICONS: Record<TabRouteName, TabIcon> = {
   me: UserCircle,
 };
 
+import { useTranslate } from '@tolgee/react';
+
 export function AppBottomTabBar({ state, navigation, insets }: BottomTabBarProps) {
+  const { t } = useTranslate();
   const { theme } = useUniwind();
   const { user } = useAuth0();
   const { isGuest } = useGuest();
@@ -43,10 +46,10 @@ export function AppBottomTabBar({ state, navigation, insets }: BottomTabBarProps
     user && !isGuest ? resolveProfileAvatarUrl(profile, user) : null;
 
   const labels: Record<TabRouteName, string> = {
-    index: "Home",
-    practice: "Practice",
-    connect: "Connect",
-    me: "Me",
+    index: t('nav_home'),
+    practice: t('nav_practice'),
+    connect: t('nav_connect'),
+    me: t('nav_me'),
   };
 
   return (

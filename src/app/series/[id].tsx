@@ -7,6 +7,7 @@ import { useSeriesById } from '@/hooks/api/useSeries';
 import { useUserPlans } from '@/hooks/api/useUserPlans';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useLoginDrawer } from '@/hooks/useLoginDrawer';
+import { appT } from '@/lib/tolgee';
 import { pickSeriesMetadata } from '@/types/series';
 import { resolveUserPlanForItem } from '@/utils/plan-utils';
 import { Ionicons } from '@expo/vector-icons';
@@ -24,8 +25,10 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth0 } from 'react-native-auth0';
 import { useGuest } from '@/providers/guest';
+import { useTranslate } from '@tolgee/react';
 
 export default function SeriesDetailScreen() {
+  const { t } = useTranslate();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: series, isLoading, error, refetch, isRefetching } = useSeriesById(id!);
   const router = useRouter();
@@ -66,7 +69,7 @@ export default function SeriesDetailScreen() {
     }
     enrollSeries.mutate(
       { series_id: id! },
-      { onError: () => Alert.alert("Unable to enroll you. Check your connection and try again.") },
+      { onError: () => Alert.alert(appT('enrollError')) },
     );
   };
 
@@ -88,9 +91,9 @@ export default function SeriesDetailScreen() {
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <View className="flex-1 items-center justify-center gap-3">
-          <Text className="text-destructive">{"Couldn't load. Check your connection and try again."}</Text>
+          <Text className="text-destructive">{t('loadFailed')}</Text>
           <Pressable onPress={() => refetch()} className="p-3 active:opacity-70">
-            <Text>{"Retry"}</Text>
+            <Text>{t('retry')}</Text>
           </Pressable>
         </View>
       </View>

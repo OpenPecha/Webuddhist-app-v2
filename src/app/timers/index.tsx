@@ -15,6 +15,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 const GRID_SPACING = 12;
 const HORIZONTAL_PADDING = 16;
@@ -24,6 +25,7 @@ function sortPresetTimers(timers: PresetTimer[]): PresetTimer[] {
 }
 
 export default function TimersScreen() {
+  const { t } = useTranslate();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { foreground, isDark } = useThemeColors();
@@ -52,7 +54,7 @@ export default function TimersScreen() {
           className="flex-1 text-center text-xl font-bold text-foreground"
           numberOfLines={1}
         >
-          {"Meditation Timer"}
+          {t('meditation_timer')}
         </Text>
         <View className="h-12 w-12" />
       </View>
@@ -62,19 +64,19 @@ export default function TimersScreen() {
       ) : isError ? (
         <View className="flex-1 items-center justify-center gap-3 p-6">
           <Text className="text-center text-muted-foreground">
-            {"Couldn't load timers. Please try again."}
+            {t('session_timers_load_error')}
           </Text>
           <Pressable
             onPress={() => void refetch()}
             className="rounded-lg bg-[#0C53C5] px-4 py-2 active:opacity-70"
           >
-            <Text className="text-white">{"Retry"}</Text>
+            <Text className="text-white">{t('retry')}</Text>
           </Pressable>
         </View>
       ) : sortedTimers.length === 0 ? (
         <View className="flex-1 items-center justify-center p-8">
           <Text className="text-center text-muted-foreground">
-            {"No meditation timers available."}
+            {t('session_no_timers')}
           </Text>
         </View>
       ) : (
@@ -94,7 +96,7 @@ export default function TimersScreen() {
             <View className="flex-1">
               <PresetTimerCard
                 timer={item}
-                minLabel={"min"}
+                minLabel={t('timer_min')}
                 onPress={() => openActiveTimer(item)}
               />
             </View>

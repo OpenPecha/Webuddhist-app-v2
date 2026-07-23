@@ -3,8 +3,10 @@ import { useRouter } from 'expo-router';
 import { Text } from '@/components/ui/text';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 export default function ReaderSearchPlaceholderScreen() {
+  const { t } = useTranslate();
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
@@ -15,12 +17,12 @@ export default function ReaderSearchPlaceholderScreen() {
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <Text className="mr-10 flex-1 text-[17px] font-semibold text-foreground">
-          {"Search"}
+          {t('text_search')}
         </Text>
       </View>
       <View className="flex-1 items-center justify-center px-6">
         <Text className="text-center text-[15px] text-muted-foreground">
-          {"Coming soon."}
+          {t('comingSoonHeadline')}
         </Text>
       </View>
     </View>

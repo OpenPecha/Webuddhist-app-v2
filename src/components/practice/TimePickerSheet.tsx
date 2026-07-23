@@ -3,6 +3,7 @@ import { dateFromTimeInt, timeIntFromDate } from '@/utils/routine-time-utils';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useState } from 'react';
 import { Platform, Pressable, Text, View } from 'react-native';
+import { useTranslate } from '@tolgee/react';
 
 interface TimePickerSheetProps {
   visible: boolean;
@@ -20,6 +21,7 @@ interface TimePickerSheetContentProps {
 
 /** iOS Cupertino wheel + Android system time picker — matches Flutter `_showCupertinoTimePicker`. */
 export function TimePickerSheet({ visible, timeInt, onClose, onConfirm }: TimePickerSheetProps) {
+  const { t } = useTranslate();
   if (!visible) return null;
 
   return (
@@ -39,6 +41,7 @@ function TimePickerSheetContent({
   onClose,
   onConfirm,
 }: TimePickerSheetContentProps) {
+  const { t } = useTranslate();
   const [selected, setSelected] = useState(() => dateFromTimeInt(timeInt));
 
   if (Platform.OS === 'android') {
@@ -60,7 +63,7 @@ function TimePickerSheetContent({
     <AppBottomSheet visible={visible} onClose={onClose} maxHeight="50%">
       <View className="flex-row justify-between px-2">
         <Pressable onPress={onClose} className="p-3">
-          <Text className="text-base text-muted-foreground">{"Cancel"}</Text>
+          <Text className="text-base text-muted-foreground">{t('cancel')}</Text>
         </Pressable>
         <Pressable
           onPress={() => {
@@ -69,7 +72,7 @@ function TimePickerSheetContent({
           }}
           className="p-3"
         >
-          <Text className="text-base font-semibold">{"Done"}</Text>
+          <Text className="text-base font-semibold">{t('done')}</Text>
         </Pressable>
       </View>
       <DateTimePicker

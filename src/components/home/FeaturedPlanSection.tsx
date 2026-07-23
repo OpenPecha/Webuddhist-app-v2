@@ -12,6 +12,7 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, View, type ImageStyle, type StyleProp } from 'react-native';
+import { useTranslate } from '@tolgee/react';
 
 function formatSeriesDateRange(series: Series): string | null {
   if (!series.start_date || !series.end_date) return null;
@@ -31,6 +32,7 @@ function SeriesCoverImage({
   style: StyleProp<ImageStyle>;
   size?: 'thumbnail' | 'medium' | 'original';
 }) {
+  const { t } = useTranslate();
   const uri = resolveCoverImage(series.image, series.image_url, size);
   const [loadFailed, setLoadFailed] = useState(false);
 
@@ -175,6 +177,7 @@ function FeaturedPlanContent({
   hasStatsCard: boolean;
   onSeriesTap: (series: Series) => void;
 }) {
+  const { t } = useTranslate();
   const language = useContentLanguage();
   const isTibetan = language === 'bo';
   const sectionTitleSize = isTibetan ? 16 : 18;
@@ -197,7 +200,7 @@ function FeaturedPlanContent({
   return (
     <View className="px-4 pb-4">
       <Text className="font-bold text-foreground" style={{ fontSize: sectionTitleSize }}>
-        {"Featured plans"}
+        {t('creator_featured_plan')}
       </Text>
       <View style={{ height: sectionContentGap }} />
       {hasStatsCard
@@ -236,6 +239,7 @@ function FeaturedPlanContent({
 }
 
 export function FeaturedPlanSection() {
+  const { t } = useTranslate();
   const router = useRouter();
   const { data: layout, isLoading, isError } = useFeaturedSeries();
   const { data: routineInfo } = useRoutineInfo();

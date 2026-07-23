@@ -4,8 +4,10 @@ import { useNotificationSettings } from '@/hooks/useNotificationSettings';
 import { useAppLanguage } from '@/lib/tolgee';
 import { ActivityIndicator, Alert, Platform, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 export default function NotificationSettingsScreen() {
+  const { t } = useTranslate();
   const language = useAppLanguage();
   const insets = useSafeAreaInsets();
   const isBo = language === 'bo';
@@ -33,20 +35,20 @@ export default function NotificationSettingsScreen() {
   }
 
   const masterSubtitle = !master
-    ? "Permission needed. Tap to grant in Settings."
+    ? t('notification_allow_subtitle_disabled')
     : hasPermission
-      ? "Notifications are enabled for this app"
-      : "Permission needed. Tap to grant in Settings.";
+      ? t('notification_allow_subtitle_enabled')
+      : t('notification_allow_subtitle_disabled');
 
   return (
     <View className="flex-1 bg-background">
-      <AppScreenHeader title={"Notification settings"} />
+      <AppScreenHeader title={t('notification_settings')} />
       <ScrollView
         contentContainerClassName="px-5"
         contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
       >
         <NotificationSwitchTile
-          title={"Allow notifications"}
+          title={t('notification_allow_title')}
           subtitle={masterSubtitle}
           value={master}
           onValueChange={updateMaster}
@@ -57,11 +59,11 @@ export default function NotificationSettingsScreen() {
         {master && hasPermission ? (
           <>
             <NotificationSwitchTile
-              title={"Routine reminders"}
+              title={t('notification_routine_title')}
               subtitle={
                 routine
-                  ? "Daily reminders for your practice blocks"
-                  : "Routine reminders are paused. Tap to resume."
+                  ? t('notification_routine_subtitle_enabled')
+                  : t('notification_routine_subtitle_disabled')
               }
               value={routine}
               onValueChange={updateRoutine}
@@ -69,11 +71,11 @@ export default function NotificationSettingsScreen() {
               subtitleSize={subtitleSize}
             />
             <NotificationSwitchTile
-              title={"Recitations reminder"}
+              title={t('notification_recitation_title')}
               subtitle={
                 recitation
-                  ? "Daily reminders for your recitations"
-                  : "Recitation reminders are paused. Tap to resume."
+                  ? t('notification_recitation_subtitle_enabled')
+                  : t('notification_recitation_subtitle_disabled')
               }
               value={recitation}
               onValueChange={updateRecitation}
@@ -82,16 +84,16 @@ export default function NotificationSettingsScreen() {
             />
             {Platform.OS === 'android' ? (
               <NotificationSwitchTile
-                title={"Background reminders"}
-                subtitle={"Some Android phones pause background apps to save battery, which can delay or skip your reminders. Tap to keep yours running."}
+                title={t('notification_battery_title')}
+                subtitle={t('notification_battery_subtitle_disabled')}
                 value={false}
                 onValueChange={() => openBatterySettings()}
                 titleSize={titleSize}
                 subtitleSize={subtitleSize}
                 onInfo={() =>
                   Alert.alert(
-                    "About background reminders",
-                    "Some Android phones pause background apps to save battery, which can delay or cancel your scheduled reminders. Exempting the app keeps your reminders reliably on time.",
+                    t('notification_battery_info_title'),
+                    t('notification_battery_info_body'),
                   )
                 }
               />

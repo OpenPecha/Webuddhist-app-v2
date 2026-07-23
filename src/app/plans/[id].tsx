@@ -37,8 +37,10 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth0 } from 'react-native-auth0';
+import { useTranslate } from '@tolgee/react';
 
 export default function PlanPreviewScreen() {
+  const { t } = useTranslate();
   const { id, seriesId } = useLocalSearchParams<{ id: string; seriesId?: string }>();
   const planId = id!;
   const router = useRouter();
@@ -205,9 +207,9 @@ export default function PlanPreviewScreen() {
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <View className="flex-1 items-center justify-center gap-3">
-          <Text className="text-destructive">{"Plan not found"}</Text>
+          <Text className="text-destructive">{t('no_plans_found')}</Text>
           <Pressable onPress={() => refetch()} className="active:opacity-70">
-            <Text>{"Retry"}</Text>
+            <Text>{t('retry')}</Text>
           </Pressable>
         </View>
       </View>
@@ -278,7 +280,7 @@ export default function PlanPreviewScreen() {
             className="items-center rounded-xl bg-black py-4 active:opacity-75"
           >
             <Text className="text-base font-semibold text-white">
-              {"Add to Routine"}
+              {t('routine_add_plan_to_routine')}
             </Text>
           </Pressable>
         </View>

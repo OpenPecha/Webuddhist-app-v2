@@ -1,5 +1,6 @@
 import { PlanReadingLayout } from '@/components/plans/PlanReadingLayout';
 import { ReaderBookmarkButton } from '@/components/reader/ReaderBookmarkButton';
+import { Text } from '@/components/ui/text';
 import { useTextReaderDetails } from '@/hooks/api/useTextReaderDetails';
 import { usePlanReadingSession } from '@/hooks/usePlanReadingSession';
 import { usePlanSegmentAudio } from '@/hooks/usePlanSegmentAudio';
@@ -7,12 +8,11 @@ import { resolveInitialSegmentId } from '@/utils/plan-subtask-navigation';
 import { extractSegmentContent, flattenReaderSegments } from '@/utils/text-reader-content';
 import { useLocalSearchParams } from 'expo-router';
 import { useMemo, useRef } from 'react';
-import { Text } from '@/components/ui/text';
 import { ActivityIndicator, View } from 'react-native';
 
 export default function ReaderScreen() {
   const { textId } = useLocalSearchParams<{ textId: string }>();
-  const cancelAudioRef = useRef<() => void>(() => {});
+  const cancelAudioRef = useRef<() => void>(() => { });
 
   const {
     isLoading: planLoading,

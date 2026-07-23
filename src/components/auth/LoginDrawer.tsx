@@ -5,6 +5,7 @@ import { Image } from 'expo-image';
 import { useEffect } from 'react';
 import { Text, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
+import { useTranslate } from '@tolgee/react';
 
 const logo = require('../../../assets/images/webuddhist_gold.png');
 
@@ -14,6 +15,7 @@ interface LoginDrawerProps {
 }
 
 export function LoginDrawer({ visible, onClose }: LoginDrawerProps) {
+  const { t } = useTranslate();
   const { user } = useAuth0();
   const { clearGuest } = useGuest();
 
@@ -29,9 +31,9 @@ export function LoginDrawer({ visible, onClose }: LoginDrawerProps) {
         <Image source={logo} style={{ width: 80, height: 80 }} contentFit="contain" />
 
         <View className="items-center gap-1">
-          <Text className="text-center text-xl font-bold">{"Log in to continue"}</Text>
+          <Text className="text-center text-xl font-bold">{t('auth_drawer_title')}</Text>
           <Text className="text-center text-[15px] leading-[22px] text-muted-foreground">
-            {"Continue your practice on any device, wherever you go."}
+            {t('auth_drawer_subtitle')}
           </Text>
         </View>
 

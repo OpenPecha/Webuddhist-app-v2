@@ -1,3 +1,5 @@
+import { appT } from '@/lib/tolgee';
+
 export interface GroupSocialLink {
   id: string;
   platform: string;
@@ -25,9 +27,9 @@ export function formatMemberCountNumber(count: number, locale?: string): string 
 
 export function getMemberCountLabel(count: number, isPage: boolean): string {
   if (isPage) {
-    return count === 1 ? "follower" : "followers";
+    return count === 1 ? appT('group_follower') : appT('group_followers');
   }
-  return count === 1 ? "member" : "members";
+  return count === 1 ? appT('group_member') : appT('group_members');
 }
 
 export function getGroupMemberCount(group: {

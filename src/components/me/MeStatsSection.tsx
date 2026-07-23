@@ -14,6 +14,7 @@ import { CirclesThree, ListChecks, Timer } from 'phosphor-react-native';
 import { Image } from 'expo-image';
 import { useState } from 'react';
 import { Pressable, View } from 'react-native';
+import { useTranslate } from '@tolgee/react';
 
 interface StatCardProps {
   label: string;
@@ -24,6 +25,7 @@ interface StatCardProps {
 }
 
 function StatCard({ label, icon, value, unit, onPress }: StatCardProps) {
+  const { t } = useTranslate();
   const { meCardSurface } = useThemeColors();
   const cardStyle = { backgroundColor: meCardSurface };
 
@@ -68,6 +70,7 @@ interface PracticeDaysCardProps {
 }
 
 function PracticeDaysCard({ days, onPress }: PracticeDaysCardProps) {
+  const { t } = useTranslate();
   const { foreground, meCardSurface } = useThemeColors();
 
   return (
@@ -80,7 +83,7 @@ function PracticeDaysCard({ days, onPress }: PracticeDaysCardProps) {
       <Text className="ml-3 flex-1 text-base">
         <Text className="text-xl font-bold">{days}</Text>
         {' '}
-        {"days plan practiced"}
+        {t('me_days_plan_practiced_suffix')}
       </Text>
     </Pressable>
   );
@@ -91,6 +94,7 @@ interface MeStatsSectionProps {
 }
 
 export function MeStatsSection({ stats }: MeStatsSectionProps) {
+  const { t } = useTranslate();
   const uiLanguage = useAppLanguage();
   const language = useContentLanguage();
   const { foreground } = useThemeColors();
@@ -107,7 +111,7 @@ export function MeStatsSection({ stats }: MeStatsSectionProps) {
 
   return (
     <View className="px-5 pb-6 pt-6">
-      <Text className="text-xl font-extrabold">{"My stats"}</Text>
+      <Text className="text-xl font-extrabold">{t('me_my_stats')}</Text>
       <View className="mt-3">
         <MeStreakCard streak={stats.streak} onPress={() => setShareVisible(true)} />
       </View>
@@ -119,7 +123,7 @@ export function MeStatsSection({ stats }: MeStatsSectionProps) {
       </View>
       <View className="mt-3 flex-row gap-3">
         <StatCard
-          label={"Accumulation"}
+          label={t('me_accumulation')}
           icon={
             <Image
               source={APP_ASSETS.malaIcon}
@@ -129,11 +133,11 @@ export function MeStatsSection({ stats }: MeStatsSectionProps) {
             />
           }
           value={formattedAccumulation}
-          unit={"counts"}
+          unit={t('me_counts')}
           onPress={() => setAccumulationVisible(true)}
         />
         <StatCard
-          label={"Total meditation time"}
+          label={t('me_total_meditation_time')}
           icon={<Timer size={22} color={foreground} />}
           value={meditationDuration}
         />

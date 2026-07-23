@@ -11,8 +11,10 @@ import { useMemo } from 'react';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, FlatList, Pressable, RefreshControl, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 export default function MyGroupsScreen() {
+  const { t } = useTranslate();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { isDark, foreground } = useThemeColors();
@@ -36,7 +38,7 @@ export default function MyGroupsScreen() {
           <Ionicons name="chevron-back" size={24} color={foreground} />
         </Pressable>
         <Text className="mr-10 flex-1 text-center text-[17px] font-semibold text-foreground">
-          {"My groups"}
+          {t('my_groups')}
         </Text>
       </View>
 
@@ -50,7 +52,7 @@ export default function MyGroupsScreen() {
             <ActivityIndicator style={{ marginTop: 48 }} />
           ) : (
             <Text className="mt-12 text-center text-muted-foreground">
-              {"You haven't joined any groups yet."}
+              {t('group_members_empty')}
             </Text>
           )
         }

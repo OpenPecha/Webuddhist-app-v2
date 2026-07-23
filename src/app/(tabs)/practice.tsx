@@ -31,6 +31,7 @@ import {
 } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 function formatTodayDate(): string {
   return new Intl.DateTimeFormat(undefined, {
@@ -121,6 +122,7 @@ function PracticeErrorState({
   onRefresh: () => void;
   refreshing: boolean;
 }) {
+  const { t } = useTranslate();
 
   return (
     <ScrollView
@@ -133,7 +135,7 @@ function PracticeErrorState({
     >
       <View className="items-center gap-3">
         <Text className="text-center text-xl font-semibold text-foreground">
-          {"Couldn't load. Check your connection and try again."}
+          {t('loadFailed')}
         </Text>
         {message ? (
           <Text className="text-center text-[15px] text-muted-foreground">
@@ -145,7 +147,7 @@ function PracticeErrorState({
           className="mt-3 rounded-3xl bg-black px-6 py-3 active:opacity-75"
         >
           <Text className="text-base font-semibold text-white">
-            {"Retry"}
+            {t('retry')}
           </Text>
         </Pressable>
       </View>
@@ -154,6 +156,7 @@ function PracticeErrorState({
 }
 
 export default function PracticeScreen() {
+  const { t } = useTranslate();
   const insets = useSafeAreaInsets();
   const contentLanguage = useContentLanguage();
   const router = useRouter();
@@ -257,7 +260,7 @@ export default function PracticeScreen() {
           contentLanguage,
         );
         if (!userPlan) {
-          Alert.alert("Plan not found");
+          Alert.alert(t('no_plans_found'));
           return;
         }
         const selectedDay = selectedDayForRoutinePlan(userPlan, item);
@@ -283,7 +286,7 @@ export default function PracticeScreen() {
   if (showGuestEmpty) {
     content = (
       <EmptyScaffold
-        title={"Practice routine"}
+        title={t('routine_title')}
         onBuildRoutine={onBuildRoutine}
         onRefresh={refreshAll}
         refreshing={refreshing}
@@ -315,8 +318,8 @@ export default function PracticeScreen() {
         }
         ListHeaderComponent={
           <RoutineFilledHeader
-            title={"My practice routine"}
-            editLabel={"Edit"}
+            title={t('routine_title')}
+            editLabel={t('routine_edit')}
             onEdit={onBuildRoutine}
           />
         }
@@ -335,7 +338,7 @@ export default function PracticeScreen() {
   } else {
     content = (
       <EmptyScaffold
-        title={"Practice routine"}
+        title={t('routine_title')}
         onBuildRoutine={onBuildRoutine}
         onRefresh={refreshAll}
         refreshing={refreshing}

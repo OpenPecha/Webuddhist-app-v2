@@ -2,6 +2,7 @@ import { Text } from '@/components/ui/text';
 import { APP_ASSETS } from '@/constants/app-assets';
 import { Image } from 'expo-image';
 import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
+import { useTranslate } from '@tolgee/react';
 
 interface RoutineEmptyStateProps {
   onBuildRoutine: () => void;
@@ -9,6 +10,7 @@ interface RoutineEmptyStateProps {
 
 /** Matches Flutter RoutineEmptyState (illustration, description, CTA). */
 export function RoutineEmptyState({ onBuildRoutine }: RoutineEmptyStateProps) {
+  const { t } = useTranslate();
   const { width, height } = useWindowDimensions();
 
   return (
@@ -31,13 +33,13 @@ export function RoutineEmptyState({ onBuildRoutine }: RoutineEmptyStateProps) {
           contentFit="cover"
         />
         <Text className="px-5 text-center text-[15px] leading-[22px] text-muted-foreground">
-          {"Explore more teachings and practices to enroll in or add to your routine"}
+          {t('routine_empty_description')}
         </Text>
         <Pressable
           onPress={onBuildRoutine}
           className="w-full bg-black rounded-[30px] py-4 items-center"
         >
-          <Text className="text-base font-semibold text-white">{"Build your routine"}</Text>
+          <Text className="text-base font-semibold text-white">{t('routine_build')}</Text>
         </Pressable>
       </View>
     </ScrollView>

@@ -11,14 +11,17 @@ interface GroupProfileTabBarProps {
   showAbout: boolean;
 }
 
+import { useTranslate } from '@tolgee/react';
+
 export function GroupProfileTabBar({ tab, onTabChange, showAbout }: GroupProfileTabBarProps) {
+  const { t } = useTranslate();
   const { cardBorder } = useThemeColors();
 
   const tabs: { key: GroupProfileTab; label: string }[] = [
-    { key: 'practices', label: "Practices" },
+    { key: 'practices', label: t('tab_practices') },
   ];
   if (showAbout) {
-    tabs.push({ key: 'about', label: "About" });
+    tabs.push({ key: 'about', label: t('about_title') });
   }
 
   return (

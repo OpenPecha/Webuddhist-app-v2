@@ -19,6 +19,7 @@ import { useMalaCounter } from '@/hooks/useMalaCounter';
 import { useMalaPreferences } from '@/hooks/useMalaPreferences';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useAppLanguage } from '@/lib/tolgee';
+import { useTranslate } from '@tolgee/react';
 import { useGuest } from '@/providers/guest';
 import { localizedMantraName, type Mantra } from '@/types/mala';
 import { cn } from '@/utils/cn';
@@ -41,6 +42,7 @@ export default function MalaScreen() {
   const toggleBookmark = useToggleBookmark();
   const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
   const language = useAppLanguage();
+  const { t } = useTranslate();
 
   const params = useLocalSearchParams<{ initialPresetId?: string; }>();
   const { data: mantras = [], isLoading, isError, refetch } = useMalaPresets();
@@ -91,7 +93,7 @@ export default function MalaScreen() {
 
   const headerTitle = activeMantra
     ? localizedMantraName(activeMantra, language)
-    : "Mala";
+    : t('home_mala');
 
   const beadImageUrl =
     state.beadImageUrl ?? activeMantra?.beadImageUrl ?? activeMantra?.mantra?.beadImageUrl;
@@ -140,7 +142,7 @@ export default function MalaScreen() {
             onPress={() => setSettingsVisible(true)}
             className="h-12 w-12 items-center justify-center p-2 active:opacity-70"
             accessibilityRole="button"
-            accessibilityLabel={"Mala options"}
+            accessibilityLabel={t('home_mala')}
           >
             <DotsThreeVerticalIcon size={30} color={foreground} />
           </Pressable>
@@ -154,7 +156,7 @@ export default function MalaScreen() {
       ) : mantras.length === 0 ? (
         <View className="flex-1 items-center justify-center p-6">
           <Text className="text-center text-foreground">
-            {"No mantras available for your language."}
+            {t('mala_no_mantras')}
           </Text>
         </View>
       ) : (
@@ -173,7 +175,7 @@ export default function MalaScreen() {
             {state.seedFailed ? (
               <MalaSeedError
                 compact
-                message={"Could not load your count."}
+                message={t('mala_count_load_error')}
                 onRetry={() => void seed()}
               />
             ) : (
@@ -235,10 +237,10 @@ export default function MalaScreen() {
 
       <DestructiveConfirmDialog
         visible={resetVisible}
-        title={"Reset Mala?"}
-        message={"Are you sure you want to reset the count for this Mala? This action cannot be undone."}
-        confirmLabel={"Reset"}
-        cancelLabel={"Cancel"}
+        title={t('mala_reset_title')}
+        message={t('mala_reset_count_confirm')}
+        confirmLabel={t('mala_reset_confirm')}
+        cancelLabel={t('cancel')}
         onConfirm={handleResetConfirm}
         onClose={() => setResetVisible(false)}
       />

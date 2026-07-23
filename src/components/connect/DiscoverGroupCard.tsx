@@ -26,11 +26,14 @@ interface DiscoverGroupCardProps {
   isFollowed?: boolean;
 }
 
+import { useTranslate } from '@tolgee/react';
+
 export function DiscoverGroupCard({
   group,
   isJoined = false,
   isFollowed = false,
 }: DiscoverGroupCardProps) {
+  const { t } = useTranslate();
   const router = useRouter();
   const language = useContentLanguage();
   const uiLanguage = useAppLanguage();
@@ -54,8 +57,8 @@ export function DiscoverGroupCard({
   const subtitle = groupCardSubtitle(
     group,
     meta,
-    "member",
-    "members",
+    t('group_member'),
+    t('group_members'),
     uiLanguage,
   );
 
@@ -70,11 +73,11 @@ export function DiscoverGroupCard({
 
   const ctaLabel = active
     ? isPage
-      ? "Following"
-      : "Joined"
+      ? t('following')
+      : t('joined')
     : isPage
-      ? "Follow"
-      : "Join";
+      ? t('follow')
+      : t('join');
 
   return (
     <>

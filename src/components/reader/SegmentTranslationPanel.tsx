@@ -5,6 +5,7 @@ import { useSegmentTranslations } from '@/hooks/api/useSegmentTranslations';
 import type { SegmentTranslation } from '@/types/segment-translation';
 import { groupByLanguage, languageDisplayName } from '@/utils/segment-resource-grouping';
 import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
+import { useTranslate } from '@tolgee/react';
 
 interface SegmentTranslationPanelProps {
   segmentId: string;
@@ -18,6 +19,7 @@ function TranslationItem({
   translation: SegmentTranslation;
   fontSize: number;
 }) {
+  const { t } = useTranslate();
   return (
     <View className="mb-6">
       <Text className="text-[15px] font-bold text-foreground mb-2">{translation.title}</Text>
@@ -35,6 +37,7 @@ function TranslationItem({
 }
 
 export function SegmentTranslationPanel({ segmentId, fontSize = 16 }: SegmentTranslationPanelProps) {
+  const { t } = useTranslate();
   const contentLanguage = useContentLanguage();
   const { data, isLoading, isError, refetch } = useSegmentTranslations(segmentId);
 
@@ -49,9 +52,9 @@ export function SegmentTranslationPanel({ segmentId, fontSize = 16 }: SegmentTra
   if (isError) {
     return (
       <View className="py-6 items-center">
-        <Text className="text-sm text-muted-foreground mb-3">{"Could not load content"}</Text>
+        <Text className="text-sm text-muted-foreground mb-3">{t('loadFailed')}</Text>
         <Pressable onPress={() => void refetch()}>
-          <Text className="text-sm font-semibold text-foreground">{"Retry"}</Text>
+          <Text className="text-sm font-semibold text-foreground">{t('retry')}</Text>
         </Pressable>
       </View>
     );
@@ -61,7 +64,7 @@ export function SegmentTranslationPanel({ segmentId, fontSize = 16 }: SegmentTra
   if (translations.length === 0) {
     return (
       <View className="py-6 items-center">
-        <Text className="text-sm text-muted-foreground">{"No translations found"}</Text>
+        <Text className="text-sm text-muted-foreground">{t('no_translation')}</Text>
       </View>
     );
   }

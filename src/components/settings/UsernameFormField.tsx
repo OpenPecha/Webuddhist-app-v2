@@ -1,8 +1,9 @@
 import { FloatingTextInput } from '@/components/ui/floating-text-input';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, Pressable, View } from 'react-native';
-import { validationMessage, type UsernameValidationKey } from '@/lib/username-validation';
+import { type UsernameValidationKey } from '@/lib/username-validation';
 import { Check, X } from 'phosphor-react-native';
+import { useTranslate } from '@tolgee/react';
 
 export type UsernameFieldState = 'idle' | 'checking' | 'available' | 'taken' | 'error';
 
@@ -16,14 +17,14 @@ interface UsernameFormFieldProps {
 }
 
 export function UsernameFormField({
-  value,
+    value,
   onChangeText,
   state,
   validationKey,
   suggestions = [],
   onSuggestionTap,
 }: UsernameFormFieldProps) {
-
+  const { t } = useTranslate();
   const trailingIcon =
     state === 'checking' ? (
       <ActivityIndicator size="small" />
@@ -36,7 +37,7 @@ export function UsernameFormField({
   return (
     <View>
       <FloatingTextInput
-        label={"Username"}
+        label={t('username_label')}
         value={value}
         onChangeText={onChangeText}
         autoCapitalize="none"
@@ -44,23 +45,23 @@ export function UsernameFormField({
         trailingIcon={trailingIcon}
       />
       {validationKey ? (
-        <Text className="text-destructive mt-1 text-sm">{validationMessage(validationKey)}</Text>
+        <Text className="text-destructive mt-1 text-sm">{t(validationKey)}</Text>
       ) : null}
       {state === 'error' ? (
-        <Text className="text-destructive mt-1 text-sm">{"Unable to check username. Try again"}</Text>
+        <Text className="text-destructive mt-1 text-sm">{t('username_check_error')}</Text>
       ) : null}
       {state === 'checking' ? (
-        <Text className="text-muted-foreground mt-1 text-sm">{"Checking availability…"}</Text>
+        <Text className="text-muted-foreground mt-1 text-sm">{t('loading')}</Text>
       ) : null}
       {state === 'available' ? (
-        <Text className="mt-1 text-sm text-[#0d530e]">{"Username is available"}</Text>
+        <Text className="mt-1 text-sm text-[#0d530e]">{t('username_available_label')}</Text>
       ) : null}
       {state === 'taken' ? (
         <View className="mt-1">
-          <Text className="text-destructive text-sm">{"Someone already used this name"}</Text>
+          <Text className="text-destructive text-sm">{t('username_taken')}</Text>
           {suggestions.length > 0 ? (
             <View className="mt-1 flex-row flex-wrap gap-2">
-              <Text className="text-muted-foreground text-sm">{"Available: "}</Text>
+              <Text className="text-muted-foreground text-sm">{t('username_available_label')}</Text>
               {suggestions.map((s) => (
                 <Pressable key={s} onPress={() => onSuggestionTap?.(s)}>
                   <Text className="text-accent text-sm font-medium">{s}</Text>

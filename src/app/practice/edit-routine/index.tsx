@@ -35,6 +35,7 @@ import { fetchSeriesById } from '@/services/series';
 import { fetchPlanById } from '@/services/plans';
 import { pickSeriesMetadata } from '@/types/series';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
+import { useTranslate } from '@tolgee/react';
 
 function hydrateBlocksFromRoutine(
   routine: NonNullable<ReturnType<typeof useRoutine>['data']>,
@@ -61,6 +62,7 @@ export default function EditRoutineScreen() {
   const insets = useSafeAreaInsets();
   const contentLanguage = useContentLanguage();
   const { dialog, confirmChoice } = useDialog();
+  const { t } = useTranslate();
   const { data: routine, isLoading } = useRoutine();
   const { createRoutine, addTimeBlock, saveTimeBlock, removeTimeBlock } = useRoutineMutations();
 
@@ -193,7 +195,7 @@ export default function EditRoutineScreen() {
           await syncBlockToServer(targetBlock, apiRoutineId);
         }
       } catch {
-        Alert.alert("Unable to enroll you. Check your connection and try again.");
+        Alert.alert(t('enrollError'));
       }
     };
 
@@ -255,7 +257,7 @@ export default function EditRoutineScreen() {
           await syncBlockToServer(targetBlock, apiRoutineId);
         }
       } catch {
-        Alert.alert("Unable to enroll you. Check your connection and try again.");
+        Alert.alert(t('enrollError'));
       }
     };
 
@@ -273,7 +275,7 @@ export default function EditRoutineScreen() {
               (i) => i.id === pending.id && i.type === pending.type,
             );
             if (exists) {
-              Alert.alert("This item is already in the block", '');
+              Alert.alert(t('duplicateItem'));
               return block;
             }
             return { ...block, items: [...block.items, pending] };
@@ -349,13 +351,13 @@ export default function EditRoutineScreen() {
 
   const addBlock = () => {
     if (!canAddBlock(blocks.length)) {
-      Alert.alert(`Maximum of ${MAX_ROUTINE_BLOCKS} time blocks reached`);
+      Alert.alert(t('maxBlocks', { max: MAX_ROUTINE_BLOCKS }));
       return;
     }
     const otherTimes = blocks.map((b) => b.timeInt);
     const adjusted = adjustTimeForMinimumGap(defaultBlockTimeInt(), otherTimes);
     if (adjusted == null) {
-      Alert.alert("No available time slots. Try removing a block first");
+      Alert.alert(t('noTimeSlot'));
       return;
     }
     setBlocks((prev) =>
@@ -373,13 +375,15 @@ export default function EditRoutineScreen() {
       .map((b) => b.timeInt);
     const adjusted = adjustTimeForMinimumGap(pickedTimeInt, otherTimes);
     if (adjusted == null) {
-      Alert.alert("No available time slots. Try removing a block first");
+      Alert.alert(t('noTimeSlot'));
       return;
     }
     if (adjusted !== pickedTimeInt) {
       Alert.alert(
-        "Time adjusted",
-        `Adjusted to ${formatRoutineTimeFromInt(adjusted)} (${MIN_BLOCK_GAP_MINUTES} min gap required)`,
+        t('routine_time_adjusted', {
+          time: formatRoutineTimeFromInt(adjusted),
+          gap: MIN_BLOCK_GAP_MINUTES,
+        }),
       );
     }
     updateBlock(blockLocalId, {
@@ -396,15 +400,15 @@ export default function EditRoutineScreen() {
       const hasMultiple = emptyBlockCount > 1;
       const result = await confirmChoice({
         title: hasMultiple
-          ? `Empty time blocks (${emptyBlockCount})`
-          : "Empty time block",
+          ? t('routine_empty_block_title_plural', { count: emptyBlockCount })
+          : t('routine_empty_block_title_singular'),
         message: hasMultiple
-          ? `${emptyBlockCount} time blocks are empty. Add items, or remove them from your routine?`
-          : "This time block is empty. Add an item, or remove it from your routine?",
-        secondaryLabel: "Add items",
+          ? t('routine_empty_block_message_plural', { count: emptyBlockCount })
+          : t('routine_empty_block_message_singular'),
+        secondaryLabel: t('routine_empty_block_add_items'),
         primaryLabel: hasMultiple
-          ? "Remove blocks"
-          : "Remove block",
+          ? t('routine_empty_block_delete_plural')
+          : t('routine_empty_block_delete_singular'),
       });
       if (result !== 'primary') return;
       const emptyApiIds = workingBlocks
@@ -428,7 +432,7 @@ export default function EditRoutineScreen() {
         }
         exitAfterSave();
       } catch (e) {
-        const message = e instanceof Error ? e.message : "Couldn't load. Check your connection and try again.";
+        const message = e instanceof Error ? e.message : t('routine_load_error');
         Alert.alert(message);
       } finally {
         setSaving(false);
@@ -473,7 +477,7 @@ export default function EditRoutineScreen() {
 
       exitAfterSave();
     } catch (e) {
-      const message = e instanceof Error ? e.message : "Couldn't load. Check your connection and try again.";
+      const message = e instanceof Error ? e.message : t('routine_load_error');
       Alert.alert(message);
     } finally {
       setSaving(false);
@@ -485,7 +489,7 @@ export default function EditRoutineScreen() {
       <View className="flex-1 items-center justify-center bg-background" style={{ paddingTop: insets.top }}>
         <ActivityIndicator size="large" />
         <Text className="mt-4 font-semibold">
-          {"Edit your routine"}
+          {t('routine_edit_title')}
         </Text>
       </View>
     );
@@ -501,12 +505,12 @@ export default function EditRoutineScreen() {
           style={{ alignSelf: 'flex-end', opacity: saving ? 0.5 : 1 }}
         >
           <Text className="text-base font-medium text-foreground">
-            {saving ? "Saving…" : "Done"}
+            {saving ? t('loading') : t('done')}
           </Text>
         </Pressable>
         <View className="h-2" />
         <Text className="text-[28px] font-bold text-foreground">
-          {"Edit your routine"}
+          {t('routine_edit_title')}
         </Text>
         <View className="h-3" />
         <View className="h-px bg-[#e8e8e4]" />

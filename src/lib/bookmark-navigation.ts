@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router';
 import type { BookmarkDTO } from '@/types/bookmarks';
+import { appT } from '@/lib/tolgee';
 import { showAppToast } from '@/utils/show-app-toast';
 
 type AppRouter = ReturnType<typeof useRouter>;
@@ -48,7 +49,7 @@ export function navigateToBookmark(
       });
       break;
     default:
-      onError?.('Unable to open bookmark');
-      showAppToast('Unable to open bookmark');
+      onError?.(appT('loadFailed'));
+      showAppToast(appT('loadFailed'));
   }
 }

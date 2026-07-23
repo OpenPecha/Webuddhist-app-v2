@@ -6,6 +6,7 @@ import type { AppEvent } from '@/types/event';
 import { cn } from '@/utils/cn';
 import { useRouter, type Href } from 'expo-router';
 import { Pressable, View } from 'react-native';
+import { useTranslate } from '@tolgee/react';
 
 const HOME_EVENTS_PREVIEW_LIMIT = 3;
 
@@ -19,6 +20,7 @@ function navigateToEvent(router: ReturnType<typeof useRouter>, event: AppEvent) 
 }
 
 export function HomeEventsSection() {
+  const { t } = useTranslate();
   const router = useRouter();
   const { data, isLoading, isError } = useEventsToday(HOME_EVENTS_PREVIEW_LIMIT);
 
@@ -30,13 +32,13 @@ export function HomeEventsSection() {
   return (
     <View className="px-4">
       <View className="flex-row items-center justify-between">
-        <Text className="text-lg font-bold text-foreground">{"Events"}</Text>
+        <Text className="text-lg font-bold text-foreground">{t('calendar_upcoming_events')}</Text>
         <Pressable
           onPress={() => router.push('/events' as Href)}
           className="active:opacity-70"
           accessibilityRole="button"
         >
-          <Text className="text-sm text-muted-foreground">{"See all"}</Text>
+          <Text className="text-sm text-muted-foreground">{t('see_all')}</Text>
         </Pressable>
       </View>
 

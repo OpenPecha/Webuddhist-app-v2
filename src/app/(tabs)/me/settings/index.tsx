@@ -34,10 +34,12 @@ import { useState } from 'react';
 import { Linking, ScrollView, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 const FEEDBACK_URL = 'https://app-webuddhist.ideas.userback.io/p/5omSMHB8A9VMUrD6vLrE';
 
 export default function SettingsScreen() {
+  const { t } = useTranslate();
   const currentCode = useAppLanguage();
   const { user, clearSession } = useAuth0();
   const { isGuest, clearGuest } = useGuest();
@@ -66,18 +68,18 @@ export default function SettingsScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <AppScreenHeader title={"Settings"} />
+      <AppScreenHeader title={t('nav_settings')} />
       <ScrollView
         className="flex-1"
         contentContainerClassName="px-6 pt-4"
         contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
       >
-        <SettingsSectionHeader title={"PERSONALIZATION"} />
+        <SettingsSectionHeader title={t('settings_section_personalisation')} />
         <View className="mt-3">
           {isAuthenticated ? (
             <SettingsRow
               icon={User}
-              title={"Edit profile"}
+              title={t('edit_profile_title')}
               onPress={() => navigateOnce('/me/settings/profile' as Href)}
             />
           ) : null}
@@ -88,33 +90,33 @@ export default function SettingsScreen() {
           />
           <SettingsRow
             icon={BellRinging}
-            title={"Notifications"}
+            title={t('settings_notification_row')}
             onPress={() => navigateOnce('/me/settings/notifications' as Href)}
           />
           <SettingsRow
             icon={isDark ? Moon : Sun}
-            title={"Theme"}
+            title={t('settings_theme')}
             onPress={() => toggleDarkLight()}
             trailing={<AppToggleSwitch value={isDark} onValueChange={() => toggleDarkLight()} />}
           />
         </View>
 
         <View className="mt-6">
-          <SettingsSectionHeader title={"MORE"} />
+          <SettingsSectionHeader title={t('settings_section_more')} />
           <View className="mt-3">
             <SettingsRow
               icon={Info}
-              title={"About"}
+              title={t('about_title')}
               onPress={() => navigateOnce('/me/settings/about' as Href)}
             />
             <SettingsRow
               icon={Gavel}
-              title={"Legal"}
+              title={t('legal_title')}
               onPress={() => navigateOnce('/me/settings/legal' as Href)}
             />
             <SettingsRow
               icon={ChatText}
-              title={"Feedback"}
+              title={t('feedback')}
               trailingIcon="external"
               onPress={() => Linking.openURL(FEEDBACK_URL)}
             />
@@ -122,14 +124,14 @@ export default function SettingsScreen() {
         </View>
 
         <View className="mt-6">
-          <SettingsSectionHeader title={"ACCOUNT"} />
+          <SettingsSectionHeader title={t('settings_section_account')} />
           <View className="mt-3">
             {!isAuthenticated ? (
-              <SettingsRow icon={SignIn} title={"Sign in"} onPress={showLoginDrawer} />
+              <SettingsRow icon={SignIn} title={t('sign_in')} onPress={showLoginDrawer} />
             ) : (
               <SettingsRow
                 icon={SignOut}
-                title={"Log out"}
+                title={t('logout')}
                 destructive
                 onPress={() => setLogoutVisible(true)}
               />
@@ -149,10 +151,10 @@ export default function SettingsScreen() {
       <LoginDrawer key={session} visible={visible} onClose={hideLoginDrawer} />
       <LogoutAlertDialog
         visible={logoutVisible}
-        title={"Log out"}
-        message={"Are you sure you want to log out?"}
-        cancelLabel={"Cancel"}
-        confirmLabel={"Log out"}
+        title={t('logout')}
+        message={t('logout_confirmation')}
+        cancelLabel={t('cancel')}
+        confirmLabel={t('logout')}
         onCancel={() => setLogoutVisible(false)}
         onConfirm={handleLogout}
       />

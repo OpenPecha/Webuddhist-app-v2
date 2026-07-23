@@ -1,18 +1,26 @@
-const LANGUAGE_NAMES: Record<string, string> = {
-  en: 'English',
-  zh: 'Chinese',
-  lzh: 'Classical Chinese',
-  bo: 'Tibetan',
+import { appT } from '@/lib/tolgee';
+
+const LANGUAGE_KEYS: Record<string, string> = {
+  en: 'english',
+  zh: 'chinese',
+  lzh: 'classicalChinese',
+  bo: 'tibetan',
+  sa: 'sanskrit',
+  pi: 'pali',
+};
+
+const LANGUAGE_FALLBACK: Record<string, string> = {
   hi: 'Hindi',
   ne: 'Nepali',
   mn: 'Mongolian',
-  sa: 'Sanskrit',
-  pi: 'Pali',
 };
 
 export function languageDisplayName(code: string): string {
   if (!code) return '';
-  return LANGUAGE_NAMES[code.toLowerCase()] ?? code.toUpperCase();
+  const normalized = code.toLowerCase();
+  const key = LANGUAGE_KEYS[normalized];
+  if (key) return appT(key);
+  return LANGUAGE_FALLBACK[normalized] ?? code.toUpperCase();
 }
 
 export interface LanguageGroup<T> {

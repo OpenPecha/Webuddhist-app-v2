@@ -4,6 +4,7 @@ import { useTriggerNotificationSync } from '@/hooks/useTriggerNotificationSync';
 import * as Notifications from 'expo-notifications';
 import { useCallback, useEffect, useState } from 'react';
 import { AppState, Linking, Platform } from 'react-native';
+import { appT } from '@/lib/tolgee';
 import { showAppToast } from '@/utils/show-app-toast';
 
 export function useNotificationSettings() {
@@ -45,7 +46,7 @@ export function useNotificationSettings() {
       const granted = await requestNotificationPermissions();
       setHasPermission(granted);
       if (!granted) {
-        showAppToast("Notifications are blocked. Turn them on in Settings");
+        showAppToast(appT('notification_snack_permission_denied'));
         await Linking.openSettings();
         return false;
       }

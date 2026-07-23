@@ -10,16 +10,17 @@ import {
   type MoonPhase,
 } from '@/utils/moon-phase';
 import { useRouter, type Href } from 'expo-router';
+import { useTranslate } from '@tolgee/react';
 import { Pressable, Text, View } from 'react-native';
 
-function moonPhaseLabel(phase: MoonPhase): string | null {
+function moonPhaseKey(phase: MoonPhase): string | null {
   switch (phase) {
     case 'newMoon':
-      return 'New moon';
+      return 'moon_phase_new_moon';
     case 'firstQuarter':
-      return 'First quarter';
+      return 'moon_phase_first_quarter';
     case 'fullMoon':
-      return 'Full moon';
+      return 'moon_phase_full_moon';
     default:
       return null;
   }
@@ -27,6 +28,7 @@ function moonPhaseLabel(phase: MoonPhase): string | null {
 
 export function HomeCalendarCard() {
   const router = useRouter();
+  const { t } = useTranslate();
   const language = useContentLanguage();
   const isTibetan = language === 'bo';
   const { data: day, isLoading, isError } = useCalendarToday();
@@ -39,7 +41,8 @@ export function HomeCalendarCard() {
   if (!day) return null;
 
   const phase = moonPhaseForLunarDay(day.lunarDay);
-  const phaseLabel = moonPhaseLabel(phase);
+  const phaseLabelKey = moonPhaseKey(phase);
+  const phaseLabel = phaseLabelKey ? t(phaseLabelKey) : null;
 
   return (
     <Pressable
@@ -59,7 +62,7 @@ export function HomeCalendarCard() {
               color: foreground,
             }}
           >
-            {`Day ${day.lunarDay} · Month ${day.lunarMonth}`}
+            {t('calendar_day_month', { day: day.lunarDay, month: day.lunarMonth })}
           </Text>
           {phaseLabel && showsMoonPhaseLabel(phase) ? (
             <Text

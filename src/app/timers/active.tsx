@@ -9,6 +9,7 @@ import { Pause, Play } from 'phosphor-react-native';
 import { useCallback, useEffect, useRef } from 'react';
 import { BackHandler, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 const RING_SIZE = 280;
 const CONTROLS_HEIGHT = 56;
@@ -16,6 +17,7 @@ const DURATION_FONT_SIZE = 40;
 const FOOTER_MIN_HEIGHT = 120;
 
 export default function ActiveTimerScreen() {
+  const { t } = useTranslate();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { foreground, isDark } = useThemeColors();
@@ -160,7 +162,7 @@ export default function ActiveTimerScreen() {
               opacity: pressed ? 0.85 : 1,
             })}
           >
-            <Text className="text-base font-medium text-foreground">{"Finish"}</Text>
+            <Text className="text-base font-medium text-foreground">{t('timer_finish')}</Text>
           </Pressable>
         </View>
 
@@ -168,7 +170,7 @@ export default function ActiveTimerScreen() {
 
         <View style={{ opacity: showDiscard ? 1 : 0 }} pointerEvents={showDiscard ? 'auto' : 'none'}>
           <Pressable onPress={handleDiscard} className="self-center px-4 py-2 active:opacity-70">
-            <Text className="text-base font-medium text-foreground">{"Discard session"}</Text>
+            <Text className="text-base font-medium text-foreground">{t('timer_discard_session')}</Text>
           </Pressable>
         </View>
       </View>

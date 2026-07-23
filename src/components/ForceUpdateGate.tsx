@@ -3,6 +3,7 @@ import Constants from 'expo-constants';
 import { useEffect, useMemo, useState } from 'react';
 import { Text } from '@/components/ui/text';
 import { Linking, Modal, Platform, Pressable, View } from 'react-native';
+import { useTranslate } from '@tolgee/react';
 
 const IOS_STORE_URL =
   process.env.EXPO_PUBLIC_IOS_STORE_URL ??
@@ -20,6 +21,7 @@ function isVersionLessThan(current: string, minimum: string): boolean {
   const b = parseVersion(minimum);
   const len = Math.max(a.length, b.length);
   for (let i = 0; i < len; i++) {
+  const { t } = useTranslate();
     const av = a[i] ?? 0;
     const bv = b[i] ?? 0;
     if (av < bv) return true;
@@ -41,6 +43,7 @@ interface ForceUpdateGateProps {
 }
 
 export function ForceUpdateGate({ children }: ForceUpdateGateProps) {
+  const { t } = useTranslate();
   const [visible, setVisible] = useState(false);
 
   const updateRequired = useMemo(() => {
@@ -66,17 +69,17 @@ export function ForceUpdateGate({ children }: ForceUpdateGateProps) {
         <View className="flex-1 items-center justify-center bg-black/55 p-6">
           <View className="w-full max-w-[340px] gap-3 rounded-2xl bg-white p-6">
             <Text className="text-center text-xl font-bold text-foreground">
-              {"Update required"}
+              {t('force_update_title')}
             </Text>
             <Text className="text-center text-[15px] leading-[22px] text-[#454545]">
-              {"A newer version of WeBuddhist is available. Please update to continue."}
+              {t('force_update_message')}
             </Text>
             <Pressable
               onPress={openStore}
               className="mt-2 rounded-xl bg-[#0C53C5] py-3.5 active:opacity-90"
             >
               <Text className="text-center text-base font-bold text-white">
-                {"Update now"}
+                {t('force_update_button')}
               </Text>
             </Pressable>
           </View>

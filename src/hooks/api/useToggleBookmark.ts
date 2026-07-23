@@ -8,6 +8,7 @@ import {
   findBookmarkInList,
 } from '@/services/bookmarks';
 import type { BookmarkCreateType, BookmarkDTO, BookmarkExistsResult } from '@/types/bookmarks';
+import { appT } from '@/lib/tolgee';
 import { showAppToast } from '@/utils/show-app-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -68,13 +69,13 @@ export function useToggleBookmark() {
           return true;
         }
         showAppToast(
-          previous.exists ? "Failed to remove bookmark" : "Failed to save bookmark",
+          previous.exists ? appT('bookmark_remove_failed') : appT('bookmark_save_failed'),
         );
         throw error;
       }
     },
     onSuccess: (saved) => {
-      showAppToast(saved ? "Bookmark saved" : "Bookmark removed");
+      showAppToast(saved ? appT('bookmark_saved') : appT('bookmark_removed'));
     },
   });
 }
@@ -110,12 +111,12 @@ export function useRemoveBookmark() {
         await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.bookmarks.all });
       } catch {
         if (previous) queryClient.setQueryData(listKey, previous);
-        showAppToast("Failed to remove bookmark");
+        showAppToast(appT('bookmark_remove_failed'));
         throw new Error('remove failed');
       }
     },
     onSuccess: () => {
-      showAppToast("Bookmark removed");
+      showAppToast(appT('bookmark_removed'));
     },
   });
 }

@@ -7,6 +7,7 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { Text } from '@/components/ui/text';
 import { FlatList, Pressable, View } from 'react-native';
+import { useTranslate } from '@tolgee/react';
 
 interface MyGroupsSectionProps {
   groups: AuthorGroupSummary[];
@@ -14,6 +15,7 @@ interface MyGroupsSectionProps {
 }
 
 export function MyGroupsSection({ groups, total }: MyGroupsSectionProps) {
+  const { t } = useTranslate();
   const router = useRouter();
   const language = useContentLanguage();
   const { cardSurface, skeleton } = useThemeColors();
@@ -25,10 +27,10 @@ export function MyGroupsSection({ groups, total }: MyGroupsSectionProps) {
   return (
     <View className="mb-2">
       <View className="flex-row items-center justify-between px-5 pb-3 pt-5">
-        <Text className="flex-1 text-lg font-bold text-foreground">{"My groups"}</Text>
+        <Text className="flex-1 text-lg font-bold text-foreground">{t('my_groups')}</Text>
         {showSeeAll ? (
           <Pressable onPress={() => router.push('/connect/my-groups')}>
-            <Text className="text-sm font-medium text-muted-foreground">{"See all"}</Text>
+            <Text className="text-sm font-medium text-muted-foreground">{t('see_all')}</Text>
           </Pressable>
         ) : null}
       </View>

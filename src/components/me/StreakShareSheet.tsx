@@ -9,6 +9,7 @@ import { useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 import type { ViewShotRef } from 'react-native-view-shot';
 import { useUniwind } from 'uniwind';
+import { useTranslate } from '@tolgee/react';
 
 interface StreakShareSheetProps {
   visible: boolean;
@@ -17,6 +18,7 @@ interface StreakShareSheetProps {
 }
 
 export function StreakShareSheet({ visible, streak, onClose }: StreakShareSheetProps) {
+  const { t } = useTranslate();
   const { theme } = useUniwind();
   const isDark = theme === 'dark';
   const { foreground } = useThemeColors();
@@ -65,7 +67,7 @@ export function StreakShareSheet({ visible, streak, onClose }: StreakShareSheetP
           ) : (
             <>
               <ShareNetwork size={22} color={foreground} />
-              <Text className="text-base font-bold">{"Share this streak"}</Text>
+              <Text className="text-base font-bold">{t('share_this_streak')}</Text>
             </>
           )}
         </Pressable>

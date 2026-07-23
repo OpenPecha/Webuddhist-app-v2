@@ -5,6 +5,7 @@ import { useSegmentCommentaries } from '@/hooks/api/useSegmentCommentaries';
 import type { SegmentCommentary } from '@/types/segment-commentary';
 import { groupByLanguage, languageDisplayName } from '@/utils/segment-resource-grouping';
 import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
+import { useTranslate } from '@tolgee/react';
 
 interface SegmentCommentaryPanelProps {
   segmentId: string;
@@ -12,6 +13,7 @@ interface SegmentCommentaryPanelProps {
 }
 
 function CommentaryItem({ commentary, fontSize }: { commentary: SegmentCommentary; fontSize: number }) {
+  const { t } = useTranslate();
   const content = commentary.segments
     .map((s) => s.content.trim())
     .filter(Boolean)
@@ -32,6 +34,7 @@ function CommentaryItem({ commentary, fontSize }: { commentary: SegmentCommentar
 }
 
 export function SegmentCommentaryPanel({ segmentId, fontSize = 16 }: SegmentCommentaryPanelProps) {
+  const { t } = useTranslate();
   const contentLanguage = useContentLanguage();
   const { data, isLoading, isError, refetch } = useSegmentCommentaries(segmentId);
 
@@ -46,9 +49,9 @@ export function SegmentCommentaryPanel({ segmentId, fontSize = 16 }: SegmentComm
   if (isError) {
     return (
       <View className="py-6 items-center">
-        <Text className="text-sm text-muted-foreground mb-3">{"Could not load content"}</Text>
+        <Text className="text-sm text-muted-foreground mb-3">{t('loadFailed')}</Text>
         <Pressable onPress={() => void refetch()}>
-          <Text className="text-sm font-semibold text-foreground">{"Retry"}</Text>
+          <Text className="text-sm font-semibold text-foreground">{t('retry')}</Text>
         </Pressable>
       </View>
     );
@@ -58,7 +61,7 @@ export function SegmentCommentaryPanel({ segmentId, fontSize = 16 }: SegmentComm
   if (commentaries.length === 0) {
     return (
       <View className="py-6 items-center">
-        <Text className="text-sm text-muted-foreground">{"No commentaries found"}</Text>
+        <Text className="text-sm text-muted-foreground">{t('no_commentary')}</Text>
       </View>
     );
   }

@@ -8,6 +8,7 @@ import React, { forwardRef, useCallback, useMemo } from 'react';
 import { Text } from '@/components/ui/text';
 import { Linking, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 interface SocialLink {
   id: string;
@@ -32,6 +33,7 @@ function platformIcon(platform: string): keyof typeof Ionicons.glyphMap {
 export const GroupSocialLinksSheet = forwardRef<BottomSheetModal, GroupSocialLinksSheetProps>(
   function GroupSocialLinksSheet({ links }, ref) {
     const insets = useSafeAreaInsets();
+    const { t } = useTranslate();
     const snapPoints = useMemo(() => ['40%'], []);
 
     const renderBackdrop = useCallback(
@@ -44,7 +46,7 @@ export const GroupSocialLinksSheet = forwardRef<BottomSheetModal, GroupSocialLin
     return (
       <BottomSheetModal ref={ref} snapPoints={snapPoints} backdropComponent={renderBackdrop}>
         <BottomSheetView className="px-5" style={{ paddingBottom: insets.bottom + 16 }}>
-          <Text className="mb-4 text-[17px] font-bold">{"Links"}</Text>
+          <Text className="mb-4 text-[17px] font-bold">{t('group_links_title')}</Text>
           {links.map((link) => (
             <Pressable
               key={link.id}

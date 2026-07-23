@@ -23,6 +23,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 const PREVIEW_LINE_LIMIT = 6;
 
@@ -55,7 +56,7 @@ interface PlanReadingLayoutProps {
 }
 
 export function PlanReadingLayout({
-  variant,
+    variant,
   content,
   contentMode,
   sectionTitle,
@@ -80,6 +81,7 @@ export function PlanReadingLayout({
   activeSegmentIds,
   showNavigator = true,
 }: PlanReadingLayoutProps) {
+  const { t } = useTranslate();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [expanded, setExpanded] = useState(false);
@@ -226,7 +228,7 @@ export function PlanReadingLayout({
             }}
             className="p-2"
             accessibilityRole="button"
-            accessibilityLabel={"Search"}
+            accessibilityLabel={t('text_search')}
           >
             <Ionicons name="search" size={20} color="#000" />
           </Pressable>
@@ -240,7 +242,7 @@ export function PlanReadingLayout({
             }}
             className="p-2"
             accessibilityRole="button"
-            accessibilityLabel={"Version"}
+            accessibilityLabel={t('version')}
           >
             <Ionicons name="globe-outline" size={20} color="#000" />
           </Pressable>
@@ -294,7 +296,7 @@ export function PlanReadingLayout({
               onPress={() => setExpanded(true)}
               className="mt-5 bg-[#e8e8e4] rounded-xl py-3.5 items-center"
             >
-              <Text className="text-[15px] font-bold text-foreground">{"Read Full Text"}</Text>
+              <Text className="text-[15px] font-bold text-foreground">{t('read_full_text')}</Text>
             </Pressable>
           ) : null}
 

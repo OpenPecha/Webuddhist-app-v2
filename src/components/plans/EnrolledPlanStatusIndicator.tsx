@@ -9,11 +9,13 @@ import {
 import type { PlanDateRange } from '@/utils/plan-utils';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, View } from 'react-native';
+import { useTranslate } from '@tolgee/react';
 
 function OnTrackBadge() {
+  const { t } = useTranslate();
   return (
     <View className="rounded-2xl border border-[rgba(138,138,138,0.5)] bg-white px-2 py-[3px]">
-      <Text className="text-xs text-muted-foreground uppercase">{"On Track!"}</Text>
+      <Text className="text-xs text-muted-foreground uppercase">{t('plan_status_on_track')}</Text>
     </View>
   );
 }
@@ -61,13 +63,14 @@ interface EnrolledPlanStatusIndicatorProps {
 
 /** Matches Flutter EnrolledPlanStatusIndicator decision tree. */
 export function EnrolledPlanStatusIndicator({
-  planId,
+    planId,
   dateRange,
   totalDays,
   planStartDate,
   completionMap: completionMapProp,
   onMissedDaysPress,
 }: EnrolledPlanStatusIndicatorProps) {
+  const { t } = useTranslate();
   const today = dateOnly(new Date());
   if (today < dateRange.start) return null;
 

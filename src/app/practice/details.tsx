@@ -37,6 +37,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 function mapTasksFromDayDetails(
   rawTasks: {
@@ -81,6 +82,7 @@ function mapTasksFromDayDetails(
 }
 
 export default function PlanTrackScreen() {
+  const { t } = useTranslate();
   const params = useLocalSearchParams<{
     planId: string;
     selectedDay?: string;
@@ -263,13 +265,13 @@ export default function PlanTrackScreen() {
       ) : notEnrolled ? (
         <View className="flex-1 items-center justify-center gap-3 p-6">
           <Text className="text-center text-destructive">
-            {"Plan not found"}
+            {t('no_plans_found')}
           </Text>
           <Pressable
             onPress={() => router.replace({ pathname: '/plans/[id]', params: { id: planId } })}
             className="p-3 active:opacity-70"
           >
-            <Text className="font-semibold">{"Retry"}</Text>
+            <Text className="font-semibold">{t('retry')}</Text>
           </Pressable>
         </View>
       ) : (
@@ -343,7 +345,7 @@ export default function PlanTrackScreen() {
             })}
           >
             <Text className="text-base font-bold text-white">
-              {"Practice Now"}
+              {t('start_reading')}
             </Text>
           </Pressable>
         </View>

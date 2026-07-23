@@ -8,8 +8,10 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, FlatList, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 export default function SelectRecitationScreen() {
+  const { t } = useTranslate();
   const { blockLocalId } = useLocalSearchParams<{ blockLocalId: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -35,7 +37,7 @@ export default function SelectRecitationScreen() {
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <Text className="flex-1 text-center text-[17px] font-semibold text-foreground">
-          {"Add recitation"}
+          {t('routine_add_recitation')}
         </Text>
         <View className="w-10" />
       </View>
@@ -51,7 +53,7 @@ export default function SelectRecitationScreen() {
           contentContainerStyle={{ padding: 20 }}
           ListEmptyComponent={
             <Text className="mt-6 text-center text-muted-foreground">
-              {"No recitations found"}
+              {t('recitations_no_found')}
             </Text>
           }
           renderItem={({ item }) => (

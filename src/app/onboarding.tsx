@@ -16,6 +16,7 @@ import {
   View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 const logo = require('../../assets/images/webuddhist_gold.png');
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -47,6 +48,7 @@ function GoldButton({ label, onPress, loading }: { label: string; onPress: () =>
 
 function WelcomeScreen({ onNext }: { onNext: () => void }) {
   const insets = useSafeAreaInsets();
+  const { t } = useTranslate();
 
   return (
     <ScrollView
@@ -58,10 +60,10 @@ function WelcomeScreen({ onNext }: { onNext: () => void }) {
     >
       <View className="items-center">
         <Text className="text-[28px] font-medium text-white">
-          {"Welcome to"}
+          {t('onboarding_welcome')}
         </Text>
         <Text className="text-4xl font-semibold text-white">
-          {"WeBuddhist"}
+          {t('appTitle')}
         </Text>
       </View>
 
@@ -71,14 +73,14 @@ function WelcomeScreen({ onNext }: { onNext: () => void }) {
 
       <View className="mb-10 gap-3">
         <Text className="text-center text-base font-medium leading-[26px] text-white">
-          "{"Drop by drop is the water pot filled. Likewise, the wise person, gathering it little by little, fills themselves with good."}"
+          {t('onboarding_quote')}
         </Text>
         <Text className="text-center text-[15px] text-white/60">
-          {"— Dhammapada 122"}
+          {t('onboarding_quote_citation')}
         </Text>
       </View>
 
-      <GoldButton label={"Get started"} onPress={onNext} />
+      <GoldButton label={t('onboarding_find_peace')} onPress={onNext} />
     </ScrollView>
   );
 }
@@ -93,6 +95,7 @@ function EventScreen({
   onSelectionChange: (selected: boolean) => void;
 }) {
   const insets = useSafeAreaInsets();
+  const { t } = useTranslate();
   const [selected, setSelected] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -113,10 +116,10 @@ function EventScreen({
       </TouchableOpacity>
 
       <Text className="mb-2 text-4xl font-bold leading-[42px] text-white">
-        {"Join an\nevent?"}
+        {t('onboarding_event_question')}
       </Text>
       <Text className="mb-9 text-[15px] text-white/50">
-        {"Optional · Tap to enroll"}
+        {t('onboarding_event_optional')}
       </Text>
 
       <Pressable
@@ -161,18 +164,19 @@ function EventScreen({
       <View className="flex-row items-start gap-1.5">
         <Text className="text-base text-white/40">🔔</Text>
         <Text className="flex-1 text-[13px] leading-5 text-white/40">
-          {"We'll send you a daily reminder at 7:30 AM. (Change anytime.)"}
+          {t('onboarding_event_reminder_note')}
         </Text>
       </View>
 
       <View className="flex-1" />
-      <GoldButton label={"Continue"} onPress={handleContinue} loading={loading} />
+      <GoldButton label={t('onboarding_continue')} onPress={handleContinue} loading={loading} />
     </View>
   );
 }
 
 function AllSetScreen({ onComplete }: { onComplete: () => void }) {
   const insets = useSafeAreaInsets();
+  const { t } = useTranslate();
 
   return (
     <View
@@ -182,22 +186,23 @@ function AllSetScreen({ onComplete }: { onComplete: () => void }) {
       <View className="flex-1 items-center justify-center gap-4">
         <Image source={logo} style={{ width: 80, height: 80 }} contentFit="contain" />
         <Text className="text-center text-[32px] font-semibold text-white">
-          {"WeBuddhist"}
+          {t('appTitle')}
         </Text>
         <Text className="text-center text-[28px] italic leading-[38px] text-white">
-          {"You're all set up"}
+          {t('onboarding_all_set')}
         </Text>
         <Text className="mt-1 text-center text-base leading-[26px] text-white/65">
-          {"We've tailored your experience to your tradition. Show up each day — even for a moment — and watch your practice grow"}
+          {t('onboarding_all_set_description')}
         </Text>
       </View>
 
-      <GoldButton label={"Begin your practice"} onPress={onComplete} />
+      <GoldButton label={t('onboarding_begin_practice')} onPress={onComplete} />
     </View>
   );
 }
 
 export default function OnboardingScreen() {
+  const { t } = useTranslate();
   const router = useRouter();
   const { markCompleted } = useOnboarding();
   const { setPendingPlan } = usePendingOnboardingPlan();

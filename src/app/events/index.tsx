@@ -13,6 +13,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 const EVENTS_LIST_LIMIT = 20;
 
@@ -26,6 +27,7 @@ function navigateToEvent(router: ReturnType<typeof useRouter>, event: AppEvent) 
 }
 
 export default function EventsScreen() {
+  const { t } = useTranslate();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { foreground, isDark } = useThemeColors();
@@ -41,7 +43,7 @@ export default function EventsScreen() {
         >
           <ArrowLeftIcon size={24} color={foreground} />
         </Pressable>
-        <Text className="flex-1 text-xl font-bold text-foreground">{"Events"}</Text>
+        <Text className="flex-1 text-xl font-bold text-foreground">{t('calendar_upcoming_events')}</Text>
       </View>
 
       {isLoading ? (
@@ -50,7 +52,7 @@ export default function EventsScreen() {
         </View>
       ) : isError || !data || data.events.length === 0 ? (
         <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-center text-base text-muted-foreground">{"No events today."}</Text>
+          <Text className="text-center text-base text-muted-foreground">{t('no_content')}</Text>
         </View>
       ) : (
         <ScrollView

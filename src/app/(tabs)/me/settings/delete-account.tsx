@@ -7,6 +7,7 @@ import { AUTH0_CUSTOM_SCHEME } from '@/providers/auth0';
 import { useGuest } from '@/providers/guest';
 import { useClearAppQueryCache } from '@/providers/query';
 import { useUniwind } from 'uniwind';
+import { useTranslate } from '@tolgee/react';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, ScrollView, View } from 'react-native';
@@ -23,13 +24,14 @@ export default function DeleteAccountScreen() {
   const { clearGuest } = useGuest();
   const clearAppQueryCache = useClearAppQueryCache();
   const [deleting, setDeleting] = useState(false);
+  const { t } = useTranslate();
 
   const handleDelete = async () => {
     const confirmed = await confirmDestructive({
-      title: "Delete account",
-      message: "Are you sure you want to delete your WeBuddhist account?",
-      confirmLabel: "Delete account",
-      cancelLabel: "Cancel",
+      title: t('delete_account_title'),
+      message: t('delete_account_confirm_message'),
+      confirmLabel: t('delete_account_button'),
+      cancelLabel: t('cancel'),
     });
     if (!confirmed) return;
 
@@ -41,7 +43,7 @@ export default function DeleteAccountScreen() {
       clearAppQueryCache();
       router.replace('/login');
     } catch {
-      Alert.alert("Couldn't save your changes. Please try again");
+      Alert.alert(t('edit_profile_save_failed'));
     } finally {
       setDeleting(false);
     }
@@ -49,12 +51,12 @@ export default function DeleteAccountScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <AppScreenHeader title={"Delete account"} />
+      <AppScreenHeader title={t('delete_account_button')} />
       <ScrollView
         contentContainerClassName="px-6 pt-6"
         contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
       >
-        <Text className="text-base leading-6">{"If you delete your account, all your information, history, and personalized settings within WeBuddhist will be permanently eliminated. Please note that this action is irreversible. To proceed, tap the button below."}</Text>
+        <Text className="text-base leading-6">{t('delete_account_description')}</Text>
         <Pressable
           onPress={handleDelete}
           disabled={deleting}
@@ -67,7 +69,7 @@ export default function DeleteAccountScreen() {
             <ActivityIndicator color={isDark ? '#000' : '#fff'} />
           ) : (
             <Text className={cn('text-base', isDark ? 'text-black' : 'text-white')}>
-              {"Delete account"}
+              {t('delete_account_button')}
             </Text>
           )}
         </Pressable>

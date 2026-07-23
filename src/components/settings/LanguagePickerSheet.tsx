@@ -7,6 +7,7 @@ import { Text } from '@/components/ui/text';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslate } from '@tolgee/react';
 
 interface LanguagePickerSheetProps {
   visible: boolean;
@@ -14,6 +15,7 @@ interface LanguagePickerSheetProps {
 }
 
 export function LanguagePickerSheet({ visible, onClose }: LanguagePickerSheetProps) {
+  const { t } = useTranslate();
   const currentCode = useAppLanguage();
   const { foreground, brand } = useThemeColors();
   const insets = useSafeAreaInsets();
@@ -27,7 +29,7 @@ export function LanguagePickerSheet({ visible, onClose }: LanguagePickerSheetPro
   return (
     <AppBottomSheet visible={visible} onClose={onClose} scrollable placement="tab">
       <BottomSheetScrollView contentContainerStyle={{ paddingBottom: contentPaddingBottom }}>
-        <Text className="px-5 pb-2 text-lg font-bold">{"Language"}</Text>
+        <Text className="px-5 pb-2 text-lg font-bold">{t('language')}</Text>
         {supportedLanguages.map((code) => {
           const selected = currentCode === code;
           const labelColor = selected ? brand : foreground;

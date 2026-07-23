@@ -6,6 +6,7 @@ import { Fire } from 'phosphor-react-native';
 import { forwardRef } from 'react';
 import { View } from 'react-native';
 import ViewShot, { type ViewShotRef } from 'react-native-view-shot';
+import { useTranslate } from '@tolgee/react';
 
 const logo = require('../../../assets/images/webuddhist_gold.png');
 const FLAME_COLOR = '#E8630A';
@@ -16,11 +17,11 @@ interface StreakShareContentProps {
 }
 
 export function StreakShareContent({ streak }: StreakShareContentProps) {
-
+  const { t } = useTranslate();
   return (
     <View className="items-center">
       <Text className="text-center text-[22px] font-bold leading-snug text-[#212121]">
-        {"My daily practice is growing"}
+        {t('me_streak_share_quote')}
       </Text>
       <View className="mt-6 flex-row items-center justify-center">
         <Fire size={32} color={FLAME_COLOR} weight="fill" />
@@ -44,7 +45,7 @@ interface StreakShareCaptureProps {
 
 export const StreakShareCapture = forwardRef<ViewShotRef, StreakShareCaptureProps>(
   function StreakShareCapture({ streak }, ref) {
-
+    const { t } = useTranslate();
     return (
       <ViewShot ref={ref} options={{ format: 'png', quality: 1 }}>
         <View className="px-3.5 py-5" style={{ backgroundColor: STREAK_SHARE_GOLD }}>
@@ -53,8 +54,8 @@ export const StreakShareCapture = forwardRef<ViewShotRef, StreakShareCaptureProp
           </View>
           <View className="mt-6 items-center">
             <Image source={logo} style={{ width: 32, height: 32 }} contentFit="contain" />
-            <Text className="mt-2 text-xs text-[#8a8a8a]">{"Shared from"}</Text>
-            <Text className="text-sm font-semibold text-[#212121]">{"WeBuddhist"}</Text>
+            <Text className="mt-2 text-xs text-[#8a8a8a]">{t('shared_from')}</Text>
+            <Text className="text-sm font-semibold text-[#212121]">{t('appTitle')}</Text>
           </View>
         </View>
       </ViewShot>

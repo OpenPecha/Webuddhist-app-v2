@@ -8,8 +8,10 @@ import { useLocalSearchParams } from 'expo-router';
 import { useMemo, useRef } from 'react';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, View } from 'react-native';
+import { useTranslate } from '@tolgee/react';
 
 export default function PlanTextScreen() {
+  const { t } = useTranslate();
   const { subtaskId } = useLocalSearchParams<{ subtaskId: string }>();
   const cancelAudioRef = useRef<() => void>(() => {});
 
@@ -89,7 +91,7 @@ export default function PlanTextScreen() {
   if (!content) {
     return (
       <View className="flex-1 items-center justify-center bg-[#F9F8F4] p-6">
-        <Text className="text-center text-muted-foreground">{"No tasks for this day"}</Text>
+        <Text className="text-center text-muted-foreground">{t('noTasks')}</Text>
       </View>
     );
   }

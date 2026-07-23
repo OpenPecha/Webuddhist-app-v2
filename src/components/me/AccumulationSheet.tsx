@@ -10,6 +10,7 @@ import { Image } from 'expo-image';
 import { CirclesThree } from 'phosphor-react-native';
 import { ActivityIndicator, View } from 'react-native';
 import { useUniwind } from 'uniwind';
+import { useTranslate } from '@tolgee/react';
 
 interface AccumulationSheetProps {
   visible: boolean;
@@ -38,6 +39,7 @@ function MalaBeadImage({ imageUrl }: { imageUrl: string | null }) {
 }
 
 export function AccumulationSheet({ visible, formattedTotal, onClose }: AccumulationSheetProps) {
+  const { t } = useTranslate();
   const language = useAppLanguage();
   const { theme } = useUniwind();
   const isDark = theme === 'dark';
@@ -66,7 +68,7 @@ export function AccumulationSheet({ visible, formattedTotal, onClose }: Accumula
       <View className="px-5 pt-1">
         <View className="flex-row items-center gap-2.5">
           <CirclesThree size={22} color={foreground} />
-          <Text className="flex-1 text-base font-bold">{"Accumulation"}</Text>
+          <Text className="flex-1 text-base font-bold">{t('me_accumulation')}</Text>
           <Text className="text-base font-bold">{formattedTotal}</Text>
         </View>
       </View>
@@ -77,7 +79,7 @@ export function AccumulationSheet({ visible, formattedTotal, onClose }: Accumula
         </View>
       ) : counts.length === 0 ? (
         <Text className="px-5 py-6 text-center text-sm text-muted-foreground">
-          {isError ? "Something went wrong. Please try again." : "No plans found"}
+          {isError ? t('something_went_wrong') : t('no_plans_found')}
         </Text>
       ) : (
         <BottomSheetScrollView contentContainerStyle={{ paddingBottom: 16 }}>
