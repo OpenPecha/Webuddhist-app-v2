@@ -2,12 +2,7 @@ import {
   supportedLanguages,
   type SupportedLanguage,
 } from "@/constants/app-config";
-import boIN from "@/i18n/bo-IN.json";
 import en from "@/i18n/en.json";
-import hi from "@/i18n/hi.json";
-import mn from "@/i18n/mn.json";
-import ne from "@/i18n/ne.json";
-import zhHantTW from "@/i18n/zh-Hant-TW.json";
 import { StorageKeys, getString, setString } from "@/lib/storage";
 import { FormatIcu } from "@tolgee/format-icu";
 import { BackendFetch, Tolgee, useTolgee } from "@tolgee/react";
@@ -15,16 +10,19 @@ import { getLocales } from "expo-localization";
 
 const CDN_URL = process.env.EXPO_PUBLIC_TOLGEE_CDN_URL;
 
-const staticData = {
-  en,
-  "bo-IN": boIN,
-  "zh-Hant-TW": zhHantTW,
-  hi,
-  mn,
-  ne,
-};
+const availableLanguages = [
+  "en",
+  "bo-IN",
+  "zh-Hant-TW",
+  "hi",
+  "mn",
+  "ne",
+] as const;
+type TolgeeLanguage = (typeof availableLanguages)[number];
 
-const APP_TO_TOLGEE: Record<SupportedLanguage, keyof typeof staticData> = {
+const staticData = { en };
+
+const APP_TO_TOLGEE: Record<SupportedLanguage, TolgeeLanguage> = {
   en: "en",
   zh: "zh-Hant-TW",
   bo: "bo-IN",
@@ -33,7 +31,7 @@ const APP_TO_TOLGEE: Record<SupportedLanguage, keyof typeof staticData> = {
   ne: "ne",
 };
 
-function toTolgeeLanguage(code: string): keyof typeof staticData {
+function toTolgeeLanguage(code: string): TolgeeLanguage {
   return APP_TO_TOLGEE[code as SupportedLanguage] ?? "en";
 }
 
@@ -53,7 +51,7 @@ if (CDN_URL) {
 }
 
 export const tolgee = tg.init({
-  availableLanguages: Object.keys(staticData),
+  availableLanguages: [...availableLanguages],
   defaultLanguage: "en",
   fallbackLanguage: "en",
   staticData,
