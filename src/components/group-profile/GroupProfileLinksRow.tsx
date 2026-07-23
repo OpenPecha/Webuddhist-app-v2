@@ -2,7 +2,6 @@ import { Text } from '@/components/ui/text';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { displayHostUrl, orderGroupSocialLinks, type GroupSocialLink } from '@/lib/group-profile-format';
 import { LinkSimple } from 'phosphor-react-native';
-import { useTranslation } from 'react-i18next';
 import { Pressable } from 'react-native';
 
 interface GroupProfileLinksRowProps {
@@ -11,7 +10,6 @@ interface GroupProfileLinksRowProps {
 }
 
 export function GroupProfileLinksRow({ links, onPress }: GroupProfileLinksRowProps) {
-  const { t } = useTranslation();
   const { mutedForeground } = useThemeColors();
 
   if (links.length === 0) return null;
@@ -31,7 +29,7 @@ export function GroupProfileLinksRow({ links, onPress }: GroupProfileLinksRowPro
         <Text className="text-foreground">{displayUrl}</Text>
         {moreCount > 0 ? (
           <Text className="text-muted-foreground">
-            {` ${t('connect.and_more_links', { count: moreCount })}`}
+            {` and ${moreCount} more links`}
           </Text>
         ) : null}
       </Text>

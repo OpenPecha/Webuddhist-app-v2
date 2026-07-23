@@ -10,24 +10,22 @@ import {
   type MoonPhase,
 } from '@/utils/moon-phase';
 import { useRouter, type Href } from 'expo-router';
-import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
 
-function moonPhaseLabelKey(phase: MoonPhase): string | null {
+function moonPhaseLabel(phase: MoonPhase): string | null {
   switch (phase) {
     case 'newMoon':
-      return 'calendar.moon_phase_new_moon';
+      return 'New moon';
     case 'firstQuarter':
-      return 'calendar.moon_phase_first_quarter';
+      return 'First quarter';
     case 'fullMoon':
-      return 'calendar.moon_phase_full_moon';
+      return 'Full moon';
     default:
       return null;
   }
 }
 
 export function HomeCalendarCard() {
-  const { t } = useTranslation();
   const router = useRouter();
   const language = useContentLanguage();
   const isTibetan = language === 'bo';
@@ -41,7 +39,7 @@ export function HomeCalendarCard() {
   if (!day) return null;
 
   const phase = moonPhaseForLunarDay(day.lunarDay);
-  const phaseLabelKey = moonPhaseLabelKey(phase);
+  const phaseLabel = moonPhaseLabel(phase);
 
   return (
     <Pressable
@@ -61,12 +59,9 @@ export function HomeCalendarCard() {
               color: foreground,
             }}
           >
-            {t('home.calendar_day_month', {
-              day: day.lunarDay,
-              month: day.lunarMonth,
-            })}
+            {`Day ${day.lunarDay} · Month ${day.lunarMonth}`}
           </Text>
-          {phaseLabelKey && showsMoonPhaseLabel(phase) ? (
+          {phaseLabel && showsMoonPhaseLabel(phase) ? (
             <Text
               style={{
                 marginTop: 2,
@@ -76,7 +71,7 @@ export function HomeCalendarCard() {
               }}
               numberOfLines={1}
             >
-              {t(phaseLabelKey)}
+              {phaseLabel}
             </Text>
           ) : null}
         </View>

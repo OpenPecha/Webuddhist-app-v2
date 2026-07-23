@@ -1,14 +1,14 @@
 import { AppScreenHeader } from '@/components/settings/AppScreenHeader';
 import { NotificationSwitchTile } from '@/components/settings/NotificationSwitchTile';
 import { useNotificationSettings } from '@/hooks/useNotificationSettings';
-import { useTranslation } from 'react-i18next';
+import { useAppLanguage } from '@/lib/tolgee';
 import { ActivityIndicator, Alert, Platform, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function NotificationSettingsScreen() {
-  const { t, i18n } = useTranslation();
+  const language = useAppLanguage();
   const insets = useSafeAreaInsets();
-  const isBo = i18n.language === 'bo';
+  const isBo = language === 'bo';
   const titleSize = isBo ? 20 : 16;
   const subtitleSize = isBo ? 17 : 13.5;
 
@@ -33,20 +33,20 @@ export default function NotificationSettingsScreen() {
   }
 
   const masterSubtitle = !master
-    ? t('notifications.allow_subtitle_disabled')
+    ? "Permission needed. Tap to grant in Settings."
     : hasPermission
-      ? t('notifications.allow_subtitle_enabled')
-      : t('notifications.allow_subtitle_disabled');
+      ? "Notifications are enabled for this app"
+      : "Permission needed. Tap to grant in Settings.";
 
   return (
     <View className="flex-1 bg-background">
-      <AppScreenHeader title={t('notifications.settings_title')} />
+      <AppScreenHeader title={"Notification settings"} />
       <ScrollView
         contentContainerClassName="px-5"
         contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
       >
         <NotificationSwitchTile
-          title={t('notifications.allow_title')}
+          title={"Allow notifications"}
           subtitle={masterSubtitle}
           value={master}
           onValueChange={updateMaster}
@@ -57,11 +57,11 @@ export default function NotificationSettingsScreen() {
         {master && hasPermission ? (
           <>
             <NotificationSwitchTile
-              title={t('notifications.routine_title')}
+              title={"Routine reminders"}
               subtitle={
                 routine
-                  ? t('notifications.routine_subtitle_enabled')
-                  : t('notifications.routine_subtitle_disabled')
+                  ? "Daily reminders for your practice blocks"
+                  : "Routine reminders are paused. Tap to resume."
               }
               value={routine}
               onValueChange={updateRoutine}
@@ -69,11 +69,11 @@ export default function NotificationSettingsScreen() {
               subtitleSize={subtitleSize}
             />
             <NotificationSwitchTile
-              title={t('notifications.recitation_title')}
+              title={"Recitations reminder"}
               subtitle={
                 recitation
-                  ? t('notifications.recitation_subtitle_enabled')
-                  : t('notifications.recitation_subtitle_disabled')
+                  ? "Daily reminders for your recitations"
+                  : "Recitation reminders are paused. Tap to resume."
               }
               value={recitation}
               onValueChange={updateRecitation}
@@ -82,16 +82,16 @@ export default function NotificationSettingsScreen() {
             />
             {Platform.OS === 'android' ? (
               <NotificationSwitchTile
-                title={t('notifications.battery_title')}
-                subtitle={t('notifications.battery_subtitle_disabled')}
+                title={"Background reminders"}
+                subtitle={"Some Android phones pause background apps to save battery, which can delay or skip your reminders. Tap to keep yours running."}
                 value={false}
                 onValueChange={() => openBatterySettings()}
                 titleSize={titleSize}
                 subtitleSize={subtitleSize}
                 onInfo={() =>
                   Alert.alert(
-                    t('notifications.battery_info_title'),
-                    t('notifications.battery_info_body'),
+                    "About background reminders",
+                    "Some Android phones pause background apps to save battery, which can delay or cancel your scheduled reminders. Exempting the app keeps your reminders reliably on time.",
                   )
                 }
               />

@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { ConnectSearchBar } from '@/components/connect/ConnectSearchBar';
 import { GroupListCard } from '@/components/connect/GroupListCard';
 import { SearchEmptyState } from '@/components/connect/SearchEmptyState';
@@ -10,14 +9,12 @@ import { usePendingGroups } from '@/hooks/usePendingGroups';
 import { filterDiscoverGroups, mergeMyGroupsWithPending } from '@/lib/connect-groups';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, FlatList, RefreshControl, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function GroupSearchScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
   const { isDark } = useThemeColors();
   const [query, setQuery] = useState('');
   const [debounced, setDebounced] = useState('');
@@ -54,12 +51,12 @@ export default function GroupSearchScreen() {
       <ConnectSearchBar
         value={query}
         onChangeText={setQuery}
-        placeholder={t('connect.search_placeholder')}
+        placeholder={"Search groups"}
         onBack={() => router.back()}
       />
 
       {showHint ? (
-        <SearchEmptyState variant="hint" message={t('connect.search_hint')} />
+        <SearchEmptyState variant="hint" message={"Search for groups"} />
       ) : (
         <FlatList
           data={groups}
@@ -70,7 +67,7 @@ export default function GroupSearchScreen() {
             isLoading ? (
               <ActivityIndicator style={{ marginTop: 48 }} />
             ) : (
-              <SearchEmptyState variant="no_results" message={t('connect.search_empty')} />
+              <SearchEmptyState variant="no_results" message={"No matching groups found"} />
             )
           }
           renderItem={({ item }) => <GroupListCard group={item} />}

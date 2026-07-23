@@ -5,7 +5,6 @@ import { useThemeColors } from '@/hooks/useThemeColors';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   FlatList,
@@ -19,7 +18,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default function AllPlansScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
   const { foreground } = useThemeColors();
 
   const {
@@ -45,7 +43,7 @@ export default function AllPlansScreen() {
           onPress={() => router.back()}
           className="p-3 active:opacity-70"
           accessibilityRole="button"
-          accessibilityLabel={t('common.back', { defaultValue: 'Back' })}
+          accessibilityLabel={"Back"}
         >
           <Ionicons name="chevron-back" size={24} color={foreground} />
         </Pressable>
@@ -53,13 +51,13 @@ export default function AllPlansScreen() {
           className="flex-1 text-center text-[17px] font-bold text-foreground"
           numberOfLines={1}
         >
-          {t('home.home_shortcut_plans')}
+          {"Plans"}
         </Text>
         <Pressable
           onPress={() => router.push('/plans/search')}
           className="p-3 active:opacity-70"
           accessibilityRole="button"
-          accessibilityLabel={t('plans.search_placeholder')}
+          accessibilityLabel={"Search plans"}
         >
           <Ionicons name="search" size={22} color={foreground} />
         </Pressable>
@@ -69,9 +67,9 @@ export default function AllPlansScreen() {
         <AllPlansListSkeleton />
       ) : isError ? (
         <View className="flex-1 items-center justify-center gap-3 p-6">
-          <Text className="text-center text-destructive">{t('plans.load_error')}</Text>
+          <Text className="text-center text-destructive">{"Could not load plans"}</Text>
           <Pressable onPress={() => void refetch()} className="p-3 active:opacity-70">
-            <Text className="font-semibold text-foreground">{t('plans.retry')}</Text>
+            <Text className="font-semibold text-foreground">{"Retry"}</Text>
           </Pressable>
         </View>
       ) : (
@@ -89,7 +87,7 @@ export default function AllPlansScreen() {
           ListEmptyComponent={
             <View className="px-6 pt-12">
               <Text className="text-center text-[15px] text-muted-foreground">
-                {t('home.no_series_found')}
+                {"No series found"}
               </Text>
             </View>
           }

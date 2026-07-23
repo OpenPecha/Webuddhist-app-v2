@@ -6,7 +6,6 @@ import { Text } from '@/components/ui/text';
 import { useDialog } from '@/hooks/useDialog';
 import type { RoutineItem } from '@/types/routine';
 import { Ionicons } from '@expo/vector-icons';
-import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
 
@@ -74,15 +73,14 @@ export function RoutineTimeBlock({
   onDeleteItem,
   onReorderItems,
 }: RoutineTimeBlockProps) {
-  const { t } = useTranslation();
   const { dialog, confirmDestructive } = useDialog();
 
   const confirmDeleteBlock = async () => {
     const confirmed = await confirmDestructive({
-      title: t('editRoutine.delete_block_title'),
-      message: t('editRoutine.delete_block_message'),
-      confirmLabel: t('editRoutine.delete_block_confirm'),
-      cancelLabel: t('editRoutine.cancel'),
+      title: "Remove block?",
+      message: "The time block and all its items will be removed",
+      confirmLabel: "Remove",
+      cancelLabel: "Cancel",
     });
     if (confirmed) onDeleteBlock();
   };
@@ -90,10 +88,10 @@ export function RoutineTimeBlock({
   const confirmDeleteItem = async (index: number) => {
     const item = items[index];
     const confirmed = await confirmDestructive({
-      title: t('editRoutine.remove_item_title'),
-      message: t('editRoutine.remove_item_message', { itemName: item.title }),
-      confirmLabel: t('editRoutine.remove'),
-      cancelLabel: t('editRoutine.cancel'),
+      title: "Remove item?",
+      message: `"${item.title}" will be removed from this block`,
+      confirmLabel: "Remove",
+      cancelLabel: "Cancel",
     });
     if (confirmed) onDeleteItem(index);
   };
@@ -107,7 +105,7 @@ export function RoutineTimeBlock({
         <View className="flex-1" />
         <Pressable onPress={confirmDeleteBlock} hitSlop={8}>
           <Text className="text-sm font-semibold text-[#f87171]">
-            {t('editRoutine.delete_time_block')}
+            {"Remove time block"}
           </Text>
         </Pressable>
       </View>
@@ -156,7 +154,7 @@ export function RoutineTimeBlock({
           <Ionicons name="add" size={24} color="#000" />
         </View>
         <Text className="flex-1 ml-4 text-base font-semibold text-foreground">
-          {t('editRoutine.add_session')}
+          {"Add to session"}
         </Text>
       </Pressable>
       {dialog}
@@ -165,13 +163,12 @@ export function RoutineTimeBlock({
 }
 
 function AddBlockButton({ onPress }: { onPress: () => void }) {
-  const { t } = useTranslation();
   return (
     <Pressable onPress={onPress} className="self-start">
       <View className="flex-row items-center px-3 py-2 bg-[#f0f0ec] rounded-[20px]">
         <Ionicons name="add" size={16} color="#000" />
         <Text className="ml-1.5 text-sm font-semibold text-foreground">
-          {t('editRoutine.add_block_label')}
+          {"Time block"}
         </Text>
       </View>
     </Pressable>

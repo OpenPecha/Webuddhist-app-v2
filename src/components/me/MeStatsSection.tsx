@@ -6,13 +6,13 @@ import { APP_ASSETS } from '@/constants/app-assets';
 import { Text } from '@/components/ui/text';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { useAppLanguage } from '@/lib/tolgee';
 import { formatMeditationDuration } from '@/lib/format-meditation-duration';
 import { formatCompactCount } from '@/lib/format-compact-count';
 import type { UserStats } from '@/types/user-stats';
 import { CirclesThree, ListChecks, Timer } from 'phosphor-react-native';
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 
 interface StatCardProps {
@@ -68,7 +68,6 @@ interface PracticeDaysCardProps {
 }
 
 function PracticeDaysCard({ days, onPress }: PracticeDaysCardProps) {
-  const { t } = useTranslation();
   const { foreground, meCardSurface } = useThemeColors();
 
   return (
@@ -81,7 +80,7 @@ function PracticeDaysCard({ days, onPress }: PracticeDaysCardProps) {
       <Text className="ml-3 flex-1 text-base">
         <Text className="text-xl font-bold">{days}</Text>
         {' '}
-        {t('me.days_plan_practiced_suffix')}
+        {"days plan practiced"}
       </Text>
     </Pressable>
   );
@@ -92,23 +91,23 @@ interface MeStatsSectionProps {
 }
 
 export function MeStatsSection({ stats }: MeStatsSectionProps) {
-  const { t, i18n } = useTranslation();
+  const uiLanguage = useAppLanguage();
   const language = useContentLanguage();
   const { foreground } = useThemeColors();
   const [shareVisible, setShareVisible] = useState(false);
   const [practiceDaysVisible, setPracticeDaysVisible] = useState(false);
   const [accumulationVisible, setAccumulationVisible] = useState(false);
 
-  const formattedAccumulation = formatCompactCount(stats.totalAccumulated, i18n.language);
+  const formattedAccumulation = formatCompactCount(stats.totalAccumulated, uiLanguage);
   const meditationDuration = formatMeditationDuration(stats.totalTimer, {
     language,
-    minuteLabel: t('me.minutes'),
-    hourLabel: t('me.hours'),
+    minuteLabel: "minutes",
+    hourLabel: "hours",
   });
 
   return (
     <View className="px-5 pb-6 pt-6">
-      <Text className="text-xl font-extrabold">{t('me.my_stats')}</Text>
+      <Text className="text-xl font-extrabold">{"My stats"}</Text>
       <View className="mt-3">
         <MeStreakCard streak={stats.streak} onPress={() => setShareVisible(true)} />
       </View>
@@ -120,7 +119,7 @@ export function MeStatsSection({ stats }: MeStatsSectionProps) {
       </View>
       <View className="mt-3 flex-row gap-3">
         <StatCard
-          label={t('me.accumulation')}
+          label={"Accumulation"}
           icon={
             <Image
               source={APP_ASSETS.malaIcon}
@@ -130,11 +129,11 @@ export function MeStatsSection({ stats }: MeStatsSectionProps) {
             />
           }
           value={formattedAccumulation}
-          unit={t('me.counts')}
+          unit={"counts"}
           onPress={() => setAccumulationVisible(true)}
         />
         <StatCard
-          label={t('me.total_meditation_time')}
+          label={"Total meditation time"}
           icon={<Timer size={22} color={foreground} />}
           value={meditationDuration}
         />

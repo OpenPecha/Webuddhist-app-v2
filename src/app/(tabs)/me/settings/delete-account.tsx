@@ -9,13 +9,11 @@ import { useClearAppQueryCache } from '@/providers/query';
 import { useUniwind } from 'uniwind';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Alert, Pressable, ScrollView, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function DeleteAccountScreen() {
-  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { theme } = useUniwind();
   const isDark = theme === 'dark';
@@ -28,10 +26,10 @@ export default function DeleteAccountScreen() {
 
   const handleDelete = async () => {
     const confirmed = await confirmDestructive({
-      title: t('profile.delete_account_title'),
-      message: t('profile.delete_account_confirm'),
-      confirmLabel: t('profile.delete_account_button'),
-      cancelLabel: t('editRoutine.cancel'),
+      title: "Delete account",
+      message: "Are you sure you want to delete your WeBuddhist account?",
+      confirmLabel: "Delete account",
+      cancelLabel: "Cancel",
     });
     if (!confirmed) return;
 
@@ -43,7 +41,7 @@ export default function DeleteAccountScreen() {
       clearAppQueryCache();
       router.replace('/login');
     } catch {
-      Alert.alert(t('profile.save_failed'));
+      Alert.alert("Couldn't save your changes. Please try again");
     } finally {
       setDeleting(false);
     }
@@ -51,12 +49,12 @@ export default function DeleteAccountScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <AppScreenHeader title={t('profile.delete_account_title')} />
+      <AppScreenHeader title={"Delete account"} />
       <ScrollView
         contentContainerClassName="px-6 pt-6"
         contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
       >
-        <Text className="text-base leading-6">{t('profile.delete_account_description')}</Text>
+        <Text className="text-base leading-6">{"If you delete your account, all your information, history, and personalized settings within WeBuddhist will be permanently eliminated. Please note that this action is irreversible. To proceed, tap the button below."}</Text>
         <Pressable
           onPress={handleDelete}
           disabled={deleting}
@@ -69,7 +67,7 @@ export default function DeleteAccountScreen() {
             <ActivityIndicator color={isDark ? '#000' : '#fff'} />
           ) : (
             <Text className={cn('text-base', isDark ? 'text-black' : 'text-white')}>
-              {t('profile.delete_account_button')}
+              {"Delete account"}
             </Text>
           )}
         </Pressable>

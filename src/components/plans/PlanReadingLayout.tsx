@@ -14,7 +14,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Dimensions,
@@ -80,7 +79,6 @@ export function PlanReadingLayout({
 }: PlanReadingLayoutProps) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const [fontSheetVisible, setFontSheetVisible] = useState(false);
   const { fontSize, canDecrease, canIncrease, decrease, increase } = useReaderFontSize();
@@ -225,7 +223,7 @@ export function PlanReadingLayout({
             }}
             className="p-2"
             accessibilityRole="button"
-            accessibilityLabel={t('home.search')}
+            accessibilityLabel={"Search"}
           >
             <Ionicons name="search" size={20} color="#000" />
           </Pressable>
@@ -239,7 +237,7 @@ export function PlanReadingLayout({
             }}
             className="p-2"
             accessibilityRole="button"
-            accessibilityLabel={t('reader.version')}
+            accessibilityLabel={"Version"}
           >
             <Ionicons name="globe-outline" size={20} color="#000" />
           </Pressable>
@@ -293,7 +291,7 @@ export function PlanReadingLayout({
               onPress={() => setExpanded(true)}
               className="mt-5 bg-[#e8e8e4] rounded-xl py-3.5 items-center"
             >
-              <Text className="text-[15px] font-bold text-foreground">{t('reader.read_full_text')}</Text>
+              <Text className="text-[15px] font-bold text-foreground">{"Read Full Text"}</Text>
             </Pressable>
           ) : null}
 

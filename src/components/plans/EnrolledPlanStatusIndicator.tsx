@@ -9,13 +9,11 @@ import {
 import type { PlanDateRange } from '@/utils/plan-utils';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, View } from 'react-native';
-import { useTranslation } from 'react-i18next';
 
 function OnTrackBadge() {
-  const { t } = useTranslation();
   return (
     <View className="rounded-2xl border border-[rgba(138,138,138,0.5)] bg-white px-2 py-[3px]">
-      <Text className="text-xs text-muted-foreground uppercase">{t('practice.plan_status_on_track')}</Text>
+      <Text className="text-xs text-muted-foreground uppercase">{"On Track!"}</Text>
     </View>
   );
 }
@@ -27,11 +25,10 @@ function MissedDaysBadge({
   count: number;
   onPress?: () => void;
 }) {
-  const { t } = useTranslation();
   const label =
     count === 1
-      ? t('practice.missed_days_one')
-      : t('practice.missed_days_other', { count });
+      ? "1 missed day"
+      : `${count} missed days`;
 
   const content = (
     <View

@@ -4,10 +4,10 @@ import { AppBottomSheet } from '@/components/settings/AppBottomSheet';
 import { Text } from '@/components/ui/text';
 import { useMantraCounts } from '@/hooks/api/useMantraCounts';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { useAppLanguage } from '@/lib/tolgee';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Image } from 'expo-image';
 import { CirclesThree } from 'phosphor-react-native';
-import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, View } from 'react-native';
 import { useUniwind } from 'uniwind';
 
@@ -38,7 +38,7 @@ function MalaBeadImage({ imageUrl }: { imageUrl: string | null }) {
 }
 
 export function AccumulationSheet({ visible, formattedTotal, onClose }: AccumulationSheetProps) {
-  const { t, i18n } = useTranslation();
+  const language = useAppLanguage();
   const { theme } = useUniwind();
   const isDark = theme === 'dark';
   const { foreground, cardBorder } = useThemeColors();
@@ -66,7 +66,7 @@ export function AccumulationSheet({ visible, formattedTotal, onClose }: Accumula
       <View className="px-5 pt-1">
         <View className="flex-row items-center gap-2.5">
           <CirclesThree size={22} color={foreground} />
-          <Text className="flex-1 text-base font-bold">{t('me.accumulation')}</Text>
+          <Text className="flex-1 text-base font-bold">{"Accumulation"}</Text>
           <Text className="text-base font-bold">{formattedTotal}</Text>
         </View>
       </View>
@@ -77,7 +77,7 @@ export function AccumulationSheet({ visible, formattedTotal, onClose }: Accumula
         </View>
       ) : counts.length === 0 ? (
         <Text className="px-5 py-6 text-center text-sm text-muted-foreground">
-          {isError ? t('connect.action_error') : t('practice.no_plans')}
+          {isError ? "Something went wrong. Please try again." : "No plans found"}
         </Text>
       ) : (
         <BottomSheetScrollView contentContainerStyle={{ paddingBottom: 16 }}>
@@ -92,7 +92,7 @@ export function AccumulationSheet({ visible, formattedTotal, onClose }: Accumula
                   {item.mantraTitle}
                 </Text>
                 <Text className="text-base font-semibold">
-                  {new Intl.NumberFormat(i18n.language).format(item.totalCount)}
+                  {new Intl.NumberFormat(language).format(item.totalCount)}
                 </Text>
               </View>
             </View>

@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { MarkdownText } from '@/components/common/MarkdownText';
 import { SeriesGroupRow } from '@/components/series/SeriesGroupRow';
 import { useSeriesById } from '@/hooks/api/useSeries';
@@ -8,7 +7,6 @@ import { imageUrl } from '@/utils/image-url';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -19,7 +17,6 @@ export default function SeriesInfoScreen() {
   const language = useContentLanguage();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
 
   const metadata = series ? pickSeriesMetadata(series.metadata, language) : undefined;
   const body = metadata?.description ?? '';
@@ -38,9 +35,9 @@ export default function SeriesInfoScreen() {
   if (error || !series) {
     return (
       <View className="flex-1 items-center justify-center bg-[#FDFDFC]" style={{ paddingTop: insets.top }}>
-        <Text className="text-destructive">{t('series.load_error')}</Text>
+        <Text className="text-destructive">{"Unable to load series. Check your connection and try again."}</Text>
         <Pressable onPress={() => refetch()} className="mt-3 active:opacity-70">
-          <Text>{t('practice.retry')}</Text>
+          <Text>{"Retry"}</Text>
         </Pressable>
       </View>
     );
@@ -77,7 +74,7 @@ export default function SeriesInfoScreen() {
             <MarkdownText content={body} />
           ) : (
             <Text className="text-center text-sm text-muted-foreground">
-              {t('series.no_about')}
+              {"No additional information available."}
             </Text>
           )}
         </View>

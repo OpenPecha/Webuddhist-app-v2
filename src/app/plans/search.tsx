@@ -6,7 +6,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { MagnifyingGlass } from 'phosphor-react-native';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   FlatList,
@@ -20,7 +19,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default function PlansSearchScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
   const { foreground, mutedForeground } = useThemeColors();
 
   const [query, setQuery] = useState('');
@@ -70,7 +68,7 @@ export default function PlansSearchScreen() {
             ref={inputRef}
             value={query}
             onChangeText={setQuery}
-            placeholder={t('plans.search_placeholder')}
+            placeholder={"Search plans"}
             placeholderTextColor={mutedForeground}
             returnKeyType="search"
             className="flex-1 py-2.5 text-[15px] text-foreground"
@@ -95,9 +93,9 @@ export default function PlansSearchScreen() {
         <AllPlansListSkeleton rows={4} />
       ) : isError ? (
         <View className="flex-1 items-center justify-center gap-3 p-6">
-          <Text className="text-center text-destructive">{t('plans.load_error')}</Text>
+          <Text className="text-center text-destructive">{"Could not load plans"}</Text>
           <Pressable onPress={() => void refetch()} className="p-3 active:opacity-70">
-            <Text className="font-semibold text-foreground">{t('plans.retry')}</Text>
+            <Text className="font-semibold text-foreground">{"Retry"}</Text>
           </Pressable>
         </View>
       ) : (
@@ -109,7 +107,7 @@ export default function PlansSearchScreen() {
           ListEmptyComponent={
             <View className="px-6 pt-12">
               <Text className="text-center text-[15px] text-muted-foreground">
-                {t('home.no_series_found')}
+                {"No series found"}
               </Text>
             </View>
           }

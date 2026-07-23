@@ -2,17 +2,15 @@ import { Text } from '@/components/ui/text';
 import { ShareNetworkIcon } from '@/components/home/HomeIcon';
 import { shareApp } from '@/services/app-share';
 import { useThemeColors } from '@/hooks/useThemeColors';
-import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 
 export function HomeSharePrompt() {
-  const { t } = useTranslation();
   const { foreground, sharePromptBg } = useThemeColors();
 
   return (
     <View className="px-5 py-6">
       <Text className="text-center text-base text-muted-foreground">
-        {t('home.home_share_prompt', { appName: t('appTitle') })}
+        {`Enjoying WeBuddhist?`}
       </Text>
       <View className="h-3" />
       <Pressable
@@ -23,7 +21,7 @@ export function HomeSharePrompt() {
         style={{ backgroundColor: sharePromptBg }}
       >
         <ShareNetworkIcon size={22} color={foreground} />
-        <Text className="text-base font-bold text-foreground">{t('home.share')}</Text>
+        <Text className="text-base font-bold text-foreground">{"Share"}</Text>
       </Pressable>
     </View>
   );

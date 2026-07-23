@@ -8,7 +8,6 @@ import { useGuest } from '@/providers/guest';
 import { Bell, House, UserCircle, UsersThree, type IconProps } from 'phosphor-react-native';
 import { Image } from 'expo-image';
 import type { ComponentType } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useUniwind } from 'uniwind';
@@ -33,7 +32,6 @@ const TAB_ICONS: Record<TabRouteName, TabIcon> = {
 };
 
 export function AppBottomTabBar({ state, navigation, insets }: BottomTabBarProps) {
-  const { t } = useTranslation();
   const { theme } = useUniwind();
   const { user } = useAuth0();
   const { isGuest } = useGuest();
@@ -45,10 +43,10 @@ export function AppBottomTabBar({ state, navigation, insets }: BottomTabBarProps
     user && !isGuest ? resolveProfileAvatarUrl(profile, user) : null;
 
   const labels: Record<TabRouteName, string> = {
-    index: t('nav.home'),
-    practice: t('nav.practice'),
-    connect: t('nav.connect'),
-    me: t('nav.me'),
+    index: "Home",
+    practice: "Practice",
+    connect: "Connect",
+    me: "Me",
   };
 
   return (

@@ -5,7 +5,6 @@ import {
 } from '@gorhom/bottom-sheet';
 import { Ionicons } from '@expo/vector-icons';
 import React, { forwardRef, useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/ui/text';
 import { Linking, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -32,7 +31,6 @@ function platformIcon(platform: string): keyof typeof Ionicons.glyphMap {
 
 export const GroupSocialLinksSheet = forwardRef<BottomSheetModal, GroupSocialLinksSheetProps>(
   function GroupSocialLinksSheet({ links }, ref) {
-    const { t } = useTranslation();
     const insets = useSafeAreaInsets();
     const snapPoints = useMemo(() => ['40%'], []);
 
@@ -46,7 +44,7 @@ export const GroupSocialLinksSheet = forwardRef<BottomSheetModal, GroupSocialLin
     return (
       <BottomSheetModal ref={ref} snapPoints={snapPoints} backdropComponent={renderBackdrop}>
         <BottomSheetView className="px-5" style={{ paddingBottom: insets.bottom + 16 }}>
-          <Text className="mb-4 text-[17px] font-bold">{t('connect.social_links_title')}</Text>
+          <Text className="mb-4 text-[17px] font-bold">{"Links"}</Text>
           {links.map((link) => (
             <Pressable
               key={link.id}

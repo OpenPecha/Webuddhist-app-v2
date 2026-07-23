@@ -1,12 +1,12 @@
 import { Text } from '@/components/ui/text';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { useAppLanguage } from '@/lib/tolgee';
 import {
   mantraScript,
   mantraTransliteration,
   type Mantra,
 } from '@/types/mala';
 import { CaretLeft, CaretRight } from 'phosphor-react-native';
-import { useTranslation } from 'react-i18next';
 import { useCallback } from 'react';
 import { Pressable, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -19,9 +19,8 @@ interface MantraSwitcherProps {
 }
 
 export function MantraSwitcher({ mantras, index, onIndexChange }: MantraSwitcherProps) {
-  const { i18n } = useTranslation();
   const { foreground } = useThemeColors();
-  const language = i18n.language.split('-')[0] ?? 'en';
+  const language = useAppLanguage();
   const canLoop = mantras.length > 1;
   const mantra = mantras[index];
 

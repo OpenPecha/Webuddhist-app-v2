@@ -9,12 +9,10 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useRef } from 'react';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, View } from 'react-native';
-import { useTranslation } from 'react-i18next';
 
 export default function ReaderScreen() {
   const { textId } = useLocalSearchParams<{ textId: string }>();
   const router = useRouter();
-  const { t } = useTranslation();
   const cancelAudioRef = useRef<() => void>(() => {});
 
   const {
@@ -76,9 +74,9 @@ export default function ReaderScreen() {
     (segments ? segmentContent : '') ||
     inlineContent ||
     readerDetails?.text_detail?.summary?.trim() ||
-    t('reader.placeholder');
+    "Full reader experience is coming in a future update. You opened this text from your practice routine.";
 
-  const textTitle = readerDetails?.text_detail?.title ?? t('reader.title');
+  const textTitle = readerDetails?.text_detail?.title ?? "Reader";
   const isLoading = planLoading || (needsReaderFetch && readerLoading);
 
   const bookmarkHeader = textId ? (

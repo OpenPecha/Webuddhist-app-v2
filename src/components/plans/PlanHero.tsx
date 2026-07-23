@@ -3,7 +3,6 @@ import { Text } from '@/components/ui/text';
 import { imageUrl } from '@/utils/image-url';
 import { Image } from 'expo-image';
 import { useWindowDimensions, View } from 'react-native';
-import { useTranslation } from 'react-i18next';
 
 interface PlanHeroProps {
   title: string;
@@ -20,12 +19,11 @@ export function PlanHero({
   description,
   variant = 'preview',
 }: PlanHeroProps) {
-  const { t } = useTranslation();
   const { height: windowHeight } = useWindowDimensions();
   const daysLabel =
     totalDays === 1
-      ? t('series.n_days_one')
-      : t('series.n_days_other', { count: totalDays });
+      ? "1 day"
+      : `${totalDays} days`;
 
   if (variant === 'track') {
     const heroHeight = Math.round(windowHeight * 0.3);

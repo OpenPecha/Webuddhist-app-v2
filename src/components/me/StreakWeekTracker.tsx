@@ -1,8 +1,8 @@
 import { Text } from '@/components/ui/text';
 import { cn } from '@/utils/cn';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { useAppLanguage } from '@/lib/tolgee';
 import { Check, Fire } from 'phosphor-react-native';
-import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import { useUniwind } from 'uniwind';
 
@@ -95,7 +95,7 @@ interface StreakWeekTrackerProps {
 }
 
 export function StreakWeekTracker({ practicedDays, forShare = false }: StreakWeekTrackerProps) {
-  const { i18n } = useTranslation();
+  const language = useAppLanguage();
   const todayWeekday = getTodayWeekdayIndex();
   const practicedSet = new Set(practicedDays);
 
@@ -108,7 +108,7 @@ export function StreakWeekTracker({ practicedDays, forShare = false }: StreakWee
         return (
           <View key={dayIndex} className={cn('flex-1 items-center', index > 0 && 'ml-1')}>
             <Text className="text-[10px] font-medium tracking-wide text-muted-foreground">
-              {weekdayLabel(dayIndex, i18n.language)}
+              {weekdayLabel(dayIndex, language)}
             </Text>
             <View className="mt-2">
               <WeekDayCell state={state} forShare={forShare} />

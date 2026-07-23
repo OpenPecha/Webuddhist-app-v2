@@ -2,7 +2,6 @@ import { Text } from '@/components/ui/text';
 import { EnrolledPlanStatusIndicator } from '@/components/plans/EnrolledPlanStatusIndicator';
 import type { PlanDateRange } from '@/utils/plan-utils';
 import { View } from 'react-native';
-import { useTranslation } from 'react-i18next';
 
 interface PlanDayHeaderProps {
   selectedDay: number;
@@ -23,12 +22,11 @@ export function PlanDayHeader({
   completionMap,
   onMissedDaysPress,
 }: PlanDayHeaderProps) {
-  const { t } = useTranslation();
 
   return (
     <View className="flex-row items-center justify-between px-4 mb-1">
       <Text className="text-lg font-bold text-foreground">
-        {t('planTrack.day_of', { day: selectedDay, total: totalDays })}
+        {`Day ${selectedDay} of ${totalDays}`}
       </Text>
       <EnrolledPlanStatusIndicator
         planId={planId}

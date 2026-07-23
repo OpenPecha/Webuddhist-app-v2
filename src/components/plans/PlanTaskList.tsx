@@ -2,7 +2,6 @@ import { Text } from '@/components/ui/text';
 import { cn } from '@/utils/cn';
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, View } from 'react-native';
-import { useTranslation } from 'react-i18next';
 import { isTaskNavigable, taskHasAudio } from '@/utils/plan-subtask-navigation';
 
 export interface PlanTaskListItem {
@@ -81,11 +80,10 @@ export function PlanTaskList({
   onPressTaskWithAudio,
   optimisticCompleted = {},
 }: PlanTaskListProps) {
-  const { t } = useTranslation();
 
   if (tasks.length === 0) {
     return (
-      <Text className="text-muted-foreground text-center mt-6 px-5">{t('planTrack.no_tasks')}</Text>
+      <Text className="text-muted-foreground text-center mt-6 px-5">{"No tasks for this day"}</Text>
     );
   }
 
@@ -114,7 +112,7 @@ export function PlanTaskList({
               onPress={() => onPressTask?.(task.id)}
             >
               <Text className="text-base font-medium text-foreground" numberOfLines={2}>
-                {task.title ?? t('plans.preview.untitled_task')}
+                {task.title ?? "Task"}
               </Text>
             </Pressable>
 

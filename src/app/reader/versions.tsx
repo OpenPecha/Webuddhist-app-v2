@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/ui/text';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -8,7 +7,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default function ReaderVersionsPlaceholderScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
 
   return (
     <View className="flex-1 bg-[#F9F8F4]" style={{ paddingTop: insets.top }}>
@@ -17,12 +15,12 @@ export default function ReaderVersionsPlaceholderScreen() {
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <Text className="mr-10 flex-1 text-[17px] font-semibold text-foreground">
-          {t('reader.version')}
+          {"Version"}
         </Text>
       </View>
       <View className="flex-1 items-center justify-center px-6">
         <Text className="text-center text-[15px] text-muted-foreground">
-          {t('reader.coming_soon')}
+          {"Coming soon."}
         </Text>
       </View>
     </View>

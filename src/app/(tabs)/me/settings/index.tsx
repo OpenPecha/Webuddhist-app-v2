@@ -24,13 +24,13 @@ import {
 import { useLoginDrawer } from '@/hooks/useLoginDrawer';
 import { useNavigateOnce } from '@/hooks/useNavigateOnce';
 import { getAppVersionLabel } from '@/lib/app-version';
+import { useAppLanguage } from '@/lib/tolgee';
 import { AUTH0_CUSTOM_SCHEME } from '@/providers/auth0';
 import { useGuest } from '@/providers/guest';
 import { useClearAppQueryCache } from '@/providers/query';
 import { useThemeMode } from '@/providers/theme';
 import { type Href, router } from 'expo-router';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Linking, ScrollView, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -38,7 +38,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const FEEDBACK_URL = 'https://app-webuddhist.ideas.userback.io/p/5omSMHB8A9VMUrD6vLrE';
 
 export default function SettingsScreen() {
-  const { t, i18n } = useTranslation();
+  const currentCode = useAppLanguage();
   const { user, clearSession } = useAuth0();
   const { isGuest, clearGuest } = useGuest();
   const { isDark, toggleDarkLight } = useThemeMode();
@@ -66,55 +66,55 @@ export default function SettingsScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <AppScreenHeader title={t('settings.title')} />
+      <AppScreenHeader title={"Settings"} />
       <ScrollView
         className="flex-1"
         contentContainerClassName="px-6 pt-4"
         contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}
       >
-        <SettingsSectionHeader title={t('settings.section_personalization')} />
+        <SettingsSectionHeader title={"PERSONALIZATION"} />
         <View className="mt-3">
           {isAuthenticated ? (
             <SettingsRow
               icon={User}
-              title={t('settings.edit_profile')}
+              title={"Edit profile"}
               onPress={() => navigateOnce('/me/settings/profile' as Href)}
             />
           ) : null}
           <SettingsRow
             icon={Globe}
-            title={currentLanguageLabel(i18n.language)}
+            title={currentLanguageLabel(currentCode)}
             onPress={() => setLanguageSheetVisible(true)}
           />
           <SettingsRow
             icon={BellRinging}
-            title={t('settings.notifications')}
+            title={"Notifications"}
             onPress={() => navigateOnce('/me/settings/notifications' as Href)}
           />
           <SettingsRow
             icon={isDark ? Moon : Sun}
-            title={t('settings.theme')}
+            title={"Theme"}
             onPress={() => toggleDarkLight()}
             trailing={<AppToggleSwitch value={isDark} onValueChange={() => toggleDarkLight()} />}
           />
         </View>
 
         <View className="mt-6">
-          <SettingsSectionHeader title={t('settings.section_more')} />
+          <SettingsSectionHeader title={"MORE"} />
           <View className="mt-3">
             <SettingsRow
               icon={Info}
-              title={t('about.title')}
+              title={"About"}
               onPress={() => navigateOnce('/me/settings/about' as Href)}
             />
             <SettingsRow
               icon={Gavel}
-              title={t('legal.title')}
+              title={"Legal"}
               onPress={() => navigateOnce('/me/settings/legal' as Href)}
             />
             <SettingsRow
               icon={ChatText}
-              title={t('settings.feedback')}
+              title={"Feedback"}
               trailingIcon="external"
               onPress={() => Linking.openURL(FEEDBACK_URL)}
             />
@@ -122,14 +122,14 @@ export default function SettingsScreen() {
         </View>
 
         <View className="mt-6">
-          <SettingsSectionHeader title={t('settings.section_account')} />
+          <SettingsSectionHeader title={"ACCOUNT"} />
           <View className="mt-3">
             {!isAuthenticated ? (
-              <SettingsRow icon={SignIn} title={t('settings.sign_in')} onPress={showLoginDrawer} />
+              <SettingsRow icon={SignIn} title={"Sign in"} onPress={showLoginDrawer} />
             ) : (
               <SettingsRow
                 icon={SignOut}
-                title={t('settings.logout')}
+                title={"Log out"}
                 destructive
                 onPress={() => setLogoutVisible(true)}
               />
@@ -149,10 +149,10 @@ export default function SettingsScreen() {
       <LoginDrawer key={session} visible={visible} onClose={hideLoginDrawer} />
       <LogoutAlertDialog
         visible={logoutVisible}
-        title={t('settings.logout')}
-        message={t('settings.logout_confirmation')}
-        cancelLabel={t('editRoutine.cancel')}
-        confirmLabel={t('settings.logout')}
+        title={"Log out"}
+        message={"Are you sure you want to log out?"}
+        cancelLabel={"Cancel"}
+        confirmLabel={"Log out"}
         onCancel={() => setLogoutVisible(false)}
         onConfirm={handleLogout}
       />

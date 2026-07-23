@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { GroupListCard } from '@/components/connect/GroupListCard';
 import { CONNECT_PADDING } from '@/components/connect/connect-styles';
 import { useJoinedGroups } from '@/hooks/api/useDiscoverGroups';
@@ -9,7 +8,6 @@ import { mergeMyGroupsWithPending } from '@/lib/connect-groups';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, FlatList, Pressable, RefreshControl, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,7 +15,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export default function MyGroupsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
   const { isDark, foreground } = useThemeColors();
   const pending = usePendingGroups();
   const { data, isLoading, isRefetching, refetch } = useJoinedGroups();
@@ -39,7 +36,7 @@ export default function MyGroupsScreen() {
           <Ionicons name="chevron-back" size={24} color={foreground} />
         </Pressable>
         <Text className="mr-10 flex-1 text-center text-[17px] font-semibold text-foreground">
-          {t('connect.my_groups')}
+          {"My groups"}
         </Text>
       </View>
 
@@ -53,7 +50,7 @@ export default function MyGroupsScreen() {
             <ActivityIndicator style={{ marginTop: 48 }} />
           ) : (
             <Text className="mt-12 text-center text-muted-foreground">
-              {t('connect.my_groups_empty')}
+              {"You haven't joined any groups yet."}
             </Text>
           )
         }

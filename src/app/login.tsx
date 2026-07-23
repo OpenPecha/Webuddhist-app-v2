@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { GoogleIcon } from '@/components/auth/GoogleIcon';
 import { AUTH0_CUSTOM_SCHEME } from '@/providers/auth0';
 import { useGuest } from '@/providers/guest';
@@ -6,7 +5,6 @@ import { cn } from '@/utils/cn';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { StatusBar } from 'expo-status-bar';
-import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, Platform, Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
@@ -44,7 +42,6 @@ export default function Login() {
   const { authorize, isLoading } = useAuth0();
   const { continueAsGuest } = useGuest();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
 
   const loginWithGoogle = async () => {
     try {
@@ -78,7 +75,7 @@ export default function Login() {
       >
         <Image source={logo} style={{ width: 150, height: 150 }} contentFit="contain" />
         <Text className="text-[32px] font-bold">
-          {t('appTitle')}
+          {"WeBuddhist"}
         </Text>
       </View>
 
@@ -95,7 +92,7 @@ export default function Login() {
           <>
             <LoginButton
               icon={<GoogleIcon />}
-              label={t('auth.continue_with_google')}
+              label={"Continue with Google"}
               onPress={loginWithGoogle}
               bordered
             />
@@ -103,7 +100,7 @@ export default function Login() {
             {Platform.OS === 'ios' && (
               <LoginButton
                 icon={<Ionicons name="logo-apple" size={22} color="#fff" />}
-                label={t('auth.continue_with_apple')}
+                label={"Continue with Apple"}
                 onPress={loginWithApple}
                 dark
               />
@@ -111,7 +108,7 @@ export default function Login() {
 
             <LoginButton
               icon={<Ionicons name="person-outline" size={20} color="#000" />}
-              label={t('auth.continue_as_guest')}
+              label={"Continue as guest"}
               onPress={continueAsGuest}
               bordered
             />

@@ -5,7 +5,6 @@ import { useLoginDrawer } from '@/hooks/useLoginDrawer';
 import { useGuest } from '@/providers/guest';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth0 } from 'react-native-auth0';
-import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable } from 'react-native';
 
 interface ReaderBookmarkButtonProps {
@@ -14,7 +13,6 @@ interface ReaderBookmarkButtonProps {
 }
 
 export function ReaderBookmarkButton({ textId, textTitle }: ReaderBookmarkButtonProps) {
-  const { t } = useTranslation();
   const { user } = useAuth0();
   const { isGuest } = useGuest();
   const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
@@ -37,7 +35,7 @@ export function ReaderBookmarkButton({ textId, textTitle }: ReaderBookmarkButton
         className="p-2 active:opacity-80"
         style={{ opacity: toggle.isPending ? 0.5 : 0.85 }}
         accessibilityRole="button"
-        accessibilityLabel={isBookmarked ? t('reader.bookmarked') : t('reader.bookmark')}
+        accessibilityLabel={isBookmarked ? "Bookmarked" : "Bookmark"}
       >
         {toggle.isPending || isLoading ? (
           <ActivityIndicator size="small" color="#000" />

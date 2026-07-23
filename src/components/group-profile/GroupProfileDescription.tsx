@@ -1,7 +1,6 @@
 import { GP_DESCRIPTION_CLAMP } from '@/components/group-profile/group-profile-styles';
 import { Text } from '@/components/ui/text';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Pressable } from 'react-native';
 
 interface GroupProfileDescriptionProps {
@@ -9,7 +8,6 @@ interface GroupProfileDescriptionProps {
 }
 
 export function GroupProfileDescription({ description }: GroupProfileDescriptionProps) {
-  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
 
   if (!description.trim()) return null;
@@ -27,7 +25,7 @@ export function GroupProfileDescription({ description }: GroupProfileDescription
       </Text>
       {description.length > 120 ? (
         <Text className="mt-1 text-[13px] font-semibold text-foreground">
-          {expanded ? t('connect.show_less') : t('connect.show_more')}
+          {expanded ? "Show less" : "Show more"}
         </Text>
       ) : null}
     </Pressable>

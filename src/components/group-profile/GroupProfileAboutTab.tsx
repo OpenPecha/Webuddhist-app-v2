@@ -1,6 +1,5 @@
 import { MarkdownText } from '@/components/common/MarkdownText';
 import { Text } from '@/components/ui/text';
-import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 
 interface GroupProfileAboutTabProps {
@@ -8,11 +7,10 @@ interface GroupProfileAboutTabProps {
 }
 
 export function GroupProfileAboutTab({ content }: GroupProfileAboutTabProps) {
-  const { t } = useTranslation();
 
   if (!content.trim()) {
     return (
-      <Text className="mt-6 px-4 text-center text-muted-foreground">{t('connect.no_about')}</Text>
+      <Text className="mt-6 px-4 text-center text-muted-foreground">{"No description available."}</Text>
     );
   }
 

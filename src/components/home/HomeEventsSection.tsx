@@ -5,7 +5,6 @@ import { useEventsToday } from '@/hooks/api/useEventsToday';
 import type { AppEvent } from '@/types/event';
 import { cn } from '@/utils/cn';
 import { useRouter, type Href } from 'expo-router';
-import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 
 const HOME_EVENTS_PREVIEW_LIMIT = 3;
@@ -20,7 +19,6 @@ function navigateToEvent(router: ReturnType<typeof useRouter>, event: AppEvent) 
 }
 
 export function HomeEventsSection() {
-  const { t } = useTranslation();
   const router = useRouter();
   const { data, isLoading, isError } = useEventsToday(HOME_EVENTS_PREVIEW_LIMIT);
 
@@ -32,13 +30,13 @@ export function HomeEventsSection() {
   return (
     <View className="px-4">
       <View className="flex-row items-center justify-between">
-        <Text className="text-lg font-bold text-foreground">{t('home.events_title')}</Text>
+        <Text className="text-lg font-bold text-foreground">{"Events"}</Text>
         <Pressable
           onPress={() => router.push('/events' as Href)}
           className="active:opacity-70"
           accessibilityRole="button"
         >
-          <Text className="text-sm text-muted-foreground">{t('home.events_see_all')}</Text>
+          <Text className="text-sm text-muted-foreground">{"See all"}</Text>
         </Pressable>
       </View>
 

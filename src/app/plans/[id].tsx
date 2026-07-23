@@ -28,7 +28,6 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
@@ -44,7 +43,6 @@ export default function PlanPreviewScreen() {
   const planId = id!;
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
   const { user } = useAuth0();
   const { isGuest } = useGuest();
   const isAuthReady = useAuthTokenReady();
@@ -207,9 +205,9 @@ export default function PlanPreviewScreen() {
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <View className="flex-1 items-center justify-center gap-3">
-          <Text className="text-destructive">{t('practice.not_found')}</Text>
+          <Text className="text-destructive">{"Plan not found"}</Text>
           <Pressable onPress={() => refetch()} className="active:opacity-70">
-            <Text>{t('practice.retry')}</Text>
+            <Text>{"Retry"}</Text>
           </Pressable>
         </View>
       </View>
@@ -280,7 +278,7 @@ export default function PlanPreviewScreen() {
             className="items-center rounded-xl bg-black py-4 active:opacity-75"
           >
             <Text className="text-base font-semibold text-white">
-              {t('plans.preview.add_to_routine')}
+              {"Add to Routine"}
             </Text>
           </Pressable>
         </View>

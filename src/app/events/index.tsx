@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { Text } from '@/components/ui/text';
 import { ArrowLeftIcon } from '@/components/home/HomeIcon';
 import { HomeEventCard } from '@/components/home/HomeEventCard';
@@ -7,7 +6,6 @@ import { useThemeColors } from '@/hooks/useThemeColors';
 import { cn } from '@/utils/cn';
 import type { AppEvent } from '@/types/event';
 import { useRouter, type Href } from 'expo-router';
-import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Pressable,
@@ -28,7 +26,6 @@ function navigateToEvent(router: ReturnType<typeof useRouter>, event: AppEvent) 
 }
 
 export default function EventsScreen() {
-  const { t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { foreground, isDark } = useThemeColors();
@@ -44,7 +41,7 @@ export default function EventsScreen() {
         >
           <ArrowLeftIcon size={24} color={foreground} />
         </Pressable>
-        <Text className="flex-1 text-xl font-bold text-foreground">{t('home.events_title')}</Text>
+        <Text className="flex-1 text-xl font-bold text-foreground">{"Events"}</Text>
       </View>
 
       {isLoading ? (
@@ -53,7 +50,7 @@ export default function EventsScreen() {
         </View>
       ) : isError || !data || data.events.length === 0 ? (
         <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-center text-base text-muted-foreground">{t('home.events_empty')}</Text>
+          <Text className="text-center text-base text-muted-foreground">{"No events today."}</Text>
         </View>
       ) : (
         <ScrollView

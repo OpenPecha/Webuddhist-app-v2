@@ -2,11 +2,9 @@ import { AppBottomSheet, bottomSheetContentPaddingBottom } from '@/components/se
 import { getLanguageLabel, supportedLanguages } from '@/constants/app-config';
 import { Check } from '@/constants/settings-icons';
 import { useThemeColors } from '@/hooks/useThemeColors';
-import { changeAppLanguage } from '@/lib/i18n';
-import { StorageKeys, setString } from '@/lib/storage';
+import { changeAppLanguage, useAppLanguage } from '@/lib/tolgee';
 import { Text } from '@/components/ui/text';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { useTranslation } from 'react-i18next';
 import { Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -16,22 +14,20 @@ interface LanguagePickerSheetProps {
 }
 
 export function LanguagePickerSheet({ visible, onClose }: LanguagePickerSheetProps) {
-  const { i18n, t } = useTranslation();
+  const currentCode = useAppLanguage();
   const { foreground, brand } = useThemeColors();
   const insets = useSafeAreaInsets();
   const contentPaddingBottom = bottomSheetContentPaddingBottom('tab', insets);
-  const currentCode = i18n.language.split('-')[0];
 
   const selectLanguage = async (code: string) => {
     await changeAppLanguage(code);
-    await setString(StorageKeys.preferredLanguage, code);
     onClose();
   };
 
   return (
     <AppBottomSheet visible={visible} onClose={onClose} scrollable placement="tab">
       <BottomSheetScrollView contentContainerStyle={{ paddingBottom: contentPaddingBottom }}>
-        <Text className="px-5 pb-2 text-lg font-bold">{t('settings.language')}</Text>
+        <Text className="px-5 pb-2 text-lg font-bold">{"Language"}</Text>
         {supportedLanguages.map((code) => {
           const selected = currentCode === code;
           const labelColor = selected ? brand : foreground;

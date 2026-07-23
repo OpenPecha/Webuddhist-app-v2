@@ -39,6 +39,37 @@ export function validatePersonName(value: string): PersonNameValidationKey {
   return null;
 }
 
+/**
+ * Hardcoded English message for a username/person-name validation code.
+ * TODO(i18n): replace with a Tolgee `t()` lookup once keys are wired up.
+ */
+export function validationMessage(
+  key: UsernameValidationKey | PersonNameValidationKey,
+): string {
+  switch (key) {
+    case 'username_min_length':
+      return 'Username must be at least 3 characters';
+    case 'username_max_length':
+      return 'Username must be 30 characters or less';
+    case 'username_no_spaces':
+      return 'Username cannot contain spaces';
+    case 'username_invalid_chars':
+      return 'Only letters, numbers, _ . - are allowed';
+    case 'username_must_start_alphanumeric':
+      return 'Username must start with a letter or number';
+    case 'username_must_end_alphanumeric':
+      return 'Username must end with a letter or number';
+    case 'person_name_min_length':
+      return 'Must be at least 1 character';
+    case 'person_name_max_length':
+      return 'Must be 50 characters or less';
+    case 'person_name_invalid_chars':
+      return 'Only letters, spaces, hyphens, and apostrophes are allowed';
+    default:
+      return '';
+  }
+}
+
 export function avatarCacheKey(url: string): string {
   try {
     const parsed = new URL(url);

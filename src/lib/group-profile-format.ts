@@ -1,5 +1,3 @@
-import type { TFunction } from 'i18next';
-
 export interface GroupSocialLink {
   id: string;
   platform: string;
@@ -25,15 +23,11 @@ export function formatMemberCountNumber(count: number, locale?: string): string 
   return count.toLocaleString(locale);
 }
 
-export function getMemberCountLabel(
-  count: number,
-  isPage: boolean,
-  t: TFunction,
-): string {
+export function getMemberCountLabel(count: number, isPage: boolean): string {
   if (isPage) {
-    return count === 1 ? t('connect.group_follower') : t('connect.group_followers');
+    return count === 1 ? "follower" : "followers";
   }
-  return count === 1 ? t('connect.member') : t('connect.members');
+  return count === 1 ? "member" : "members";
 }
 
 export function getGroupMemberCount(group: {

@@ -5,6 +5,7 @@ import {
 import { Text } from '@/components/ui/text';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { useAppLanguage } from '@/lib/tolgee';
 import { formatSeriesDateRange } from '@/lib/group-profile-format';
 import { pickSeriesMetadata } from '@/types/series';
 import type { Plan, Series } from '@/types/series';
@@ -13,7 +14,6 @@ import { BookOpenText } from 'phosphor-react-native';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import type { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 
 interface GroupProfilePracticesTabProps {
@@ -24,12 +24,12 @@ interface GroupProfilePracticesTabProps {
 export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfilePracticesTabProps) {
   const router = useRouter();
   const language = useContentLanguage();
-  const { t, i18n } = useTranslation();
+  const uiLanguage = useAppLanguage();
   const { mutedForeground, skeleton, cardBorder } = useThemeColors();
 
   if (seriesList.length === 0 && plansList.length === 0) {
     return (
-      <Text className="mt-6 px-4 text-center text-muted-foreground">{t('connect.no_practices')}</Text>
+      <Text className="mt-6 px-4 text-center text-muted-foreground">{"No practices yet."}</Text>
     );
   }
 
@@ -42,7 +42,7 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
     );
     const subtitle =
       seriesMeta?.sub_title?.trim() ||
-      formatSeriesDateRange(series.start_date, series.end_date, i18n.language);
+      formatSeriesDateRange(series.start_date, series.end_date, uiLanguage);
 
     rows.push(
       <Pressable
@@ -90,7 +90,7 @@ export function GroupProfilePracticesTab({ seriesList, plansList }: GroupProfile
   });
 
   plansList.forEach((plan, index) => {
-    const subtitle = formatSeriesDateRange(plan.start_date, null, i18n.language);
+    const subtitle = formatSeriesDateRange(plan.start_date, null, uiLanguage);
 
     rows.push(
       <Pressable

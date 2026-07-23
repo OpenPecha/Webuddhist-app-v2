@@ -5,7 +5,6 @@ import type { AuthorGroupSummary } from '@/types/groups';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/ui/text';
 import { FlatList, Pressable, View } from 'react-native';
 
@@ -15,7 +14,6 @@ interface MyGroupsSectionProps {
 }
 
 export function MyGroupsSection({ groups, total }: MyGroupsSectionProps) {
-  const { t } = useTranslation();
   const router = useRouter();
   const language = useContentLanguage();
   const { cardSurface, skeleton } = useThemeColors();
@@ -27,10 +25,10 @@ export function MyGroupsSection({ groups, total }: MyGroupsSectionProps) {
   return (
     <View className="mb-2">
       <View className="flex-row items-center justify-between px-5 pb-3 pt-5">
-        <Text className="flex-1 text-lg font-bold text-foreground">{t('connect.my_groups')}</Text>
+        <Text className="flex-1 text-lg font-bold text-foreground">{"My groups"}</Text>
         {showSeeAll ? (
           <Pressable onPress={() => router.push('/connect/my-groups')}>
-            <Text className="text-sm font-medium text-muted-foreground">{t('connect.see_all')}</Text>
+            <Text className="text-sm font-medium text-muted-foreground">{"See all"}</Text>
           </Pressable>
         ) : null}
       </View>

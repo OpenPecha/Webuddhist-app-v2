@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { normalizeBeadImageUrl } from '@/lib/mala-bead-image';
 import { MALA_BEADS_BOTTOM_INSET, MALA_BEADS_LAYOUT_HEIGHT } from '@/lib/mala-bead-geometry';
 import { MalaBeadArcPlaceholder } from '@/components/mala/MalaBeadArcPlaceholder';
@@ -19,13 +18,13 @@ import { useMalaPresets } from '@/hooks/api/useMalaPresets';
 import { useMalaCounter } from '@/hooks/useMalaCounter';
 import { useMalaPreferences } from '@/hooks/useMalaPreferences';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { useAppLanguage } from '@/lib/tolgee';
 import { cn } from '@/utils/cn';
 import { localizedMantraName, type Mantra } from '@/types/mala';
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
 import { DotsThreeVerticalIcon } from 'phosphor-react-native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/ui/text';
 import { Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
@@ -34,7 +33,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 const KEEP_AWAKE_TAG = 'mala-screen';
 
 export default function MalaScreen() {
-  const { t, i18n } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { foreground, isDark } = useThemeColors();
@@ -42,7 +40,7 @@ export default function MalaScreen() {
   const { isGuest } = useGuest();
   const toggleBookmark = useToggleBookmark();
   const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
-  const language = i18n.language.split('-')[0] ?? 'en';
+  const language = useAppLanguage();
 
   const params = useLocalSearchParams<{ initialPresetId?: string; }>();
   const { data: mantras = [], isLoading, isError, refetch } = useMalaPresets();
@@ -93,7 +91,7 @@ export default function MalaScreen() {
 
   const headerTitle = activeMantra
     ? localizedMantraName(activeMantra, language)
-    : t('mala.title');
+    : "Mala";
 
   const beadImageUrl =
     state.beadImageUrl ?? activeMantra?.beadImageUrl ?? activeMantra?.mantra?.beadImageUrl;
@@ -142,7 +140,7 @@ export default function MalaScreen() {
             onPress={() => setSettingsVisible(true)}
             className="h-12 w-12 items-center justify-center p-2 active:opacity-70"
             accessibilityRole="button"
-            accessibilityLabel={t('mala.settings_title')}
+            accessibilityLabel={"Mala options"}
           >
             <DotsThreeVerticalIcon size={30} color={foreground} />
           </Pressable>
@@ -156,7 +154,7 @@ export default function MalaScreen() {
       ) : mantras.length === 0 ? (
         <View className="flex-1 items-center justify-center p-6">
           <Text className="text-center text-foreground">
-            {t('mala.no_mantras')}
+            {"No mantras available for your language."}
           </Text>
         </View>
       ) : (
@@ -175,7 +173,7 @@ export default function MalaScreen() {
             {state.seedFailed ? (
               <MalaSeedError
                 compact
-                message={t('mala.seed_error')}
+                message={"Could not load your count."}
                 onRetry={() => void seed()}
               />
             ) : (
@@ -237,10 +235,10 @@ export default function MalaScreen() {
 
       <DestructiveConfirmDialog
         visible={resetVisible}
-        title={t('mala.reset_title')}
-        message={t('mala.reset_message')}
-        confirmLabel={t('mala.reset_confirm')}
-        cancelLabel={t('common.cancel')}
+        title={"Reset Mala?"}
+        message={"Are you sure you want to reset the count for this Mala? This action cannot be undone."}
+        confirmLabel={"Reset"}
+        cancelLabel={"Cancel"}
         onConfirm={handleResetConfirm}
         onClose={() => setResetVisible(false)}
       />

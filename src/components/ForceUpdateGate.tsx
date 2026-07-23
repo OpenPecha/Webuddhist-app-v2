@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import Constants from 'expo-constants';
 import { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/ui/text';
 import { Linking, Modal, Platform, Pressable, View } from 'react-native';
 
@@ -42,7 +41,6 @@ interface ForceUpdateGateProps {
 }
 
 export function ForceUpdateGate({ children }: ForceUpdateGateProps) {
-  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
 
   const updateRequired = useMemo(() => {
@@ -68,17 +66,17 @@ export function ForceUpdateGate({ children }: ForceUpdateGateProps) {
         <View className="flex-1 items-center justify-center bg-black/55 p-6">
           <View className="w-full max-w-[340px] gap-3 rounded-2xl bg-white p-6">
             <Text className="text-center text-xl font-bold text-foreground">
-              {t('force_update.title')}
+              {"Update required"}
             </Text>
             <Text className="text-center text-[15px] leading-[22px] text-[#454545]">
-              {t('force_update.message')}
+              {"A newer version of WeBuddhist is available. Please update to continue."}
             </Text>
             <Pressable
               onPress={openStore}
               className="mt-2 rounded-xl bg-[#0C53C5] py-3.5 active:opacity-90"
             >
               <Text className="text-center text-base font-bold text-white">
-                {t('force_update.button')}
+                {"Update now"}
               </Text>
             </Pressable>
           </View>

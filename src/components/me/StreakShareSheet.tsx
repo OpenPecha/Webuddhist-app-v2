@@ -6,7 +6,6 @@ import { useThemeColors } from '@/hooks/useThemeColors';
 import type { StreakStats } from '@/types/user-stats';
 import { ShareNetwork } from 'phosphor-react-native';
 import { useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 import type { ViewShotRef } from 'react-native-view-shot';
 import { useUniwind } from 'uniwind';
@@ -18,7 +17,6 @@ interface StreakShareSheetProps {
 }
 
 export function StreakShareSheet({ visible, streak, onClose }: StreakShareSheetProps) {
-  const { t } = useTranslation();
   const { theme } = useUniwind();
   const isDark = theme === 'dark';
   const { foreground } = useThemeColors();
@@ -29,7 +27,7 @@ export function StreakShareSheet({ visible, streak, onClose }: StreakShareSheetP
     if (sharing) return;
     setSharing(true);
     try {
-      await captureAndShareStreak(viewShotRef.current, t);
+      await captureAndShareStreak(viewShotRef.current);
     } finally {
       setSharing(false);
     }
@@ -67,7 +65,7 @@ export function StreakShareSheet({ visible, streak, onClose }: StreakShareSheetP
           ) : (
             <>
               <ShareNetwork size={22} color={foreground} />
-              <Text className="text-base font-bold">{t('me.share_this_streak')}</Text>
+              <Text className="text-base font-bold">{"Share this streak"}</Text>
             </>
           )}
         </Pressable>

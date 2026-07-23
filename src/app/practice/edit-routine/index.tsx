@@ -22,7 +22,6 @@ import {
 } from '@/utils/routine-time-utils';
 import { type Href, useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
@@ -60,7 +59,6 @@ export default function EditRoutineScreen() {
     initialPlanId?: string;
   }>();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
   const contentLanguage = useContentLanguage();
   const { dialog, confirmChoice } = useDialog();
   const { data: routine, isLoading } = useRoutine();
@@ -195,12 +193,12 @@ export default function EditRoutineScreen() {
           await syncBlockToServer(targetBlock, apiRoutineId);
         }
       } catch {
-        Alert.alert(t('series.enroll_error'));
+        Alert.alert("Unable to enroll you. Check your connection and try again.");
       }
     };
 
     void hydrateSeriesEnrollment();
-  }, [hydrated, enrollSeriesId, contentLanguage, apiRoutineId, syncBlockToServer, t]);
+  }, [hydrated, enrollSeriesId, contentLanguage, apiRoutineId, syncBlockToServer]);
 
   useEffect(() => {
     if (!hydrated || !initialPlanId || planPrefillHydrated.current) return;
@@ -257,12 +255,12 @@ export default function EditRoutineScreen() {
           await syncBlockToServer(targetBlock, apiRoutineId);
         }
       } catch {
-        Alert.alert(t('series.enroll_error'));
+        Alert.alert("Unable to enroll you. Check your connection and try again.");
       }
     };
 
     void hydratePlanPrefill();
-  }, [hydrated, initialPlanId, contentLanguage, apiRoutineId, syncBlockToServer, t]);
+  }, [hydrated, initialPlanId, contentLanguage, apiRoutineId, syncBlockToServer]);
 
   useFocusEffect(
     useCallback(() => {
@@ -275,14 +273,14 @@ export default function EditRoutineScreen() {
               (i) => i.id === pending.id && i.type === pending.type,
             );
             if (exists) {
-              Alert.alert(t('editRoutine.duplicate_item'), '');
+              Alert.alert("This item is already in the block", '');
               return block;
             }
             return { ...block, items: [...block.items, pending] };
           }),
         ),
       );
-    }, [t]),
+    }, []),
   );
 
   const isLastBlockEmpty = blocks.length > 0 && blocks[blocks.length - 1].items.length === 0;
@@ -351,13 +349,13 @@ export default function EditRoutineScreen() {
 
   const addBlock = () => {
     if (!canAddBlock(blocks.length)) {
-      Alert.alert(t('editRoutine.max_blocks', { max: MAX_ROUTINE_BLOCKS }));
+      Alert.alert(`Maximum of ${MAX_ROUTINE_BLOCKS} time blocks reached`);
       return;
     }
     const otherTimes = blocks.map((b) => b.timeInt);
     const adjusted = adjustTimeForMinimumGap(defaultBlockTimeInt(), otherTimes);
     if (adjusted == null) {
-      Alert.alert(t('editRoutine.no_time_slot'));
+      Alert.alert("No available time slots. Try removing a block first");
       return;
     }
     setBlocks((prev) =>
@@ -375,16 +373,13 @@ export default function EditRoutineScreen() {
       .map((b) => b.timeInt);
     const adjusted = adjustTimeForMinimumGap(pickedTimeInt, otherTimes);
     if (adjusted == null) {
-      Alert.alert(t('editRoutine.no_time_slot'));
+      Alert.alert("No available time slots. Try removing a block first");
       return;
     }
     if (adjusted !== pickedTimeInt) {
       Alert.alert(
-        t('editRoutine.time_adjusted_title'),
-        t('editRoutine.time_adjusted_message', {
-          time: formatRoutineTimeFromInt(adjusted),
-          minutes: MIN_BLOCK_GAP_MINUTES,
-        }),
+        "Time adjusted",
+        `Adjusted to ${formatRoutineTimeFromInt(adjusted)} (${MIN_BLOCK_GAP_MINUTES} min gap required)`,
       );
     }
     updateBlock(blockLocalId, {
@@ -401,15 +396,15 @@ export default function EditRoutineScreen() {
       const hasMultiple = emptyBlockCount > 1;
       const result = await confirmChoice({
         title: hasMultiple
-          ? t('editRoutine.empty_block_title_plural', { count: emptyBlockCount })
-          : t('editRoutine.empty_block_title'),
+          ? `Empty time blocks (${emptyBlockCount})`
+          : "Empty time block",
         message: hasMultiple
-          ? t('editRoutine.empty_block_message_plural', { count: emptyBlockCount })
-          : t('editRoutine.empty_block_message'),
-        secondaryLabel: t('editRoutine.empty_block_add_items'),
+          ? `${emptyBlockCount} time blocks are empty. Add items, or remove them from your routine?`
+          : "This time block is empty. Add an item, or remove it from your routine?",
+        secondaryLabel: "Add items",
         primaryLabel: hasMultiple
-          ? t('editRoutine.empty_block_delete_plural')
-          : t('editRoutine.empty_block_delete'),
+          ? "Remove blocks"
+          : "Remove block",
       });
       if (result !== 'primary') return;
       const emptyApiIds = workingBlocks
@@ -433,7 +428,7 @@ export default function EditRoutineScreen() {
         }
         exitAfterSave();
       } catch (e) {
-        const message = e instanceof Error ? e.message : t('practice.routine_load_error');
+        const message = e instanceof Error ? e.message : "Couldn't load. Check your connection and try again.";
         Alert.alert(message);
       } finally {
         setSaving(false);
@@ -478,7 +473,7 @@ export default function EditRoutineScreen() {
 
       exitAfterSave();
     } catch (e) {
-      const message = e instanceof Error ? e.message : t('practice.routine_load_error');
+      const message = e instanceof Error ? e.message : "Couldn't load. Check your connection and try again.";
       Alert.alert(message);
     } finally {
       setSaving(false);
@@ -490,7 +485,7 @@ export default function EditRoutineScreen() {
       <View className="flex-1 items-center justify-center bg-background" style={{ paddingTop: insets.top }}>
         <ActivityIndicator size="large" />
         <Text className="mt-4 font-semibold">
-          {t('editRoutine.title')}
+          {"Edit your routine"}
         </Text>
       </View>
     );
@@ -506,12 +501,12 @@ export default function EditRoutineScreen() {
           style={{ alignSelf: 'flex-end', opacity: saving ? 0.5 : 1 }}
         >
           <Text className="text-base font-medium text-foreground">
-            {saving ? t('editRoutine.saving') : t('editRoutine.done')}
+            {saving ? "Saving…" : "Done"}
           </Text>
         </Pressable>
         <View className="h-2" />
         <Text className="text-[28px] font-bold text-foreground">
-          {t('editRoutine.title')}
+          {"Edit your routine"}
         </Text>
         <View className="h-3" />
         <View className="h-px bg-[#e8e8e4]" />

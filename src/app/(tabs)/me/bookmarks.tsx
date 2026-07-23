@@ -11,7 +11,6 @@ import { bookmarkCreateTypeFromItem, type BookmarkDTO, type BookmarkTab } from '
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/ui/text';
 import {
   Alert,
@@ -26,40 +25,39 @@ import { useAuth0 } from 'react-native-auth0';
 import { useGuest } from '@/providers/guest';
 import { Swipeable } from 'react-native-gesture-handler';
 
-function tabLabel(tab: BookmarkTab, t: (k: string) => string): string {
+function tabLabel(tab: BookmarkTab): string {
   switch (tab) {
     case 'all':
-      return t('bookmarks.tab_all');
+      return "All";
     case 'plans':
-      return t('bookmarks.tab_plans');
+      return "Plans";
     case 'mala':
-      return t('bookmarks.tab_mala');
+      return "Mala";
     case 'timers':
-      return t('bookmarks.tab_timers');
+      return "Timers";
     case 'texts':
-      return t('bookmarks.tab_texts');
+      return "Texts";
   }
 }
 
-function emptyCopy(tab: BookmarkTab, t: (k: string) => string): { title: string; hint: string } {
+function emptyCopy(tab: BookmarkTab): { title: string; hint: string } {
   switch (tab) {
     case 'plans':
-      return { title: t('bookmarks.empty_plans'), hint: t('bookmarks.empty_plans_hint') };
+      return { title: "No bookmarked plans yet.", hint: "Bookmark a plan or series to find it here." };
     case 'mala':
-      return { title: t('bookmarks.empty_mala'), hint: t('bookmarks.empty_mala_hint') };
+      return { title: "No bookmarked mala yet.", hint: "Bookmark a mala preset from the mala screen." };
     case 'timers':
-      return { title: t('bookmarks.empty_timers'), hint: t('bookmarks.empty_timers_hint') };
+      return { title: "No bookmarked timers yet.", hint: "Bookmark a timer to start it quickly from here." };
     case 'texts':
-      return { title: t('bookmarks.empty_texts'), hint: t('bookmarks.empty_texts_hint') };
+      return { title: "No bookmarked texts yet.", hint: "Bookmark a text or verse while reading." };
     default:
-      return { title: t('bookmarks.empty_all'), hint: t('bookmarks.empty_all_hint') };
+      return { title: "Nothing bookmarked yet.", hint: "Bookmark anything to save it here." };
   }
 }
 
 export default function BookmarksScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
   const { user } = useAuth0();
   const { isGuest } = useGuest();
   const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
@@ -69,16 +67,16 @@ export default function BookmarksScreen() {
 
   const { scaffoldBackground } = useThemeColors();
   const filtered = useMemo(() => filterBookmarksByTab(data, tab), [data, tab]);
-  const empty = emptyCopy(tab, t);
+  const empty = emptyCopy(tab);
 
   if (isGuest || !user) {
     return (
       <View className="flex-1" style={{ paddingTop: insets.top, backgroundColor: scaffoldBackground }}>
-        <Header onBack={() => router.back()} title={t('bookmarks.title')} />
+        <Header onBack={() => router.back()} title={"Bookmarks"} />
         <View className="flex-1 items-center justify-center p-6">
-          <Text className="text-center text-muted-foreground">{t('bookmarks.login_required')}</Text>
+          <Text className="text-center text-muted-foreground">{"Sign in to view your bookmarks."}</Text>
           <Pressable onPress={showLoginDrawer} className="mt-4 active:opacity-70">
-            <Text className="font-semibold text-foreground">{t('settings.sign_in')}</Text>
+            <Text className="font-semibold text-foreground">{"Sign in"}</Text>
           </Pressable>
         </View>
         <LoginDrawer key={session} visible={visible} onClose={hideLoginDrawer} />
@@ -87,10 +85,10 @@ export default function BookmarksScreen() {
   }
 
   const confirmRemove = (bookmark: BookmarkDTO) => {
-    Alert.alert(t('bookmarks.remove_confirm_title'), t('bookmarks.remove_confirm_body'), [
-      { text: t('common.cancel'), style: 'cancel' },
+    Alert.alert("Remove bookmark?", "This will remove the bookmark from your list.", [
+      { text: "Cancel", style: 'cancel' },
       {
-        text: t('bookmarks.remove'),
+        text: "Remove",
         style: 'destructive',
         onPress: () => {
           remove.mutate({
@@ -105,7 +103,7 @@ export default function BookmarksScreen() {
 
   return (
     <View className="flex-1" style={{ paddingTop: insets.top, backgroundColor: scaffoldBackground }}>
-      <Header onBack={() => router.back()} title={t('bookmarks.title')} />
+      <Header onBack={() => router.back()} title={"Bookmarks"} />
 
       <View>
         <ScrollView
@@ -129,7 +127,7 @@ export default function BookmarksScreen() {
                     : 'font-medium text-muted-foreground'
                 }`}
               >
-                {tabLabel(key, t)}
+                {tabLabel(key)}
               </Text>
             </Pressable>
           ))}
@@ -142,9 +140,9 @@ export default function BookmarksScreen() {
         </View>
       ) : isError ? (
         <View className="flex-1 items-center justify-center p-6">
-          <Text className="mb-3 text-muted-foreground">{t('bookmarks.load_error')}</Text>
+          <Text className="mb-3 text-muted-foreground">{"Could not load bookmarks. Please try again."}</Text>
           <Pressable onPress={() => void refetch()} className="active:opacity-70">
-            <Text className="font-semibold">{t('practice.retry')}</Text>
+            <Text className="font-semibold">{"Retry"}</Text>
           </Pressable>
         </View>
       ) : (
@@ -175,7 +173,7 @@ export default function BookmarksScreen() {
                   onPress={() => confirmRemove(item)}
                   className="mb-3 justify-center rounded-xl bg-[#c0392b] px-5 active:opacity-70"
                 >
-                  <Text className="font-semibold text-white">{t('bookmarks.remove')}</Text>
+                  <Text className="font-semibold text-white">{"Remove"}</Text>
                 </Pressable>
               )}
             >

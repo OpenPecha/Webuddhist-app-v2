@@ -1,7 +1,7 @@
 import { AppToastHost } from '@/components/common/AppToastHost';
 import { ForceUpdateGate } from '@/components/ForceUpdateGate';
 import { AppColors } from '@/constants/app-colors';
-import { ensureI18nReady } from '@/lib/i18n';
+import { ensureI18nReady, tolgee } from '@/lib/tolgee';
 import { configureNotificationHandler } from '@/lib/notifications';
 import { AuthTokenSync } from '@/providers/auth-token';
 import { Auth0ProviderWrapper } from '@/providers/auth0';
@@ -14,6 +14,7 @@ import { OnboardingProvider, useOnboarding } from '@/providers/onboarding';
 import { QueryProvider } from '@/providers/query';
 import { ThemeProvider } from '@/providers/theme';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { TolgeeProvider } from '@tolgee/react';
 import { useFonts } from 'expo-font';
 import {
   Stack,
@@ -140,28 +141,30 @@ export default function RootLayout() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <QueryProvider>
-        <Auth0ProviderWrapper>
-          <GuestProvider>
-            <AuthTokenSync>
-              <PendingNotificationNavProvider>
-                <NotificationSyncBootstrap />
-                <PendingOnboardingPlanProvider>
-                  <MalaSyncBootstrap />
-                  <OnboardingProvider>
-                    <ThemeProvider>
-                      <BottomSheetModalProvider>
-                        <AuthGate />
-                        <AppToastHost />
-                      </BottomSheetModalProvider>
-                    </ThemeProvider>
-                  </OnboardingProvider>
-                </PendingOnboardingPlanProvider>
-              </PendingNotificationNavProvider>
-            </AuthTokenSync>
-          </GuestProvider>
-        </Auth0ProviderWrapper>
-      </QueryProvider>
+      <TolgeeProvider tolgee={tolgee} fallback={null} options={{ useSuspense: false }}>
+        <QueryProvider>
+          <Auth0ProviderWrapper>
+            <GuestProvider>
+              <AuthTokenSync>
+                <PendingNotificationNavProvider>
+                  <NotificationSyncBootstrap />
+                  <PendingOnboardingPlanProvider>
+                    <MalaSyncBootstrap />
+                    <OnboardingProvider>
+                      <ThemeProvider>
+                        <BottomSheetModalProvider>
+                          <AuthGate />
+                          <AppToastHost />
+                        </BottomSheetModalProvider>
+                      </ThemeProvider>
+                    </OnboardingProvider>
+                  </PendingOnboardingPlanProvider>
+                </PendingNotificationNavProvider>
+              </AuthTokenSync>
+            </GuestProvider>
+          </Auth0ProviderWrapper>
+        </QueryProvider>
+      </TolgeeProvider>
     </GestureHandlerRootView>
   );
 }

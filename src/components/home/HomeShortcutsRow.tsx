@@ -10,7 +10,6 @@ import { useGuest } from '@/providers/guest';
 import { showAppToast } from '@/utils/show-app-toast';
 import { useRouter, type Href } from 'expo-router';
 import { CirclesThree } from 'phosphor-react-native';
-import { useTranslation } from 'react-i18next';
 import { Image, Pressable, View } from 'react-native';
 
 const ICON_SIZE = 28;
@@ -59,13 +58,12 @@ function MalaShortcutIcon({ color }: { color: string }) {
 }
 
 export function HomeShortcutsRow() {
-  const { t } = useTranslation();
   const router = useRouter();
   const { isGuest } = useGuest();
   const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
   const { foreground, shortcutCard } = useThemeColors();
 
-  const showComingSoon = () => showAppToast(t('home.shortcut_coming_soon'));
+  const showComingSoon = () => showAppToast("Coming soon.");
 
   const openGated = (route: '/mala' | '/timers') => {
     if (isGuest) {
@@ -80,25 +78,25 @@ export function HomeShortcutsRow() {
       <View className="flex-row gap-2 px-4">
         <ShortcutTile
           icon={<ListChecksIcon size={ICON_SIZE} color={foreground} />}
-          label={t('home.home_shortcut_plans')}
+          label={"Plans"}
           onPress={() => router.push('/plans' as Href)}
           cardColor={shortcutCard}
         />
         <ShortcutTile
           icon={<BookOpenTextIcon size={ICON_SIZE} color={foreground} />}
-          label={t('home.home_chants')}
+          label={"Chants"}
           onPress={showComingSoon}
           cardColor={shortcutCard}
         />
         <ShortcutTile
           icon={<MalaShortcutIcon color={foreground} />}
-          label={t('home.home_mala')}
+          label={"Mala"}
           onPress={() => openGated('/mala')}
           cardColor={shortcutCard}
         />
         <ShortcutTile
           icon={<TimerIcon size={ICON_SIZE} color={foreground} />}
-          label={t('home.timer')}
+          label={"Timer"}
           onPress={() => openGated('/timers')}
           cardColor={shortcutCard}
         />

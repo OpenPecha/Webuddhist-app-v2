@@ -1,5 +1,4 @@
 import { Text } from '@/components/ui/text';
-import '@/lib/i18n';
 import { TimerProgressRing } from '@/components/timer/TimerProgressRing';
 import { useActiveTimer } from '@/hooks/useActiveTimer';
 import { useThemeColors } from '@/hooks/useThemeColors';
@@ -8,7 +7,6 @@ import { stopUserTimer } from '@/services/timers';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Pause, Play } from 'phosphor-react-native';
 import { useCallback, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
 import { BackHandler, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -18,7 +16,6 @@ const DURATION_FONT_SIZE = 40;
 const FOOTER_MIN_HEIGHT = 120;
 
 export default function ActiveTimerScreen() {
-  const { t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { foreground, isDark } = useThemeColors();
@@ -163,7 +160,7 @@ export default function ActiveTimerScreen() {
               opacity: pressed ? 0.85 : 1,
             })}
           >
-            <Text className="text-base font-medium text-foreground">{t('timers.finish')}</Text>
+            <Text className="text-base font-medium text-foreground">{"Finish"}</Text>
           </Pressable>
         </View>
 
@@ -171,7 +168,7 @@ export default function ActiveTimerScreen() {
 
         <View style={{ opacity: showDiscard ? 1 : 0 }} pointerEvents={showDiscard ? 'auto' : 'none'}>
           <Pressable onPress={handleDiscard} className="self-center px-4 py-2 active:opacity-70">
-            <Text className="text-base font-medium text-foreground">{t('timers.discard_session')}</Text>
+            <Text className="text-base font-medium text-foreground">{"Discard session"}</Text>
           </Pressable>
         </View>
       </View>

@@ -20,7 +20,6 @@ import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Image } from 'expo-image';
 import * as WebBrowser from 'expo-web-browser';
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Pressable,
@@ -151,16 +150,15 @@ function ActionsBody({
   onOpenCommentaries: () => void;
   onOpenVersions: () => void;
 }) {
-  const { t } = useTranslation();
   const countUnavailable = infoLoading || infoError;
 
   return (
     <>
       <View className="flex-row justify-center gap-4 mt-2">
-        <ActionButton label={t('reader.copy')} icon="copy-outline" onPress={onCopy} />
-        <ActionButton label={t('reader.share')} icon="share-outline" onPress={onShare} />
+        <ActionButton label={"Copy"} icon="copy-outline" onPress={onCopy} />
+        <ActionButton label={"Share"} icon="share-outline" onPress={onShare} />
         <ActionButton
-          label={isBookmarked ? t('reader.bookmarked') : t('reader.bookmark')}
+          label={isBookmarked ? "Bookmarked" : "Bookmark"}
           icon={isBookmarked ? 'bookmark' : 'bookmark-outline'}
           active={isBookmarked}
           onPress={onBookmark}
@@ -169,18 +167,18 @@ function ActionsBody({
       </View>
 
       <Text className="text-[13px] font-semibold mt-6 mb-2 text-foreground">
-        {t('reader.related_resources')}
+        {"Related resources"}
       </Text>
       <View className="h-px bg-[#e8e8e4] mb-3" />
 
       <ResourceTile
-        label={t('reader.commentaries')}
+        label={"Commentaries"}
         icon="chatbubble-ellipses-outline"
         count={countUnavailable ? undefined : (info?.relatedText.commentaries ?? 0)}
         onPress={onOpenCommentaries}
       />
       <ResourceTile
-        label={t('reader.version')}
+        label={"Version"}
         icon="language-outline"
         count={countUnavailable ? undefined : (info?.translations ?? 0)}
         onPress={onOpenVersions}
@@ -189,7 +187,7 @@ function ActionsBody({
       {videos.length > 0 ? (
         <>
           <Text className="text-[13px] font-semibold mt-5 mb-3 text-foreground">
-            {t('reader.videos')}
+            {"Videos"}
           </Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {videos.map((video) => (
@@ -224,7 +222,6 @@ function ActionsBody({
 }
 
 export function SegmentActionSheet({ selected, onClose }: SegmentActionSheetProps) {
-  const { t } = useTranslation();
   const language = useContentLanguage();
   const { user } = useAuth0();
   const { isGuest } = useGuest();
@@ -253,12 +250,12 @@ export function SegmentActionSheet({ selected, onClose }: SegmentActionSheetProp
     const text = segmentPlainText(selected.content);
     const result = await copyToClipboard(text);
     if (result.ok) {
-      showAppToast(t('reader.copied'));
+      showAppToast("Copied to clipboard");
       onClose();
     } else if (result.cancelled) {
       onClose();
     } else {
-      showAppToast(t('reader.copy_error'));
+      showAppToast("Could not copy");
     }
   };
 
@@ -269,7 +266,7 @@ export function SegmentActionSheet({ selected, onClose }: SegmentActionSheetProp
       await Share.share({ message: url });
       onClose();
     } catch {
-      showAppToast(t('reader.share_error'));
+      showAppToast("Could not share");
     }
   };
 
@@ -295,9 +292,9 @@ export function SegmentActionSheet({ selected, onClose }: SegmentActionSheetProp
   const videos = info?.videos ?? [];
   const sheetTitle =
     view === 'commentaries'
-      ? t('reader.commentaries')
+      ? "Commentaries"
       : view === 'versions'
-        ? t('reader.translations')
+        ? "Translations"
         : '';
 
   const maxHeight =

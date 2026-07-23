@@ -7,7 +7,6 @@ import { imageUrl } from '@/utils/image-url';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
@@ -21,7 +20,6 @@ export default function SelectSessionScreen() {
   const { blockLocalId } = useLocalSearchParams<{ blockLocalId: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
   const language = useContentLanguage();
 
   const { data: seriesData, isLoading: seriesLoading } = useSeries(0, 50);
@@ -49,7 +47,7 @@ export default function SelectSessionScreen() {
           <Ionicons name="arrow-back" size={22} color="#000" />
         </Pressable>
         <Text className="flex-1 text-center text-lg font-bold text-foreground">
-          {t('editRoutine.add_session')}
+          {"Add to session"}
         </Text>
         <View className="w-[38px]" />
       </View>
@@ -66,7 +64,7 @@ export default function SelectSessionScreen() {
           ItemSeparatorComponent={() => <View className="h-px bg-[#e8e8e4]" />}
           ListEmptyComponent={
             <Text className="mt-6 text-center text-muted-foreground">
-              {t('editRoutine.no_series')}
+              {"No series found"}
             </Text>
           }
           renderItem={({ item }) => {

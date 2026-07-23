@@ -4,7 +4,6 @@ import type { StreakStats } from '@/types/user-stats';
 import { Image } from 'expo-image';
 import { Fire } from 'phosphor-react-native';
 import { forwardRef } from 'react';
-import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import ViewShot, { type ViewShotRef } from 'react-native-view-shot';
 
@@ -17,21 +16,20 @@ interface StreakShareContentProps {
 }
 
 export function StreakShareContent({ streak }: StreakShareContentProps) {
-  const { t } = useTranslation();
 
   return (
     <View className="items-center">
       <Text className="text-center text-[22px] font-bold leading-snug text-[#212121]">
-        {t('me.streak_share_quote')}
+        {"My daily practice is growing"}
       </Text>
       <View className="mt-6 flex-row items-center justify-center">
         <Fire size={32} color={FLAME_COLOR} weight="fill" />
         <Text className="ml-2 text-[28px] font-bold text-[#212121]">
-          {t('me.streak_days_count', { count: streak.current })}
+          {`${streak.current} days`}
         </Text>
       </View>
       <Text className="mt-2 text-sm text-[#8a8a8a]">
-        {t('me.best_streak', { count: streak.highest })}
+        {`Best streak: ${streak.highest} days`}
       </Text>
       <View className="mt-7 w-full">
         <StreakWeekTracker practicedDays={streak.week} forShare />
@@ -46,7 +44,6 @@ interface StreakShareCaptureProps {
 
 export const StreakShareCapture = forwardRef<ViewShotRef, StreakShareCaptureProps>(
   function StreakShareCapture({ streak }, ref) {
-    const { t } = useTranslation();
 
     return (
       <ViewShot ref={ref} options={{ format: 'png', quality: 1 }}>
@@ -56,8 +53,8 @@ export const StreakShareCapture = forwardRef<ViewShotRef, StreakShareCaptureProp
           </View>
           <View className="mt-6 items-center">
             <Image source={logo} style={{ width: 32, height: 32 }} contentFit="contain" />
-            <Text className="mt-2 text-xs text-[#8a8a8a]">{t('me.shared_from')}</Text>
-            <Text className="text-sm font-semibold text-[#212121]">{t('appTitle')}</Text>
+            <Text className="mt-2 text-xs text-[#8a8a8a]">{"Shared from"}</Text>
+            <Text className="text-sm font-semibold text-[#212121]">{"WeBuddhist"}</Text>
           </View>
         </View>
       </ViewShot>

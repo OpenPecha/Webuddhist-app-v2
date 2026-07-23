@@ -1,13 +1,13 @@
 import { CONNECT_AVATAR } from '@/components/connect/connect-styles';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useThemeColors } from '@/hooks/useThemeColors';
+import { useAppLanguage } from '@/lib/tolgee';
 import { groupCardSubtitle } from '@/lib/connect-groups';
 import { pickGroupMetadata } from '@/types/groups';
 import type { AuthorGroupSummary } from '@/types/groups';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/ui/text';
 import { Pressable, View } from 'react-native';
 
@@ -19,16 +19,16 @@ interface GroupListCardProps {
 export function GroupListCard({ group, showChevron = false }: GroupListCardProps) {
   const router = useRouter();
   const language = useContentLanguage();
-  const { t, i18n } = useTranslation();
+  const uiLanguage = useAppLanguage();
   const { mutedForeground, cardSurface, cardBorder, skeleton } = useThemeColors();
 
   const meta = pickGroupMetadata(group.metadata, language);
   const subtitle = groupCardSubtitle(
     group,
     meta,
-    t('connect.member'),
-    t('connect.members'),
-    i18n.language,
+    "member",
+    "members",
+    uiLanguage,
   );
 
   return (

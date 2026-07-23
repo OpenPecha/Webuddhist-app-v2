@@ -4,7 +4,6 @@ import { cn } from '@/utils/cn';
 import { imageUrl } from '@/utils/image-url';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 
@@ -29,7 +28,6 @@ export function FeaturedSeriesPlanCard({
   onEnroll,
   seriesId,
 }: FeaturedSeriesPlanCardProps) {
-  const { t } = useTranslation();
   const router = useRouter();
 
   const subtitle = metadata?.sub_title?.trim() || featuredPlan.description;
@@ -76,7 +74,7 @@ export function FeaturedSeriesPlanCard({
             {isEnrolling ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text className="text-base font-semibold text-white">{t('series.enroll')}</Text>
+              <Text className="text-base font-semibold text-white">{"Enroll"}</Text>
             )}
           </Pressable>
         ) : null}

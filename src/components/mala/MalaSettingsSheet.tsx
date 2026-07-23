@@ -12,7 +12,6 @@ import {
   Vibrate,
 } from 'phosphor-react-native';
 import type { IconProps } from 'phosphor-react-native';
-import { useTranslation } from 'react-i18next';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -97,7 +96,6 @@ export function MalaSettingsSheet({
   onSoundChange,
   onVibrationChange,
 }: MalaSettingsSheetProps) {
-  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { borderInput } = useThemeColors();
 
@@ -121,21 +119,21 @@ export function MalaSettingsSheet({
       <View className="px-5" style={{ paddingBottom: Math.max(16, insets.bottom) }}>
         <SettingsActionRow
           icon={Plus}
-          label={t('mala.settings_add_to_practice')}
+          label={"Add to practice"}
           onPress={handleAddToPractice}
         />
         <SheetDivider color={borderInput} />
 
         <SettingsActionRow
           icon={BookmarkSimple}
-          label={t('mala.settings_bookmark')}
+          label={"Bookmark"}
           onPress={handleBookmark}
         />
         <SheetDivider color={borderInput} />
 
         <SettingsToggleRow
           icon={SpeakerHigh}
-          label={t('mala.settings_sound')}
+          label={"Sound"}
           value={prefs.soundEnabled}
           onValueChange={onSoundChange}
         />
@@ -143,7 +141,7 @@ export function MalaSettingsSheet({
 
         <SettingsToggleRow
           icon={Vibrate}
-          label={t('mala.settings_vibration')}
+          label={"Vibration"}
           value={prefs.vibrationEnabled}
           onValueChange={onVibrationChange}
         />
@@ -151,7 +149,7 @@ export function MalaSettingsSheet({
 
         <SettingsActionRow
           icon={ArrowsClockwise}
-          label={t('mala.settings_reset')}
+          label={"Reset count"}
           onPress={handleReset}
           destructive
         />

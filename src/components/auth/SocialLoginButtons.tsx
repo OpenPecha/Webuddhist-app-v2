@@ -2,7 +2,6 @@ import { GoogleIcon } from '@/components/auth/GoogleIcon';
 import { AUTH0_CUSTOM_SCHEME } from '@/providers/auth0';
 import { useGuest } from '@/providers/guest';
 import { Ionicons } from '@expo/vector-icons';
-import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Platform, Pressable, View } from 'react-native';
 import { useAuth0, WebAuthError, WebAuthErrorCodes } from 'react-native-auth0';
 import { useState } from 'react';
@@ -44,7 +43,6 @@ interface SocialLoginButtonsProps {
 export function SocialLoginButtons({ onSuccess, className }: SocialLoginButtonsProps) {
   const { authorize } = useAuth0();
   const { clearGuest } = useGuest();
-  const { t } = useTranslation();
   const { theme } = useUniwind();
   const isDark = theme === 'dark';
   const [isAuthorizing, setIsAuthorizing] = useState(false);
@@ -86,14 +84,14 @@ export function SocialLoginButtons({ onSuccess, className }: SocialLoginButtonsP
     <View className={cn('w-full gap-3.5', className)}>
       <SocialLoginButton
         icon={<GoogleIcon />}
-        label={t('auth.continue_with_google')}
+        label={"Continue with Google"}
         onPress={() => loginWith('google-oauth2')}
         bordered={!isDark}
       />
       {Platform.OS === 'ios' ? (
         <SocialLoginButton
           icon={<Ionicons name="logo-apple" size={22} color="#fff" />}
-          label={t('auth.continue_with_apple')}
+          label={"Continue with Apple"}
           onPress={() => loginWith('apple')}
           dark
         />

@@ -1,6 +1,5 @@
 import { Text } from '@/components/ui/text';
 import { useThemeColors } from '@/hooks/useThemeColors';
-import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, Pressable } from 'react-native';
 
 interface GroupProfileJoinButtonProps {
@@ -16,16 +15,15 @@ export function GroupProfileJoinButton({
   pending,
   onPress,
 }: GroupProfileJoinButtonProps) {
-  const { t } = useTranslation();
   const { foreground, scaffoldBackground, shortcutCard, isDark } = useThemeColors();
 
   const label = isActive
     ? isPage
-      ? t('connect.following')
-      : t('connect.joined')
+      ? "Following"
+      : "Joined"
     : isPage
-      ? t('connect.follow')
-      : t('connect.join');
+      ? "Follow"
+      : "Join";
 
   const activeBg = isActive ? shortcutCard : foreground;
   const activeFg = isActive ? foreground : isDark ? foreground : scaffoldBackground;
