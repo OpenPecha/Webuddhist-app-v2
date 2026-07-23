@@ -1,4 +1,4 @@
-import { AppBottomSheet, appBottomSheetInsets } from '@/components/settings/AppBottomSheet';
+import { AppBottomSheet, bottomSheetContentPaddingBottom } from '@/components/settings/AppBottomSheet';
 import { getLanguageLabel, supportedLanguages } from '@/constants/app-config';
 import { Check } from '@/constants/settings-icons';
 import { useThemeColors } from '@/hooks/useThemeColors';
@@ -19,7 +19,7 @@ export function LanguagePickerSheet({ visible, onClose }: LanguagePickerSheetPro
   const { i18n, t } = useTranslation();
   const { foreground, brand } = useThemeColors();
   const insets = useSafeAreaInsets();
-  const { contentPaddingBottom } = appBottomSheetInsets('tab', insets, undefined, '70%');
+  const contentPaddingBottom = bottomSheetContentPaddingBottom('tab', insets);
   const currentCode = i18n.language.split('-')[0];
 
   const selectLanguage = async (code: string) => {

@@ -21,7 +21,6 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text } from '@/components/ui/text';
 import {
-  Platform,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -90,10 +89,8 @@ export default function Index() {
     routineInfo &&
     (routineInfo.seriesCount > 0 || routineInfo.recitationCount > 0);
 
-  const topInset = Platform.OS === 'android' ? insets.top : 0;
-
   return (
-    <View className={cn('flex-1', isDark ? 'bg-black' : 'bg-[#FBF9F4]')} style={{ paddingTop: topInset }}>
+    <View className={cn('flex-1', isDark ? 'bg-black' : 'bg-[#FBF9F4]')} style={{ paddingTop: insets.top }}>
       <HomeHeader />
 
       <ScrollView

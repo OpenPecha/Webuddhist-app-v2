@@ -19,7 +19,7 @@ interface MeStreakCardProps {
 
 export function MeStreakCard({ streak, onPress }: MeStreakCardProps) {
   const { t } = useTranslation();
-  const { mutedForeground } = useThemeColors();
+  const { mutedForeground, meCardSurface } = useThemeColors();
   const captureRef = useRef<ViewShotRef>(null);
   const [sharing, setSharing] = useState(false);
 
@@ -34,7 +34,10 @@ export function MeStreakCard({ streak, onPress }: MeStreakCardProps) {
   };
 
   return (
-    <View className="overflow-hidden rounded-2xl border border-border bg-card">
+    <View
+      className="overflow-hidden rounded-2xl"
+      style={{ backgroundColor: meCardSurface }}
+    >
       <View className="absolute left-[-5000px] top-0 opacity-0" pointerEvents="none">
         <StreakShareCapture ref={captureRef} streak={streak} />
       </View>
