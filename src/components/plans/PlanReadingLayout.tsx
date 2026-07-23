@@ -50,6 +50,8 @@ interface PlanReadingLayoutProps {
   footerMeta?: ReactNode;
   collapsedSegmentPreview?: boolean;
   activeSegmentIds?: string[] | null;
+  /** Plan prev/next/finish bar. Hide for free reading (e.g. chants browse). */
+  showNavigator?: boolean;
 }
 
 export function PlanReadingLayout({
@@ -76,6 +78,7 @@ export function PlanReadingLayout({
   footerMeta,
   collapsedSegmentPreview = false,
   activeSegmentIds,
+  showNavigator = true,
 }: PlanReadingLayoutProps) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -321,16 +324,20 @@ export function PlanReadingLayout({
         </ScrollView>
       </View>
 
-      <View style={{ paddingBottom: insets.bottom }}>
-        <PlanNavigator
-          title={sectionTitle}
-          canPrev={canPrev}
-          canNext={canNext}
-          onPrev={onPrev}
-          onNext={onNext}
-          onFinish={onFinish}
-        />
-      </View>
+      {showNavigator ? (
+        <View style={{ paddingBottom: insets.bottom }}>
+          <PlanNavigator
+            title={sectionTitle}
+            canPrev={canPrev}
+            canNext={canNext}
+            onPrev={onPrev}
+            onNext={onNext}
+            onFinish={onFinish}
+          />
+        </View>
+      ) : (
+        <View style={{ paddingBottom: insets.bottom }} />
+      )}
 
       {showFontControls ? (
         <ReaderFontSizeSheet

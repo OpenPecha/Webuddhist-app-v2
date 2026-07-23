@@ -5,14 +5,13 @@ import { usePlanReadingSession } from '@/hooks/usePlanReadingSession';
 import { usePlanSegmentAudio } from '@/hooks/usePlanSegmentAudio';
 import { resolveInitialSegmentId } from '@/utils/plan-subtask-navigation';
 import { extractSegmentContent, flattenReaderSegments } from '@/utils/text-reader-content';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useMemo, useRef } from 'react';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, View } from 'react-native';
 
 export default function ReaderScreen() {
   const { textId } = useLocalSearchParams<{ textId: string }>();
-  const router = useRouter();
   const cancelAudioRef = useRef<() => void>(() => {});
 
   const {
@@ -102,7 +101,7 @@ export default function ReaderScreen() {
         headerExtra={bookmarkHeader}
         canPrev={false}
         canNext={false}
-        onFinish={() => router.back()}
+        showNavigator={false}
       />
     );
   }

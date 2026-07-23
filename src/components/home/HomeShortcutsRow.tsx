@@ -7,8 +7,8 @@ import { BookOpenTextIcon, ListChecksIcon, TimerIcon } from '@/components/home/H
 import { useLoginDrawer } from '@/hooks/useLoginDrawer';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useGuest } from '@/providers/guest';
-import { showAppToast } from '@/utils/show-app-toast';
 import { useRouter, type Href } from 'expo-router';
+import { useTranslate } from '@tolgee/react';
 import { CirclesThree } from 'phosphor-react-native';
 import { Image, Pressable, View } from 'react-native';
 
@@ -58,12 +58,11 @@ function MalaShortcutIcon({ color }: { color: string }) {
 }
 
 export function HomeShortcutsRow() {
+  const { t } = useTranslate();
   const router = useRouter();
   const { isGuest } = useGuest();
   const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
   const { foreground, shortcutCard } = useThemeColors();
-
-  const showComingSoon = () => showAppToast("Coming soon.");
 
   const openGated = (route: '/mala' | '/timers') => {
     if (isGuest) {
@@ -84,8 +83,8 @@ export function HomeShortcutsRow() {
         />
         <ShortcutTile
           icon={<BookOpenTextIcon size={ICON_SIZE} color={foreground} />}
-          label={"Chants"}
-          onPress={showComingSoon}
+          label={t('home_chants')}
+          onPress={() => router.push('/recitations' as Href)}
           cardColor={shortcutCard}
         />
         <ShortcutTile

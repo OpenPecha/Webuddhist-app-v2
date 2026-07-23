@@ -1,5 +1,7 @@
-import { normalizeBeadImageUrl } from '@/lib/mala-bead-image';
+import { LoginDrawer } from '@/components/auth/LoginDrawer';
+import { ArrowLeftIcon } from '@/components/home/HomeIcon';
 import { MALA_BEADS_BOTTOM_INSET, MALA_BEADS_LAYOUT_HEIGHT } from '@/lib/mala-bead-geometry';
+import { normalizeBeadImageUrl } from '@/lib/mala-bead-image';
 import { MalaBeadArcPlaceholder } from '@/components/mala/MalaBeadArcPlaceholder';
 import { MalaBeads } from '@/components/mala/MalaBeads';
 import { MalaCounterDisplay } from '@/components/mala/MalaCounterDisplay';
@@ -8,24 +10,22 @@ import { MalaSettingsSheet } from '@/components/mala/MalaSettingsSheet';
 import { MalaSkeleton } from '@/components/mala/MalaSkeleton';
 import { createMalaSoundPlayer } from '@/components/mala/MalaSoundPlayer';
 import { MantraSwitcher } from '@/components/mala/MantraSwitcher';
-import { ArrowLeftIcon } from '@/components/home/HomeIcon';
-import { LoginDrawer } from '@/components/auth/LoginDrawer';
 import { DestructiveConfirmDialog } from '@/components/ui/DestructiveConfirmDialog';
+import { Text } from '@/components/ui/text';
+import { useMalaPresets } from '@/hooks/api/useMalaPresets';
 import { useToggleBookmark } from '@/hooks/api/useToggleBookmark';
 import { useLoginDrawer } from '@/hooks/useLoginDrawer';
-import { useGuest } from '@/providers/guest';
-import { useMalaPresets } from '@/hooks/api/useMalaPresets';
 import { useMalaCounter } from '@/hooks/useMalaCounter';
 import { useMalaPreferences } from '@/hooks/useMalaPreferences';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useAppLanguage } from '@/lib/tolgee';
-import { cn } from '@/utils/cn';
+import { useGuest } from '@/providers/guest';
 import { localizedMantraName, type Mantra } from '@/types/mala';
-import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
+import { cn } from '@/utils/cn';
 import { activateKeepAwakeAsync, deactivateKeepAwake } from 'expo-keep-awake';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { DotsThreeVerticalIcon } from 'phosphor-react-native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Text } from '@/components/ui/text';
 import { Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -159,11 +159,11 @@ export default function MalaScreen() {
         </View>
       ) : (
         <View className="flex-1 px-6">
-          <View className="min-h-10 flex-[0.4]">
+          <View className="min-h-0 flex-[0.4]">
             <MantraSwitcher mantras={mantras} index={index} onIndexChange={setIndex} />
           </View>
 
-          <View className="flex-[0.6]">
+          <View className="min-h-0 flex-[0.6]">
             <MalaCounterDisplay
               beadInRound={state.beadInRound}
               rounds={state.rounds}
@@ -187,11 +187,11 @@ export default function MalaScreen() {
                     style={
                       waitingForBeadTexture
                         ? {
-                            opacity: 0,
-                            position: 'absolute',
-                            width: '100%',
-                            bottom: MALA_BEADS_BOTTOM_INSET,
-                          }
+                          opacity: 0,
+                          position: 'absolute',
+                          width: '100%',
+                          bottom: MALA_BEADS_BOTTOM_INSET,
+                        }
                         : undefined
                     }
                   >
