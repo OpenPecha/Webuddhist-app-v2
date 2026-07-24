@@ -119,6 +119,8 @@
     "continue": "Continue",
     "day_complete_title": "Day complete!",
     "day_complete_body": "Great work — you've finished all tasks for today.",
+    "share_this_day": "Share",
+    "day_share_error": "Unable to share. Please try again.",
     "complete_error": "Couldn't save your progress. Please try again."
   },
   "plans": {

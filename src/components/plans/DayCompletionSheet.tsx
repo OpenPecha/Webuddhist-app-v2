@@ -1,18 +1,26 @@
+import { AppBottomSheet } from '@/components/settings/AppBottomSheet';
 import { Text } from '@/components/ui/text';
-import { imageUrl } from '@/utils/image-url';
+import { useThemeColors } from '@/hooks/useThemeColors';
+import { sharePlanDayImage } from '@/lib/plan-day-share';
 import type { ImageSizes } from '@/types/api';
+import { cn } from '@/utils/cn';
+import { imageUrl } from '@/utils/image-url';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
-import { Modal, Pressable, View } from 'react-native';
+import { ShareNetwork } from 'phosphor-react-native';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ActivityIndicator, Pressable, View } from 'react-native';
 
 interface DayCompletionSheetProps {
   visible: boolean;
   onClose: () => void;
   dayNumber: number;
   totalDays: number;
+  completedDays: number;
   planImage?: ImageSizes | null;
+  thumbnailUrl?: string | null;
+  shareableImageUrl?: string | null;
 }
 
 export function DayCompletionSheet({
@@ -20,49 +28,91 @@ export function DayCompletionSheet({
   onClose,
   dayNumber,
   totalDays,
+  completedDays,
   planImage,
+  thumbnailUrl,
+  shareableImageUrl,
 }: DayCompletionSheetProps) {
   const { t } = useTranslation();
-  const insets = useSafeAreaInsets();
-  const progress = totalDays > 0 ? dayNumber / totalDays : 0;
+  const { foreground } = useThemeColors();
+  const [sharing, setSharing] = useState(false);
+
+  const progress = totalDays > 0 ? completedDays / totalDays : 0;
+  const hasShareableImage = !!shareableImageUrl?.trim();
+
+  const cardImageUri =
+    thumbnailUrl?.trim() || imageUrl(planImage, 'medium') || '';
+
+  const handleShare = async () => {
+    if (sharing) return;
+    setSharing(true);
+    try {
+      await sharePlanDayImage(shareableImageUrl, t);
+    } finally {
+      setSharing(false);
+    }
+  };
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <Pressable className="flex-1 justify-end bg-black/40" onPress={onClose}>
-        <Pressable
-          onPress={(e) => e.stopPropagation()}
-          className="items-center rounded-t-[20px] bg-[#FDFDFC] px-6 pt-8"
-          style={{ paddingBottom: insets.bottom + 24 }}
-        >
-          {planImage ? (
-            <Image
-              source={{ uri: imageUrl(planImage, 'thumbnail') }}
-              style={{ width: 64, height: 64, borderRadius: 8, marginBottom: 16 }}
-              contentFit="cover"
-            />
+    <AppBottomSheet visible={visible} onClose={onClose} maxHeight="85%">
+      <View className="items-center px-6 pt-2">
+        <View className="mb-4 h-14 w-14 items-center justify-center rounded-full bg-black">
+          <Ionicons name="checkmark" size={28} color="#fff" />
+        </View>
+
+        <Text className="mb-2 text-xl font-bold text-foreground">
+          {t('planTrack.day_complete_title')}
+        </Text>
+        <Text className="mb-5 text-sm text-muted-foreground">
+          {t('planTrack.day_of', { day: dayNumber, total: totalDays })}
+        </Text>
+
+        {cardImageUri ? (
+          <Image
+            source={{ uri: cardImageUri }}
+            style={{ width: '100%', height: 180, borderRadius: 12 }}
+            contentFit="cover"
+          />
+        ) : (
+          <View
+            className="w-full items-center justify-center rounded-xl bg-muted/40"
+            style={{ height: 180 }}
+          >
+            <Ionicons name="image-outline" size={40} color={foreground} />
+          </View>
+        )}
+
+        <View className="mt-6 w-full">
+          {hasShareableImage ? (
+            <Pressable
+              onPress={handleShare}
+              disabled={sharing}
+              className={cn(
+                'h-[52px] flex-row items-center justify-center gap-2 rounded-full bg-black active:opacity-85',
+                sharing && 'opacity-85',
+              )}
+            >
+              {sharing ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <>
+                  <ShareNetwork size={22} color="#fff" />
+                  <Text className="text-base font-bold text-white">
+                    {t('planTrack.share_this_day')}
+                  </Text>
+                </>
+              )}
+            </Pressable>
           ) : (
-            <View className="mb-4 h-14 w-14 items-center justify-center rounded-full bg-black">
-              <Ionicons name="checkmark" size={28} color="#fff" />
+            <View className="h-[5px] w-full overflow-hidden rounded-sm bg-[#e8e8e4]">
+              <View
+                className="h-[5px] bg-destructive"
+                style={{ width: `${Math.min(100, progress * 100)}%` }}
+              />
             </View>
           )}
-          <Text className="text-xl font-bold text-foreground mb-2">{t('planTrack.day_complete_title')}</Text>
-          <Text className="text-sm text-muted-foreground mb-3">
-            {t('planTrack.day_of', { day: dayNumber, total: totalDays })}
-          </Text>
-          <View className="mb-6 h-1 w-full overflow-hidden rounded-sm bg-[#e8e8e4]">
-            <View
-              className="h-1 bg-black"
-              style={{ width: `${Math.min(100, progress * 100)}%` }}
-            />
-          </View>
-          <Pressable
-            onPress={onClose}
-            className="rounded-xl bg-black px-12 py-3.5 active:opacity-80"
-          >
-            <Text className="text-white text-base font-semibold">{t('planTrack.continue')}</Text>
-          </Pressable>
-        </Pressable>
-      </Pressable>
-    </Modal>
+        </View>
+      </View>
+    </AppBottomSheet>
   );
 }
