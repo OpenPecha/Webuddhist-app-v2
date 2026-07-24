@@ -139,6 +139,14 @@
       "title": "Shorts"
     }
   },
+  "recitations": {
+    "title": "Chants",
+    "search_placeholder": "Search for recitations...",
+    "empty": "No chants available",
+    "search_empty": "No matching chants found",
+    "load_error": "Could not load chants",
+    "retry": "Retry"
+  },
   "reader": {
     "title": "Reader",
     "plan_context": "Day {{day}} reading",
