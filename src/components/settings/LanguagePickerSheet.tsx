@@ -1,9 +1,9 @@
 import { AppBottomSheet, bottomSheetContentPaddingBottom } from '@/components/settings/AppBottomSheet';
+import { Text } from '@/components/ui/text';
 import { getLanguageLabel, supportedLanguages } from '@/constants/app-config';
 import { Check } from '@/constants/settings-icons';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useChangeLanguage, useUiLanguage } from '@/lib/i18n';
-import { Text } from '@/components/ui/text';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useTranslate } from '@tolgee/react';
 import { Pressable } from 'react-native';
