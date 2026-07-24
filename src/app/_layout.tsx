@@ -123,6 +123,8 @@ export default function RootLayout() {
     'Inter-Regular': require('@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf'),
     'Inter-SemiBold': require('@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.ttf'),
     'Inter-Bold': require('@expo-google-fonts/inter/700Bold/Inter_700Bold.ttf'),
+    'Inter-ExtraBold': require('@expo-google-fonts/inter/800ExtraBold/Inter_800ExtraBold.ttf'),
+    'Inter-Black': require('@expo-google-fonts/inter/900Black/Inter_900Black.ttf'),
   });
   const [i18nReady, setI18nReady] = useState(false);
 
