@@ -6,7 +6,7 @@ import { routineItemCoverUri } from '@/components/practice/RoutineItemCard';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, FlatList, Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -15,7 +15,7 @@ export default function SelectPlanScreen() {
   const { blockLocalId } = useLocalSearchParams<{ blockLocalId: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const { data, isLoading } = useUserPlans();
 
   const onSelect = (plan: UserPlan) => {
@@ -42,7 +42,7 @@ export default function SelectPlanScreen() {
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <Text className="flex-1 text-center text-[17px] font-semibold text-foreground">
-          {t('editRoutine.select_plan_title')}
+          {t('routine_add_plan')}
         </Text>
         <View className="w-10" />
       </View>
@@ -58,7 +58,7 @@ export default function SelectPlanScreen() {
           contentContainerStyle={{ padding: 20 }}
           ListEmptyComponent={
             <Text className="mt-6 text-center text-muted-foreground">
-              {t('editRoutine.no_plans')}
+              {t('no_plans_found')}
             </Text>
           }
           renderItem={({ item }) => {

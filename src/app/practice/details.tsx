@@ -29,7 +29,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
@@ -90,7 +90,7 @@ export default function PlanTrackScreen() {
   const planId = params.planId;
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   const hasSelectedDayParam = useMemo(() => {
     const parsed = Number(params.selectedDay);
@@ -129,7 +129,7 @@ export default function PlanTrackScreen() {
 
   const totalDays = userPlan?.total_days ?? planDetail?.total_days ?? daysData?.days.length ?? 1;
 
-  const title = params.title ?? userPlan?.title ?? planDetail?.title ?? t('planTrack.title');
+  const title = params.title ?? userPlan?.title ?? planDetail?.title ?? t('plan_info');
 
   const planStartDate = userPlan ? getEffectiveStartDate(userPlan) : new Date();
 
@@ -265,13 +265,13 @@ export default function PlanTrackScreen() {
       ) : notEnrolled ? (
         <View className="flex-1 items-center justify-center gap-3 p-6">
           <Text className="text-center text-destructive">
-            {t('practice.not_found')}
+            {t('plan_not_found', "Plan not found")}
           </Text>
           <Pressable
             onPress={() => router.replace({ pathname: '/plans/[id]', params: { id: planId } })}
             className="p-3 active:opacity-70"
           >
-            <Text className="font-semibold">{t('practice.retry')}</Text>
+            <Text className="font-semibold">{t('retry')}</Text>
           </Pressable>
         </View>
       ) : (
@@ -345,7 +345,7 @@ export default function PlanTrackScreen() {
             })}
           >
             <Text className="text-base font-bold text-white">
-              {t('planTrack.practice_now')}
+              {t('start_reading')}
             </Text>
           </Pressable>
         </View>

@@ -1,4 +1,4 @@
-import type { TFunction } from 'i18next';
+import type { TranslateFn } from '@/lib/i18n';
 
 export interface GroupSocialLink {
   id: string;
@@ -28,12 +28,12 @@ export function formatMemberCountNumber(count: number, locale?: string): string 
 export function getMemberCountLabel(
   count: number,
   isPage: boolean,
-  t: TFunction,
+  t: TranslateFn,
 ): string {
   if (isPage) {
-    return count === 1 ? t('connect.group_follower') : t('connect.group_followers');
+    return count === 1 ? t('group_follower') : t('group_followers');
   }
-  return count === 1 ? t('connect.member') : t('connect.members');
+  return count === 1 ? t('group_member') : t('group_members');
 }
 
 export function getGroupMemberCount(group: {

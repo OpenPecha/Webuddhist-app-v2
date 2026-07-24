@@ -15,14 +15,14 @@ import { useGuest } from '@/providers/guest';
 import { EMPTY_USER_STATS } from '@/types/user-stats';
 import { type Href } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { ActivityIndicator, AppState, Pressable, RefreshControl, ScrollView, View } from 'react-native';
 import { BookmarkSimple } from 'phosphor-react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function MeScreen() {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const { user, isLoading: authLoading } = useAuth0();
   const { isGuest } = useGuest();
   const { foreground, scaffoldBackground, meCardSurface } = useThemeColors();
@@ -66,7 +66,7 @@ export default function MeScreen() {
   return (
     <View className="flex-1" style={{ paddingTop: insets.top, backgroundColor: scaffoldBackground }}>
       <View className="min-h-12 flex-row items-center justify-between px-4 pb-2">
-        <Text className="text-2xl font-bold">{t('nav.me')}</Text>
+        <Text className="text-2xl font-bold">{t('nav_me')}</Text>
         <Pressable
           onPress={() => {
             const href = '/me/settings/' as Href;
@@ -74,7 +74,7 @@ export default function MeScreen() {
           }}
           className="h-10 w-10 items-center justify-center active:opacity-70"
           accessibilityRole="button"
-          accessibilityLabel={t('settings.title')}
+          accessibilityLabel={t('nav_settings')}
         >
           <Gear size={24} color={foreground} />
         </Pressable>
@@ -85,10 +85,10 @@ export default function MeScreen() {
           <View className="items-center">
             <ProfileAvatar size={104} />
             <Text className="mt-5 text-center text-[34px] font-bold leading-tight">
-              {t('me.guest_headline')}
+              {t('me_guest_headline')}
             </Text>
             <Text className="mt-3 text-center text-base text-muted-foreground">
-              {t('me.guest_subtitle')}
+              {t('me_guest_subtitle')}
             </Text>
             <View className="mt-10 w-full">
               {authLoading ? (
@@ -125,10 +125,10 @@ export default function MeScreen() {
             className="mx-4 mt-6 flex-row items-center rounded-xl px-4 py-3 active:opacity-70"
             style={{ backgroundColor: meCardSurface }}
             accessibilityRole="button"
-            accessibilityLabel={t('bookmarks.title')}
+            accessibilityLabel={t('bookmarks')}
           >
             <BookmarkSimple size={22} color={foreground} />
-            <Text className="ml-3 flex-1 text-base font-medium">{t('bookmarks.title')}</Text>
+            <Text className="ml-3 flex-1 text-base font-medium">{t('bookmarks')}</Text>
             <Text className="text-muted-foreground">›</Text>
           </Pressable>
         </ScrollView>

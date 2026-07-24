@@ -10,12 +10,12 @@ import { useGuest } from '@/providers/guest';
 import { useRouter, type Href } from 'expo-router';
 import { Fire } from 'phosphor-react-native';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 
 export function HomeHeader() {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const router = useRouter();
   const { user } = useAuth0();
   const { isGuest } = useGuest();
@@ -41,7 +41,7 @@ export function HomeHeader() {
           }}
           numberOfLines={2}
         >
-          {t('home.hello_prefix')}
+          {t('home_hello_prefix')}
           {firstName ? firstName : ''}
         </Text>
 
@@ -50,7 +50,7 @@ export function HomeHeader() {
             onPress={() => router.push('/calendar' as Href)}
             className="active:opacity-70"
             accessibilityRole="button"
-            accessibilityLabel={t('home.calendar_accessibility')}
+            accessibilityLabel={t('home_calendar_accessibility', "Open calendar")}
           >
             <CalendarDotsIcon size={24} color={foreground} />
           </Pressable>

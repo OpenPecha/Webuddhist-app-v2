@@ -1,3 +1,4 @@
+import { getApiLanguageSync } from '@/lib/i18n';
 import { QUERY_KEYS } from '@/constants/query-keys';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { fetchSeriesList, SERIES_SEARCH_PAGE_SIZE } from '@/services/series';
@@ -10,7 +11,7 @@ export function useSeriesSearch(search: string) {
   return useInfiniteQuery({
     queryKey: QUERY_KEYS.series.search(language, normalized),
     queryFn: ({ pageParam = 0 }) =>
-      fetchSeriesList(language, pageParam, SERIES_SEARCH_PAGE_SIZE, normalized),
+      fetchSeriesList(getApiLanguageSync(), pageParam, SERIES_SEARCH_PAGE_SIZE, normalized),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       const next = lastPage.skip + lastPage.limit;

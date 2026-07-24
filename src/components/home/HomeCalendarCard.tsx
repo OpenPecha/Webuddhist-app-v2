@@ -10,24 +10,24 @@ import {
   type MoonPhase,
 } from '@/utils/moon-phase';
 import { useRouter, type Href } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Pressable, Text, View } from 'react-native';
 
 function moonPhaseLabelKey(phase: MoonPhase): string | null {
   switch (phase) {
     case 'newMoon':
-      return 'calendar.moon_phase_new_moon';
+      return 'moon_phase_new_moon';
     case 'firstQuarter':
-      return 'calendar.moon_phase_first_quarter';
+      return 'moon_phase_first_quarter';
     case 'fullMoon':
-      return 'calendar.moon_phase_full_moon';
+      return 'moon_phase_full_moon';
     default:
       return null;
   }
 }
 
 export function HomeCalendarCard() {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const router = useRouter();
   const language = useContentLanguage();
   const isTibetan = language === 'bo';
@@ -61,7 +61,7 @@ export function HomeCalendarCard() {
               color: foreground,
             }}
           >
-            {t('home.calendar_day_month', {
+            {t('calendar_day_month', {
               day: day.lunarDay,
               month: day.lunarMonth,
             })}

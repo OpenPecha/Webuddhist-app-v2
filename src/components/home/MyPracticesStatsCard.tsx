@@ -3,7 +3,7 @@ import { Text } from '@/components/ui/text';
 import { AppColors } from '@/constants/app-colors';
 import type { RoutineInfo } from '@/types/routine-info';
 import type { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Pressable, View } from 'react-native';
 
 interface MyPracticesStatsCardProps {
@@ -42,7 +42,7 @@ function StatItem({
 }
 
 export function MyPracticesStatsCard({ routineInfo, onPress }: MyPracticesStatsCardProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   return (
     <Pressable
@@ -52,7 +52,7 @@ export function MyPracticesStatsCard({ routineInfo, onPress }: MyPracticesStatsC
     >
       <View className="p-5">
         <View className="flex-row items-start">
-          <Text className="flex-1 text-lg font-bold text-white">{t('home.my_practices_title')}</Text>
+          <Text className="flex-1 text-lg font-bold text-white">{t('routine_title')}</Text>
           <Pressable
             onPress={onPress}
             className="h-8 w-8 items-center justify-center rounded-full bg-white"
@@ -60,17 +60,17 @@ export function MyPracticesStatsCard({ routineInfo, onPress }: MyPracticesStatsC
             <ArrowRightIcon size={18} color={AppColors.blue} weight="bold" />
           </Pressable>
         </View>
-        <Text className="mt-1 text-sm text-white/85">{t('home.home_overall_stats')}</Text>
+        <Text className="mt-1 text-sm text-white/85">{t('home_overall_stats')}</Text>
         <View className="mt-4 flex-row gap-2">
           <StatItem
             icon={<ListChecksIcon size={22} color="#fff" />}
             count={routineInfo.seriesCount}
-            label={t('home.home_plans_count', { count: routineInfo.seriesCount })}
+            label={t('home_plans_count', { count: routineInfo.seriesCount })}
           />
           <StatItem
             icon={<BookOpenTextIcon size={22} color="#fff" />}
             count={routineInfo.recitationCount}
-            label={t('home.home_recitation_count', {
+            label={t('home_recitation_count', {
               count: routineInfo.recitationCount,
             })}
           />

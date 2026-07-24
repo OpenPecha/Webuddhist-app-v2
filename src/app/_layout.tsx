@@ -1,6 +1,6 @@
 import { AppToastHost } from '@/components/common/AppToastHost';
 import { AppColors } from '@/constants/app-colors';
-import localeEn from "@/i18n/en.json";
+import { initI18n, tolgee } from '@/lib/i18n';
 import { configureNotificationHandler } from '@/lib/notifications';
 import { AuthTokenSync } from '@/providers/auth-token';
 import { Auth0ProviderWrapper } from '@/providers/auth0';
@@ -12,15 +12,8 @@ import { PendingNotificationNavProvider } from '@/providers/pending-notification
 import { PendingOnboardingPlanProvider } from '@/providers/pending-onboarding-plan';
 import { QueryProvider } from '@/providers/query';
 import { ThemeProvider } from '@/providers/theme';
-import { DEFAULT_LANGUAGE, LANGUAGE } from "@/utils/constant";
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import {
-  BackendFetch,
-  DevTools,
-  FormatSimple,
-  Tolgee,
-  TolgeeProvider,
-} from "@tolgee/react";
+import { TolgeeProvider } from '@tolgee/react';
 import { useFonts } from 'expo-font';
 import {
   Stack,
@@ -36,29 +29,6 @@ import { useAuth0 } from 'react-native-auth0';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import '../../global.css';
 
-
-if (!localStorage.getItem(LANGUAGE)) {
-  localStorage.setItem(LANGUAGE, DEFAULT_LANGUAGE);
-}
-
-const tolgee = Tolgee()
-  .use(DevTools())
-  .use(FormatSimple())
-  // replace with .use(FormatIcu()) for rendering plurals, formatted numbers, etc.
-  .use(
-    BackendFetch({
-      prefix:
-        "https://cdn.tolg.ee/a23495c159b886551292e856ecf7a332/webuddhist",
-      fallbackOnFail: true,
-    }),
-  )
-  .init({
-    language: localStorage.getItem(LANGUAGE) || DEFAULT_LANGUAGE,
-    fallbackLanguage: "en",
-    staticData: {
-      en: async () => localeEn,
-    },
-  });
 
 SplashScreen.preventAutoHideAsync();
 configureNotificationHandler();
@@ -156,6 +126,10 @@ export default function RootLayout() {
     'Inter-Bold': require('@expo-google-fonts/inter/700Bold/Inter_700Bold.ttf'),
   });
   const [i18nReady, setI18nReady] = useState(false);
+
+  useEffect(() => {
+    initI18n().finally(() => setI18nReady(true));
+  }, []);
 
   useEffect(() => {
     if ((fontsLoaded || fontError) && i18nReady) {

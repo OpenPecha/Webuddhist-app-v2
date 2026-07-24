@@ -22,7 +22,7 @@ import {
 } from '@/utils/routine-time-utils';
 import { type Href, useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
@@ -60,7 +60,7 @@ export default function EditRoutineScreen() {
     initialPlanId?: string;
   }>();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const contentLanguage = useContentLanguage();
   const { dialog, confirmChoice } = useDialog();
   const { data: routine, isLoading } = useRoutine();
@@ -195,7 +195,7 @@ export default function EditRoutineScreen() {
           await syncBlockToServer(targetBlock, apiRoutineId);
         }
       } catch {
-        Alert.alert(t('series.enroll_error'));
+        Alert.alert(t('enrollError'));
       }
     };
 
@@ -257,7 +257,7 @@ export default function EditRoutineScreen() {
           await syncBlockToServer(targetBlock, apiRoutineId);
         }
       } catch {
-        Alert.alert(t('series.enroll_error'));
+        Alert.alert(t('enrollError'));
       }
     };
 
@@ -275,7 +275,7 @@ export default function EditRoutineScreen() {
               (i) => i.id === pending.id && i.type === pending.type,
             );
             if (exists) {
-              Alert.alert(t('editRoutine.duplicate_item'), '');
+              Alert.alert(t('duplicateItem'), '');
               return block;
             }
             return { ...block, items: [...block.items, pending] };
@@ -351,13 +351,13 @@ export default function EditRoutineScreen() {
 
   const addBlock = () => {
     if (!canAddBlock(blocks.length)) {
-      Alert.alert(t('editRoutine.max_blocks', { max: MAX_ROUTINE_BLOCKS }));
+      Alert.alert(t('maxBlocks', { max: MAX_ROUTINE_BLOCKS }));
       return;
     }
     const otherTimes = blocks.map((b) => b.timeInt);
     const adjusted = adjustTimeForMinimumGap(defaultBlockTimeInt(), otherTimes);
     if (adjusted == null) {
-      Alert.alert(t('editRoutine.no_time_slot'));
+      Alert.alert(t('noTimeSlot'));
       return;
     }
     setBlocks((prev) =>
@@ -375,15 +375,15 @@ export default function EditRoutineScreen() {
       .map((b) => b.timeInt);
     const adjusted = adjustTimeForMinimumGap(pickedTimeInt, otherTimes);
     if (adjusted == null) {
-      Alert.alert(t('editRoutine.no_time_slot'));
+      Alert.alert(t('noTimeSlot'));
       return;
     }
     if (adjusted !== pickedTimeInt) {
       Alert.alert(
-        t('editRoutine.time_adjusted_title'),
-        t('editRoutine.time_adjusted_message', {
+        t('routine_time_adjusted_title', 'Time adjusted'),
+        t('routine_time_adjusted', {
           time: formatRoutineTimeFromInt(adjusted),
-          minutes: MIN_BLOCK_GAP_MINUTES,
+          gap: MIN_BLOCK_GAP_MINUTES,
         }),
       );
     }
@@ -401,15 +401,15 @@ export default function EditRoutineScreen() {
       const hasMultiple = emptyBlockCount > 1;
       const result = await confirmChoice({
         title: hasMultiple
-          ? t('editRoutine.empty_block_title_plural', { count: emptyBlockCount })
-          : t('editRoutine.empty_block_title'),
+          ? t('routine_empty_block_title_plural', { count: emptyBlockCount })
+          : t('routine_empty_block_title_singular'),
         message: hasMultiple
-          ? t('editRoutine.empty_block_message_plural', { count: emptyBlockCount })
-          : t('editRoutine.empty_block_message'),
-        secondaryLabel: t('editRoutine.empty_block_add_items'),
+          ? t('routine_empty_block_message_plural', { count: emptyBlockCount })
+          : t('routine_empty_block_message_singular'),
+        secondaryLabel: t('routine_empty_block_add_items'),
         primaryLabel: hasMultiple
-          ? t('editRoutine.empty_block_delete_plural')
-          : t('editRoutine.empty_block_delete'),
+          ? t('routine_empty_block_delete_plural')
+          : t('routine_empty_block_delete_singular'),
       });
       if (result !== 'primary') return;
       const emptyApiIds = workingBlocks
@@ -433,7 +433,7 @@ export default function EditRoutineScreen() {
         }
         exitAfterSave();
       } catch (e) {
-        const message = e instanceof Error ? e.message : t('practice.routine_load_error');
+        const message = e instanceof Error ? e.message : t('routine_load_error');
         Alert.alert(message);
       } finally {
         setSaving(false);
@@ -478,7 +478,7 @@ export default function EditRoutineScreen() {
 
       exitAfterSave();
     } catch (e) {
-      const message = e instanceof Error ? e.message : t('practice.routine_load_error');
+      const message = e instanceof Error ? e.message : t('routine_load_error');
       Alert.alert(message);
     } finally {
       setSaving(false);
@@ -490,7 +490,7 @@ export default function EditRoutineScreen() {
       <View className="flex-1 items-center justify-center bg-background" style={{ paddingTop: insets.top }}>
         <ActivityIndicator size="large" />
         <Text className="mt-4 font-semibold">
-          {t('editRoutine.title')}
+          {t('routine_edit_title')}
         </Text>
       </View>
     );
@@ -506,12 +506,12 @@ export default function EditRoutineScreen() {
           style={{ alignSelf: 'flex-end', opacity: saving ? 0.5 : 1 }}
         >
           <Text className="text-base font-medium text-foreground">
-            {saving ? t('editRoutine.saving') : t('editRoutine.done')}
+            {saving ? t('routine_saving', "Saving…") : t('done')}
           </Text>
         </Pressable>
         <View className="h-2" />
         <Text className="text-[28px] font-bold text-foreground">
-          {t('editRoutine.title')}
+          {t('routine_edit_title')}
         </Text>
         <View className="h-3" />
         <View className="h-px bg-[#e8e8e4]" />

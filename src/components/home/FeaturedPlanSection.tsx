@@ -11,7 +11,7 @@ import { resolveCoverImage } from '@/utils/image-url';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Pressable, View, type ImageStyle, type StyleProp } from 'react-native';
 
 function formatSeriesDateRange(series: Series): string | null {
@@ -176,7 +176,7 @@ function FeaturedPlanContent({
   hasStatsCard: boolean;
   onSeriesTap: (series: Series) => void;
 }) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const language = useContentLanguage();
   const isTibetan = language === 'bo';
   const sectionTitleSize = isTibetan ? 16 : 18;
@@ -199,7 +199,7 @@ function FeaturedPlanContent({
   return (
     <View className="px-4 pb-4">
       <Text className="font-bold text-foreground" style={{ fontSize: sectionTitleSize }}>
-        {t('home.creator_featured_plan')}
+        {t('creator_featured_plan')}
       </Text>
       <View style={{ height: sectionContentGap }} />
       {hasStatsCard

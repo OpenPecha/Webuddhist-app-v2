@@ -8,23 +8,23 @@ import { Text } from '@/components/ui/text';
 import { cn } from '@/utils/cn';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Pressable, View } from 'react-native';
 
-function typeLabel(type: BookmarkItemType, t: (k: string) => string): string {
+function typeLabel(type: BookmarkItemType, t: (k: string, d?: string) => string): string {
   switch (type) {
     case 'PLAN':
-      return t('bookmarks.type_plan');
+      return t('bookmark_type_plan', "Plan");
     case 'SERIES':
-      return t('bookmarks.type_series');
+      return t('bookmark_type_series', "Series");
     case 'ACCUMULATOR':
-      return t('bookmarks.type_mala');
+      return t('home_mala');
     case 'TIMER':
-      return t('bookmarks.type_timer');
+      return t('home_timer');
     case 'TEXT':
-      return t('bookmarks.type_text');
+      return t('bookmark_type_text', "Text");
     case 'VERSE':
-      return t('bookmarks.type_verse');
+      return t('bookmark_type_verse', "Verse");
     default:
       return type;
   }
@@ -45,7 +45,7 @@ interface BookmarkCardProps {
 }
 
 export function BookmarkCard({ bookmark, onPress, onRemove }: BookmarkCardProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const title = bookmarkDisplayTitle(bookmark);
   const dateLabel = formatDateRange(bookmark);
   const badge = typeLabel(bookmark.type, t);

@@ -9,7 +9,7 @@ import { useThemeColors } from '@/hooks/useThemeColors';
 import { useGuest } from '@/providers/guest';
 import { useRouter, type Href } from 'expo-router';
 import { CirclesThree } from 'phosphor-react-native';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Image, Pressable, View } from 'react-native';
 
 const ICON_SIZE = 28;
@@ -58,7 +58,7 @@ function MalaShortcutIcon({ color }: { color: string }) {
 }
 
 export function HomeShortcutsRow() {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const router = useRouter();
   const { isGuest } = useGuest();
   const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
@@ -77,25 +77,25 @@ export function HomeShortcutsRow() {
       <View className="flex-row gap-2 px-4">
         <ShortcutTile
           icon={<ListChecksIcon size={ICON_SIZE} color={foreground} />}
-          label={t('home.home_shortcut_plans')}
+          label={t('home_shortcut_plans')}
           onPress={() => router.push('/plans' as Href)}
           cardColor={shortcutCard}
         />
         <ShortcutTile
           icon={<BookOpenTextIcon size={ICON_SIZE} color={foreground} />}
-          label={t('home.home_chants')}
+          label={t('home_chants')}
           onPress={() => router.push('/recitations' as Href)}
           cardColor={shortcutCard}
         />
         <ShortcutTile
           icon={<MalaShortcutIcon color={foreground} />}
-          label={t('home.home_mala')}
+          label={t('home_mala')}
           onPress={() => openGated('/mala')}
           cardColor={shortcutCard}
         />
         <ShortcutTile
           icon={<TimerIcon size={ICON_SIZE} color={foreground} />}
-          label={t('home.timer')}
+          label={t('home_timer')}
           onPress={() => openGated('/timers')}
           cardColor={shortcutCard}
         />

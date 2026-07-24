@@ -1,6 +1,6 @@
 import { Text } from '@/components/ui/text';
 import { BEADS_PER_ROUND } from '@/types/mala';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { View } from 'react-native';
 
 const COUNTER_FONT_SIZE = 48;
@@ -21,7 +21,7 @@ export function MalaCounterDisplay({
   beadsPerRound = BEADS_PER_ROUND,
   loaded = true,
 }: MalaCounterDisplayProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const opacity = loaded ? 1 : 0.35;
 
   return (
@@ -44,7 +44,7 @@ export function MalaCounterDisplay({
           opacity: loaded ? 0.7 : 0.35,
         }}
       >
-        {t('mala.rounds', { count: rounds })}
+        {t('mala_rounds_count', { count: rounds })}
       </Text>
     </View>
   );

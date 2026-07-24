@@ -1,7 +1,7 @@
 import { AppBottomSheet } from '@/components/settings/AppBottomSheet';
 import { Text } from '@/components/ui/text';
 import { cn } from '@/utils/cn';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Pressable, View } from 'react-native';
 
 interface ReaderFontSizeSheetProps {
@@ -49,13 +49,13 @@ export function ReaderFontSizeSheet({
   onIncrease,
   fontSize,
 }: ReaderFontSizeSheetProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   return (
     <AppBottomSheet visible={visible} onClose={onClose} maxHeight="30%" placement="fullscreen">
       <View className="px-6 pb-4">
         <Text className="text-center text-[13px] text-muted-foreground mb-4">
-          {t('reader.font_size')} · {fontSize}px
+          {t('text_size')} · {fontSize}px
         </Text>
         <View className="flex-row gap-3">
           <FontSizeButton

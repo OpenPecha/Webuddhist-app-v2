@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { FeaturedPlanSection } from '@/components/home/FeaturedPlanSection';
 import { HomeEventsSection } from '@/components/home/HomeEventsSection';
 import { HomeHeader } from '@/components/home/HomeHeader';
@@ -18,7 +17,7 @@ import { cn } from '@/utils/cn';
 import { useGuest } from '@/providers/guest';
 import { useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Text } from '@/components/ui/text';
 import {
   Pressable,
@@ -29,19 +28,19 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function HomeErrorState({ onRetry }: { onRetry: () => void }) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   return (
     <View className="items-center gap-3 px-6">
       <Text className="text-center text-destructive">
-        {t('home.load_error')}
+        {t('unableToLoad')}
       </Text>
       <Pressable
         onPress={onRetry}
         className="rounded-lg bg-foreground px-4 py-2 active:opacity-70"
       >
         <Text className="text-[13px] font-medium text-white">
-          {t('practice.retry')}
+          {t('retry')}
         </Text>
       </Pressable>
     </View>
@@ -50,7 +49,7 @@ function HomeErrorState({ onRetry }: { onRetry: () => void }) {
 
 export default function Index() {
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const router = useRouter();
   const { isGuest } = useGuest();
   const { isDark } = useThemeColors();
@@ -113,7 +112,7 @@ export default function Index() {
         ) : seriesList.length === 0 ? (
           <View className="min-h-80 flex-1 justify-center">
             <Text className="px-6 text-center text-lg text-foreground">
-              {t('home.no_feature_content')}
+              {t('no_feature_content')}
             </Text>
           </View>
         ) : showBody ? (

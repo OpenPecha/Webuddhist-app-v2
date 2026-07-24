@@ -5,7 +5,7 @@ import { Text } from '@/components/ui/text';
 import { useSeriesDayCompleted } from '@/hooks/api/useSeriesDayCompleted';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { Image } from 'expo-image';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { ActivityIndicator, View } from 'react-native';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useUniwind } from 'uniwind';
@@ -17,7 +17,7 @@ interface PracticeDaysSheetProps {
 }
 
 export function PracticeDaysSheet({ visible, totalDays, onClose }: PracticeDaysSheetProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const { theme } = useUniwind();
   const isDark = theme === 'dark';
   const { foreground, cardBorder } = useThemeColors();
@@ -46,8 +46,8 @@ export function PracticeDaysSheet({ visible, totalDays, onClose }: PracticeDaysS
       <View className="px-5 pt-1">
         <View className="flex-row items-center gap-2.5">
           <ListIcon size={22} color={foreground} />
-          <Text className="flex-1 text-base font-bold">{t('me.days_plan_practiced_suffix')}</Text>
-          <Text className="text-base font-bold">{t('me.streak_days_count', { count: totalDays })}</Text>
+          <Text className="flex-1 text-base font-bold">{t('me_days_plan_practiced_suffix')}</Text>
+          <Text className="text-base font-bold">{t('me_streak_days_count', { count: totalDays })}</Text>
         </View>
       </View>
       <View className="mx-5 mt-4 h-px" style={{ backgroundColor: cardBorder }} />
@@ -57,7 +57,7 @@ export function PracticeDaysSheet({ visible, totalDays, onClose }: PracticeDaysS
         </View>
       ) : series.length === 0 ? (
         <Text className="px-5 py-6 text-center text-sm text-muted-foreground">
-          {isError ? t('connect.action_error') : t('practice.no_plans')}
+          {isError ? t('something_went_wrong') : t('no_plans_found')}
         </Text>
       ) : (
         <BottomSheetScrollView contentContainerStyle={{ paddingBottom: 16 }}>
@@ -80,7 +80,7 @@ export function PracticeDaysSheet({ visible, totalDays, onClose }: PracticeDaysS
                   {item.seriesTitle}
                 </Text>
                 <Text className="text-base font-semibold">
-                  {t('me.streak_days_count', { count: item.daysCompleted })}
+                  {t('me_streak_days_count', { count: item.daysCompleted })}
                 </Text>
               </View>
             </View>

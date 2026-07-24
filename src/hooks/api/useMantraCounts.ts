@@ -5,6 +5,7 @@ import { useGuest } from '@/providers/guest';
 import { fetchMantraCounts } from '@/services/mantra-counts';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth0 } from 'react-native-auth0';
+import { getApiLanguageSync } from '@/lib/i18n';
 
 export function useMantraCounts(enabled = true, skip = 0, limit = 20) {
   const language = useContentLanguage();
@@ -15,7 +16,7 @@ export function useMantraCounts(enabled = true, skip = 0, limit = 20) {
 
   return useQuery({
     queryKey: QUERY_KEYS.profile.mantraCounts(language, skip, limit),
-    queryFn: () => fetchMantraCounts(language, skip, limit),
+    queryFn: () => fetchMantraCounts(getApiLanguageSync(), skip, limit),
     enabled: canFetch,
     staleTime: 0,
   });
