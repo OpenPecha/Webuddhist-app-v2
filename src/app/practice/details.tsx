@@ -5,7 +5,7 @@ import { PlanDayVideosStrip } from "@/components/plans/PlanDayVideosStrip";
 import { PlanHero } from "@/components/plans/PlanHero";
 import { PlanTaskList } from "@/components/plans/PlanTaskList";
 import { Text } from "@/components/ui/text";
-import { useCompleteTask } from "@/hooks/api/useCompleteTask";
+import { useCompleteTask, useDeleteTask } from "@/hooks/api/useCompleteTask";
 import { usePlanCompletionStatus } from "@/hooks/api/usePlanCompletionStatus";
 import { usePlanDays } from "@/hooks/api/usePlanDays";
 import { usePlanDetail } from "@/hooks/api/usePlanDetail";
