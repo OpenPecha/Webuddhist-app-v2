@@ -22,9 +22,9 @@ export function LanguagePickerSheet({ visible, onClose }: LanguagePickerSheetPro
   const insets = useSafeAreaInsets();
   const contentPaddingBottom = bottomSheetContentPaddingBottom('tab', insets);
 
-  const selectLanguage = async (code: (typeof supportedLanguages)[number]) => {
-    await changeLanguage(code);
+  const selectLanguage = (code: (typeof supportedLanguages)[number]) => {
     onClose();
+    void changeLanguage(code);
   };
 
   return (
