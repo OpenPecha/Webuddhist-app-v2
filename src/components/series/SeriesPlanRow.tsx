@@ -15,7 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { Text } from '@/components/ui/text';
 import { useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Pressable, View } from 'react-native';
 
 interface SeriesPlanRowProps {
@@ -120,12 +120,12 @@ interface SeriesStatsRowProps {
 }
 
 export function SeriesStatsRow({ planCount, totalDays, enrolledCount }: SeriesStatsRowProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   const parts = [
-    t('series.stats_plans', { count: planCount }),
-    t('series.stats_days', { count: totalDays }),
-    enrolledCount != null ? t('series.stats_enrolled', { count: enrolledCount }) : null,
+    t('home_plans_count', { count: planCount }),
+    t('me_streak_days_count', { count: totalDays }),
+    enrolledCount != null ? t('series_stats_enrolled', "{count} ENROLLED", { count: enrolledCount }) : null,
   ].filter(Boolean);
 
   return (

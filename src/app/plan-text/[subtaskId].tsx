@@ -8,11 +8,11 @@ import { useLocalSearchParams } from 'expo-router';
 import { useMemo, useRef } from 'react';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, View } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 export default function PlanTextScreen() {
   const { subtaskId } = useLocalSearchParams<{ subtaskId: string }>();
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const cancelAudioRef = useRef<() => void>(() => {});
 
   const {
@@ -77,7 +77,7 @@ export default function PlanTextScreen() {
     readerDetails?.text_detail?.summary?.trim() ||
     '';
 
-  const textTitle = readerDetails?.text_detail?.title ?? t('reader.title');
+  const textTitle = readerDetails?.text_detail?.title ?? t('reader_settings_tooltip');
   const isLoading = planLoading || (needsReaderFetch && readerLoading);
 
   if (isLoading) {
@@ -91,7 +91,7 @@ export default function PlanTextScreen() {
   if (!content) {
     return (
       <View className="flex-1 items-center justify-center bg-[#F9F8F4] p-6">
-        <Text className="text-center text-muted-foreground">{t('planTrack.no_tasks')}</Text>
+        <Text className="text-center text-muted-foreground">{t('noTasks')}</Text>
       </View>
     );
   }

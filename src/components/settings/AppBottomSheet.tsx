@@ -100,6 +100,8 @@ export function AppBottomSheet({
   const { mutedForeground } = useThemeColors();
   const ref = useRef<BottomSheetModal>(null);
   const wasVisibleRef = useRef(false);
+  const presentationIdRef = useRef(0);
+  const dismissingPresentationIdRef = useRef<number | null>(null);
 
   const { bottomInset, topInset, maxDynamicContentSize } = useMemo(
     () => appBottomSheetInsets(placement, insets, screenHeight, maxHeight),
@@ -108,6 +110,7 @@ export function AppBottomSheet({
 
   useEffect(() => {
     if (visible) {
+      presentationIdRef.current += 1;
       wasVisibleRef.current = true;
       requestAnimationFrame(() => {
         ref.current?.present();
@@ -116,6 +119,7 @@ export function AppBottomSheet({
     }
 
     if (wasVisibleRef.current) {
+      dismissingPresentationIdRef.current = presentationIdRef.current;
       wasVisibleRef.current = false;
       ref.current?.dismiss();
     }
@@ -123,7 +127,11 @@ export function AppBottomSheet({
 
   const handleDismiss = useCallback(() => {
     wasVisibleRef.current = false;
-    onClose();
+    const dismissingId = dismissingPresentationIdRef.current;
+    dismissingPresentationIdRef.current = null;
+    if (dismissingId === null || dismissingId === presentationIdRef.current) {
+      onClose();
+    }
   }, [onClose]);
 
   const renderBackdrop = useCallback(

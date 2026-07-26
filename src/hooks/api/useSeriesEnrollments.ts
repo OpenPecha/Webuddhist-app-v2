@@ -5,6 +5,7 @@ import { fetchUserSeriesEnrollments } from '@/services/series';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth0 } from 'react-native-auth0';
+import { getApiLanguageSync } from '@/lib/i18n';
 
 export function useSeriesEnrollments(skip = 0, limit = 50) {
   const { user } = useAuth0();
@@ -15,7 +16,7 @@ export function useSeriesEnrollments(skip = 0, limit = 50) {
 
   return useQuery({
     queryKey: QUERY_KEYS.series.userEnrollments(language),
-    queryFn: () => fetchUserSeriesEnrollments(language, 'ACTIVE', skip, limit),
+    queryFn: () => fetchUserSeriesEnrollments(getApiLanguageSync(), 'ACTIVE', skip, limit),
     enabled,
   });
 }

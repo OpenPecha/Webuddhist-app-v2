@@ -1,5 +1,4 @@
 import { Text } from '@/components/ui/text';
-import '@/lib/i18n';
 import { useOnboarding } from '@/providers/onboarding';
 import { usePendingOnboardingPlan } from '@/providers/pending-onboarding-plan';
 import type { UserPlan } from '@/types/plans';
@@ -8,7 +7,7 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -48,7 +47,7 @@ function GoldButton({ label, onPress, loading }: { label: string; onPress: () =>
 }
 
 function WelcomeScreen({ onNext }: { onNext: () => void }) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const insets = useSafeAreaInsets();
 
   return (
@@ -61,7 +60,7 @@ function WelcomeScreen({ onNext }: { onNext: () => void }) {
     >
       <View className="items-center">
         <Text className="text-[28px] font-medium text-white">
-          {t('onboarding.welcome')}
+          {t('onboarding_welcome')}
         </Text>
         <Text className="text-4xl font-semibold text-white">
           {t('appTitle')}
@@ -74,14 +73,14 @@ function WelcomeScreen({ onNext }: { onNext: () => void }) {
 
       <View className="mb-10 gap-3">
         <Text className="text-center text-base font-medium leading-[26px] text-white">
-          "{t('onboarding.quote')}"
+          "{t('onboarding_quote')}"
         </Text>
         <Text className="text-center text-[15px] text-white/60">
-          {t('onboarding.quote_citation')}
+          {t('onboarding_quote_citation')}
         </Text>
       </View>
 
-      <GoldButton label={t('onboarding.get_started')} onPress={onNext} />
+      <GoldButton label={t('onboarding_find_peace')} onPress={onNext} />
     </ScrollView>
   );
 }
@@ -95,7 +94,7 @@ function EventScreen({
   onBack: () => void;
   onSelectionChange: (selected: boolean) => void;
 }) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const insets = useSafeAreaInsets();
   const [selected, setSelected] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -117,10 +116,10 @@ function EventScreen({
       </TouchableOpacity>
 
       <Text className="mb-2 text-4xl font-bold leading-[42px] text-white">
-        {t('onboarding.event_question')}
+        {t('onboarding_event_question')}
       </Text>
       <Text className="mb-9 text-[15px] text-white/50">
-        {t('onboarding.event_optional')}
+        {t('onboarding_event_optional')}
       </Text>
 
       <Pressable
@@ -148,7 +147,7 @@ function EventScreen({
             {ONBOARDING_EVENT.planName}
           </Text>
           <Text className="text-[13px] text-white/50">
-            {t('onboarding.event_duration', { description: ONBOARDING_EVENT.description, days: ONBOARDING_EVENT.totalDays })}
+            {t('onboarding_event_duration', { description: ONBOARDING_EVENT.description, days: ONBOARDING_EVENT.totalDays })}
           </Text>
         </View>
 
@@ -165,18 +164,18 @@ function EventScreen({
       <View className="flex-row items-start gap-1.5">
         <Text className="text-base text-white/40">🔔</Text>
         <Text className="flex-1 text-[13px] leading-5 text-white/40">
-          {t('onboarding.event_reminder')}
+          {t('onboarding_event_reminder_note')}
         </Text>
       </View>
 
       <View className="flex-1" />
-      <GoldButton label={t('onboarding.continue')} onPress={handleContinue} loading={loading} />
+      <GoldButton label={t('onboarding_continue')} onPress={handleContinue} loading={loading} />
     </View>
   );
 }
 
 function AllSetScreen({ onComplete }: { onComplete: () => void }) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const insets = useSafeAreaInsets();
 
   return (
@@ -190,14 +189,14 @@ function AllSetScreen({ onComplete }: { onComplete: () => void }) {
           {t('appTitle')}
         </Text>
         <Text className="text-center text-[28px] italic leading-[38px] text-white">
-          {t('onboarding.all_set')}
+          {t('onboarding_all_set')}
         </Text>
         <Text className="mt-1 text-center text-base leading-[26px] text-white/65">
-          {t('onboarding.all_set_description')}
+          {t('onboarding_all_set_description')}
         </Text>
       </View>
 
-      <GoldButton label={t('onboarding.begin_practice')} onPress={onComplete} />
+      <GoldButton label={t('onboarding_begin_practice')} onPress={onComplete} />
     </View>
   );
 }

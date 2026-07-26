@@ -3,7 +3,7 @@ import { SocialLoginButtons } from '@/components/auth/SocialLoginButtons';
 import { useGuest } from '@/providers/guest';
 import { Image } from 'expo-image';
 import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Text, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 
@@ -17,7 +17,7 @@ interface LoginDrawerProps {
 export function LoginDrawer({ visible, onClose }: LoginDrawerProps) {
   const { user } = useAuth0();
   const { clearGuest } = useGuest();
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   useEffect(() => {
     if (visible && user) {
@@ -31,9 +31,9 @@ export function LoginDrawer({ visible, onClose }: LoginDrawerProps) {
         <Image source={logo} style={{ width: 80, height: 80 }} contentFit="contain" />
 
         <View className="items-center gap-1">
-          <Text className="text-center text-xl font-bold">{t('auth.drawer_title')}</Text>
+          <Text className="text-center text-xl font-bold">{t('auth_drawer_title')}</Text>
           <Text className="text-center text-[15px] leading-[22px] text-muted-foreground">
-            {t('auth.drawer_subtitle')}
+            {t('auth_drawer_subtitle')}
           </Text>
         </View>
 

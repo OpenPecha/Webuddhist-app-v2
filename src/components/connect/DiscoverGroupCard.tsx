@@ -15,7 +15,8 @@ import {
 } from '@/stores/pending-groups';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
+import { useUiLanguage } from '@/lib/i18n';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
@@ -33,7 +34,8 @@ export function DiscoverGroupCard({
 }: DiscoverGroupCardProps) {
   const router = useRouter();
   const language = useContentLanguage();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslate();
+  const uiLanguage = useUiLanguage();
   const { user } = useAuth0();
   const { isGuest } = useGuest();
   const { visible, session, showLoginDrawer, hideLoginDrawer } = useLoginDrawer();
@@ -54,9 +56,9 @@ export function DiscoverGroupCard({
   const subtitle = groupCardSubtitle(
     group,
     meta,
-    t('connect.member'),
-    t('connect.members'),
-    i18n.language,
+    t('group_member'),
+    t('group_members'),
+    uiLanguage,
   );
 
   const handleCta = () => {
@@ -70,11 +72,11 @@ export function DiscoverGroupCard({
 
   const ctaLabel = active
     ? isPage
-      ? t('connect.following')
-      : t('connect.joined')
+      ? t('following')
+      : t('joined')
     : isPage
-      ? t('connect.follow')
-      : t('connect.join');
+      ? t('follow')
+      : t('join');
 
   return (
     <>

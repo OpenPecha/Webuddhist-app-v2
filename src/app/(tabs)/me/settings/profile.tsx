@@ -28,7 +28,7 @@ import type { UserProfile } from '@/types/user';
 import { useQueryClient } from '@tanstack/react-query';
 import { type Href, router, useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { ActivityIndicator, Alert, Pressable, ScrollView, View } from 'react-native';
 import { useAuth0, type User } from 'react-native-auth0';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -54,7 +54,7 @@ function seedFromAuth0(form: ProfileFormState, authUser: User | null | undefined
 }
 
 export default function EditProfileScreen() {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const insets = useSafeAreaInsets();
   const { theme } = useUniwind();
   const isDark = theme === 'dark';
@@ -165,7 +165,7 @@ export default function EditProfileScreen() {
     setAvatarSheetVisible(false);
     const uri = await pickProfileImage(source);
     if (!uri) {
-      Alert.alert(t('profile.photo_upload_failed'));
+      Alert.alert(t('edit_profile_photo_upload_failed'));
       return;
     }
     setLocalAvatarUri(uri);
@@ -203,7 +203,7 @@ export default function EditProfileScreen() {
           setAvatarUrl(nextAvatarUrl);
           setLocalAvatarUri(null);
         } catch {
-          Alert.alert(t('profile.photo_upload_failed'));
+          Alert.alert(t('edit_profile_photo_upload_failed'));
           return;
         } finally {
           setUploadingAvatar(false);
@@ -229,7 +229,7 @@ export default function EditProfileScreen() {
       await refetch();
       router.back();
     } catch {
-      Alert.alert(t('profile.save_failed'));
+      Alert.alert(t('edit_profile_save_failed'));
     } finally {
       setSaving(false);
     }
@@ -256,7 +256,7 @@ export default function EditProfileScreen() {
           canSave ? (isDark ? 'text-black' : 'text-white') : 'text-muted-foreground',
         )}
       >
-        {saving ? t('editRoutine.saving') : t('profile.save')}
+        {saving ? t('routine_saving', "Saving…") : t('edit_profile_save')}
       </Text>
     </Pressable>
   );
@@ -264,10 +264,10 @@ export default function EditProfileScreen() {
   if (isError && !profile) {
     return (
       <View className="flex-1 bg-background">
-        <AppScreenHeader title={t('profile.edit_title')} />
+        <AppScreenHeader title={t('edit_profile_title')} />
         <View className="flex-1 items-center justify-center px-8">
           <Text className="text-center text-base text-muted-foreground">
-            {t('practice.routine_load_error')}
+            {t('routine_load_error')}
           </Text>
           <Pressable
             onPress={() => refetch()}
@@ -277,7 +277,7 @@ export default function EditProfileScreen() {
             )}
           >
             <Text className={cn('text-sm font-semibold', isDark ? 'text-black' : 'text-white')}>
-              {t('practice.retry')}
+              {t('retry')}
             </Text>
           </Pressable>
         </View>
@@ -298,7 +298,7 @@ export default function EditProfileScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <AppScreenHeader title={t('profile.edit_title')} rightAction={savePill} />
+      <AppScreenHeader title={t('edit_profile_title')} rightAction={savePill} />
       {(saving || uploadingAvatar || isRefreshing) && (
         <View className="bg-muted h-0.5 w-full">
           <ActivityIndicator style={{ height: 2 }} />
@@ -329,7 +329,7 @@ export default function EditProfileScreen() {
         <View className="mt-5 flex-row gap-3">
           <View className="flex-1">
             <FloatingTextInput
-              label={t('profile.first_name')}
+              label={t('edit_profile_first_name')}
               value={firstName}
               onChangeText={setFirstName}
               error={firstNameError ? t(`profile.${firstNameError}`) : null}
@@ -337,7 +337,7 @@ export default function EditProfileScreen() {
           </View>
           <View className="flex-1">
             <FloatingTextInput
-              label={t('profile.last_name')}
+              label={t('edit_profile_last_name')}
               value={lastName}
               onChangeText={setLastName}
               error={lastNameError ? t(`profile.${lastNameError}`) : null}
@@ -347,8 +347,8 @@ export default function EditProfileScreen() {
 
         <View className="mt-5">
           <FloatingTextInput
-            label={t('profile.bio')}
-            hint={t('profile.bio_hint')}
+            label={t('edit_profile_bio')}
+            hint={t('edit_profile_bio_hint')}
             value={bio}
             onChangeText={setBio}
             multiline
@@ -365,7 +365,7 @@ export default function EditProfileScreen() {
           className="mt-8 flex-row items-center py-3 active:opacity-70"
         >
           <Trash size={22} color={destructive} />
-          <Text className="ml-3 flex-1 text-base text-destructive">{t('profile.delete_account')}</Text>
+          <Text className="ml-3 flex-1 text-base text-destructive">{t('edit_profile_delete_account')}</Text>
           <CaretRight size={20} color={mutedForeground} />
         </Pressable>
       </ScrollView>
@@ -380,14 +380,14 @@ export default function EditProfileScreen() {
           className="flex-row items-center px-6 py-4 active:opacity-70"
         >
           <Images size={24} color={foreground} />
-          <Text className="ml-4 text-base">{t('profile.choose_from_library')}</Text>
+          <Text className="ml-4 text-base">{t('edit_profile_choose_from_library')}</Text>
         </Pressable>
         <Pressable
           onPress={() => pickAvatar('camera')}
           className="flex-row items-center px-6 py-4 active:opacity-70"
         >
           <Camera size={24} color={foreground} />
-          <Text className="ml-4 text-base">{t('profile.take_photo')}</Text>
+          <Text className="ml-4 text-base">{t('edit_profile_take_photo')}</Text>
         </Pressable>
       </AppBottomSheet>
     </View>

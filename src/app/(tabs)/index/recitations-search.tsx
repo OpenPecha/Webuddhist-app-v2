@@ -7,14 +7,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { MagnifyingGlass } from 'phosphor-react-native';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { FlatList, Pressable, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function RecitationsSearchScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const { foreground, mutedForeground } = useThemeColors();
 
   const [query, setQuery] = useState('');
@@ -48,7 +48,7 @@ export default function RecitationsSearchScreen() {
           onPress={() => router.back()}
           className="p-3 active:opacity-70"
           accessibilityRole="button"
-          accessibilityLabel={t('common.back', { defaultValue: 'Back' })}
+          accessibilityLabel={t('back')}
         >
           <Ionicons name="chevron-back" size={22} color={foreground} />
         </Pressable>
@@ -58,11 +58,11 @@ export default function RecitationsSearchScreen() {
             ref={inputRef}
             value={query}
             onChangeText={setQuery}
-            placeholder={t('recitations.search_placeholder')}
+            placeholder={t('recitations_search')}
             placeholderTextColor={mutedForeground}
             returnKeyType="search"
             className="flex-1 py-2.5 text-[15px] text-foreground"
-            accessibilityLabel={t('recitations.search_placeholder')}
+            accessibilityLabel={t('recitations_search')}
           />
           {query.length > 0 ? (
             <Pressable
@@ -84,9 +84,9 @@ export default function RecitationsSearchScreen() {
         <RecitationsListSkeleton rows={4} />
       ) : isError ? (
         <View className="flex-1 items-center justify-center gap-3 p-6">
-          <Text className="text-center text-destructive">{t('recitations.load_error')}</Text>
+          <Text className="text-center text-destructive">{t('recitations_load_error')}</Text>
           <Pressable onPress={() => void refetch()} className="p-3 active:opacity-70">
-            <Text className="font-semibold text-foreground">{t('recitations.retry')}</Text>
+            <Text className="font-semibold text-foreground">{t('retry')}</Text>
           </Pressable>
         </View>
       ) : (
@@ -98,7 +98,7 @@ export default function RecitationsSearchScreen() {
           ListEmptyComponent={
             <View className="px-6 pt-12">
               <Text className="text-center text-[15px] text-muted-foreground">
-                {t('recitations.search_empty')}
+                {t('recitations_no_found')}
               </Text>
             </View>
           }

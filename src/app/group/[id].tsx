@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { LoginDrawer } from '@/components/auth/LoginDrawer';
 import { GroupSocialLinksSheet } from '@/components/connect/GroupSocialLinksSheet';
 import { GroupProfileAboutTab } from '@/components/group-profile/GroupProfileAboutTab';
@@ -36,7 +35,7 @@ import {
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, Alert, Linking, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -48,7 +47,7 @@ export default function GroupProfileScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const groupId = id!;
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const language = useContentLanguage();
   const { user } = useAuth0();
   const { isGuest } = useGuest();
@@ -108,7 +107,7 @@ export default function GroupProfileScreen() {
       }
       refetchMember();
     } catch {
-      Alert.alert(t('connect.action_error'));
+      Alert.alert(t('something_went_wrong'));
     }
   };
 
@@ -140,9 +139,9 @@ export default function GroupProfileScreen() {
   if (error || !group) {
     return (
       <View className={cn(scaffoldClassName, 'items-center justify-center')} style={{ paddingTop: insets.top }}>
-        <Text className="text-destructive">{t('connect.not_found')}</Text>
+        <Text className="text-destructive">{t('group_not_found', "Group not found")}</Text>
         <Pressable onPress={() => refetch()} className="mt-3 active:opacity-70">
-          <Text className="text-foreground">{t('practice.retry')}</Text>
+          <Text className="text-foreground">{t('retry')}</Text>
         </Pressable>
       </View>
     );

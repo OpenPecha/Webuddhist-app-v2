@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { ArrowLeftIcon } from '@/components/home/HomeIcon';
 import { MoonPhaseIcon } from '@/components/home/MoonPhaseIcon';
 import { useCalendarMonth } from '@/hooks/api/useCalendarMonth';
@@ -10,7 +9,7 @@ import { moonPhaseForLunarDay } from '@/utils/moon-phase';
 import { useRouter } from 'expo-router';
 import { CaretLeft, CaretRight } from 'phosphor-react-native';
 import { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
@@ -54,7 +53,7 @@ function buildMonthGrid(year: number, month: number, days: CalendarDay[]) {
 }
 
 export default function CalendarScreen() {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const today = new Date();
@@ -106,7 +105,7 @@ export default function CalendarScreen() {
           <ArrowLeftIcon size={24} color={foreground} />
         </Pressable>
         <Text className="flex-1 text-center text-[17px] font-semibold text-foreground">
-          {t('calendar.title')}
+          {t('calendar_title')}
         </Text>
         <View className="w-10" />
       </View>
@@ -120,7 +119,7 @@ export default function CalendarScreen() {
             <MoonPhaseIcon phase={moonPhaseForLunarDay(todayData.lunarDay)} size={48} />
             <View className="flex-1">
               <Text className="text-lg font-bold text-foreground">
-                {t('home.calendar_day_month', {
+                {t('calendar_day_month', {
                   day: todayData.lunarDay,
                   month: todayData.lunarMonth,
                 })}
@@ -170,12 +169,12 @@ export default function CalendarScreen() {
             </View>
           ) : isError ? (
             <View className="items-center gap-3 p-6">
-              <Text className="text-center text-muted-foreground">{t('home.load_error')}</Text>
+              <Text className="text-center text-muted-foreground">{t('unableToLoad')}</Text>
               <Pressable
                 onPress={() => void refetch()}
                 className="rounded-lg bg-[#0C53C5] px-4 py-2 active:opacity-70"
               >
-                <Text className="text-white">{t('practice.retry')}</Text>
+                <Text className="text-white">{t('retry')}</Text>
               </Pressable>
             </View>
           ) : (

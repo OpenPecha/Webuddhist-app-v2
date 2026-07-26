@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { ArrowLeftIcon } from '@/components/home/HomeIcon';
 import { PresetTimerCard } from '@/components/timer/PresetTimerCard';
 import { PresetTimersGridSkeleton } from '@/components/timer/PresetTimersGridSkeleton';
@@ -8,7 +7,7 @@ import { cn } from '@/utils/cn';
 import type { PresetTimer } from '@/types/timers';
 import { useRouter, type Href } from 'expo-router';
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Text } from '@/components/ui/text';
 import {
   FlatList,
@@ -26,7 +25,7 @@ function sortPresetTimers(timers: PresetTimer[]): PresetTimer[] {
 }
 
 export default function TimersScreen() {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { foreground, isDark } = useThemeColors();
@@ -55,7 +54,7 @@ export default function TimersScreen() {
           className="flex-1 text-center text-xl font-bold text-foreground"
           numberOfLines={1}
         >
-          {t('timers.meditation_timer')}
+          {t('meditation_timer')}
         </Text>
         <View className="h-12 w-12" />
       </View>
@@ -65,19 +64,19 @@ export default function TimersScreen() {
       ) : isError ? (
         <View className="flex-1 items-center justify-center gap-3 p-6">
           <Text className="text-center text-muted-foreground">
-            {t('timers.load_error')}
+            {t('session_timers_load_error')}
           </Text>
           <Pressable
             onPress={() => void refetch()}
             className="rounded-lg bg-[#0C53C5] px-4 py-2 active:opacity-70"
           >
-            <Text className="text-white">{t('practice.retry')}</Text>
+            <Text className="text-white">{t('retry')}</Text>
           </Pressable>
         </View>
       ) : sortedTimers.length === 0 ? (
         <View className="flex-1 items-center justify-center p-8">
           <Text className="text-center text-muted-foreground">
-            {t('timers.no_timers')}
+            {t('session_no_timers')}
           </Text>
         </View>
       ) : (
@@ -97,7 +96,7 @@ export default function TimersScreen() {
             <View className="flex-1">
               <PresetTimerCard
                 timer={item}
-                minLabel={t('timers.min')}
+                minLabel={t('timer_min')}
                 onPress={() => openActiveTimer(item)}
               />
             </View>

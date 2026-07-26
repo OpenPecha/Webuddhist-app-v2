@@ -4,7 +4,7 @@ import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useSegmentCommentaries } from '@/hooks/api/useSegmentCommentaries';
 import type { SegmentCommentary } from '@/types/segment-commentary';
 import { groupByLanguage, languageDisplayName } from '@/utils/segment-resource-grouping';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
 
 interface SegmentCommentaryPanelProps {
@@ -33,7 +33,7 @@ function CommentaryItem({ commentary, fontSize }: { commentary: SegmentCommentar
 }
 
 export function SegmentCommentaryPanel({ segmentId, fontSize = 16 }: SegmentCommentaryPanelProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const contentLanguage = useContentLanguage();
   const { data, isLoading, isError, refetch } = useSegmentCommentaries(segmentId);
 
@@ -48,9 +48,9 @@ export function SegmentCommentaryPanel({ segmentId, fontSize = 16 }: SegmentComm
   if (isError) {
     return (
       <View className="py-6 items-center">
-        <Text className="text-sm text-muted-foreground mb-3">{t('reader.load_error')}</Text>
+        <Text className="text-sm text-muted-foreground mb-3">{t('loadFailed')}</Text>
         <Pressable onPress={() => void refetch()}>
-          <Text className="text-sm font-semibold text-foreground">{t('practice.retry')}</Text>
+          <Text className="text-sm font-semibold text-foreground">{t('retry')}</Text>
         </Pressable>
       </View>
     );
@@ -60,7 +60,7 @@ export function SegmentCommentaryPanel({ segmentId, fontSize = 16 }: SegmentComm
   if (commentaries.length === 0) {
     return (
       <View className="py-6 items-center">
-        <Text className="text-sm text-muted-foreground">{t('reader.no_commentary')}</Text>
+        <Text className="text-sm text-muted-foreground">{t('no_commentary')}</Text>
       </View>
     );
   }

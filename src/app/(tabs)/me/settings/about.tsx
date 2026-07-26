@@ -11,7 +11,7 @@ import {
 } from '@/constants/settings-icons';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { Image } from 'expo-image';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Linking, Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useUniwind } from 'uniwind';
@@ -21,7 +21,7 @@ const logo = require('../../../../../assets/images/webuddhist_gold.png');
 const SOCIAL_LINKS = [
   {
     icon: LinkSimple,
-    titleKey: 'about.social_website',
+    titleKey: 'about_social_website',
     subtitle: 'www.webuddhist.com',
     url: 'https://webuddhist.com',
   },
@@ -52,7 +52,7 @@ const SOCIAL_LINKS = [
 ] as const;
 
 export default function AboutScreen() {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const insets = useSafeAreaInsets();
   const { mutedForeground } = useThemeColors();
   const { theme } = useUniwind();
@@ -60,19 +60,19 @@ export default function AboutScreen() {
 
   return (
     <View className="flex-1 bg-background">
-      <AppScreenHeader title={t('about.title')} />
+      <AppScreenHeader title={t('about_title')} />
       <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + 24 }}>
         <View className="px-5 py-6">
           <View className="items-center">
             <Image source={logo} style={{ width: 96, height: 96 }} contentFit="contain" />
             <Text className="mt-4 text-[23px] font-bold">{t('appTitle')}</Text>
           </View>
-          <Text className="mt-3 text-justify text-base leading-6">{t('about.description')}</Text>
+          <Text className="mt-3 text-justify text-base leading-6">{t('about_description')}</Text>
         </View>
 
         <View className="px-5">
           <Text className="text-base font-medium text-muted-foreground">
-            {t('about.connect_with_us')}
+            {t('about_connect_with_us')}
           </Text>
           <View className="mt-4">
             {SOCIAL_LINKS.map((link, index) => {

@@ -12,6 +12,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { useAuth0 } from 'react-native-auth0';
+import { getApiLanguageSync } from '@/lib/i18n';
 
 /** Home-screen bootstrap: notification permission, user-plans refresh, pending plan nav. */
 export function useHomeBootstrap() {
@@ -47,7 +48,7 @@ export function useHomeBootstrap() {
           await queryClient.refetchQueries({
             queryKey: QUERY_KEYS.plans.userPlans(language, 0, 50),
           });
-          plansData = await fetchUserPlans(language, 0, 50);
+          plansData = await fetchUserPlans(getApiLanguageSync(), 0, 50);
           break;
         } catch {
           if (attempt < maxAttempts) {

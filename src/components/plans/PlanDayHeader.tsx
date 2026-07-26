@@ -2,7 +2,7 @@ import { Text } from '@/components/ui/text';
 import { EnrolledPlanStatusIndicator } from '@/components/plans/EnrolledPlanStatusIndicator';
 import type { PlanDateRange } from '@/utils/plan-utils';
 import { View } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 interface PlanDayHeaderProps {
   selectedDay: number;
@@ -23,12 +23,12 @@ export function PlanDayHeader({
   completionMap,
   onMissedDaysPress,
 }: PlanDayHeaderProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   return (
     <View className="flex-row items-center justify-between px-4 mb-1">
       <Text className="text-lg font-bold text-foreground">
-        {t('planTrack.day_of', { day: selectedDay, total: totalDays })}
+        {t('plan_day_of', { day: selectedDay, total: totalDays })}
       </Text>
       <EnrolledPlanStatusIndicator
         planId={planId}

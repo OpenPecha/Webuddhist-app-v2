@@ -10,7 +10,7 @@ import {
 import type { BookmarkCreateType, BookmarkDTO, BookmarkExistsResult } from '@/types/bookmarks';
 import { showAppToast } from '@/utils/show-app-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 export interface ToggleBookmarkInput {
   type: BookmarkCreateType;
@@ -21,7 +21,7 @@ export interface ToggleBookmarkInput {
 export function useToggleBookmark() {
   const queryClient = useQueryClient();
   const language = useContentLanguage();
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   return useMutation({
     mutationFn: async ({ type, sourceId, name }: ToggleBookmarkInput) => {
@@ -70,13 +70,13 @@ export function useToggleBookmark() {
           return true;
         }
         showAppToast(
-          previous.exists ? t('bookmarks.remove_failed') : t('bookmarks.save_failed'),
+          previous.exists ? t('bookmark_remove_failed') : t('bookmark_save_failed'),
         );
         throw error;
       }
     },
     onSuccess: (saved) => {
-      showAppToast(saved ? t('bookmarks.saved') : t('bookmarks.removed'));
+      showAppToast(saved ? t('bookmark_saved') : t('bookmark_removed'));
     },
   });
 }
@@ -84,7 +84,7 @@ export function useToggleBookmark() {
 export function useRemoveBookmark() {
   const queryClient = useQueryClient();
   const language = useContentLanguage();
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   return useMutation({
     mutationFn: async (input: {
@@ -113,12 +113,12 @@ export function useRemoveBookmark() {
         await queryClient.invalidateQueries({ queryKey: QUERY_KEYS.bookmarks.all });
       } catch {
         if (previous) queryClient.setQueryData(listKey, previous);
-        showAppToast(t('bookmarks.remove_failed'));
+        showAppToast(t('bookmark_remove_failed'));
         throw new Error('remove failed');
       }
     },
     onSuccess: () => {
-      showAppToast(t('bookmarks.removed'));
+      showAppToast(t('bookmark_removed'));
     },
   });
 }

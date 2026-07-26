@@ -1,19 +1,19 @@
 import { AppToastHost } from '@/components/common/AppToastHost';
-import { ForceUpdateGate } from '@/components/ForceUpdateGate';
 import { AppColors } from '@/constants/app-colors';
-import { ensureI18nReady } from '@/lib/i18n';
+import { initI18n, tolgee } from '@/lib/i18n';
 import { configureNotificationHandler } from '@/lib/notifications';
 import { AuthTokenSync } from '@/providers/auth-token';
 import { Auth0ProviderWrapper } from '@/providers/auth0';
 import { GuestProvider, useGuest } from '@/providers/guest';
 import { MalaSyncBootstrap } from '@/providers/mala-sync';
-import { PendingOnboardingPlanProvider } from '@/providers/pending-onboarding-plan';
-import { PendingNotificationNavProvider } from '@/providers/pending-notification-nav';
 import { NotificationSyncBootstrap } from '@/providers/notification-sync';
 import { OnboardingProvider, useOnboarding } from '@/providers/onboarding';
+import { PendingNotificationNavProvider } from '@/providers/pending-notification-nav';
+import { PendingOnboardingPlanProvider } from '@/providers/pending-onboarding-plan';
 import { QueryProvider } from '@/providers/query';
 import { ThemeProvider } from '@/providers/theme';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { TolgeeProvider } from '@tolgee/react';
 import { useFonts } from 'expo-font';
 import {
   Stack,
@@ -25,9 +25,10 @@ import {
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useAuth0 } from 'react-native-auth0';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import '../../global.css';
+
 
 SplashScreen.preventAutoHideAsync();
 configureNotificationHandler();
@@ -127,7 +128,7 @@ export default function RootLayout() {
   const [i18nReady, setI18nReady] = useState(false);
 
   useEffect(() => {
-    ensureI18nReady().then(() => setI18nReady(true));
+    initI18n().finally(() => setI18nReady(true));
   }, []);
 
   useEffect(() => {
@@ -141,26 +142,28 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <QueryProvider>
-        <Auth0ProviderWrapper>
-          <GuestProvider>
-            <AuthTokenSync>
-              <PendingNotificationNavProvider>
-                <NotificationSyncBootstrap />
-                <PendingOnboardingPlanProvider>
-                  <MalaSyncBootstrap />
-                  <OnboardingProvider>
-                    <ThemeProvider>
-                      <BottomSheetModalProvider>
-                        <AuthGate />
-                        <AppToastHost />
-                      </BottomSheetModalProvider>
-                    </ThemeProvider>
-                  </OnboardingProvider>
-                </PendingOnboardingPlanProvider>
-              </PendingNotificationNavProvider>
-            </AuthTokenSync>
-          </GuestProvider>
-        </Auth0ProviderWrapper>
+        <TolgeeProvider tolgee={tolgee}>
+          <Auth0ProviderWrapper>
+            <GuestProvider>
+              <AuthTokenSync>
+                <PendingNotificationNavProvider>
+                  <NotificationSyncBootstrap />
+                  <PendingOnboardingPlanProvider>
+                    <MalaSyncBootstrap />
+                    <OnboardingProvider>
+                      <ThemeProvider>
+                        <BottomSheetModalProvider>
+                          <AuthGate />
+                          <AppToastHost />
+                        </BottomSheetModalProvider>
+                      </ThemeProvider>
+                    </OnboardingProvider>
+                  </PendingOnboardingPlanProvider>
+                </PendingNotificationNavProvider>
+              </AuthTokenSync>
+            </GuestProvider>
+          </Auth0ProviderWrapper>
+        </TolgeeProvider>
       </QueryProvider>
     </GestureHandlerRootView>
   );

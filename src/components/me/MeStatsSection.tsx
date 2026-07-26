@@ -12,7 +12,8 @@ import type { UserStats } from '@/types/user-stats';
 import { CirclesThree, ListChecks, Timer } from 'phosphor-react-native';
 import { Image } from 'expo-image';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
+import { useUiLanguage } from '@/lib/i18n';
 import { Pressable, View } from 'react-native';
 
 interface StatCardProps {
@@ -68,7 +69,7 @@ interface PracticeDaysCardProps {
 }
 
 function PracticeDaysCard({ days, onPress }: PracticeDaysCardProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const { foreground, meCardSurface } = useThemeColors();
 
   return (
@@ -81,7 +82,7 @@ function PracticeDaysCard({ days, onPress }: PracticeDaysCardProps) {
       <Text className="ml-3 flex-1 text-base">
         <Text className="text-xl font-bold">{days}</Text>
         {' '}
-        {t('me.days_plan_practiced_suffix')}
+        {t('me_days_plan_practiced_suffix')}
       </Text>
     </Pressable>
   );
@@ -92,23 +93,24 @@ interface MeStatsSectionProps {
 }
 
 export function MeStatsSection({ stats }: MeStatsSectionProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslate();
+  const uiLanguage = useUiLanguage();
   const language = useContentLanguage();
   const { foreground } = useThemeColors();
   const [shareVisible, setShareVisible] = useState(false);
   const [practiceDaysVisible, setPracticeDaysVisible] = useState(false);
   const [accumulationVisible, setAccumulationVisible] = useState(false);
 
-  const formattedAccumulation = formatCompactCount(stats.totalAccumulated, i18n.language);
+  const formattedAccumulation = formatCompactCount(stats.totalAccumulated, uiLanguage);
   const meditationDuration = formatMeditationDuration(stats.totalTimer, {
     language,
-    minuteLabel: t('me.minutes'),
-    hourLabel: t('me.hours'),
+    minuteLabel: t('me_minutes'),
+    hourLabel: t('me_hours'),
   });
 
   return (
     <View className="px-5 pb-6 pt-6">
-      <Text className="text-xl font-extrabold">{t('me.my_stats')}</Text>
+      <Text className="text-xl font-extrabold">{t('me_my_stats')}</Text>
       <View className="mt-3">
         <MeStreakCard streak={stats.streak} onPress={() => setShareVisible(true)} />
       </View>
@@ -120,7 +122,7 @@ export function MeStatsSection({ stats }: MeStatsSectionProps) {
       </View>
       <View className="mt-3 flex-row gap-3">
         <StatCard
-          label={t('me.accumulation')}
+          label={t('me_accumulation')}
           icon={
             <Image
               source={APP_ASSETS.malaIcon}
@@ -130,11 +132,11 @@ export function MeStatsSection({ stats }: MeStatsSectionProps) {
             />
           }
           value={formattedAccumulation}
-          unit={t('me.counts')}
+          unit={t('me_counts')}
           onPress={() => setAccumulationVisible(true)}
         />
         <StatCard
-          label={t('me.total_meditation_time')}
+          label={t('me_total_meditation_time')}
           icon={<Timer size={22} color={foreground} />}
           value={meditationDuration}
         />
