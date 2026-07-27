@@ -5,9 +5,9 @@ import { useRoutine } from '@/hooks/api/useRoutine';
 import { useUserPlans } from '@/hooks/api/useUserPlans';
 import { useLoginDrawer } from '@/hooks/useLoginDrawer';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
+import { useThemeColors } from '@/hooks/useThemeColors';
 import { useGuest } from '@/providers/guest';
 import { routineHasItems, type RoutineItem } from '@/types/routine';
-import { usePendingNotificationNav } from '@/providers/pending-notification-nav';
 import {
   getCurrentDay,
   resolveUserPlanForItem,
@@ -16,9 +16,10 @@ import {
   resolveUserPlanForRoutineItem,
   selectedDayForRoutinePlan,
 } from '@/utils/routine-navigation';
+import { Ionicons } from '@expo/vector-icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { type Href, useRouter } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslate } from '@tolgee/react';
 import { Text } from '@/components/ui/text';
 import {
@@ -46,6 +47,24 @@ function getErrorMessage(error: unknown): string {
     return error.message.replace(/^Exception:\s*/, '').trim();
   }
   return '';
+}
+
+function BackRow({ onBack }: { onBack: () => void }) {
+  const { t } = useTranslate();
+  const { foreground } = useThemeColors();
+
+  return (
+    <View className="flex-row items-center px-1">
+      <Pressable
+        onPress={onBack}
+        className="p-3 active:opacity-70"
+        accessibilityRole="button"
+        accessibilityLabel={t('back')}
+      >
+        <Ionicons name="chevron-back" size={24} color={foreground} />
+      </Pressable>
+    </View>
+  );
 }
 
 function EmptyScaffold({
@@ -155,7 +174,7 @@ function PracticeErrorState({
   );
 }
 
-export default function PracticeScreen() {
+export default function MyPracticesScreen() {
   const insets = useSafeAreaInsets();
   const { t } = useTranslate();
   const contentLanguage = useContentLanguage();
@@ -180,34 +199,9 @@ export default function PracticeScreen() {
     isFetching: plansFetching,
   } = useUserPlans();
 
-  const userPlans = userPlansData?.plans ?? [];
+  const userPlans = useMemo(() => userPlansData?.plans ?? [], [userPlansData]);
   const refreshing = routineFetching || plansFetching;
   const [resolvingItemId, setResolvingItemId] = useState<string | null>(null);
-  const { pending, consumePendingNav } = usePendingNotificationNav();
-
-  useEffect(() => {
-    if (!pending || isGuest || !user) return;
-
-    const nav = consumePendingNav();
-    if (!nav) return;
-
-    if (nav.itemType === 'recitation') {
-      router.push({ pathname: '/reader/[textId]', params: { textId: nav.itemId } });
-      return;
-    }
-
-    const planId = nav.planId ?? nav.itemId;
-    const userPlan = resolveUserPlanForItem(planId, userPlans);
-    const selectedDay = userPlan ? getCurrentDay(userPlan) : nav.day;
-    router.push({
-      pathname: '/practice/details',
-      params: {
-        planId,
-        title: userPlan?.title ?? '',
-        ...(selectedDay != null ? { selectedDay: String(selectedDay) } : {}),
-      },
-    });
-  }, [consumePendingNav, isGuest, pending, router, user, userPlans]);
 
   const refreshAll = useCallback(async () => {
     await Promise.all([refetchRoutine(), refetchUserPlans()]);
@@ -353,6 +347,7 @@ export default function PracticeScreen() {
           <ActivityIndicator size="large" />
         </View>
       ) : null}
+      <BackRow onBack={() => router.back()} />
       {content}
       <LoginDrawer
         key={loginDrawerSession}

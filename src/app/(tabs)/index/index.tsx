@@ -132,7 +132,7 @@ export default function Index() {
             ) : showRoutineStats && routineInfo ? (
               <MyPracticesStatsCard
                 routineInfo={routineInfo}
-                onPress={() => router.replace('/practice')}
+                onPress={() => router.push('/practice/my-practices')}
               />
             ) : null}
 

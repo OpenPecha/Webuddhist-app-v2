@@ -1,5 +1,5 @@
 import { PresetTimersView } from '@/components/timer/PresetTimersView';
 
-export default function TimersScreen() {
+export default function PracticeTimersScreen() {
   return <PresetTimersView />;
 }

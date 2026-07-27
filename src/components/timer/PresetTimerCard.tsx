@@ -3,7 +3,7 @@ import { useThemeColors } from '@/hooks/useThemeColors';
 import type { PresetTimer } from '@/types/timers';
 import { Pressable, View } from 'react-native';
 
-const CARD_BORDER_LIGHT = '#E4E4E4';
+export const TIMER_CARD_BORDER_LIGHT = '#E4E4E4';
 
 interface PresetTimerCardProps {
   timer: PresetTimer;
@@ -17,7 +17,7 @@ export function displayMinutes(durationMs: number): number {
 
 export function PresetTimerCard({ timer, minLabel, onPress }: PresetTimerCardProps) {
   const { cardSurface, cardBorder, isDark } = useThemeColors();
-  const borderColor = isDark ? cardBorder : CARD_BORDER_LIGHT;
+  const borderColor = isDark ? cardBorder : TIMER_CARD_BORDER_LIGHT;
 
   return (
     <Pressable

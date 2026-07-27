@@ -84,7 +84,7 @@ export function useHomeBootstrap() {
           title: plan.title,
         },
       });
-      router.replace('/practice');
+      router.replace('/practice/my-practices');
     };
 
     void run();

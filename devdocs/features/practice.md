@@ -2,12 +2,12 @@
 
 | | |
 |---|---|
-| **Status** | In progress (Practice tab + edit-routine exist) |
+| **Status** | In progress (explore tab + routine + edit-routine exist) |
 | **Priority** | P1 |
 | **Flutter baseline** | `lib/features/practice` |
-| **v2 target** | `src/app/(tabs)/practice.tsx`, `src/app/practice/edit-routine/*`, `src/app/practice/details.tsx` |
+| **v2 target** | `src/app/(tabs)/practice/*`, `src/app/practice/edit-routine/*`, `src/app/practice/details.tsx` |
 | **Owner** | @migration-lead |
-| **Last updated** | 2026-06-22 (implementation alignment) |
+| **Last updated** | 2026-07-27 (practice explore tab) |
 
 ---
 
@@ -17,13 +17,21 @@ Practice is the user's personal daily routine: time-blocked sessions built from 
 and recitations. Users build/edit a routine, select series/plans/recitations to include, and
 the routine drives scheduled notifications.
 
-**Note: this page will be renamed "Routine" and will be sub-page of the home page. V2 of the app will include a new Practice page with different content.
+The Practice **tab** itself is an explore hub (Plans, My practices, Bookmarks, Chants,
+Accumulations, Meditation Timer); the routine list lives behind the "My practices" button at
+`/practice/my-practices`, matching Flutter.
 
 ## 2. Flutter reference map
 
 | Screen / element | Flutter source | Route |
 |------------------|----------------|-------|
-| Practice screen | `features/practice/presentation/screens/practice_screen.dart` | `/practice` |
+| Practice explore tab | `features/practice/presentation/screens/practice_explore_screen.dart` | `/practice` |
+| My practices (routine) | `features/practice/presentation/screens/practice_screen.dart` | `/practice/my-practices` |
+| Section container | `features/practice/presentation/widgets/practice_section_container.dart` | — |
+| Plan carousel card | `features/practice/presentation/widgets/practice_plan_card.dart` | — |
+| Action buttons | `features/practice/presentation/widgets/practice_tab_button.dart` | — |
+| Accumulation circle | `features/practice/presentation/widgets/practice_accumulation_circle_item.dart` | — |
+| Timer card | `features/practice/presentation/widgets/practice_timer_card.dart` | — |
 | Edit routine | `features/practice/presentation/screens/edit_routine_screen.dart` | `/practice/edit-routine` |
 | Select plan | `features/practice/presentation/screens/select_plan_screen.dart` | `/practice/edit-routine/select-plan` |
 | Select recitation/session | `features/practice/presentation/screens/select_session_screen.dart` | `/practice/edit-routine/select-recitation` |
@@ -39,7 +47,14 @@ the routine drives scheduled notifications.
 
 | Screen / flow | v2 file | Status |
 |---------------|---------|--------|
-| Practice tab | `src/app/(tabs)/practice.tsx` | Partial — routine display, login gating, plan card nav |
+| Practice explore tab | `src/app/(tabs)/practice/index.tsx` | Done — Plans / Chants / Accumulations / Timers sections, action buttons, guest gating |
+| My practices (routine) | `src/app/(tabs)/practice/my-practices.tsx` | Partial — routine display, login gating, plan card nav |
+| Plans "See all" | `src/app/(tabs)/practice/plans.tsx` → `AllPlansView` | Done — shared with root `/plans` |
+| Chants "See all" | `src/app/(tabs)/practice/chants.tsx` → `RecitationsBrowseView` | Done — shared with Home `/recitations` |
+| Chants search | `src/app/(tabs)/practice/chants-search.tsx` → `RecitationsSearchView` | Done |
+| Accumulations "See all" | `src/app/(tabs)/practice/accumulations.tsx` | Done — 2-column bead grid |
+| Timers "See all" | `src/app/(tabs)/practice/timers.tsx` → `PresetTimersView` | Done — shared with root `/timers` |
+| Bookmarks | `src/app/(tabs)/practice/bookmarks.tsx` → `BookmarksView` | Done — shared with `/me/bookmarks` |
 | Edit routine | `src/app/practice/edit-routine/index.tsx` | Partial — time blocks, plan/recitation select; **missing SERIES session type + `enrollSeriesId` prefill** |
 | Select plan | `src/app/practice/edit-routine/select-plan.tsx` | Exists |
 | Select recitation | `src/app/practice/edit-routine/select-recitation.tsx` | Exists |
@@ -84,8 +99,18 @@ the routine drives scheduled notifications.
 
 ## 7. Navigation
 
-Mirror nested routes under `src/app/practice/*`:
-`edit-routine`, `edit-routine/select-plan`, `edit-routine/select-recitation`.
+Two directories feed the `/practice` prefix:
+
+- `src/app/(tabs)/practice/*` — tab stack, bottom tab bar stays visible
+  (`index`, `my-practices`, `plans`, `chants`, `chants-search`, `accumulations`, `timers`, `bookmarks`).
+- `src/app/practice/*` — full-screen root stack (`details`, `edit-routine`, `edit-routine/select-*`).
+
+Explore tap targets: plan card → `/series/{id}`, chant → `/reader/[textId]`,
+accumulation → `/mala?initialPresetId=`, timer → `/timers/active`. Bookmarks, accumulation and
+timer taps open the login drawer for guests.
+
+Notification deep links are consumed by `usePendingRoutineNavigation()` in
+`src/app/(tabs)/practice/_layout.tsx`, so they still fire when the tab opens on the explore hub.
 
 | Flow | v2 route | Notes |
 |------|----------|-------|
@@ -115,7 +140,8 @@ SERIES routine session — see [open-questions.md §1](../research/open-question
 
 | Requirement | Flutter | v2 | Notes |
 |-------------|---------|-----|-------|
-| Practice screen | yes | partial | routine tab exists |
+| Practice explore tab | yes | yes | Plans / Chants / Accumulations / Timers + action buttons |
+| Practice screen | yes | partial | routine at `/practice/my-practices` |
 | Edit routine | yes | partial | missing SERIES type |
 | Select plan/recitation | yes | yes | |
 | SERIES enroll prefill | yes | no | see series.md §6a |
