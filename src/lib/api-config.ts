@@ -26,6 +26,7 @@ export const ENDPOINTS = {
     completionStatus: (planId: string) =>
       `/users/me/plans/${planId}/days/completion_status`,
     completeTask: (taskId: string) => `/users/me/tasks/${taskId}/complete`,
+    deleteTask: (taskId: string) => `/users/me/task/${taskId}`,
     completeSubTask: (id: string) => `/users/me/sub-tasks/${id}/complete`,
   },
   groups: {

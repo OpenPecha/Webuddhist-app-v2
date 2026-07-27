@@ -115,6 +115,11 @@ export async function completeTask(taskId: string): Promise<void> {
   await http.post(ENDPOINTS.plans.completeTask(taskId));
 }
 
+/** Uncompletes a task. Mirrors the Flutter app's "uncheck" behavior. */
+export async function deleteTask(taskId: string): Promise<void> {
+  await http.delete(ENDPOINTS.plans.deleteTask(taskId));
+}
+
 export async function completeSubTask(subTaskId: string): Promise<void> {
   await http.post(ENDPOINTS.plans.completeSubTask(subTaskId));
 }

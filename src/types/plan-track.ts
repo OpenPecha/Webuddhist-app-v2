@@ -31,6 +31,8 @@ export interface UserPlanDayDetails {
   is_completed: boolean;
   videos?: DayVideoSummary[];
   audio_url?: string | null;
+  thumbnail_url?: string | null;
+  shareable_image_url?: string | null;
 }
 
 export interface UserPlanProgress {
