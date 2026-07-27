@@ -28,11 +28,12 @@ import {
   resolveUserPlanForItem,
 } from "@/utils/plan-utils";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslate } from '@tolgee/react';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
 
 function mapTasksFromDayDetails(
   rawTasks: {
@@ -85,7 +86,7 @@ export default function PlanTrackScreen() {
   const planId = params.planId;
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   const hasSelectedDayParam = useMemo(() => {
     const parsed = Number(params.selectedDay);
@@ -139,7 +140,8 @@ export default function PlanTrackScreen() {
     params.title ??
     userPlan?.title ??
     planDetail?.title ??
-    t("planTrack.title");
+    t("plan_info");
+
 
   const planStartDate = userPlan ? getEffectiveStartDate(userPlan) : new Date();
 
@@ -331,8 +333,8 @@ export default function PlanTrackScreen() {
       ) : notEnrolled ? (
         <View className="flex-1 items-center justify-center gap-3 p-6">
           <Text className="text-center text-destructive">
-            {t("practice.not_found")}
-          </Text>
+            {t('plan_not_found', "Plan not found")}
+          </Text >
           <Pressable
             onPress={() =>
               router.replace({
@@ -342,9 +344,9 @@ export default function PlanTrackScreen() {
             }
             className="p-3 active:opacity-70"
           >
-            <Text className="font-semibold">{t("practice.retry")}</Text>
-          </Pressable>
-        </View>
+            <Text className="font-semibold">{t('retry')}</Text>
+          </Pressable >
+        </View >
       ) : (
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -397,30 +399,33 @@ export default function PlanTrackScreen() {
             }}
           />
         </ScrollView>
-      )}
+      )
+      }
 
-      {showPracticeNow && !notEnrolled && !isLoading ? (
-        <View
-          className="absolute bottom-0 left-0 right-0 bg-background px-4 pt-3"
-          style={{ paddingBottom: insets.bottom + 16 }}
-        >
-          <Pressable
-            onPress={() => openPlanReading("first-incomplete", false)}
-            disabled={allTasksComplete}
-            style={({ pressed }) => ({
-              backgroundColor: "#000",
-              borderRadius: 999,
-              paddingVertical: 16,
-              alignItems: "center",
-              opacity: allTasksComplete ? 0.5 : pressed ? 0.75 : 1,
-            })}
+      {
+        showPracticeNow && !notEnrolled && !isLoading ? (
+          <View
+            className="absolute bottom-0 left-0 right-0 bg-background px-4 pt-3"
+            style={{ paddingBottom: insets.bottom + 16 }}
           >
-            <Text className="text-base font-bold text-white">
-              {t("planTrack.practice_now")}
-            </Text>
-          </Pressable>
-        </View>
-      ) : null}
+            <Pressable
+              onPress={() => openPlanReading("first-incomplete", false)}
+              disabled={allTasksComplete}
+              style={({ pressed }) => ({
+                backgroundColor: "#000",
+                borderRadius: 999,
+                paddingVertical: 16,
+                alignItems: "center",
+                opacity: allTasksComplete ? 0.5 : pressed ? 0.75 : 1,
+              })}
+            >
+              <Text className="text-base font-bold text-white">
+                {t('start_reading')}
+              </Text >
+            </Pressable >
+          </View >
+        ) : null
+      }
 
       <DayCompletionSheet
         visible={showDayComplete}
@@ -432,6 +437,6 @@ export default function PlanTrackScreen() {
         thumbnailUrl={dayDetails?.thumbnail_url}
         shareableImageUrl={dayDetails?.shareable_image_url}
       />
-    </View>
+    </View >
   );
 }

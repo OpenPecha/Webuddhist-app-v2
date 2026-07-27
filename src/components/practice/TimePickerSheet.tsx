@@ -2,7 +2,7 @@ import { AppBottomSheet } from '@/components/settings/AppBottomSheet';
 import { dateFromTimeInt, timeIntFromDate } from '@/utils/routine-time-utils';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Platform, Pressable, Text, View } from 'react-native';
 
 interface TimePickerSheetProps {
@@ -40,7 +40,7 @@ function TimePickerSheetContent({
   onClose,
   onConfirm,
 }: TimePickerSheetContentProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const [selected, setSelected] = useState(() => dateFromTimeInt(timeInt));
 
   if (Platform.OS === 'android') {
@@ -62,7 +62,7 @@ function TimePickerSheetContent({
     <AppBottomSheet visible={visible} onClose={onClose} maxHeight="50%">
       <View className="flex-row justify-between px-2">
         <Pressable onPress={onClose} className="p-3">
-          <Text className="text-base text-muted-foreground">{t('editRoutine.cancel')}</Text>
+          <Text className="text-base text-muted-foreground">{t('cancel')}</Text>
         </Pressable>
         <Pressable
           onPress={() => {
@@ -71,7 +71,7 @@ function TimePickerSheetContent({
           }}
           className="p-3"
         >
-          <Text className="text-base font-semibold">{t('editRoutine.done')}</Text>
+          <Text className="text-base font-semibold">{t('done')}</Text>
         </Pressable>
       </View>
       <DateTimePicker

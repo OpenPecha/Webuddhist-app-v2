@@ -5,6 +5,7 @@ import { useGuest } from '@/providers/guest';
 import { fetchAllBookmarks } from '@/services/bookmarks';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth0 } from 'react-native-auth0';
+import { getApiLanguageSync } from '@/lib/i18n';
 
 export function useBookmarks() {
   const { user } = useAuth0();
@@ -14,7 +15,7 @@ export function useBookmarks() {
 
   return useQuery({
     queryKey: QUERY_KEYS.bookmarks.list(language),
-    queryFn: () => fetchAllBookmarks(language),
+    queryFn: () => fetchAllBookmarks(getApiLanguageSync()),
     enabled: !!user && !isGuest && isAuthReady,
   });
 }

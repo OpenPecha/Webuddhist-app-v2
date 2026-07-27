@@ -5,6 +5,7 @@ import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useGuest } from '@/providers/guest';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth0 } from 'react-native-auth0';
+import { getApiLanguageSync } from '@/lib/i18n';
 
 export function useUserPlans(skip = 0, limit = 50) {
   const { user } = useAuth0();
@@ -15,7 +16,7 @@ export function useUserPlans(skip = 0, limit = 50) {
 
   return useQuery({
     queryKey: QUERY_KEYS.plans.userPlans(language, skip, limit),
-    queryFn: () => fetchUserPlans(language, skip, limit),
+    queryFn: () => fetchUserPlans(getApiLanguageSync(), skip, limit),
     enabled,
   });
 }

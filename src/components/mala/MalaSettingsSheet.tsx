@@ -12,7 +12,7 @@ import {
   Vibrate,
 } from 'phosphor-react-native';
 import type { IconProps } from 'phosphor-react-native';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -97,7 +97,7 @@ export function MalaSettingsSheet({
   onSoundChange,
   onVibrationChange,
 }: MalaSettingsSheetProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const insets = useSafeAreaInsets();
   const { borderInput } = useThemeColors();
 
@@ -121,21 +121,21 @@ export function MalaSettingsSheet({
       <View className="px-5" style={{ paddingBottom: Math.max(16, insets.bottom) }}>
         <SettingsActionRow
           icon={Plus}
-          label={t('mala.settings_add_to_practice')}
+          label={t('mala_add_to_practice')}
           onPress={handleAddToPractice}
         />
         <SheetDivider color={borderInput} />
 
         <SettingsActionRow
           icon={BookmarkSimple}
-          label={t('mala.settings_bookmark')}
+          label={t('mala_add_to_bookmark')}
           onPress={handleBookmark}
         />
         <SheetDivider color={borderInput} />
 
         <SettingsToggleRow
           icon={SpeakerHigh}
-          label={t('mala.settings_sound')}
+          label={t('mala_sound')}
           value={prefs.soundEnabled}
           onValueChange={onSoundChange}
         />
@@ -143,7 +143,7 @@ export function MalaSettingsSheet({
 
         <SettingsToggleRow
           icon={Vibrate}
-          label={t('mala.settings_vibration')}
+          label={t('mala_vibration')}
           value={prefs.vibrationEnabled}
           onValueChange={onVibrationChange}
         />
@@ -151,7 +151,7 @@ export function MalaSettingsSheet({
 
         <SettingsActionRow
           icon={ArrowsClockwise}
-          label={t('mala.settings_reset')}
+          label={t('mala_reset_count')}
           onPress={handleReset}
           destructive
         />

@@ -5,6 +5,7 @@ import { useGuest } from '@/providers/guest';
 import { fetchSeriesDayCompleted } from '@/services/series-day-completed';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth0 } from 'react-native-auth0';
+import { getApiLanguageSync } from '@/lib/i18n';
 
 export function useSeriesDayCompleted(enabled = true, skip = 0, limit = 20) {
   const language = useContentLanguage();
@@ -15,7 +16,7 @@ export function useSeriesDayCompleted(enabled = true, skip = 0, limit = 20) {
 
   return useQuery({
     queryKey: QUERY_KEYS.profile.seriesDayCompleted(language, skip, limit),
-    queryFn: () => fetchSeriesDayCompleted(language, skip, limit),
+    queryFn: () => fetchSeriesDayCompleted(getApiLanguageSync(), skip, limit),
     enabled: canFetch,
     staleTime: 0,
   });

@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { LoginDrawer } from '@/components/auth/LoginDrawer';
 import { RoutineBlockSection } from '@/components/practice/RoutineBlockSection';
 import { RoutineEmptyState } from '@/components/practice/RoutineEmptyState';
@@ -20,7 +19,7 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { type Href, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
@@ -123,7 +122,7 @@ function PracticeErrorState({
   onRefresh: () => void;
   refreshing: boolean;
 }) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   return (
     <ScrollView
@@ -136,7 +135,7 @@ function PracticeErrorState({
     >
       <View className="items-center gap-3">
         <Text className="text-center text-xl font-semibold text-foreground">
-          {t('practice.routine_load_error')}
+          {t('routine_load_error')}
         </Text>
         {message ? (
           <Text className="text-center text-[15px] text-muted-foreground">
@@ -148,7 +147,7 @@ function PracticeErrorState({
           className="mt-3 rounded-3xl bg-black px-6 py-3 active:opacity-75"
         >
           <Text className="text-base font-semibold text-white">
-            {t('practice.retry')}
+            {t('retry')}
           </Text>
         </Pressable>
       </View>
@@ -158,7 +157,7 @@ function PracticeErrorState({
 
 export default function PracticeScreen() {
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const contentLanguage = useContentLanguage();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -261,7 +260,7 @@ export default function PracticeScreen() {
           contentLanguage,
         );
         if (!userPlan) {
-          Alert.alert(t('practice.not_found'));
+          Alert.alert(t('plan_not_found', "Plan not found"));
           return;
         }
         const selectedDay = selectedDayForRoutinePlan(userPlan, item);
@@ -287,7 +286,7 @@ export default function PracticeScreen() {
   if (showGuestEmpty) {
     content = (
       <EmptyScaffold
-        title={t('practice.routine_empty_title')}
+        title={t('routine_empty_title')}
         onBuildRoutine={onBuildRoutine}
         onRefresh={refreshAll}
         refreshing={refreshing}
@@ -300,7 +299,7 @@ export default function PracticeScreen() {
       </View>
     );
   } else if (routineError && routine === undefined) {
-    const message = getErrorMessage(routineError) || t('practice.routine_load_error');
+    const message = getErrorMessage(routineError) || t('routine_load_error');
     content = (
       <PracticeErrorState
         message={message}
@@ -319,8 +318,8 @@ export default function PracticeScreen() {
         }
         ListHeaderComponent={
           <RoutineFilledHeader
-            title={t('practice.routine_title')}
-            editLabel={t('practice.routine_edit')}
+            title={t('routine_title')}
+            editLabel={t('routine_edit')}
             onEdit={onBuildRoutine}
           />
         }
@@ -339,7 +338,7 @@ export default function PracticeScreen() {
   } else {
     content = (
       <EmptyScaffold
-        title={t('practice.routine_empty_title')}
+        title={t('routine_empty_title')}
         onBuildRoutine={onBuildRoutine}
         onRefresh={refreshAll}
         refreshing={refreshing}

@@ -1,3 +1,4 @@
+import { getApiLanguageSync } from '@/lib/i18n';
 import { QUERY_KEYS } from '@/constants/query-keys';
 import { useAuthTokenReady } from '@/providers/auth-token';
 import { useGuest } from '@/providers/guest';
@@ -15,7 +16,7 @@ export function useSeriesProgress(seriesId: string, enabled = true) {
 
   return useQuery({
     queryKey: QUERY_KEYS.series.userProgress(seriesId, language),
-    queryFn: () => fetchUserSeriesProgress(seriesId, language),
+    queryFn: () => fetchUserSeriesProgress(seriesId, getApiLanguageSync()),
     enabled: isEnabled,
   });
 }

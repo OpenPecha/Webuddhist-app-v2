@@ -12,7 +12,8 @@ import type { PublicGroupDetail } from '@/types/groups';
 import { Image } from 'expo-image';
 import { UsersThree } from 'phosphor-react-native';
 import { Text } from '@/components/ui/text';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
+import { useUiLanguage } from '@/lib/i18n';
 import { View } from 'react-native';
 
 interface GroupProfileHeaderProps {
@@ -22,12 +23,13 @@ interface GroupProfileHeaderProps {
 }
 
 export function GroupProfileHeader({ group, meta, language }: GroupProfileHeaderProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslate();
+  const uiLanguage = useUiLanguage();
   const { mutedForeground, skeleton } = useThemeColors();
 
   const isPage = group.group_type === 'PAGE';
   const count = getGroupMemberCount(group);
-  const formattedCount = formatMemberCountNumber(count, i18n.language || language);
+  const formattedCount = formatMemberCountNumber(count, uiLanguage || language);
   const countLabel = getMemberCountLabel(count, isPage, t);
   const title = meta?.title ?? group.slug;
 

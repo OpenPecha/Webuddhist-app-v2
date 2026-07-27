@@ -11,6 +11,7 @@ import {
   JOINED_GROUPS_FETCH_LIMIT,
 } from '@/services/groups';
 import type { AuthorGroupSummary } from '@/types/groups';
+import { getApiLanguageSync } from '@/lib/i18n';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { useAuthTokenReady } from '@/providers/auth-token';
 import { useGuest } from '@/providers/guest';
@@ -29,7 +30,7 @@ export function useDiscoverGroups(search = '') {
   return useInfiniteQuery({
     queryKey: QUERY_KEYS.groups.discover(language, search),
     queryFn: ({ pageParam = 0 }) =>
-      fetchDiscoverGroups(language, pageParam, DISCOVER_PAGE_SIZE, search || undefined),
+      fetchDiscoverGroups(getApiLanguageSync(), pageParam, DISCOVER_PAGE_SIZE, search || undefined),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       const next = lastPage.skip + lastPage.limit;
@@ -46,7 +47,7 @@ export function useJoinedGroups(skip = 0, limit = JOINED_GROUPS_FETCH_LIMIT) {
 
   return useQuery({
     queryKey: QUERY_KEYS.groups.joined(language, skip, limit),
-    queryFn: () => fetchJoinedGroups(language, skip, limit),
+    queryFn: () => fetchJoinedGroups(getApiLanguageSync(), skip, limit),
     enabled: !!user && !isGuest && isAuthReady,
   });
 }

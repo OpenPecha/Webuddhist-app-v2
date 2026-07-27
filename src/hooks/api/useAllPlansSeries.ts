@@ -1,3 +1,4 @@
+import { getApiLanguageSync } from '@/lib/i18n';
 import { QUERY_KEYS } from '@/constants/query-keys';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import {
@@ -12,7 +13,7 @@ export function useAllPlansSeries() {
   return useInfiniteQuery({
     queryKey: QUERY_KEYS.series.allPlans(language),
     queryFn: ({ pageParam = 0 }) =>
-      fetchSeriesList(language, pageParam, ALL_PLANS_SERIES_PAGE_SIZE),
+      fetchSeriesList(getApiLanguageSync(), pageParam, ALL_PLANS_SERIES_PAGE_SIZE),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       const next = lastPage.skip + lastPage.limit;

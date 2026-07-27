@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { ConnectHeader, ConnectSectionTitle } from '@/components/connect/ConnectHeader';
 import { ConnectHeroImage } from '@/components/connect/ConnectHeroImage';
 import { DiscoverEmptyState } from '@/components/connect/DiscoverEmptyState';
@@ -22,7 +21,7 @@ import {
   clearGroupPending,
 } from '@/stores/pending-groups';
 import { useEffect, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
@@ -34,19 +33,19 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 function ConnectErrorState({ onRetry }: { onRetry: () => void }) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   return (
     <View className="mt-12 items-center gap-3 px-6">
       <Text className="text-center text-destructive">
-        {t('connect.load_error')}
+        {t('connect_groups_load_error')}
       </Text>
       <Pressable
         onPress={onRetry}
         className="rounded-lg bg-foreground px-4 py-2.5 active:opacity-70"
       >
         <Text className="font-semibold text-white">
-          {t('practice.retry')}
+          {t('retry')}
         </Text>
       </Pressable>
     </View>
@@ -54,7 +53,7 @@ function ConnectErrorState({ onRetry }: { onRetry: () => void }) {
 }
 
 export default function ConnectScreen() {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const insets = useSafeAreaInsets();
   const { isDark } = useThemeColors();
   const queryClient = useQueryClient();
@@ -117,7 +116,7 @@ export default function ConnectScreen() {
     if (hasMyGroups) return <DiscoverEmptyState />;
     return (
       <Text className="mt-12 px-6 text-center text-muted-foreground">
-        {t('connect.empty_title')}
+        {t('connect_groups_empty_title')}
       </Text>
     );
   };
@@ -137,7 +136,7 @@ export default function ConnectScreen() {
             ) : (
               <ConnectHeroImage />
             )}
-            <ConnectSectionTitle label={t('connect.discover_groups')} />
+            <ConnectSectionTitle label={t('discover_groups')} />
           </>
         }
         ListEmptyComponent={renderEmptyDiscover()}

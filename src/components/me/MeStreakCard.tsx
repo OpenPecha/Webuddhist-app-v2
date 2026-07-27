@@ -6,7 +6,7 @@ import { useThemeColors } from '@/hooks/useThemeColors';
 import type { StreakStats } from '@/types/user-stats';
 import { Fire, ShareNetwork } from 'phosphor-react-native';
 import { useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { ActivityIndicator, Pressable, View } from 'react-native';
 import type { ViewShotRef } from 'react-native-view-shot';
 
@@ -18,7 +18,7 @@ interface MeStreakCardProps {
 }
 
 export function MeStreakCard({ streak, onPress }: MeStreakCardProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const { mutedForeground, meCardSurface } = useThemeColors();
   const captureRef = useRef<ViewShotRef>(null);
   const [sharing, setSharing] = useState(false);
@@ -59,11 +59,11 @@ export function MeStreakCard({ streak, onPress }: MeStreakCardProps) {
         <View className="flex-row items-center justify-center">
           <Fire size={28} color={FLAME_COLOR} weight="fill" />
           <Text className="ml-2 text-xl font-bold">
-            {t('me.day_streak', { count: streak.current })}
+            {t('me_day_streak', { count: streak.current })}
           </Text>
         </View>
         <Text className="mt-1 text-center text-xs text-muted-foreground">
-          {t('me.best_streak', { count: streak.highest })}
+          {t('me_best_streak', { count: streak.highest })}
         </Text>
         <View className="mt-5">
           <StreakWeekTracker practicedDays={streak.week} />

@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { AppBottomTabBar } from '@/components/navigation/AppBottomTabBar';
 import { Tabs } from 'expo-router';
 

@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { GoogleIcon } from '@/components/auth/GoogleIcon';
 import { AUTH0_CUSTOM_SCHEME } from '@/providers/auth0';
 import { useGuest } from '@/providers/guest';
@@ -6,7 +5,7 @@ import { cn } from '@/utils/cn';
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { StatusBar } from 'expo-status-bar';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Text } from '@/components/ui/text';
 import { ActivityIndicator, Platform, Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
@@ -44,7 +43,7 @@ export default function Login() {
   const { authorize, isLoading } = useAuth0();
   const { continueAsGuest } = useGuest();
   const insets = useSafeAreaInsets();
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   const loginWithGoogle = async () => {
     try {
@@ -95,7 +94,7 @@ export default function Login() {
           <>
             <LoginButton
               icon={<GoogleIcon />}
-              label={t('auth.continue_with_google')}
+              label={t('continueWithGoogle')}
               onPress={loginWithGoogle}
               bordered
             />
@@ -103,7 +102,7 @@ export default function Login() {
             {Platform.OS === 'ios' && (
               <LoginButton
                 icon={<Ionicons name="logo-apple" size={22} color="#fff" />}
-                label={t('auth.continue_with_apple')}
+                label={t('continueWithApple')}
                 onPress={loginWithApple}
                 dark
               />
@@ -111,7 +110,7 @@ export default function Login() {
 
             <LoginButton
               icon={<Ionicons name="person-outline" size={20} color="#000" />}
-              label={t('auth.continue_as_guest')}
+              label={t('continueAsGuest')}
               onPress={continueAsGuest}
               bordered
             />

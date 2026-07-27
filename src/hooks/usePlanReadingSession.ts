@@ -14,7 +14,7 @@ import { showAppToast } from '@/utils/show-app-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useMemo, useCallback, useRef, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 
 function mapDayTasksFromApi(
   rawTasks: {
@@ -59,7 +59,7 @@ function mapDayTasksFromApi(
 }
 
 export function usePlanReadingSession(options?: { onBeforeNavigate?: () => void }) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const params = useLocalSearchParams<{
     planId: string;
     dayNumber: string;
@@ -107,7 +107,7 @@ export function usePlanReadingSession(options?: { onBeforeNavigate?: () => void 
   invalidateRef.current = invalidatePlanDay;
 
   const onCompleteErrorRef = useRef<() => void>(() => {});
-  onCompleteErrorRef.current = () => showAppToast(t('planTrack.complete_error'));
+  onCompleteErrorRef.current = () => showAppToast(t('plan_complete_error', "Couldn't save your progress. Please try again."));
 
   const completionSessionRef = useRef<ReturnType<typeof createPlanSubtaskCompletionSession> | null>(
     null,

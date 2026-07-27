@@ -6,11 +6,12 @@ import type { ImageSizes } from "@/types/api";
 import { cn } from "@/utils/cn";
 import { imageUrl } from "@/utils/image-url";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslate } from '@tolgee/react';
 import { Image } from "expo-image";
 import { ShareNetwork } from "phosphor-react-native";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Pressable, View } from "react-native";
+
 
 interface DayCompletionSheetProps {
   visible: boolean;
@@ -33,7 +34,7 @@ export function DayCompletionSheet({
   thumbnailUrl,
   shareableImageUrl,
 }: DayCompletionSheetProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const { foreground } = useThemeColors();
   const [sharing, setSharing] = useState(false);
 
@@ -52,6 +53,7 @@ export function DayCompletionSheet({
       setSharing(false);
     }
   };
+
 
   return (
     <AppBottomSheet visible={visible} onClose={onClose} maxHeight="85%">
@@ -106,7 +108,7 @@ export function DayCompletionSheet({
                 <>
                   <ShareNetwork size={22} color="#fff" />
                   <Text className="text-base font-bold text-white">
-                    {t("planTrack.share_this_day")}
+                    Share
                   </Text>
                 </>
               )}

@@ -1,3 +1,4 @@
+import { getApiLanguageSync } from '@/lib/i18n';
 import { QUERY_KEYS } from '@/constants/query-keys';
 import { useContentLanguage } from '@/hooks/useContentLanguage';
 import { fetchPlans, PLANS_CATALOG_PAGE_SIZE } from '@/services/plans';
@@ -10,7 +11,7 @@ export function usePlansCatalog(search = '') {
   return useInfiniteQuery({
     queryKey: QUERY_KEYS.plans.list(language, normalizedSearch),
     queryFn: ({ pageParam = 0 }) =>
-      fetchPlans(language, pageParam, PLANS_CATALOG_PAGE_SIZE, normalizedSearch || undefined),
+      fetchPlans(getApiLanguageSync(), pageParam, PLANS_CATALOG_PAGE_SIZE, normalizedSearch || undefined),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       const next = lastPage.skip + lastPage.limit;

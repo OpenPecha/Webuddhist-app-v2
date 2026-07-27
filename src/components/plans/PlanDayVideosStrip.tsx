@@ -2,7 +2,7 @@ import type { DayVideoSummary } from '@/types/plan-catalog';
 import { Text } from '@/components/ui/text';
 import { Ionicons } from '@expo/vector-icons';
 import * as WebBrowser from 'expo-web-browser';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Pressable, ScrollView, View } from 'react-native';
 
 interface PlanDayVideosStripProps {
@@ -10,7 +10,7 @@ interface PlanDayVideosStripProps {
 }
 
 export function PlanDayVideosStrip({ videos }: PlanDayVideosStripProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   if (!videos.length) return null;
 
@@ -26,7 +26,7 @@ export function PlanDayVideosStrip({ videos }: PlanDayVideosStripProps) {
   return (
     <View className="my-2">
       <Text className="text-[11px] font-semibold tracking-widest text-muted-foreground uppercase px-5 mb-3">
-        {t('plans.videos.title')}
+        {t('plan_shorts', "Shorts")}
       </Text>
       <ScrollView
         horizontal

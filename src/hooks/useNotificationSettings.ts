@@ -4,11 +4,11 @@ import { useTriggerNotificationSync } from '@/hooks/useTriggerNotificationSync';
 import * as Notifications from 'expo-notifications';
 import { useCallback, useEffect, useState } from 'react';
 import { AppState, Linking, Platform } from 'react-native';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { showAppToast } from '@/utils/show-app-toast';
 
 export function useNotificationSettings() {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const triggerSync = useTriggerNotificationSync();
   const [master, setMaster] = useState(true);
   const [routine, setRoutine] = useState(true);
@@ -47,7 +47,7 @@ export function useNotificationSettings() {
       const granted = await requestNotificationPermissions();
       setHasPermission(granted);
       if (!granted) {
-        showAppToast(t('notifications.permission_denied'));
+        showAppToast(t('notification_snack_permission_denied'));
         await Linking.openSettings();
         return false;
       }

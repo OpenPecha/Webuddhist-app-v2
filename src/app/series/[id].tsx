@@ -1,4 +1,3 @@
-import '@/lib/i18n';
 import { LoginDrawer } from '@/components/auth/LoginDrawer';
 import { FeaturedSeriesPlanCard } from '@/components/series/FeaturedSeriesPlanCard';
 import { SeriesPlanRow } from '@/components/series/SeriesPlanRow';
@@ -13,7 +12,7 @@ import { resolveUserPlanForItem } from '@/utils/plan-utils';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Text } from '@/components/ui/text';
 import {
   ActivityIndicator,
@@ -30,7 +29,7 @@ import { useGuest } from '@/providers/guest';
 export default function SeriesDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data: series, isLoading, error, refetch, isRefetching } = useSeriesById(id!);
-  const { t } = useTranslation();
+  const { t } = useTranslate();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const language = useContentLanguage();
@@ -69,7 +68,7 @@ export default function SeriesDetailScreen() {
     }
     enrollSeries.mutate(
       { series_id: id! },
-      { onError: () => Alert.alert(t('series.enroll_error')) },
+      { onError: () => Alert.alert(t('enrollError')) },
     );
   };
 
@@ -91,9 +90,9 @@ export default function SeriesDetailScreen() {
           <Ionicons name="chevron-back" size={24} color="#000" />
         </Pressable>
         <View className="flex-1 items-center justify-center gap-3">
-          <Text className="text-destructive">{t('practice.routine_load_error')}</Text>
+          <Text className="text-destructive">{t('routine_load_error')}</Text>
           <Pressable onPress={() => refetch()} className="p-3 active:opacity-70">
-            <Text>{t('practice.retry')}</Text>
+            <Text>{t('retry')}</Text>
           </Pressable>
         </View>
       </View>

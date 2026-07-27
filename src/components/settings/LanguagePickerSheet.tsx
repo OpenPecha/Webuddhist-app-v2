@@ -1,12 +1,11 @@
 import { AppBottomSheet, bottomSheetContentPaddingBottom } from '@/components/settings/AppBottomSheet';
+import { Text } from '@/components/ui/text';
 import { getLanguageLabel, supportedLanguages } from '@/constants/app-config';
 import { Check } from '@/constants/settings-icons';
 import { useThemeColors } from '@/hooks/useThemeColors';
-import { changeAppLanguage } from '@/lib/i18n';
-import { StorageKeys, setString } from '@/lib/storage';
-import { Text } from '@/components/ui/text';
+import { useChangeLanguage, useUiLanguage } from '@/lib/i18n';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Pressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -16,22 +15,22 @@ interface LanguagePickerSheetProps {
 }
 
 export function LanguagePickerSheet({ visible, onClose }: LanguagePickerSheetProps) {
-  const { i18n, t } = useTranslation();
+  const { t } = useTranslate();
+  const changeLanguage = useChangeLanguage();
+  const currentCode = useUiLanguage();
   const { foreground, brand } = useThemeColors();
   const insets = useSafeAreaInsets();
   const contentPaddingBottom = bottomSheetContentPaddingBottom('tab', insets);
-  const currentCode = i18n.language.split('-')[0];
 
-  const selectLanguage = async (code: string) => {
-    await changeAppLanguage(code);
-    await setString(StorageKeys.preferredLanguage, code);
+  const selectLanguage = (code: (typeof supportedLanguages)[number]) => {
     onClose();
+    void changeLanguage(code);
   };
 
   return (
     <AppBottomSheet visible={visible} onClose={onClose} scrollable placement="tab">
       <BottomSheetScrollView contentContainerStyle={{ paddingBottom: contentPaddingBottom }}>
-        <Text className="px-5 pb-2 text-lg font-bold">{t('settings.language')}</Text>
+        <Text className="px-5 pb-2 text-lg font-bold">{t('language')}</Text>
         {supportedLanguages.map((code) => {
           const selected = currentCode === code;
           const labelColor = selected ? brand : foreground;
@@ -60,5 +59,5 @@ export function LanguagePickerSheet({ visible, onClose }: LanguagePickerSheetPro
 }
 
 export function currentLanguageLabel(code: string): string {
-  return getLanguageLabel(code.split('-')[0]);
+  return getLanguageLabel(code);
 }

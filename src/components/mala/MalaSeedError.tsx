@@ -1,6 +1,6 @@
 import { Text } from '@/components/ui/text';
 import { cn } from '@/utils/cn';
-import { useTranslation } from 'react-i18next';
+import { useTranslate } from '@tolgee/react';
 import { Pressable, View } from 'react-native';
 
 interface MalaSeedErrorProps {
@@ -10,7 +10,7 @@ interface MalaSeedErrorProps {
 }
 
 export function MalaSeedError({ message, onRetry, compact = false }: MalaSeedErrorProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslate();
 
   return (
     <View
@@ -20,13 +20,13 @@ export function MalaSeedError({ message, onRetry, compact = false }: MalaSeedErr
       )}
     >
       <Text className={`text-destructive ${compact ? 'text-left' : 'text-center'}`}>
-        {message ?? t('mala.load_error')}
+        {message ?? t('unableToLoad')}
       </Text>
       <Pressable
         onPress={onRetry}
         className="rounded-[30px] border border-border px-5 py-2.5 active:opacity-80"
       >
-        <Text className="text-[15px] text-foreground">{t('practice.retry')}</Text>
+        <Text className="text-[15px] text-foreground">{t('retry')}</Text>
       </Pressable>
     </View>
   );

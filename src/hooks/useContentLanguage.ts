@@ -1,8 +1,6 @@
-import { resolveContentLanguage } from '@/constants/app-config';
-import { useTranslation } from 'react-i18next';
+import { useUiLanguage } from '@/lib/i18n';
 
-/** UI locale from i18n mapped to backend-supported content language (en/zh/bo). */
+/** App short code for API `?language=` params (en, bo, zh, hi, … — never Tolgee CDN tags). */
 export function useContentLanguage(): string {
-  const { i18n } = useTranslation();
-  return resolveContentLanguage(i18n.language);
+  return useUiLanguage();
 }
