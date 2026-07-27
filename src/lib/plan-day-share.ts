@@ -1,6 +1,5 @@
 import { Directory, File, Paths } from "expo-file-system";
 import * as Sharing from "expo-sharing";
-import type { TFunction } from "i18next";
 import { Alert } from "react-native";
 
 function mimeTypeFromUrl(url: string): string {
@@ -17,7 +16,7 @@ function mimeTypeFromUrl(url: string): string {
  */
 export async function sharePlanDayImage(
   shareableImageUrl: string | null | undefined,
-  t: TFunction,
+  t: any,
 ): Promise<boolean> {
   const url = shareableImageUrl?.trim();
   if (!url) return false;
@@ -26,7 +25,7 @@ export async function sharePlanDayImage(
   try {
     const canShare = await Sharing.isAvailableAsync();
     if (!canShare) {
-      Alert.alert(t("planTrack.day_share_error"));
+      Alert.alert("Error sharing image");
       return false;
     }
 
@@ -34,11 +33,11 @@ export async function sharePlanDayImage(
 
     await Sharing.shareAsync(file.uri, {
       mimeType: mimeTypeFromUrl(url),
-      dialogTitle: t("planTrack.share_this_day"),
+      dialogTitle: "Share",
     });
     return true;
   } catch {
-    Alert.alert(t("planTrack.day_share_error"));
+    Alert.alert("Error sharing image");
     return false;
   } finally {
     try {
